@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import HomePage from '../pages/HomePage/HomePage';
-import UserListPage from '../pages/UserListPage/UserListPage';
-import DashboardPage from '../pages/DashboardPage/DashboardPage';
-import Operator from '../pages/Operator/Operator';
+import HomePage from '../modules/FacialRecognition/HomePage/HomePage';
+import UserListPage from '../modules/FacialRecognition/UserListPage/UserListPage';
+import DashboardPage from '../modules/DashboardPage/DashboardPage';
+import Operator from '../modules/FacialRecognition/Operator/Operator';
 
 const AppRoutes = () => {
     return (

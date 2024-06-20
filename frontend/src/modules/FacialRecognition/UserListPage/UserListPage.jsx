@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUsers, deleteUser, getAllUsers } from "../../api/userApi";
+import { getUsers, getAllUsers } from "../../../api/userApi";
 import { Link } from "react-router-dom";
 import { IconButton, Typography, Box } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
@@ -13,24 +13,14 @@ import {
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Operator from "../Operator/Operator";
+import DefaultModal from "../../../components/shared/modals/DefaultModal";
+import ToastDefault from "../../../components/shared/toasts/ToastDefault";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 const UserListPage = () => {
-  const [users, setUsers] = useState([]);
+  const [, setUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [modalShow, setModalShow] = React.useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,9 +44,6 @@ const UserListPage = () => {
     fetchDataAllUsers();
     fetchData();
   }, []);
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   function CustomToolbar() {
     return (
@@ -64,17 +51,11 @@ const UserListPage = () => {
         <GridToolbarQuickFilter />
         <GridToolbarColumnsButton />
         <GridToolbarDensitySelector />
-        <Button onClick={handleOpen}>Adicionar Operador</Button>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-                <Operator></Operator>
-          </Box>
-        </Modal>
+        <Button onClick={() => setModalShow(true)}>Adicionar Operador</Button>
+        <DefaultModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        ></DefaultModal>
       </GridToolbarContainer>
     );
   }
@@ -130,6 +111,7 @@ const UserListPage = () => {
 
   return (
     <Box sx={{ p: 3 }}>
+      <ToastDefault tipo="success" texto="example"></ToastDefault>
       <Typography variant="h4" gutterBottom>
         User List
       </Typography>

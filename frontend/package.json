@@ -1,5 +1,5 @@
 {
-  "name": "fct-facial-recognition-frontend",
+  "name": "fct-autotest-phase3-frontend",
   "version": "0.1.0",
   "private": true,
   "main": "public/electron.js",
