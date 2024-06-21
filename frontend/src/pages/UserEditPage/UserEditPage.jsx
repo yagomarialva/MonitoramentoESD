@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { getUser, createUser, updateUser } from '../../../api/userApi'
-import UserForm from '../../../components/UserForm/UserForm';
-import * as reactRouterDom from 'react-router-dom';
+import { getUser, createUser, updateUser } from '../../api/userApi';
+import UserForm from '../../components/UserForm/UserForm';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, Box } from '@mui/material';
 
 const UserEditPage = () => {
     const [user, setUser] = useState(null);
-    const { id } = reactRouterDom.useParams();
-    const navigate = reactRouterDom.useNavigate();
+    const { id } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
