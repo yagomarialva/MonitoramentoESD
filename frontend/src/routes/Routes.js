@@ -4,7 +4,7 @@ import HomePage from '../pages/HomePage/HomePage';
 import UserListPage from '../pages/UserListPage/UserListPage';
 import DashboardPage from '../pages/DashboardPage/DashboardPage';
 import Operator from '../pages/Operator/Operator';
-import BraceletList from '../components/BraceletList/BraceletList';
+import BraceletList from '../components/ESD/BraceletList/BraceletList';
 
 const AppRoutes = () => {
     return (
