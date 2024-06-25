@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getAllBracelets, getBracelets, createBracelets } from "../../../api/braceletApi";
+import {
+  getAllBracelets,
+  getBracelets,
+  createBracelets,
+} from "../../../api/braceletApi";
 import { IconButton, Typography, Box, Paper } from "@mui/material";
 import { Delete, Info } from "@mui/icons-material";
 import Chip from "@mui/material/Chip";
@@ -16,7 +20,7 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import ButtonBootstrap from "react-bootstrap/Button";
 import ModalBootstrap from "react-bootstrap/Modal";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 
 const style = {
   position: "absolute",
@@ -29,42 +33,91 @@ const style = {
   p: 4,
 };
 
-
 const CustomToolbar = () => (
   <GridToolbarContainer>
     <GridToolbarQuickFilter />
     <GridToolbarColumnsButton />
     <GridToolbarDensitySelector />
-    <Button >Adicionar Operador</Button>
+    <Button>Adicionar Operador</Button>
   </GridToolbarContainer>
 );
-function MyVerticallyCenteredModal(props) {
+
+const BraceletForm = ({ open, handleClose, onSubmit }) => {
+  const [station, setStation] = useState({
+    userId: "",
+    title: "",
+    completed: false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setStation((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await onSubmit(station);
+      handleClose();
+    } catch (error) {
+      console.error("Error creating bracelet:", error);
+    }
+  };
+
   return (
     <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
     >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <h4>Centered Modal</h4>
-        <p>
-          Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-          dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-          consectetur ac, vestibulum at eros.
-        </p>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
+      <Paper sx={style}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Create Bracelet
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            id="userId"
+            name="userId"
+            label="User ID"
+            value={station.userId}
+            onChange={handleChange}
+          />
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            id="title"
+            name="title"
+            label="Title"
+            value={station.title}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            id="completed"
+            name="completed"
+            label="Completed"
+            value={station.completed}
+            onChange={handleChange}
+            type="checkbox"
+            checked={station.completed}
+          />
+          <Button type="submit" variant="contained" color="primary">
+            Submit
+          </Button>
+        </Box>
+      </Paper>
     </Modal>
   );
-}
+};
 
 const BraceletModal = ({ open, handleClose, braceletId, bracelet }) => (
   <Modal
@@ -117,8 +170,33 @@ const BasicTable = () => {
   const [allBracelets, setAllBracelets] = useState([]);
   const [bracelet, setBracelet] = useState([]);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [selectedBracelet, setSelectedBracelet] = useState(null);
 
+  const handleOpen = (braceletId, bracelet) => {
+    setBracelet(bracelet);
+    setSelectedBracelet(braceletId);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    // setBracelet(null);
+    setOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    // setBracelet(null);
+    setOpenModal(false);
+  };
+  const handleOpenModal = () => {
+    // setBracelet(null);
+    setOpenModal(true);
+  };
+
+  const handleCreateBracelet = async (bracelet) => {
+    const newBracelet = await createBracelets(bracelet);
+    setAllBracelets((prev) => [...prev, newBracelet]);
+  };
 
   useEffect(() => {
     const fetchDataAllUsers = async () => {
@@ -139,27 +217,19 @@ const BasicTable = () => {
       }
     };
 
-    const fetchDataCreateBracelet = async () => {
-      try {
-        const result = await createBracelets(bracelet.id);
-        setBracelet(result);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+    // const fetchDataCreateBracelet = async () => {
+    //   try {
+    //     const result = await createBracelets(bracelet.id);
+    //     setBracelet(result);
+    //   } catch (error) {
+    //     console.error("Error fetching users:", error);
+    //   }
+    // };
 
     fetchDataBracelet();
     fetchDataAllUsers();
-    fetchDataCreateBracelet();
+    // fetchDataCreateBracelet();
   }, [bracelet.id]);
-
-  const handleOpen = (braceletId, bracelet) => {
-    setBracelet(bracelet);
-    setSelectedBracelet(braceletId);
-    setOpen(true);
-  };
-
-  const handleClose = () => setOpen(false);
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -218,6 +288,13 @@ const BasicTable = () => {
       <Typography variant="h4" gutterBottom>
         ESD Bracelet List
       </Typography>
+      <IconButton
+        onClick={() => handleOpenModal()}
+        edge="start"
+        aria-label="delete"
+      >
+        <AddIcon />
+      </IconButton>
       <div style={{ height: 800, width: 950 }}>
         <DataGrid
           rows={rows}
@@ -240,6 +317,11 @@ const BasicTable = () => {
         braceletId={selectedBracelet}
         braceletName={bracelet.title}
         bracelet={bracelet}
+      />
+      <BraceletForm
+        open={openModal}
+        handleClose={handleCloseModal}
+        onSubmit={handleCreateBracelet}
       />
     </Box>
   );
