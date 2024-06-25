@@ -10,7 +10,7 @@ namespace BiometricFaceApi.Services
         {
             this.repository = repository;
         }
-        public async Task<List<ProduceActivityModel>> GetProduceAct()
+        public async Task<List<ProduceActivityModel>> GetAllProduceAct()
         {
             return await repository.GetAllProduceActivity();
         }

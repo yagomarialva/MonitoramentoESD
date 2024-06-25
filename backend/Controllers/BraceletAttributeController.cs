@@ -35,7 +35,7 @@ namespace BiometricFaceApi.Controllers
         public async Task<ActionResult> BuscarAtributo(int id)
         {
             await _braceletAttributeService.GetByAttibeById(id);
-            return Ok(id);
+            return Ok();
         }
 
         [HttpGet]
@@ -43,7 +43,7 @@ namespace BiometricFaceApi.Controllers
         public async Task<ActionResult> BuascarAtributo(string name)
         {
             await _braceletAttributeService.GetByPropertyName(name);
-            return Ok(name);
+            return Ok();
         }
 
         [HttpPost]
@@ -51,15 +51,15 @@ namespace BiometricFaceApi.Controllers
         public async Task<ActionResult> Include([FromForm] BraceletAttributeModel model)
         {
             _braceletAttributeService.Include(model);
-            return Ok(model);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("/delete")]
-        public async Task<ActionResult> delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             await _braceletAttributeService.Delete(id);
-            return Ok(id);
+            return Ok();
         }
     }
 

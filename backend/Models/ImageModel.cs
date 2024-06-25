@@ -13,7 +13,7 @@ namespace BiometricFaceApi.Models
         public int IdImage { get; set; }
         [ForeignKey("Users")]
         public int UserId { get; set; }
-        public virtual UserModel User { get; set; }
+        public virtual UserModel? User { get; set; }
         [IgnoreDataMember, NotMapped]
         public IFormFile ImageFile
         {

@@ -75,7 +75,7 @@ namespace BiometricFaceApi.Services
 
                     // include
 
-                    //user.Born = DateTime.Now;
+                    user.Born = DateTime.Now;
                     var newUser = await _userService.Include(user);
                     if (newUser != null)
                     {

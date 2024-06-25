@@ -10,7 +10,7 @@ namespace BiometricFaceApi.Services
         {
             this.repository = repository;
         }
-        public async Task<List<StationAttributeModel>> GetStation()
+        public async Task<List<StationAttributeModel>> GetAllStation()
         {
             return await repository.GetAllStationAtt();
         }
