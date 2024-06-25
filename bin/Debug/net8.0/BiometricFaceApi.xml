@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BiometricFaceApi</name>
+    </assembly>
+    <members>
+        <member name="M:BiometricFaceApi.Controllers.AuthenticationController.Login(BiometricFaceApi.Models.LoginModel)">
+            <summary>
+            Rota de autenticação de usuários cadastrados no banco de dados.
+            </summary>
+            <param name="login"></param>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.AuthenticationController.InsertAuths(BiometricFaceApi.Models.AuthenticationModel)">
+            <summary>
+            Cadastra e Atualiza de dados do operador.
+            </summary>
+            <remarks>Cadastra o engenheiro na base de dados; Para atualizar dados basta usar a matricula do engenheiro.</remarks>
+            <param name="authModel">Dados de cadastro do operador</param>
+            <response code="200">Dados atualizado com sucesso.</response>
+            <response code="201">Dados cadastrados com sucesso.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <reponse  code="500">Erro do servidor interno!</reponse>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.AuthenticationController.GetAuthsById(System.Int32)">
+            <summary>
+            Buscar operador pelo id
+            </summary>
+            <param name="id"> Buscar operador</param>
+            <returns></returns>
+            <response code="200">Retorna dados do banco de dados..</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <reponse  code="500">Erro do servidor interno!</reponse>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.AuthenticationController.DeleteAtuhs(System.Int32)">
+            <summary>
+            Deleta operador
+            </summary>
+            <param name="id"> Deletar operador</param>
+            <returns></returns>
+            <response code="200">Remove dados do banco de dados.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <reponse  code="500">Erro do servidor interno!</reponse>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.BiometricController.InsertBiometric(BiometricFaceApi.Models.BiometricModel)">
+            <summary>
+            Cadastra e Atualiza de dados do operador.
+            </summary>
+            <remarks>Cadastra o operador na base de dados; Para atualizar dados basta usar a matricula do operador.</remarks>
+            <param name="biometric">Dados de cadastro do operador</param>
+            <response code="200">Dados atualizado com sucesso.</response>
+            <response code="201">Dados cadastrados com sucesso.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <reponse  code="500">Erro do servidor interno!</reponse>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.BiometricController.GetUserById(System.Int32)">
+            <summary>
+            Buscar operador pelo id
+            </summary>
+            <param name="id"> Buscar operador</param>
+            <response code="200">Retorna dados do operador.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <reponse  code="500">Erro do servidor interno!</reponse>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.BiometricController.GetAllUsers">
+            <summary>
+            Buscar todos operadores
+            </summary>
+            <response code="200">Retorna dados de todos operadores.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <reponse  code="500">Erro do servidor interno!</reponse>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.BiometricController.DeleteBiometic(System.Int32)">
+            <summary>
+            Deleta operador
+            </summary>
+            <param name="id"> Deleta operador</param>
+            <returns></returns>
+            <response code="200">Remove dados do banco de dados.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <reponse  code="500">Erro do servidor interno!</reponse>
+        </member>
+        <member name="T:BiometricFaceApi.Migrations.firstmigration">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.firstmigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.firstmigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.firstmigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BiometricFaceApi.Migrations.authmiration">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.authmiration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.authmiration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.authmiration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:BiometricFaceApi.Migrations.newClassesModel">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.newClassesModel.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.newClassesModel.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.newClassesModel.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
