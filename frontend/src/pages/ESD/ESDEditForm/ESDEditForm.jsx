@@ -95,10 +95,10 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             </Typography>
           </ModalBootstrap.Body>
           <ModalBootstrap.Footer>
-            <ButtonBootstrap variant="secondary" onClick={handleClose}>
+            <ButtonBootstrap style={{ marginTop: "10px", marginLeft: "4px" }} variant="secondary" onClick={handleClose}>
               Close
             </ButtonBootstrap>
-            <ButtonBootstrap variant="success" type="submit">
+            <ButtonBootstrap style={{ marginTop: "10px", marginLeft: "4px" }} variant="success" type="submit">
               Save
             </ButtonBootstrap>
           </ModalBootstrap.Footer>

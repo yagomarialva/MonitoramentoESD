@@ -83,7 +83,6 @@ const StationTable = () => {
   };
 
   const handleEditCellChange = async (params) => {
-    console.log(params)
     setEditCell(params.id);
     setEditValue(params.value);
     const updatedBracelet = { ...bracelet, title: params.title, userId: params.userId, completed: params.completed };
