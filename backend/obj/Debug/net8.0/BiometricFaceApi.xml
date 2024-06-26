@@ -85,40 +85,16 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <reponse  code="500">Erro do servidor interno!</reponse>
         </member>
-        <member name="T:BiometricFaceApi.Migrations.firstmigration">
+        <member name="T:BiometricFaceApi.Migrations.addNewClassesModel">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.firstmigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.addNewClassesModel.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.firstmigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.addNewClassesModel.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.firstmigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:BiometricFaceApi.Migrations.authmiration">
-            <inheritdoc />
-        </member>
-        <member name="M:BiometricFaceApi.Migrations.authmiration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BiometricFaceApi.Migrations.authmiration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BiometricFaceApi.Migrations.authmiration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:BiometricFaceApi.Migrations.newClassesModel">
-            <inheritdoc />
-        </member>
-        <member name="M:BiometricFaceApi.Migrations.newClassesModel.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BiometricFaceApi.Migrations.newClassesModel.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:BiometricFaceApi.Migrations.newClassesModel.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.addNewClassesModel.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

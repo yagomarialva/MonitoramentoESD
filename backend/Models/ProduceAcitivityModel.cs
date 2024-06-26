@@ -3,21 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BiometricFaceApi.Models
 {
-    [Table("ProduceActivity")]
+    [Table("produceActivity")]
     public class ProduceActivityModel
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("Users")]
+        [ForeignKey("users")]
         public int UserId { get; set; }
         public virtual UserModel? User { get; set; }
-        [ForeignKey("Bracelets")]
+        [ForeignKey("bracelets")]
         public int BraceletId{ get; set;}
         public virtual BraceletModel? Bracelet { get; set; }
-        [ForeignKey("Station")]
+        [ForeignKey("station")]
         public int StationId { get; set; }
         public virtual StationModel? Station { get; set;}
-        [ForeignKey("MonitorEsd")]
+        [ForeignKey("monitorEsd")]
         public int MonitorEsdId { get; set; }
         public virtual MonitorEsdModel? Event { get; set; }   
         public DateTime DatatimeEvent { get; set; }

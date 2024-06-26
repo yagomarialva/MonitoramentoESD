@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BiometricFaceApi.Models
 {
-    [Table("LinkOperatorToBracelet")]
+    [Table("linkOperatorToBracelet")]
     public class LinkOperatorToBraceletModel
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("Users")]
+        [ForeignKey("users")]
         public int UserId { get; set; }
         public virtual UserModel? User { get; set; }
-        [ForeignKey("Bracelets")]
+        [ForeignKey("bracelets")]
         public int BraceletId { get; set; }
         public virtual BraceletModel? Bracelet { get; set; }
         public DateTime DatatimeEvent { get; set; }

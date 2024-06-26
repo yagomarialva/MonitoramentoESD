@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BiometricFaceApi.Models
 {
-    [Table("Auths")]
+    [Table("authentication")]
     [Index(nameof(Badge), IsUnique = true)]
     public class AuthenticationModel
     {

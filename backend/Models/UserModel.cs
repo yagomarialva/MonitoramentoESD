@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace BiometricFaceApi.Models
 {
-    [Table("Users")]
+    [Table("users")]
     [Index(nameof(Badge), IsUnique = true)]
     public class UserModel
     {

@@ -35,34 +35,34 @@ namespace BiometricFaceApi.Repositories
         // tenha alguma propriedade cadastrada.
         public async Task<BraceletAttributeModel?> Include(BraceletAttributeModel braceletAtt)
         {
-            if (braceletAtt == null)
-            {
-                throw new ArgumentNullException("Atributo não pode ser nulo.");
-            }
-            BraceletAttributeModel? braceletAttributeUp = await GetByAttribId(braceletAtt.Id);
-            if (braceletAttributeUp == null)
-            {
-                // include
-                await _dbContext.BraceletAttrib.AddAsync(braceletAtt);
-                await _dbContext.SaveChangesAsync();
+            //if (braceletAtt == null)
+            //{
+            //    throw new ArgumentNullException("Atributo não pode ser nulo.");
+            //}
+            //BraceletAttributeModel? braceletAttributeUp = await GetByBraceletId(braceletAtt.Id);
+            //if (braceletAttributeUp == null)
+            //{
+            //    // include
+            //    await _dbContext.BraceletAttrib.AddAsync(braceletAtt);
+            //    await _dbContext.SaveChangesAsync();
 
-                var savedAttribute = _dbContext.BraceletAttrib.FirstOrDefault(newAttribute => newAttribute.Id == braceletAtt.Id);
-                braceletAtt.Id = savedAttribute.Id;
-            }
-            else
-            {
-                // update
-                var update = await _dbContext.BraceletAttrib.AsNoTracking().FirstOrDefaultAsync(x => x.Id == braceletAtt.Id);
-                braceletAtt.Id = braceletAttributeUp.Id;
-                braceletAttributeUp = braceletAtt;
-                await _dbContext.BraceletAttrib.AddAsync(braceletAtt);
-                await _dbContext.SaveChangesAsync();
-            }
-            return braceletAtt;
-            //await _dbContext.BraceletAttrib.AddAsync(braceletAtt);
-            //await _dbContext.SaveChangesAsync();
-            //var result = await _dbContext.BraceletAttrib.FirstOrDefaultAsync(x => x.Id == braceletAtt.Id);   
-            //return result;
+            //    var savedAttribute = _dbContext.BraceletAttrib.FirstOrDefault(newAttribute => newAttribute.Id == braceletAtt.Id);
+            //    braceletAtt.Id = savedAttribute.Id;
+            //}
+            //else
+            //{
+            //    // update
+            //    var update = await _dbContext.BraceletAttrib.AsNoTracking().FirstOrDefaultAsync(x => x.Id == braceletAtt.Id);
+            //    braceletAtt.Id = braceletAttributeUp.Id;
+            //    braceletAttributeUp = braceletAtt;
+            //    await _dbContext.BraceletAttrib.AddAsync(braceletAtt);
+            //    await _dbContext.SaveChangesAsync();
+            //}
+            //return braceletAtt;
+            await _dbContext.BraceletAttrib.AddAsync(braceletAtt);
+            await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.BraceletAttrib.FirstOrDefaultAsync(x => x.Id == braceletAtt.Id);
+            return result;
         }
 
         public async Task<BraceletAttributeModel> Update(BraceletAttributeModel bracelet, int id)

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BiometricFaceApi.Models
 {
-    [Table("MonitorEsd")]
+    [Table("monitorEsd")]
     public class MonitorEsdModel
     {
         [Key]

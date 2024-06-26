@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BiometricFaceApi.Models
 {
-    [Table("BraceletsAtrribute")]
+    [Table("braceletsAtrribute")]
     [Index(nameof(Property), IsUnique = true)]
     public class BraceletAttributeModel
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("Bracelets")]
+        [ForeignKey("bracelets")]
         public int BraceletId { get; set; }
         public virtual BraceletModel? Bracelet { get; set; }
         public string? Property { get; set; }

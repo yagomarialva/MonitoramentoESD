@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BiometricFaceApi.Models
 {
-    [Table("Bracelets")]
+    [Table("bracelets")]
     public class BraceletModel
     {
         [Key]

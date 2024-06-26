@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BiometricFaceApi.Models
 {
-    [Table("StationAtttrib")]
+    [Table("stationAtttribute")]
     public class StationAttributeModel
     {
         [Key]
         public int Id {  get; set; }
-        [ForeignKey("Station")]
+        [ForeignKey("station")]
         public int StationId { get; set; }
         public string? Property { get; set; }
         public string? Value { get; set; }

@@ -26,6 +26,10 @@ namespace BiometricFaceApi.Services
         {
             return await repository.Include(model);
         }
+        public async Task<BraceletAttributeModel> Update(BraceletAttributeModel model, int id)
+        {
+            return await repository.Update(model, id);
+        }
         public async Task<BraceletAttributeModel> Delete (int id)
         {
             return await repository.Delete(id);

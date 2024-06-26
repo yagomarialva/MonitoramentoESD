@@ -10,6 +10,7 @@ namespace BiometricFaceApi.Data
         public DbSet<UserModel> Users { get; set; }
         public DbSet<ImageModel> Images { get; set; }
         public DbSet<AuthenticationModel> Auths { get; set; }
+        public DbSet<ActivityDetailsModel> ActivityDetails { get; set; }
         public DbSet<BraceletModel> Bracelet { get; set;}
         public DbSet<BraceletAttributeModel> BraceletAttrib { get; set; }
         public DbSet<MonitorEsdModel> MonitorEsds { get; set; }

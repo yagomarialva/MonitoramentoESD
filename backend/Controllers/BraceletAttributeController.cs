@@ -12,15 +12,10 @@ namespace BiometricFaceApi.Controllers
     {
 
         private readonly BraceletAttributeService _braceletAttributeService;
-
-
-
         public BraceletAttributeController(IBraceletAttributeRepository braceletAttributeRepository)
         {
             _braceletAttributeService = new BraceletAttributeService(braceletAttributeRepository);
         }
-
-
 
         [HttpGet]
         [Route("/todos/")]
@@ -50,8 +45,15 @@ namespace BiometricFaceApi.Controllers
         [Route("/createAttribute")]
         public async Task<ActionResult> Include([FromForm] BraceletAttributeModel model)
         {
-            _braceletAttributeService.Include(model);
+            await   _braceletAttributeService.Include(model);
             return Ok();
+        }
+        [HttpPost]
+        [Route("/alterarAtributte/{id}")]
+        public async Task<ActionResult> Update([FromForm] BraceletAttributeModel model, int id)
+        {
+            await _braceletAttributeService.Update(model, id);
+            return Ok(model);
         }
 
         [HttpDelete]

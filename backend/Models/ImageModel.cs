@@ -6,12 +6,12 @@ using System.Text.Json.Serialization;
 
 namespace BiometricFaceApi.Models
 {
-    [Table("Images")]
+    [Table("images")]
     public class ImageModel
     {
         [Key]
         public int IdImage { get; set; }
-        [ForeignKey("Users")]
+        [ForeignKey("users")]
         public int UserId { get; set; }
         public virtual UserModel? User { get; set; }
         [IgnoreDataMember, NotMapped]
