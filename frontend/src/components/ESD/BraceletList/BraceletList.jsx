@@ -1,34 +1,7 @@
-import BasicTable from '../../../pages/ESD/table/BasicTable';
+import StationTable from "../../../pages/ESD/ESDTable/StationTable";
 
 function BraceletList() {
-    // const [bracelets, setBracelets] = useState([]);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //       try {
-    //         const result = await getAllBracelets();
-    //         setBracelets(result);
-    //         // console.log(Object.entries(result))
-    //       } catch (error) {
-    //         console.error("Error fetching users:", error);
-    //       }
-    //     };
-    
-    //     // const fetchDataAllUsers = async () => {
-    //     //   try {
-    //     //     const result = await getAllUsers();
-    //     //     console.log("result", result);
-    //     //     setAllUsers(result);
-    //     //   } catch (error) {
-    //     //     console.error("Error fetching users:", error);
-    //     //   }
-    //     // };
-    //     // fetchDataAllUsers();
-    //     fetchData();
-    //   }, []);
-  return (
-      <BasicTable></BasicTable>
-  );
+  return <StationTable></StationTable>;
 }
 
 export default BraceletList;
