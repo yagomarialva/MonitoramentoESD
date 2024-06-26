@@ -94,7 +94,7 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
             />
           </Typography>
 
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="success">
             Submit
           </Button>
         </Box>

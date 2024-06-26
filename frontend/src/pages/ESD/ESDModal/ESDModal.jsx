@@ -57,7 +57,7 @@ const ESDModal = ({ open, handleClose, bracelet }) => (
         {/* <ESDForm open={open} handleClose={handleClose} onSubmit={bracelet} ></ESDForm> */}
       </ModalBootstrap.Body>
       <ModalBootstrap.Footer>
-        <ButtonBootstrap sx={{ mt: 2 }} onClick={handleClose}>
+        <ButtonBootstrap variant="success" sx={{ mt: 2 }} onClick={handleClose}>
           Close
         </ButtonBootstrap>
       </ModalBootstrap.Footer>
