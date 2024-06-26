@@ -3,7 +3,8 @@ import {
   getAllBracelets,
   getBracelets,
   createBracelets,
-  deleteBracelets
+  deleteBracelets,
+  updateBracelets
 } from "../../../api/braceletApi";
 import { IconButton, Typography, Box } from "@mui/material";
 import { Delete, Info } from "@mui/icons-material";
@@ -17,24 +18,42 @@ import {
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
 import ESDModal from "../ESDModal/ESDModal";
 import ESDForm from "../ESDForm/ESDForm";
+import EditIcon from "@mui/icons-material/Edit";
+import ESDEditForm from "../ESDEditForm/ESDEditForm";
 
 const StationTable = () => {
   const [allBracelets, setAllBracelets] = useState([]);
   const [bracelet, setBracelet] = useState([]);
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [openEditModal, setEditModal] = useState(false);
+  const [editCell, setEditCell] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [editValue, setEditValue] = useState("");
+  const [editData, setEditData] = useState(null);
 
   const handleOpen = ( bracelet) => {
     setBracelet(bracelet);
     setOpen(true);
   };
 
+
+  const handleEditClose = () => {
+    setEditModal(false);
+    setEditData(null);
+  };
+
+  const handleEditOpen = (data) => {
+    setEditData(data);
+    setEditModal(true);
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
+
 
   const handleCloseModal = () => {
     try {
@@ -55,14 +74,26 @@ const StationTable = () => {
   };
 
   const handleDelete = async (id) => {
-    try{
+    try {
       await deleteBracelets(id);
-      setAllBracelets(allBracelets.filter(bracelet => bracelet.id !== id));
-
-    } catch(e){
+      setAllBracelets(allBracelets.filter((bracelet) => bracelet.id !== id));
+    } catch (e) {
       console.log(e);
     }
-};
+  };
+
+  const handleEditCellChange = async (params) => {
+    console.log(params)
+    setEditCell(params.id);
+    setEditValue(params.value);
+    const updatedBracelet = { ...bracelet, title: params.title, userId: params.userId, completed: params.completed };
+    const updatedItem = await updateBracelets(editCell, updatedBracelet);
+    setAllBracelets((prev) =>
+      prev.map((item) =>
+         (item.id === editCell ? updatedItem : item))
+    );
+  };
+
 
   useEffect(() => {
     const fetchDataAllUsers = async () => {
@@ -86,15 +117,14 @@ const StationTable = () => {
     fetchDataAllUsers();
   }, [bracelet.id]);
 
-  
-const CustomToolbar = () => (
-  <GridToolbarContainer>
-    <GridToolbarQuickFilter />
-    <GridToolbarColumnsButton />
-    <GridToolbarDensitySelector />
-    <Button onClick={() => handleOpenModal()}>Adicionar Estação</Button>
-  </GridToolbarContainer>
-);
+  const CustomToolbar = () => (
+    <GridToolbarContainer>
+      <GridToolbarQuickFilter />
+      <GridToolbarColumnsButton />
+      <GridToolbarDensitySelector />
+      <Button onClick={() => handleOpenModal()}>Adicionar Estação</Button>
+    </GridToolbarContainer>
+  );
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -128,17 +158,21 @@ const CustomToolbar = () => (
       width: 120,
       renderCell: (params) => (
         <>
-          <IconButton edge="start" aria-label="delete">
-            <AddIcon />
+          <IconButton  onClick={() => handleEditOpen(params.row)}  edge="start" aria-label="delete">
+            <EditIcon />
           </IconButton>
           <IconButton
             edge="start"
             aria-label="info"
-            onClick={() => handleOpen( params.row)}
+            onClick={() => handleOpen(params.row)}
           >
             <Info />
           </IconButton>
-          <IconButton onClick={() => handleDelete(params.row.id)} edge="start" aria-label="delete">
+          <IconButton
+            onClick={() => handleDelete(params.row.id)}
+            edge="start"
+            aria-label="delete"
+          >
             <Delete />
           </IconButton>
         </>
@@ -173,6 +207,7 @@ const CustomToolbar = () => (
             },
           }}
           pageSizeOptions={[5, 10, 25, 50, 75, 100]}
+          onCellEditCommit={handleEditCellChange}
         />
       </div>
       <ESDModal
@@ -186,6 +221,11 @@ const CustomToolbar = () => (
         handleClose={handleCloseModal}
         onSubmit={handleCreateBracelet}
       />
+      <ESDEditForm  open={openEditModal}
+        handleClose={handleEditClose}
+        onSubmit={handleEditCellChange}
+        initialData={editData}
+        ></ESDEditForm>
     </Box>
   );
 };
