@@ -23,19 +23,11 @@ import ESDForm from "../ESDForm/ESDForm";
 import EditIcon from "@mui/icons-material/Edit";
 import ESDEditForm from "../ESDEditForm/ESDEditForm";
 import { useTranslation } from "react-i18next";
+import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 
 const StationTable = () => {
-  const {
-    t,
-    i18n: { changeLanguage, language },
-  } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
-  // eslint-disable-next-line no-unused-vars
-  const handleChangeLanguage = () => {
-    const newLanguage = currentLanguage === "en" ? "pt" : "en";
-    setCurrentLanguage(newLanguage);
-    changeLanguage(newLanguage);
-  };
+  const { t } = useTranslation();
+
   const [allBracelets, setAllBracelets] = useState([]);
   const [bracelet, setBracelet] = useState([]);
   const [open, setOpen] = useState(false);
@@ -45,10 +37,16 @@ const StationTable = () => {
   // eslint-disable-next-line no-unused-vars
   const [editValue, setEditValue] = useState("");
   const [editData, setEditData] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [braceletToDelete, setBraceletToDelete] = useState(null);
 
   const handleOpen = (bracelet) => {
     setBracelet(bracelet);
     setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const handleEditClose = () => {
@@ -61,17 +59,10 @@ const StationTable = () => {
     setEditModal(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
-  const handleCloseModal = () => {
-    try {
-      setOpenModal(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -91,6 +82,7 @@ const StationTable = () => {
       console.log(e);
     }
   };
+
   const handleEditCellChange = async (params) => {
     setEditCell(params.id);
     setEditValue(params.value);
@@ -110,7 +102,6 @@ const StationTable = () => {
     const fetchDataAllUsers = async () => {
       try {
         const result = await getAllBracelets();
-        console.log("result", result);
         setAllBracelets(result);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -129,13 +120,29 @@ const StationTable = () => {
     fetchDataAllUsers();
   }, [bracelet.id]);
 
+  const handleDeleteOpen = (bracelet) => {
+    setBraceletToDelete(bracelet);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setDeleteConfirmOpen(false);
+    setBraceletToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (braceletToDelete) {
+      await handleDelete(braceletToDelete.id);
+      handleDeleteClose();
+    }
+  };
+
   const CustomToolbar = () => (
     <GridToolbarContainer>
       <GridToolbarQuickFilter />
       <GridToolbarColumnsButton />
       <GridToolbarDensitySelector GridLocaleText={{}} />
       <Button onClick={() => handleOpenModal()}>
-        {" "}
         {t("ESD_TEST.ADD_STATION", { appName: "App for Translations" })}
       </Button>
     </GridToolbarContainer>
@@ -184,7 +191,7 @@ const StationTable = () => {
           <IconButton
             onClick={() => handleEditOpen(params.row)}
             edge="start"
-            aria-label="delete"
+            aria-label="edit"
           >
             <EditIcon />
           </IconButton>
@@ -196,7 +203,7 @@ const StationTable = () => {
             <Info />
           </IconButton>
           <IconButton
-            onClick={() => handleDelete(params.row.id)}
+            onClick={() => handleDeleteOpen(params.row)}
             edge="start"
             aria-label="delete"
           >
@@ -214,7 +221,7 @@ const StationTable = () => {
       <Typography variant="h4" gutterBottom>
         {t("ESD_TEST.TABLE_HEADER", { appName: "App for Translations" })}
       </Typography>
-      <div style={{ height: 800, width: 950 }}>
+      <div style={{ height: 1100, width: 1000 }}>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -234,7 +241,7 @@ const StationTable = () => {
             toolbarDensityStandard: t("ESD_TEST.TABLE.STANDARD", {
               appName: "App for Translations",
             }),
-            toolbarDensityComfortable: t("ESD_TEST.TABLE.CONFORTABLE", {
+            toolbarDensityComfortable: t("ESD_TEST.TABLE.COMFORTABLE", {
               appName: "App for Translations",
             }),
           }}
@@ -273,9 +280,21 @@ const StationTable = () => {
         handleClose={handleEditClose}
         onSubmit={handleEditCellChange}
         initialData={editData}
-      ></ESDEditForm>
+      />
+      <ESDConfirmModal
+        open={deleteConfirmOpen}
+        handleClose={handleDeleteClose}
+        handleConfirm={handleConfirmDelete}
+        title= {t("ESD_TEST.CONFIRM_DIALOG.DELETE_STATION", {
+          appName: "App for Translations",
+        })}
+        description= {t("ESD_TEST.CONFIRM_DIALOG.CONFIRM-TEXT", {
+          appName: "App for Translations",
+        })}
+      />
     </Box>
   );
 };
+// CONFIRM-TEXT
 
 export default StationTable;

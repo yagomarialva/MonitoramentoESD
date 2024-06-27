@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Box, Paper } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Paper,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import ButtonBootstrap from "react-bootstrap/Button";
@@ -29,7 +37,6 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     setCurrentLanguage(newLanguage);
     changeLanguage(newLanguage);
   };
-
 
   const [bracelet, setBracelet] = useState({
     userId: "",
@@ -101,25 +108,38 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
               />
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                required
-                id="outlined-completed"
-                label="Completed"
-                name="completed"
-                value={bracelet.completed}
-                onChange={handleChange}
-                fullWidth
-              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="completed-label">Completed</InputLabel>
+                <Select
+                  labelId="completed-label"
+                  id="completed"
+                  label="completed"
+                  name="completed"
+                  value={bracelet.completed}
+                  onChange={handleChange}
+                >
+                  <MenuItem value={true}>True</MenuItem>
+                  <MenuItem value={false}>False</MenuItem>
+                </Select>
+              </FormControl>
             </Typography>
           </ModalBootstrap.Body>
           <ModalBootstrap.Footer>
-            <ButtonBootstrap style={{ marginTop: "10px", marginLeft: "4px" }} variant="secondary" onClick={handleClose}>
-            {t("ESD_TEST.DIALOG.CLOSE", {
+            <ButtonBootstrap
+              style={{ marginTop: "10px", marginLeft: "4px" }}
+              variant="outline-success"
+              onClick={handleClose}
+            >
+              {t("ESD_TEST.DIALOG.CLOSE", {
                 appName: "App for Translations",
               })}
             </ButtonBootstrap>
-            <ButtonBootstrap style={{ marginTop: "10px", marginLeft: "4px" }} variant="success" type="submit">
-            {t("ESD_TEST.DIALOG.SAVE", {
+            <ButtonBootstrap
+              style={{ marginTop: "10px", marginLeft: "4px" }}
+              variant="success"
+              type="submit"
+            >
+              {t("ESD_TEST.DIALOG.SAVE", {
                 appName: "App for Translations",
               })}
             </ButtonBootstrap>

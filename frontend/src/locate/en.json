@@ -7,13 +7,19 @@
       "TABLE": {
         "USER_ID": "Serial Number",
         "NAME": "Station",
-        "ACTIONS":"Actions",
+        "ACTIONS": "Actions",
         "COLUMNS": "Filter Columns",
         "DENSITY": "Adjust Density",
         "SEARCH": "Search",
         "COMPACT": "Compact",
         "STANDARD": "Standard",
         "CONFORTABLE": "Confortable"
+      },
+      "CONFIRM_DIALOG": {
+        "CONFIRM-TEXT":"Are you sure you want to delete this ESD Station?",
+        "CLOSE": "Close",
+        "SAVE": "Save",
+        "DELETE_STATION": "Delete Station"
       },
       "DIALOG": {
         "CLOSE": "Close",

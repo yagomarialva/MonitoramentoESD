@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Typography, Box, Paper } from "@mui/material";
+import { Typography, Box, Paper, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -102,18 +102,21 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
             />
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TextField
-              required
-              fullWidth
-              margin="normal"
-              id="completed"
-              name="completed"
-              label="completed"
-              value={station.completed}
-              defaultValue={station.completed}
-              onChange={handleChange}
-            />
-          </Typography>
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="completed-label">Completed</InputLabel>
+                <Select
+                  labelId="completed-label"
+                  id="completed"
+                  name="completed"
+                  label="completed"
+                  value={station.completed}
+                  onChange={handleChange}
+                >
+                  <MenuItem value={true}>True</MenuItem>
+                  <MenuItem value={false}>False</MenuItem>
+                </Select>
+              </FormControl>
+            </Typography>
 
           <Button type="submit" variant="contained" color="success">
           {t("ESD_TEST.DIALOG.SAVE", {

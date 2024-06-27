@@ -15,6 +15,12 @@
         "STANDARD": "Padrão",
         "CONFORTABLE": "Confortável"
       },
+      "CONFIRM_DIALOG": {
+        "CONFIRM-TEXT":"Deseja excluir a estação ESD?",
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "DELETE_STATION": "Excluir Estação"
+      },
       "DIALOG": {
         "CLOSE": "Fechar",
         "SAVE": "Salvar",
