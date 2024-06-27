@@ -1,0 +1,29 @@
+{
+  "translation": {
+    "headerTitle": "My {{appName}} Header Title",
+    "ESD_TEST": {
+      "TABLE_HEADER": "ESD Stations",
+      "ADD_STATION": "Add Station",
+      "TABLE": {
+        "USER_ID": "Serial Number",
+        "NAME": "Station",
+        "ACTIONS":"Actions",
+        "COLUMNS": "Filter Columns",
+        "DENSITY": "Adjust Density",
+        "SEARCH": "Search",
+        "COMPACT": "Compact",
+        "STANDARD": "Standard",
+        "CONFORTABLE": "Confortable"
+      },
+      "DIALOG": {
+        "CLOSE": "Close",
+        "SAVE": "Save",
+        "CREATE_STATION": "Create Station"
+      }
+    },
+    "FCT_Home_Page": {
+      "Header": "Home Page",
+      "Label": "FCT for test automation"
+    }
+  }
+}

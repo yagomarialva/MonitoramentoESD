@@ -1,0 +1,29 @@
+{
+  "translation": {
+    "headerTitle": "Meu Titulo do Cabecalho do {{appName}}",
+    "ESD_TEST": {
+      "TABLE_HEADER": "Estações ESD",
+      "ADD_STATION": "Adicionar Estação",
+      "TABLE": {
+        "USER_ID": "Número de Série",
+        "NAME": "Estação",
+        "ACTIONS": "Ações",
+        "COLUMNS": "Filtrar Colunas",
+        "DENSITY": "Ajustar Exibição",
+        "SEARCH": "Pesquisar",
+        "COMPACT": "Compacto",
+        "STANDARD": "Padrão",
+        "CONFORTABLE": "Confortável"
+      },
+      "DIALOG": {
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "CREATE_STATION": "Adicionar Estação"
+      }
+    },
+    "FCT_Home_Page": {
+      "Header": "Página Inicial",
+      "Label": "FCT para automação dos testes"
+    }
+  }
+}

@@ -4,7 +4,7 @@ import {
   getBracelets,
   createBracelets,
   deleteBracelets,
-  updateBracelets
+  updateBracelets,
 } from "../../../api/braceletApi";
 import { IconButton, Typography, Box } from "@mui/material";
 import { Delete, Info } from "@mui/icons-material";
@@ -22,8 +22,20 @@ import ESDModal from "../ESDModal/ESDModal";
 import ESDForm from "../ESDForm/ESDForm";
 import EditIcon from "@mui/icons-material/Edit";
 import ESDEditForm from "../ESDEditForm/ESDEditForm";
+import { useTranslation } from "react-i18next";
 
 const StationTable = () => {
+  const {
+    t,
+    i18n: { changeLanguage, language },
+  } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
+  // eslint-disable-next-line no-unused-vars
+  const handleChangeLanguage = () => {
+    const newLanguage = currentLanguage === "en" ? "pt" : "en";
+    setCurrentLanguage(newLanguage);
+    changeLanguage(newLanguage);
+  };
   const [allBracelets, setAllBracelets] = useState([]);
   const [bracelet, setBracelet] = useState([]);
   const [open, setOpen] = useState(false);
@@ -34,11 +46,10 @@ const StationTable = () => {
   const [editValue, setEditValue] = useState("");
   const [editData, setEditData] = useState(null);
 
-  const handleOpen = ( bracelet) => {
+  const handleOpen = (bracelet) => {
     setBracelet(bracelet);
     setOpen(true);
   };
-
 
   const handleEditClose = () => {
     setEditModal(false);
@@ -53,7 +64,6 @@ const StationTable = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
 
   const handleCloseModal = () => {
     try {
@@ -81,23 +91,26 @@ const StationTable = () => {
       console.log(e);
     }
   };
-
   const handleEditCellChange = async (params) => {
     setEditCell(params.id);
     setEditValue(params.value);
-    const updatedBracelet = { ...bracelet, title: params.title, userId: params.userId, completed: params.completed };
+    const updatedBracelet = {
+      ...bracelet,
+      title: params.title,
+      userId: params.userId,
+      completed: params.completed,
+    };
     const updatedItem = await updateBracelets(editCell, updatedBracelet);
     setAllBracelets((prev) =>
-      prev.map((item) =>
-         (item.id === editCell ? updatedItem : item))
+      prev.map((item) => (item.id === editCell ? updatedItem : item))
     );
   };
-
 
   useEffect(() => {
     const fetchDataAllUsers = async () => {
       try {
         const result = await getAllBracelets();
+        console.log("result", result);
         setAllBracelets(result);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -120,8 +133,11 @@ const StationTable = () => {
     <GridToolbarContainer>
       <GridToolbarQuickFilter />
       <GridToolbarColumnsButton />
-      <GridToolbarDensitySelector />
-      <Button onClick={() => handleOpenModal()}>Adicionar Estação</Button>
+      <GridToolbarDensitySelector GridLocaleText={{}} />
+      <Button onClick={() => handleOpenModal()}>
+        {" "}
+        {t("ESD_TEST.ADD_STATION", { appName: "App for Translations" })}
+      </Button>
     </GridToolbarContainer>
   );
 
@@ -129,11 +145,17 @@ const StationTable = () => {
     { field: "id", headerName: "ID", width: 70 },
     {
       field: "userId",
-      headerName: "User ID",
+      headerName: t("ESD_TEST.TABLE.USER_ID", {
+        appName: "App for Translations",
+      }),
       sortable: false,
       width: 160,
     },
-    { field: "title", headerName: "Title", width: 250 },
+    {
+      field: "title",
+      headerName: t("ESD_TEST.TABLE.NAME", { appName: "App for Translations" }),
+      width: 250,
+    },
     { field: "completed", headerName: "Completed", width: 250 },
     {
       field: "status",
@@ -152,12 +174,18 @@ const StationTable = () => {
     },
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: t("ESD_TEST.TABLE.ACTIONS", {
+        appName: "App for Translations",
+      }),
       sortable: false,
       width: 120,
       renderCell: (params) => (
         <>
-          <IconButton  onClick={() => handleEditOpen(params.row)}  edge="start" aria-label="delete">
+          <IconButton
+            onClick={() => handleEditOpen(params.row)}
+            edge="start"
+            aria-label="delete"
+          >
             <EditIcon />
           </IconButton>
           <IconButton
@@ -184,12 +212,32 @@ const StationTable = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        ESD Station List
+        {t("ESD_TEST.TABLE_HEADER", { appName: "App for Translations" })}
       </Typography>
       <div style={{ height: 800, width: 950 }}>
         <DataGrid
           rows={rows}
           columns={columns}
+          localeText={{
+            toolbarColumns: t("ESD_TEST.TABLE.COLUMNS", {
+              appName: "App for Translations",
+            }),
+            toolbarFilters: t("ESD_TEST.TABLE.SEARCH", {
+              appName: "App for Translations",
+            }),
+            toolbarDensity: t("ESD_TEST.TABLE.DENSITY", {
+              appName: "App for Translations",
+            }),
+            toolbarDensityCompact: t("ESD_TEST.TABLE.COMPACT", {
+              appName: "App for Translations",
+            }),
+            toolbarDensityStandard: t("ESD_TEST.TABLE.STANDARD", {
+              appName: "App for Translations",
+            }),
+            toolbarDensityComfortable: t("ESD_TEST.TABLE.CONFORTABLE", {
+              appName: "App for Translations",
+            }),
+          }}
           components={{ Toolbar: CustomToolbar }}
           componentsProps={{
             toolbar: { onAdd: () => handleOpen(null) },
@@ -220,11 +268,12 @@ const StationTable = () => {
         handleClose={handleCloseModal}
         onSubmit={handleCreateBracelet}
       />
-      <ESDEditForm  open={openEditModal}
+      <ESDEditForm
+        open={openEditModal}
         handleClose={handleEditClose}
         onSubmit={handleEditCellChange}
         initialData={editData}
-        ></ESDEditForm>
+      ></ESDEditForm>
     </Box>
   );
 };

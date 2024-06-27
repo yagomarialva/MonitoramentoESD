@@ -6,6 +6,9 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 
+import { useTranslation } from "react-i18next";
+
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -18,6 +21,18 @@ const style = {
 };
 
 const ESDForm = ({ open, handleClose, onSubmit }) => {
+  const {
+    t,
+    i18n: { changeLanguage, language },
+  } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
+  // eslint-disable-next-line no-unused-vars
+  const handleChangeLanguage = () => {
+    const newLanguage = currentLanguage === "en" ? "pt" : "en";
+    setCurrentLanguage(newLanguage);
+    changeLanguage(newLanguage);
+  };
+
   const [station, setStation] = useState({
     userId: "",
     title: "",
@@ -51,7 +66,9 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
     >
       <Paper sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create Bracelet
+        {t("ESD_TEST.DIALOG.CREATE_STATION", {
+                appName: "App for Translations",
+              })}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -61,7 +78,9 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
               margin="normal"
               id="userId"
               name="userId"
-              label="User ID"
+              label={t("ESD_TEST.TABLE.USER_ID", {
+                appName: "App for Translations",
+              })}
               value={station.userId}
               defaultValue={station.userId}
               onChange={handleChange}
@@ -74,7 +93,9 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
               margin="normal"
               id="title"
               name="title"
-              label="Title"
+              label={t("ESD_TEST.TABLE.NAME", {
+                appName: "App for Translations",
+              })}
               value={station.title}
               defaultValue={station.title}
               onChange={handleChange}
@@ -95,7 +116,9 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
           </Typography>
 
           <Button type="submit" variant="contained" color="success">
-            Submit
+          {t("ESD_TEST.DIALOG.SAVE", {
+                appName: "App for Translations",
+              })}
           </Button>
         </Box>
       </Paper>
