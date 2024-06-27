@@ -18,9 +18,20 @@ namespace BiometricFaceApi.Services
         {
             return await repository.GetByStationId(id);
         }
-        public async Task<StationModel?> Include(StationModel model)
+        public async Task<(object?, int)> Include(StationModel model)
         {
-            return await repository.Include(model);
+            var statusCode = StatusCodes.Status200OK;
+            object? response;
+            try
+            {
+                response = await repository.Include(model);
+            }
+            catch (Exception ex)
+            {
+                response = ex.Message;
+                statusCode = StatusCodes.Status400BadRequest;
+            }
+            return (response, statusCode);
         }
         public async Task<StationModel> Delete(int id)
         {

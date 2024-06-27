@@ -14,7 +14,7 @@ namespace BiometricFaceApi.Services
         {
             return await repository.GetAllBraceletsAtt();
         }
-       public async Task<BraceletAttributeModel> GetByAttibeById(int id)
+        public async Task<BraceletAttributeModel> GetByAttibeById(int id)
         {
             return await repository.GetByAttribId(id);
         }
@@ -22,7 +22,7 @@ namespace BiometricFaceApi.Services
         {
             return await repository.GetByPropertyName(name);
         }
-        public async Task<BraceletAttributeModel> Include (BraceletAttributeModel model)
+        public async Task<BraceletAttributeModel> Include(BraceletAttributeModel model)
         {
             return await repository.Include(model);
         }
@@ -30,7 +30,7 @@ namespace BiometricFaceApi.Services
         {
             return await repository.Update(model, id);
         }
-        public async Task<BraceletAttributeModel> Delete (int id)
+        public async Task<BraceletAttributeModel> Delete(int id)
         {
             return await repository.Delete(id);
         }

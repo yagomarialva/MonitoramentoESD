@@ -108,12 +108,11 @@ namespace BiometricFaceApi
                 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
                 builder.Services.AddScoped<IActivityDetailsRepository, ActivityDetailsRepository>();
-                builder.Services.AddScoped<IBraceletAttributeRepository, BraceletAttributeRepository>();
+                //builder.Services.AddScoped<IBraceletAttributeRepository, BraceletAttributeRepository>();
                 builder.Services.AddScoped<IBraceletRepository, BraceletRepository>();
-                builder.Services.AddScoped<ILinkOperatorToBraceletRepository, LinkOperatorToBraceletRepository>();
+                //builder.Services.AddScoped<ILinkOperatorToBraceletRepository, LinkOperatorToBraceletRepository>();
                 builder.Services.AddScoped<IMonitorEsdRepository,MonitorEsdRepository>();
                 builder.Services.AddScoped<IProduceActivityRepository, ProduceActivityRepository>();
-                builder.Services.AddScoped<IStationAttributeRepository, StationAttributeRepository>();
                 builder.Services.AddScoped<IStationRepository, StationRepository>();
 
                 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();

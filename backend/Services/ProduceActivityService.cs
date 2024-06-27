@@ -36,7 +36,7 @@ namespace BiometricFaceApi.Services
         }
         public async Task<ProduceActivityModel?> Include(ProduceActivityModel produceModel)
         {
-            produceModel.DatatimeEvent = DateTime.Now;
+            produceModel.DatatimeMonitorEsdEvent = DateTime.Now;
             return await repository.Include(produceModel);
         }
         public async Task<ProduceActivityModel> Delete(int id)

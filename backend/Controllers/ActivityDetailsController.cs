@@ -21,53 +21,53 @@ namespace BiometricFaceApi.Controllers
         [Route("/buscarTodas")]
         public async Task<ActionResult> BuscarTodas()
         {
-            await _activityDetailsService.GetAllActivityDetails();
-            return Ok();
+            var list = await _activityDetailsService.GetAllActivityDetails();
+            return Ok(list);
         }
 
         [HttpGet]
         [Route("/buscarAtividade/{id}")]
         public async Task<ActionResult> BuscarAtividade(int id)
         {
-            await _activityDetailsService.GetActivityDetailsId(id);
-            return Ok();
+            var item = await _activityDetailsService.GetActivityDetailsId(id);
+            return Ok(item);
         }
 
         [HttpGet]
         [Route("/buscarProducao/{id}")]
         public async Task<ActionResult> BuscarProducaoId(int id)
         {
-            await _activityDetailsService.GetProduceActivityId(id);
-            return Ok();
+            var item = await _activityDetailsService.GetProduceActivityId(id);
+            return Ok(item);
         }
 
         [HttpGet]
         [Route("/buscarAtividadePorDescricao/{description}")]
         public async Task<ActionResult> BuscarAtividadePorDescricaoId(string description)
         {
-            await _activityDetailsService.GetProduceActivityDes(description);
-            return Ok();
+            var item = await _activityDetailsService.GetProduceActivityDes(description);
+            return Ok(item);
         }
         [HttpPost]
         [Route("/adicionarAtividade")]
         public async Task<ActionResult> Include(ActivityDetailsModel model)
         {
-            await _activityDetailsService.Include(model);
-            return Ok();
+            var include = await _activityDetailsService.Include(model);
+            return Ok(include);
         }
         [HttpPost]
         [Route("/alterarAtividade")]
         public async Task<ActionResult> Update(ActivityDetailsModel model)
         {
-            await _activityDetailsService.Update(model);
-            return Ok();
+            var update = await _activityDetailsService.Update(model);
+            return Ok(update);
         }
         [HttpGet]
         [Route("/deleteAtividade/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await _activityDetailsService.Delete(id);
-            return Ok();
+            var delete = await _activityDetailsService.Delete(id);
+            return Ok(delete);
         }
     }
 }

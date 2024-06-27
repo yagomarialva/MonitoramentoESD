@@ -27,34 +27,29 @@ namespace BiometricFaceApi.Repositories
 
         // Task realiza o include e update, include caso nao haja no banco, update caso o bracelet ja 
         // tenha alguma propriedade cadastrada.
-        public async Task<BraceletModel?> Include(BraceletModel bracelet)
+        public async Task<BraceletModel?> Include(BraceletModel braceletModel)
         {
-            if (bracelet == null)
+            var repositoryBracelet = await _dbContext.Bracelet.FirstOrDefaultAsync(x => x.Id == braceletModel.Id);
+            if (repositoryBracelet is null)
             {
-                throw new ArgumentNullException("a Pulseira ESD não pode ser nulo.");
-            }
-            BraceletModel? braceletModelUp = await GetByBreceletSn(bracelet.Sn);
-            if (braceletModelUp == null)
-            {
-                // include
-                await _dbContext.Bracelet.AddAsync(bracelet);
+                //include
+                await _dbContext.Bracelet.AddAsync(braceletModel);
                 await _dbContext.SaveChangesAsync();
-
-                var savedBracelet = _dbContext.Bracelet.FirstOrDefault(newBracelet => newBracelet.Sn == bracelet.Sn);
-                bracelet.Id = savedBracelet.Id;
             }
             else
             {
-                // update
-                var update = await _dbContext.BraceletAttrib.AsNoTracking().FirstOrDefaultAsync(x => x.Id == bracelet.Id);
-                bracelet.Id = braceletModelUp.Id;
-                braceletModelUp = bracelet;
-                await _dbContext.Bracelet.AddAsync(bracelet);
+                //update
+                var update = await _dbContext.Bracelet.AsNoTracking().FirstOrDefaultAsync(x => x.Id == braceletModel.Id);
+                braceletModel.Id = braceletModel.Id;
+                _dbContext.Bracelet.Update(braceletModel);
                 await _dbContext.SaveChangesAsync();
             }
+            var result = await _dbContext.Bracelet.FirstAsync(x => x.Id == braceletModel.Id);
 
-            return bracelet;
+            return result;
+
         }
+
         public async Task<BraceletModel> Delete(int id)
         {
             BraceletModel braceletModelDel = await GetByBraceletId(id);

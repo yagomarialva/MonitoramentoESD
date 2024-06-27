@@ -20,31 +20,31 @@ namespace BiometricFaceApi.Controllers
         [Route("/todasStations")]
         public async Task<ActionResult> BuscarTodasStations()
         {
-            await _service.GetAllStation();
-            return Ok();
+            var list = await _service.GetAllStation();
+            return Ok(list);
         }
 
         [HttpGet]
         [Route("/buscarStationId{id}")]
         public async Task<ActionResult> BuscarStationId(int id)
         {
-            await _service.GetStationId(id);
-            return Ok();
+            var item = await _service.GetStationId(id);
+            return Ok(item);
         }
 
         [HttpPost]
-        [Route("/adicionarStation")]
+        [Route("/gerenciarStation")]
         public async Task<ActionResult> Include(StationModel model)
         {
-            await _service.Include(model);
-            return Ok();
+            var (response, statusCode) = await _service.Include(model);
+            return StatusCode(statusCode, response);
         }
 
         [HttpDelete]
         [Route("/deleteSation")]
         public async Task<ActionResult> Delete(int id)
         {
-            await _service.Delete(id);
+            var delete = await _service.Delete(id);
             return Ok();
         }
     }

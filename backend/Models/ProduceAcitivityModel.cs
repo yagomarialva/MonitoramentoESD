@@ -16,11 +16,12 @@ namespace BiometricFaceApi.Models
         public virtual BraceletModel? Bracelet { get; set; }
         [ForeignKey("station")]
         public int StationId { get; set; }
+                     
         public virtual StationModel? Station { get; set;}
         [ForeignKey("monitorEsd")]
         public int MonitorEsdId { get; set; }
-        public virtual MonitorEsdModel? Event { get; set; }   
-        public DateTime DatatimeEvent { get; set; }
+        public virtual MonitorEsdModel? MonitorEsdEvent { get; set; }   
+        public DateTime DatatimeMonitorEsdEvent { get; set; }
 
     }
 }

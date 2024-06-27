@@ -12,7 +12,6 @@ namespace BiometricFaceApi.Controllers
     public class BraceletController : Controller
     {
         private readonly BraceletService _braceletService;
-
         public BraceletController(IBraceletRepository braceletRepository)
         {
             _braceletService = new BraceletService(braceletRepository);
@@ -22,36 +21,38 @@ namespace BiometricFaceApi.Controllers
         [Route("/todosBracelets")]
         public async Task<ActionResult> BuscarTodosBracelets()
         {
-            await _braceletService.GetAllBracelets();
-            return Ok();
+            var list = await _braceletService.GetAllBracelets();
+            return Ok(list);
         }
         [HttpGet]
         [Route("/braceletsById/{id}")]
         public async Task<ActionResult> BuscarId(int id)
         {
-            await _braceletService.GetBraceletId(id);
-            return Ok();
+            var item = await _braceletService.GetBraceletId(id);
+            return Ok(item);
         }
         [HttpGet]
         [Route("/braceletBySn/{sn}")]
         public async Task<ActionResult> BuscarSn(string sn)
         {
-            await _braceletService.GetBraceletSn(sn);
-            return Ok();
+            var item = await _braceletService.GetBraceletSn(sn);
+            return Ok(item);
         }
         [HttpPost]
-        [Route("/adicionarbracelet")]
+        [Route("/gerenciarbracelet")]
         public async Task<ActionResult> Include(BraceletModel model)
         {
-            await _braceletService.Include(model);
-            return Ok();
+           
+           var (response,statusCode) =  await _braceletService.Include(model);
+            return StatusCode(statusCode, response);
         }
+        
         [HttpDelete]
         [Route("deleteBracelet")]
         public async Task<ActionResult> Delete(int id)
         {
-            await _braceletService.Delete(id);
-            return Ok();
+           var delete =  await _braceletService.Delete(id);
+            return Ok(delete);
         }
     }
 

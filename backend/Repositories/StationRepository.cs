@@ -24,28 +24,27 @@ namespace BiometricFaceApi.Repositories
         // tenha alguma propriedade cadastrada.
         public async Task<StationModel?> Include(StationModel stationModel)
         {
-            if (stationModel == null)
-            {
-                throw new ArgumentNullException("Estação não pode ser nulo");
-            }
-            StationModel? stationModelUp = await GetByStationId(stationModel.Id);
-            if (stationModelUp == null)
+            var repositoryStation = await _dbContext.Station.FirstOrDefaultAsync(x => x.Id == stationModel.Id);
+            if (repositoryStation is null)
             {
                 // include
+
+                stationModel.Created = stationModel.Created ?? DateTime.Now;
+                stationModel.LastUpdated = stationModel.LastUpdated ?? DateTime.Now;
                 await _dbContext.Station.AddAsync(stationModel);
                 await _dbContext.SaveChangesAsync();
             }
             else
             {
                 // update
-                var update = await _dbContext.Station.AsNoTracking().FirstOrDefaultAsync(x => x.Id == stationModel.Id);
-                stationModel.Id = stationModelUp.Id;
-                stationModelUp = stationModel;
-                await _dbContext.Station.AddAsync(stationModel);
-                await _dbContext.SaveChangesAsync();
+                repositoryStation.Name = stationModel.Name;
+                repositoryStation.LastUpdated = DateTime.Now;
+                _dbContext.Station.Update(repositoryStation);
+                await _dbContext.SaveChangesAsync(); 
             }
+            var result = await _dbContext.Station.FirstAsync(x => x.Id == stationModel.Id);
 
-            return stationModel;
+            return result;
         }
         public async Task<StationModel> Delete(int id)
         {

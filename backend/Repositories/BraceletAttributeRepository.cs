@@ -19,7 +19,7 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<BraceletAttributeModel> GetByAttribId(int id)
         {
-            return await _dbContext.BraceletAttrib.FirstOrDefaultAsync(x => x.Id == id) ?? new BraceletAttributeModel();
+            return await _dbContext.BraceletAttrib.FirstOrDefaultAsync(x => x.AttributeId == id) ?? new BraceletAttributeModel();
         }
 
         public async Task<BraceletAttributeModel> GetByBraceletId(int id)
@@ -35,33 +35,9 @@ namespace BiometricFaceApi.Repositories
         // tenha alguma propriedade cadastrada.
         public async Task<BraceletAttributeModel?> Include(BraceletAttributeModel braceletAtt)
         {
-            //if (braceletAtt == null)
-            //{
-            //    throw new ArgumentNullException("Atributo não pode ser nulo.");
-            //}
-            //BraceletAttributeModel? braceletAttributeUp = await GetByBraceletId(braceletAtt.Id);
-            //if (braceletAttributeUp == null)
-            //{
-            //    // include
-            //    await _dbContext.BraceletAttrib.AddAsync(braceletAtt);
-            //    await _dbContext.SaveChangesAsync();
-
-            //    var savedAttribute = _dbContext.BraceletAttrib.FirstOrDefault(newAttribute => newAttribute.Id == braceletAtt.Id);
-            //    braceletAtt.Id = savedAttribute.Id;
-            //}
-            //else
-            //{
-            //    // update
-            //    var update = await _dbContext.BraceletAttrib.AsNoTracking().FirstOrDefaultAsync(x => x.Id == braceletAtt.Id);
-            //    braceletAtt.Id = braceletAttributeUp.Id;
-            //    braceletAttributeUp = braceletAtt;
-            //    await _dbContext.BraceletAttrib.AddAsync(braceletAtt);
-            //    await _dbContext.SaveChangesAsync();
-            //}
-            //return braceletAtt;
             await _dbContext.BraceletAttrib.AddAsync(braceletAtt);
             await _dbContext.SaveChangesAsync();
-            var result = await _dbContext.BraceletAttrib.FirstOrDefaultAsync(x => x.Id == braceletAtt.Id);
+            var result = await _dbContext.BraceletAttrib.FirstOrDefaultAsync(x => x.AttributeId == braceletAtt.AttributeId);
             return result;
         }
 
@@ -73,8 +49,9 @@ namespace BiometricFaceApi.Repositories
             {
                 throw new Exception($"O bracelet para ID:{id} não foi encontrado no banco de dados.");
             }
-            var update = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == braceletAttriUp.Id);
+            var update = await _dbContext.BraceletAttrib.AsNoTracking().FirstOrDefaultAsync(x => x.AttributeId == braceletAttriUp.AttributeId);
             braceletAttriUp.Property = braceletAttriUp.Property;
+            braceletAttriUp.Value = braceletAttriUp.Value;
             _dbContext.BraceletAttrib.Update(braceletAttriUp);
             await _dbContext.SaveChangesAsync();
             return braceletAttriUp;

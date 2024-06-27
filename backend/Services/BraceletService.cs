@@ -6,7 +6,7 @@ namespace BiometricFaceApi.Services
     public class BraceletService
     {
         private IBraceletRepository repository;
-        public BraceletService (IBraceletRepository repository)
+        public BraceletService(IBraceletRepository repository)
         {
             this.repository = repository;
         }
@@ -22,11 +22,23 @@ namespace BiometricFaceApi.Services
         {
             return await repository.GetByBreceletSn(sn);
         }
-        public async  Task<BraceletModel?> Include(BraceletModel model)
+        public async Task<(object?, int)> Include(BraceletModel model)
         {
-            return await repository.Include(model);
+            var statusCode = StatusCodes.Status200OK;
+            object? response;
+            try
+            {
+                response = await repository.Include(model);
+            }
+            catch (Exception ex)
+            {
+                response = ex.Message;
+                statusCode = StatusCodes.Status400BadRequest;
+            }
+            return (response, statusCode);
+
         }
-        public async Task<BraceletModel> Delete (int id)
+        public async Task<BraceletModel> Delete(int id)
         {
             return await repository.Delete(id);
         }

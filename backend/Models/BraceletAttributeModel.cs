@@ -9,7 +9,7 @@ namespace BiometricFaceApi.Models
     public class BraceletAttributeModel
     {
         [Key]
-        public int Id { get; set; }
+        public int AttributeId { get; set; }
         [ForeignKey("bracelets")]
         public int BraceletId { get; set; }
         public virtual BraceletModel? Bracelet { get; set; }
