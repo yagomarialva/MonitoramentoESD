@@ -13,6 +13,7 @@ using BiometricFaceApi.Security;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity;
+using BiometricFaceApi.Middleware;
 namespace BiometricFaceApi
 {
     public class Program
@@ -46,15 +47,15 @@ namespace BiometricFaceApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                
+
                 c.SwaggerDoc("v1",
                     new OpenApiInfo
                     {
                         Title = "Biometric.Backend",
                         Version = "v1"
                     });
-                
-               
+
+
                 // Jwt Autorization settings 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -90,7 +91,7 @@ namespace BiometricFaceApi
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath,includeControllerXmlComments:true);
+                c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
                 c.EnableAnnotations();
             });
 
@@ -102,18 +103,19 @@ namespace BiometricFaceApi
             {
                 builder.Services.AddDbContext<BiometricFaceDBContex>(
                     options => { options.UseMySQL(connectionString); });
-                
+
                 // Repositores
                 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
                 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
-                builder.Services.AddScoped<IActivityDetailsRepository, ActivityDetailsRepository>();
+                
                 //builder.Services.AddScoped<IBraceletAttributeRepository, BraceletAttributeRepository>();
                 builder.Services.AddScoped<IBraceletRepository, BraceletRepository>();
                 //builder.Services.AddScoped<ILinkOperatorToBraceletRepository, LinkOperatorToBraceletRepository>();
-                builder.Services.AddScoped<IMonitorEsdRepository,MonitorEsdRepository>();
+                builder.Services.AddScoped<IMonitorEsdRepository, MonitorEsdRepository>();
                 builder.Services.AddScoped<IProduceActivityRepository, ProduceActivityRepository>();
                 builder.Services.AddScoped<IStationRepository, StationRepository>();
+
 
                 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
                 builder.Services.AddSingleton<JwtAuthentication>();
@@ -131,7 +133,8 @@ namespace BiometricFaceApi
                         "Biometric.backend v1");
                 });
             }
-
+            
+            app.UseMiddleware(typeof(GlobalErrorHandlingMiddleware));   
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

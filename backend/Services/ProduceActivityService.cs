@@ -12,7 +12,8 @@ namespace BiometricFaceApi.Services
         }
         public async Task<List<ProduceActivityModel>> GetAllProduceAct()
         {
-            return await repository.GetAllProduceActivity();
+            List<ProduceActivityModel> activity = await repository.GetAllProduceActivity();
+            return activity;
         }
         public async Task<ProduceActivityModel> GetProduceId(int id)
         {

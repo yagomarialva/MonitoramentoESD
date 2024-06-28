@@ -41,11 +41,11 @@ namespace BiometricFaceApi.Controllers
         }
 
         [HttpDelete]
-        [Route("/deleteSation")]
+        [Route("/deleteSation/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             var delete = await _service.Delete(id);
-            return Ok();
+            return Ok(delete);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.MonitorEsds.ToListAsync();
         }
-        public async Task<MonitorEsdModel?> GetByMonitorId(int id)
+        public async Task<MonitorEsdModel> GetByMonitorId(int id)
         {
             return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Id == id) ?? new MonitorEsdModel();
         }
@@ -51,13 +51,9 @@ namespace BiometricFaceApi.Repositories
             }
             return eventModel;
         }
-        public async Task<MonitorEsdModel?> Delete(int id)
+        public async Task<MonitorEsdModel> Delete(int id)
         {
-            MonitorEsdModel? eventModelDel = await GetByMonitorId(id);
-            if (eventModelDel == null)
-            {
-                throw new Exception($"O Evento com o ID:{id} não foi encontrado no banco de dados.");
-            }
+            MonitorEsdModel eventModelDel = await GetByMonitorId(id);
             _dbContext.MonitorEsds.Remove(eventModelDel);
             await _dbContext.SaveChangesAsync();
             return eventModelDel;

@@ -84,9 +84,9 @@ namespace BiometricFaceApi.Services
                     statusCode = StatusCodes.Status400BadRequest;
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                content = exception.Message;
+                content = ex.Message;
                 statusCode = StatusCodes.Status400BadRequest;
             }
             return (content, statusCode);
@@ -118,9 +118,9 @@ namespace BiometricFaceApi.Services
                     statusCode = StatusCodes.Status400BadRequest;
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                content = exception.Message;
+                content = ex.Message;
                 statusCode = StatusCodes.Status500InternalServerError;
             }
             return (content, statusCode);
@@ -151,9 +151,9 @@ namespace BiometricFaceApi.Services
                     statusCode = StatusCodes.Status400BadRequest;
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                content = exception.Message;
+                content = ex.Message;
                 statusCode = StatusCodes.Status500InternalServerError;
             }
             return (content, statusCode);

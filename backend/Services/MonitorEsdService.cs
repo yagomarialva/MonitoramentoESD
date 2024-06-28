@@ -1,5 +1,7 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices.ObjectiveC;
 
 namespace BiometricFaceApi.Services
 {
@@ -10,22 +12,63 @@ namespace BiometricFaceApi.Services
         {
             this.repository = repository;
         }
-        public async Task<List<MonitorEsdModel>> GetAllMonitorEsds()
+        public async Task<ActionResult<List<MonitorEsdModel>>> GetAllMonitorEsds()
         {
-            return await repository.GetAllMonitor();
+            List<MonitorEsdModel> monitor = await repository.GetAllMonitor();
+            return (monitor );
         }
         public async Task<MonitorEsdModel?> GetMonitorId(int id)
         {
             return await repository.GetByMonitorId(id);
         }
-       
-        public async Task<MonitorEsdModel?> Include(MonitorEsdModel monitorModel)
+
+        public async Task<(object?, int)> Include(MonitorEsdModel monitorModel)
         {
-            return await repository.Inclue(monitorModel);
+            var statusCode = StatusCodes.Status200OK;
+            object? response;
+            try
+            {
+                response = await repository.Inclue(monitorModel);
+            }
+            catch (Exception ex)
+            {
+
+                response = ex.Message;
+                statusCode = StatusCodes.Status400BadRequest;
+            }
+            return (response, statusCode);
         }
-        public async Task<MonitorEsdModel?> Delete(int id)
+        public async Task<(object?, int)> Delete(int id)
         {
-            return await repository.Delete(id);
+            object? content;
+            int statusCode;
+            try
+            {
+                var respositoryMonitor = await repository.GetByMonitorId(id);
+                if (respositoryMonitor.Id > 0)
+                {
+                    content = new
+                    {
+                        id = respositoryMonitor.Id,
+                        name = respositoryMonitor.Name,
+                        description = respositoryMonitor.Descrition
+                    };
+                    await repository.Delete(respositoryMonitor.Id);
+                    statusCode = StatusCodes.Status200OK;
+                }
+                else
+                {
+                    content = "Dados incorretos ou inválidos.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                content = ex.Message;
+                statusCode = StatusCodes.Status500InternalServerError;
+            }
+            return (content, statusCode);
         }
     }
 }

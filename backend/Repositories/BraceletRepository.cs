@@ -53,10 +53,6 @@ namespace BiometricFaceApi.Repositories
         public async Task<BraceletModel> Delete(int id)
         {
             BraceletModel braceletModelDel = await GetByBraceletId(id);
-            if (braceletModelDel == null)
-            {
-                throw new Exception($"A Pulseira ESD com o ID:{id} não foi encontrado no banco de dados.");
-            }
             _dbContext.Bracelet.Remove(braceletModelDel);
             await _dbContext.SaveChangesAsync();
             return braceletModelDel;

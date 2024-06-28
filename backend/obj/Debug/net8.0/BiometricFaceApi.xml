@@ -44,6 +44,14 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <reponse  code="500">Erro do servidor interno!</reponse>
         </member>
+        <member name="M:BiometricFaceApi.Controllers.BiometricController.GetAllUsers">
+            <summary>
+            Buscar todos operadores
+            </summary>
+            <response code="200">Retorna dados de todos operadores.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <reponse  code="500">Erro do servidor interno!</reponse>
+        </member>
         <member name="M:BiometricFaceApi.Controllers.BiometricController.InsertBiometric(BiometricFaceApi.Models.BiometricModel)">
             <summary>
             Cadastra e Atualiza de dados do operador.
@@ -63,14 +71,6 @@
             <param name="id"> Buscar operador</param>
             <response code="200">Retorna dados do operador.</response>
             <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <reponse  code="500">Erro do servidor interno!</reponse>
-        </member>
-        <member name="M:BiometricFaceApi.Controllers.BiometricController.GetAllUsers">
-            <summary>
-            Buscar todos operadores
-            </summary>
-            <response code="200">Retorna dados de todos operadores.</response>
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <reponse  code="500">Erro do servidor interno!</reponse>
         </member>

@@ -1,8 +1,11 @@
-﻿using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Middleware;
+using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
+using System.Text.Json;
 using ZstdSharp.Unsafe;
 
 namespace BiometricFaceApi.Controllers
@@ -12,6 +15,7 @@ namespace BiometricFaceApi.Controllers
     public class BraceletController : Controller
     {
         private readonly BraceletService _braceletService;
+        
         public BraceletController(IBraceletRepository braceletRepository)
         {
             _braceletService = new BraceletService(braceletRepository);
@@ -42,17 +46,28 @@ namespace BiometricFaceApi.Controllers
         [Route("/gerenciarbracelet")]
         public async Task<ActionResult> Include(BraceletModel model)
         {
-           
-           var (response,statusCode) =  await _braceletService.Include(model);
+
+            var (response, statusCode) = await _braceletService.Include(model);
             return StatusCode(statusCode, response);
         }
-        
+
         [HttpDelete]
-        [Route("deleteBracelet")]
+        [Route("deleteBracelet/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-           var delete =  await _braceletService.Delete(id);
-            return Ok(delete);
+            var (result, statusCode) = await _braceletService.Delete(id);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var delete = await _braceletService.Delete(id);
+            if (!string.IsNullOrEmpty(jsonResponse))
+            {
+                return StatusCode(statusCode, result);
+            }
+            else
+            {
+                return StatusCode(statusCode);
+            }
+
         }
     }
 

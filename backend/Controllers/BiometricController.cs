@@ -37,6 +37,21 @@ namespace BiometricFaceApi.Controllers
  
            
         }
+        /// <summary>
+        /// Buscar todos operadores
+        /// </summary>
+        /// <response code="200">Retorna dados de todos operadores.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <reponse  code="500">Erro do servidor interno!</reponse>
+        //[Authorize]
+        [HttpGet]
+        [Route("/todosOp")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Retorna todos cadastrados.")]
+        public async Task<ActionResult> GetAllUsers()
+        {
+            return Ok(await _biometricService.GetAllUsers());
+        }
+
 
         /// <summary>
         /// Cadastra e Atualiza de dados do operador.
@@ -53,7 +68,7 @@ namespace BiometricFaceApi.Controllers
         [Route("/adicionar")]
         public async Task<ActionResult> InsertBiometric([FromForm] BiometricModel biometric)
         {
-            var result = await _biometricService.ManagerBiometric(biometric);
+            var result = await _biometricService.ManagerOperator(biometric);
 
             return StatusCode(result.Item2, result.Item1);
 
@@ -76,21 +91,6 @@ namespace BiometricFaceApi.Controllers
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(response, options);
             return StatusCode(statusCode, jsonResponse);
-        }
-
-        /// <summary>
-        /// Buscar todos operadores
-        /// </summary>
-        /// <response code="200">Retorna dados de todos operadores.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <reponse  code="500">Erro do servidor interno!</reponse>
-        //[Authorize]
-        [HttpGet]
-        [Route("/todosOp")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Retorna todos cadastrados.")]
-        public async Task<ActionResult> GetAllUsers()
-        {
-            return Ok(await _biometricService.GetAllUsers());
         }
 
         /// <summary>

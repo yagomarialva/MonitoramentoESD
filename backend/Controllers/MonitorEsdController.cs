@@ -20,32 +20,32 @@ namespace BiometricFaceApi.Controllers
         [Route("/todosMonitores")]
         public async Task<ActionResult> BuscarTodos()
         {
-            await _service.GetAllMonitorEsds();
-            return Ok();
+           var list =  await _service.GetAllMonitorEsds();
+            return Ok(list);
         }
 
         [HttpGet]
         [Route("/BuscarMonitores{id}")]
         public async Task<ActionResult> BuscarIdMonitor(int id)
         {
-            await _service.GetMonitorId(id);
-            return Ok();
+            var item = await _service.GetMonitorId(id);
+            return Ok(item);
         }
 
         [HttpPost]
         [Route("/adicionarMonitor")]
         public async Task<ActionResult> Include(MonitorEsdModel model)
         {
-            await _service.Include(model);
-            return Ok(model);
+            var include = await _service.Include(model);
+            return Ok(include);
         }
 
         [HttpDelete]
         [Route("/deleteMonitor")]
         public async Task<ActionResult> Delete(int id)
         {
-            await _service.Delete(id);
-            return Ok();
+            var include = await _service.Delete(id);
+            return Ok(include);
         }
 
     }

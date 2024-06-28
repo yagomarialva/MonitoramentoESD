@@ -1,4 +1,5 @@
-﻿using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Middleware;
+using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 
 namespace BiometricFaceApi.Services
@@ -6,6 +7,7 @@ namespace BiometricFaceApi.Services
     public class BraceletService
     {
         private IBraceletRepository repository;
+
         public BraceletService(IBraceletRepository repository)
         {
             this.repository = repository;
@@ -38,9 +40,35 @@ namespace BiometricFaceApi.Services
             return (response, statusCode);
 
         }
-        public async Task<BraceletModel> Delete(int id)
+        public async Task<(object?, int)> Delete(int id)
         {
-            return await repository.Delete(id);
+            object? content;
+            int statusCode;
+            try
+            {
+                var repositoryBracelet = await repository.GetByBraceletId(id);
+                if (repositoryBracelet.Id > 0)
+                {
+                    content = new
+                    {
+                        id = repositoryBracelet.Id,
+                        sn = repositoryBracelet.Sn
+                    };
+                    await repository.Delete(repositoryBracelet.Id);
+                    statusCode = StatusCodes.Status200OK;
+                }
+                else
+                {
+                    content = "Dados incorretos ou inválidos.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                content = ex.Message;
+                statusCode = StatusCodes.Status500InternalServerError;
+            }
+            return (content, statusCode);
         }
     }
 }

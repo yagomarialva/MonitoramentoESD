@@ -1,5 +1,6 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
+using System;
 
 namespace BiometricFaceApi.Services
 {
@@ -10,9 +11,11 @@ namespace BiometricFaceApi.Services
         {
             this.repository = repository;
         }
+
         public async Task<List<BraceletAttributeModel>> GetAllAttributes()
         {
-            return await repository.GetAllBraceletsAtt();
+            List<BraceletAttributeModel> bracelet = await repository.GetAllBraceletsAtt();
+            return bracelet;
         }
         public async Task<BraceletAttributeModel> GetByAttibeById(int id)
         {
@@ -30,9 +33,38 @@ namespace BiometricFaceApi.Services
         {
             return await repository.Update(model, id);
         }
-        public async Task<BraceletAttributeModel> Delete(int id)
+        public async Task<(object?, int)> Delete(int id)
         {
-            return await repository.Delete(id);
+            object? content;
+            int statusCode;
+
+            try
+            {
+                var repositorybracelet = await repository.GetByAttribId(id);
+                if (repositorybracelet.AttributeId > 0)
+                {
+                    content = new
+                    {
+                        id = repositorybracelet.AttributeId,
+                        braletId = repositorybracelet.BraceletId,
+                        property = repositorybracelet.Property,
+                        value = repositorybracelet.Value
+                    };
+                    await repository.Delete(repositorybracelet.AttributeId);
+                    statusCode = StatusCodes.Status200OK;
+                }
+                else
+                {
+                    content = "Dados incorretos ou inválidos.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                content = ex.Message;
+                statusCode = StatusCodes.Status500InternalServerError;
+            }
+            return (content, statusCode);
         }
     }
 }

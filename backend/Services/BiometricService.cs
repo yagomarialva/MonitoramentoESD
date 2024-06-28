@@ -30,9 +30,9 @@ namespace BiometricFaceApi.Services
 
         }
 
-        // Na mesma rota é possível atualizar e inserir operadores
+        // Na rota ManagerOperator é possível atualizar e inserir operadores
 
-        public async Task<(object?, int)> ManagerBiometric(BiometricModel biometric)
+        public async Task<(object?, int)> ManagerOperator(BiometricModel biometric)
         {
             object? content;
             int statusCode;
@@ -100,10 +100,10 @@ namespace BiometricFaceApi.Services
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
 
-                content = exception.Message;
+                content = ex.Message;
                 statusCode = StatusCodes.Status400BadRequest;
             }
             return (content, statusCode);
@@ -135,9 +135,10 @@ namespace BiometricFaceApi.Services
                     statusCode = StatusCodes.Status404NotFound;
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                content = exception.Message;
+
+                content = ex.Message;
                 statusCode = StatusCodes.Status500InternalServerError;
             }
             return (content, statusCode);
@@ -175,9 +176,10 @@ namespace BiometricFaceApi.Services
                     statusCode = StatusCodes.Status404NotFound;
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                content = exception.Message;
+
+                content = ex.Message;
                 statusCode = StatusCodes.Status500InternalServerError;
             }
 
