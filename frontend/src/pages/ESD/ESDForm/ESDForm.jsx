@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-
-import { Typography, Box, Paper, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-
+import {
+  Typography,
+  Box,
+  Paper,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Modal,
+  TextField,
+  Button,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
-
 
 const style = {
   position: "absolute",
@@ -26,7 +30,7 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
     i18n: { changeLanguage, language },
   } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
-  // eslint-disable-next-line no-unused-vars
+
   const handleChangeLanguage = () => {
     const newLanguage = currentLanguage === "en" ? "pt" : "en";
     setCurrentLanguage(newLanguage);
@@ -66,63 +70,56 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
     >
       <Paper sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-        {t("ESD_TEST.DIALOG.CREATE_STATION", {
-                appName: "App for Translations",
-              })}
+          {t("ESD_TEST.DIALOG.CREATE_STATION", {
+            appName: "App for Translations",
+          })}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TextField
-              required
-              fullWidth
-              margin="normal"
-              id="userId"
-              name="userId"
-              label={t("ESD_TEST.TABLE.USER_ID", {
-                appName: "App for Translations",
-              })}
-              value={station.userId}
-              defaultValue={station.userId}
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            id="userId"
+            name="userId"
+            label={t("ESD_TEST.TABLE.USER_ID", {
+              appName: "App for Translations",
+            })}
+            onChange={handleChange}
+          />
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            id="title"
+            name="title"
+            label={t("ESD_TEST.TABLE.NAME", {
+              appName: "App for Translations",
+            })}
+            onChange={handleChange}
+          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="completed-label">Completed</InputLabel>
+            <Select
+              labelId="completed-label"
+              id="completed"
+              name="completed"
+              label="completed"
               onChange={handleChange}
-            />
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TextField
-              required
-              fullWidth
-              margin="normal"
-              id="title"
-              name="title"
-              label={t("ESD_TEST.TABLE.NAME", {
-                appName: "App for Translations",
-              })}
-              value={station.title}
-              defaultValue={station.title}
-              onChange={handleChange}
-            />
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <FormControl fullWidth margin="normal">
-                <InputLabel id="completed-label">Completed</InputLabel>
-                <Select
-                  labelId="completed-label"
-                  id="completed"
-                  name="completed"
-                  label="completed"
-                  value={station.completed}
-                  onChange={handleChange}
-                >
-                  <MenuItem value={true}>True</MenuItem>
-                  <MenuItem value={false}>False</MenuItem>
-                </Select>
-              </FormControl>
-            </Typography>
-
-          <Button type="submit" variant="contained" color="success">
-          {t("ESD_TEST.DIALOG.SAVE", {
-                appName: "App for Translations",
-              })}
+            >
+              <MenuItem value={true}>True</MenuItem>
+              <MenuItem value={false}>False</MenuItem>
+            </Select>
+          </FormControl>
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
+          >
+            {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
           </Button>
+          </Box>
         </Box>
       </Paper>
     </Modal>

@@ -16,7 +16,7 @@
         "CONFORTABLE": "Confortable"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM-TEXT":"Are you sure you want to delete this ESD Station?",
+        "CONFIRM-TEXT": "Are you sure you want to delete this ESD Station?",
         "CLOSE": "Close",
         "SAVE": "Save",
         "DELETE_STATION": "Delete Station"
@@ -24,7 +24,15 @@
       "DIALOG": {
         "CLOSE": "Close",
         "SAVE": "Save",
-        "CREATE_STATION": "Create Station"
+        "CREATE_STATION": "Create Station",
+        "EDIT_STATION": "Edit Sation"
+      },
+      "TOAST": {
+        "CREATE_SUCCESS": "Station created successfully",
+        "TOAST_ERROR":"Operation not completed successfully",
+        "CREATE_ERROR": "Operation not completed successfully",
+        "DELETE_SUCCESS": "Station successfully deleted",
+        "UPDATE_SUCCESS": "Station successfully updated"
       }
     },
     "FCT_Home_Page": {

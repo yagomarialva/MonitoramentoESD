@@ -6,7 +6,7 @@ import {
   deleteBracelets,
   updateBracelets,
 } from "../../../api/braceletApi";
-import { IconButton, Typography, Box } from "@mui/material";
+import { IconButton, Typography, Box, Snackbar, Alert } from "@mui/material";
 import { Delete, Info } from "@mui/icons-material";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
@@ -25,6 +25,8 @@ import ESDEditForm from "../ESDEditForm/ESDEditForm";
 import { useTranslation } from "react-i18next";
 import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 
+import "./SnackbarStyles.css"; // Importe o CSS
+
 const StationTable = () => {
   const { t } = useTranslation();
 
@@ -39,6 +41,26 @@ const StationTable = () => {
   const [editData, setEditData] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [braceletToDelete, setBraceletToDelete] = useState(null);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const showSuccessSnackbar = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+  };
+
+  const showErrorSnackbar = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity("error");
+    setSnackbarOpen(true);
+  };
 
   const handleOpen = (bracelet) => {
     setBracelet(bracelet);
@@ -69,33 +91,44 @@ const StationTable = () => {
 
   const handleCreateBracelet = async (bracelet) => {
     const newBracelet = { ...bracelet, id: Date.now() };
-    const response = await createBracelets(newBracelet);
-    setAllBracelets((prev) => [...prev, newBracelet]);
-    return response.data;
+    try {
+      const response = await createBracelets(newBracelet);
+      setAllBracelets((prev) => [...prev, newBracelet]);
+      showSuccessSnackbar( t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" }));
+      return response.data;
+    } catch (error) {
+      showErrorSnackbar( t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }, error));
+    }
   };
 
   const handleDelete = async (id) => {
     try {
       await deleteBracelets(id);
       setAllBracelets(allBracelets.filter((bracelet) => bracelet.id !== id));
-    } catch (e) {
-      console.log(e);
+      showSuccessSnackbar( t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" }));
+    } catch (error) {
+      showErrorSnackbar( t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }, error));
     }
   };
 
   const handleEditCellChange = async (params) => {
-    setEditCell(params.id);
-    setEditValue(params.value);
-    const updatedBracelet = {
-      ...bracelet,
-      title: params.title,
-      userId: params.userId,
-      completed: params.completed,
-    };
-    const updatedItem = await updateBracelets(editCell, updatedBracelet);
-    setAllBracelets((prev) =>
-      prev.map((item) => (item.id === editCell ? updatedItem : item))
-    );
+    try {
+      setEditCell(params.id);
+      setEditValue(params.value);
+      const updatedBracelet = {
+        ...bracelet,
+        title: params.title,
+        userId: params.userId,
+        completed: params.completed,
+      };
+      const updatedItem = await updateBracelets(editCell, updatedBracelet);
+      setAllBracelets((prev) =>
+        prev.map((item) => (item.id === editCell ? updatedItem : item))
+      );
+      showSuccessSnackbar( t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" }));
+    } catch(error){
+      showErrorSnackbar( t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }, error));
+    }
   };
 
   useEffect(() => {
@@ -285,16 +318,37 @@ const StationTable = () => {
         open={deleteConfirmOpen}
         handleClose={handleDeleteClose}
         handleConfirm={handleConfirmDelete}
-        title= {t("ESD_TEST.CONFIRM_DIALOG.DELETE_STATION", {
+        title={t("ESD_TEST.CONFIRM_DIALOG.DELETE_STATION", {
           appName: "App for Translations",
         })}
-        description= {t("ESD_TEST.CONFIRM_DIALOG.CONFIRM-TEXT", {
+        description={t("ESD_TEST.CONFIRM_DIALOG.CONFIRM-TEXT", {
           appName: "App for Translations",
         })}
       />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        className={`snackbar-content snackbar-${snackbarSeverity}`}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{
+            backgroundColor: "inherit",
+            color: "inherit",
+            fontWeight: "inherit",
+            boxShadow: "inherit",
+            borderRadius: "inherit",
+            padding: "inherit",
+          }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
-// CONFIRM-TEXT
 
 export default StationTable;

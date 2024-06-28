@@ -7,11 +7,10 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Modal,
+  TextField,
+  Button,
 } from "@mui/material";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import ButtonBootstrap from "react-bootstrap/Button";
-import ModalBootstrap from "react-bootstrap/Modal";
 import { useTranslation } from "react-i18next";
 
 const style = {
@@ -31,7 +30,7 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     i18n: { changeLanguage, language },
   } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
-  // eslint-disable-next-line no-unused-vars
+
   const handleChangeLanguage = () => {
     const newLanguage = currentLanguage === "en" ? "pt" : "en";
     setCurrentLanguage(newLanguage);
@@ -76,74 +75,63 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
       aria-describedby="modal-modal-description"
     >
       <Paper sx={style}>
-        <ModalBootstrap.Title id="contained-modal-title-vcenter">
-          Station {bracelet.title}
-        </ModalBootstrap.Title>
-        <Box component="form" onSubmit={handleSubmit}>
-          <ModalBootstrap.Body>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                required
-                id="outlined-userId"
-                label={t("ESD_TEST.TABLE.USER_ID", {
-                  appName: "App for Translations",
-                })}
-                name="userId"
-                value={bracelet.userId}
-                onChange={handleChange}
-                fullWidth
-              />
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                required
-                id="outlined-title"
-                label={t("ESD_TEST.TABLE.NAME", {
-                  appName: "App for Translations",
-                })}
-                name="title"
-                value={bracelet.title}
-                onChange={handleChange}
-                fullWidth
-              />
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <FormControl fullWidth margin="normal">
-                <InputLabel id="completed-label">Completed</InputLabel>
-                <Select
-                  labelId="completed-label"
-                  id="completed"
-                  label="completed"
-                  name="completed"
-                  value={bracelet.completed}
-                  onChange={handleChange}
-                >
-                  <MenuItem value={true}>True</MenuItem>
-                  <MenuItem value={false}>False</MenuItem>
-                </Select>
-              </FormControl>
-            </Typography>
-          </ModalBootstrap.Body>
-          <ModalBootstrap.Footer>
-            <ButtonBootstrap
-              style={{ marginTop: "10px", marginLeft: "4px" }}
-              variant="outline-success"
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          {t("ESD_TEST.DIALOG.EDIT_STATION", {
+            appName: "App for Translations",
+          })}
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            id="outlined-userId"
+            name="userId"
+            label={t("ESD_TEST.TABLE.USER_ID", {
+              appName: "App for Translations",
+            })}
+            value={bracelet.userId}
+            onChange={handleChange}
+          />
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            id="outlined-title"
+            name="title"
+            label={t("ESD_TEST.TABLE.NAME", {
+              appName: "App for Translations",
+            })}
+            value={bracelet.title}
+            onChange={handleChange}
+          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="completed-label">Completed</InputLabel>
+            <Select
+              labelId="completed-label"
+              id="completed"
+              name="completed"
+              label="completed"
+              value={bracelet.completed}
+              onChange={handleChange}
+            >
+              <MenuItem value={true}>True</MenuItem>
+              <MenuItem value={false}>False</MenuItem>
+            </Select>
+          </FormControl>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+            <Button
               onClick={handleClose}
+              variant="outlined"
+              color="success"
+              sx={{ mr: 2 }}
             >
-              {t("ESD_TEST.DIALOG.CLOSE", {
-                appName: "App for Translations",
-              })}
-            </ButtonBootstrap>
-            <ButtonBootstrap
-              style={{ marginTop: "10px", marginLeft: "4px" }}
-              variant="success"
-              type="submit"
-            >
-              {t("ESD_TEST.DIALOG.SAVE", {
-                appName: "App for Translations",
-              })}
-            </ButtonBootstrap>
-          </ModalBootstrap.Footer>
+              {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
+            </Button>
+            <Button type="submit" variant="contained" color="success">
+              {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </Modal>

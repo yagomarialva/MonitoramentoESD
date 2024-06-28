@@ -24,7 +24,14 @@
       "DIALOG": {
         "CLOSE": "Fechar",
         "SAVE": "Salvar",
-        "CREATE_STATION": "Adicionar Estação"
+        "CREATE_STATION": "Adicionar Estação",
+        "EDIT_STATION": "Editar Estação"
+      },
+      "TOAST":{
+        "CREATE_SUCCESS":"Estação criada com sucesso",
+        "TOAST_ERROR":"Operação não pode ser concluída",
+        "DELETE_SUCCESS":"Estação Excluída com sucesso",
+        "UPDATE_SUCCESS":"Estação atualizada com sucesso"
       }
     },
     "FCT_Home_Page": {

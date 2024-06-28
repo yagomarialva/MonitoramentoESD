@@ -1,11 +1,14 @@
-import React from "react";
-import { Typography, Paper } from "@mui/material";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import ButtonBootstrap from "react-bootstrap/Button";
-import ModalBootstrap from "react-bootstrap/Modal";
+import React, { useState } from "react";
+import {
+  Typography,
+  Paper,
+  Modal,
+  TextField,
+  Button,
+  Box,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -23,7 +26,7 @@ const ESDModal = ({ open, handleClose, bracelet }) => {
     i18n: { changeLanguage, language },
   } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
-  // eslint-disable-next-line no-unused-vars
+
   const handleChangeLanguage = () => {
     const newLanguage = currentLanguage === "en" ? "pt" : "en";
     setCurrentLanguage(newLanguage);
@@ -38,53 +41,54 @@ const ESDModal = ({ open, handleClose, bracelet }) => {
       aria-describedby="modal-modal-description"
     >
       <Paper sx={style}>
-        <ModalBootstrap.Title id="contained-modal-title-vcenter">
+        <Typography
+          variant="h6"
+          id="contained-modal-title-vcenter"
+          gutterBottom
+        >
           Bracelet {bracelet.title}
-        </ModalBootstrap.Title>
-        <ModalBootstrap.Body>
+        </Typography>
+        <Box component="form" noValidate autoComplete="off">
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <TextField
+              fullWidth
               disabled
               required
-              id="outlined-required"
               label={t("ESD_TEST.TABLE.USER_ID", {
                 appName: "App for Translations",
               })}
               defaultValue={bracelet.userId}
+              margin="normal"
             />
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <TextField
+              fullWidth
               disabled
               required
-              id="outlined-required"
               label={t("ESD_TEST.TABLE.NAME", {
                 appName: "App for Translations",
               })}
               defaultValue={bracelet.title}
+              margin="normal"
             />
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <TextField
+              fullWidth
               disabled
               required
-              id="outlined-required"
               label="Completed"
               defaultValue={bracelet.completed}
+              margin="normal"
             />
           </Typography>
-        </ModalBootstrap.Body>
-        <ModalBootstrap.Footer>
-          <ButtonBootstrap
-            variant="success"
-            sx={{ mt: 2 }}
-            onClick={handleClose}
-          >
-            {t("ESD_TEST.DIALOG.CLOSE", {
-                appName: "App for Translations",
-              })}
-          </ButtonBootstrap>
-        </ModalBootstrap.Footer>
+        </Box>
+        <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+          <Button variant="contained" color="success" onClick={handleClose}>
+            {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
+          </Button>
+        </Box>
       </Paper>
     </Modal>
   );
