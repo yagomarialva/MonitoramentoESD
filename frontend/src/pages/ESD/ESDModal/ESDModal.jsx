@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Typography,
   Paper,
@@ -23,15 +23,7 @@ const style = {
 const ESDModal = ({ open, handleClose, bracelet }) => {
   const {
     t,
-    i18n: { changeLanguage, language },
   } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
-
-  const handleChangeLanguage = () => {
-    const newLanguage = currentLanguage === "en" ? "pt" : "en";
-    setCurrentLanguage(newLanguage);
-    changeLanguage(newLanguage);
-  };
 
   return (
     <Modal
@@ -46,7 +38,7 @@ const ESDModal = ({ open, handleClose, bracelet }) => {
           id="contained-modal-title-vcenter"
           gutterBottom
         >
-          Bracelet {bracelet.title}
+          {bracelet.title}
         </Typography>
         <Box component="form" noValidate autoComplete="off">
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>

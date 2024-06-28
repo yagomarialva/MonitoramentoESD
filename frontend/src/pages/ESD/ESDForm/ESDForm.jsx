@@ -27,15 +27,7 @@ const style = {
 const ESDForm = ({ open, handleClose, onSubmit }) => {
   const {
     t,
-    i18n: { changeLanguage, language },
   } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
-
-  const handleChangeLanguage = () => {
-    const newLanguage = currentLanguage === "en" ? "pt" : "en";
-    setCurrentLanguage(newLanguage);
-    changeLanguage(newLanguage);
-  };
 
   const [station, setStation] = useState({
     userId: "",

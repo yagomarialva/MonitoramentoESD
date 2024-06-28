@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
   getAllBracelets,
-  getBracelets,
   createBracelets,
   deleteBracelets,
   updateBracelets,
 } from "../../../api/braceletApi";
-import { IconButton, Typography, Box, Snackbar, Alert } from "@mui/material";
+import { IconButton, Box, Snackbar, Alert } from "@mui/material";
 import { Delete, Info } from "@mui/icons-material";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
@@ -26,6 +25,8 @@ import { useTranslation } from "react-i18next";
 import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 
 import "./SnackbarStyles.css"; // Importe o CSS
+import "./ESDTable.css";
+import ESDHeader from "../ESDHeader/ESDHeader";
 
 const StationTable = () => {
   const { t } = useTranslation();
@@ -94,10 +95,18 @@ const StationTable = () => {
     try {
       const response = await createBracelets(newBracelet);
       setAllBracelets((prev) => [...prev, newBracelet]);
-      showSuccessSnackbar( t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" }));
+      showSuccessSnackbar(
+        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+      );
       return response.data;
     } catch (error) {
-      showErrorSnackbar( t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }, error));
+      showErrorSnackbar(
+        t(
+          "ESD_TEST.TOAST.TOAST_ERROR",
+          { appName: "App for Translations" },
+          error
+        )
+      );
     }
   };
 
@@ -105,9 +114,17 @@ const StationTable = () => {
     try {
       await deleteBracelets(id);
       setAllBracelets(allBracelets.filter((bracelet) => bracelet.id !== id));
-      showSuccessSnackbar( t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" }));
+      showSuccessSnackbar(
+        t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" })
+      );
     } catch (error) {
-      showErrorSnackbar( t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }, error));
+      showErrorSnackbar(
+        t(
+          "ESD_TEST.TOAST.TOAST_ERROR",
+          { appName: "App for Translations" },
+          error
+        )
+      );
     }
   };
 
@@ -125,9 +142,17 @@ const StationTable = () => {
       setAllBracelets((prev) =>
         prev.map((item) => (item.id === editCell ? updatedItem : item))
       );
-      showSuccessSnackbar( t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" }));
-    } catch(error){
-      showErrorSnackbar( t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }, error));
+      showSuccessSnackbar(
+        t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" })
+      );
+    } catch (error) {
+      showErrorSnackbar(
+        t(
+          "ESD_TEST.TOAST.TOAST_ERROR",
+          { appName: "App for Translations" },
+          error
+        )
+      );
     }
   };
 
@@ -137,21 +162,11 @@ const StationTable = () => {
         const result = await getAllBracelets();
         setAllBracelets(result);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        showErrorSnackbar(t(error.message));
       }
     };
-
-    const fetchDataBracelet = async () => {
-      try {
-        const result = await getBracelets(bracelet.id);
-        setBracelet(result);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-    fetchDataBracelet();
     fetchDataAllUsers();
-  }, [bracelet.id]);
+  }, [bracelet.id, t]);
 
   const handleDeleteOpen = (bracelet) => {
     setBraceletToDelete(bracelet);
@@ -171,11 +186,15 @@ const StationTable = () => {
   };
 
   const CustomToolbar = () => (
-    <GridToolbarContainer>
+    <GridToolbarContainer className="gridToolbar">
       <GridToolbarQuickFilter />
-      <GridToolbarColumnsButton />
+      <GridToolbarColumnsButton/>
       <GridToolbarDensitySelector GridLocaleText={{}} />
-      <Button onClick={() => handleOpenModal()}>
+      <Button
+        variant="outlined"
+        color="success"
+        onClick={() => handleOpenModal()}
+      >
         {t("ESD_TEST.ADD_STATION", { appName: "App for Translations" })}
       </Button>
     </GridToolbarContainer>
@@ -251,10 +270,12 @@ const StationTable = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        {t("ESD_TEST.TABLE_HEADER", { appName: "App for Translations" })}
-      </Typography>
-      <div style={{ height: 1100, width: 1000 }}>
+      <ESDHeader
+        variant="h4"
+        gutterBottom
+        title={t("ESD_TEST.TABLE_HEADER", { appName: "App for Translations" })}
+      ></ESDHeader>
+      <div className="grid-table">
         <DataGrid
           rows={rows}
           columns={columns}
@@ -274,7 +295,7 @@ const StationTable = () => {
             toolbarDensityStandard: t("ESD_TEST.TABLE.STANDARD", {
               appName: "App for Translations",
             }),
-            toolbarDensityComfortable: t("ESD_TEST.TABLE.COMFORTABLE", {
+            toolbarDensityComfortable: t("ESD_TEST.TABLE.CONFORTABLE", {
               appName: "App for Translations",
             }),
           }}
