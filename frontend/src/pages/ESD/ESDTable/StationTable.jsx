@@ -188,9 +188,10 @@ const StationTable = () => {
   const CustomToolbar = () => (
     <GridToolbarContainer className="gridToolbar">
       <GridToolbarQuickFilter />
-      <GridToolbarColumnsButton/>
+      <GridToolbarColumnsButton />
       <GridToolbarDensitySelector GridLocaleText={{}} />
       <Button
+        id="add-button"
         variant="outlined"
         color="success"
         onClick={() => handleOpenModal()}
