@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import "./ESDHeader.css";
 
 export default function ESDHeader(title) {
-    console.log(title)
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar className='header-title' position="static">
