@@ -4,6 +4,7 @@ import DashboardPage from '../pages/DashboardPage/DashboardPage';
 import ESDDashboardPage from '../pages/ESD/ESDHome/ESDDashboardPage/ESDDashboardPage';
 import StationList from '../components/ESD/StationList/StationList';
 import Operators from '../components/ESD/Operators/Operators';
+import Monitors from '../components/ESD/Monitors/Monitors';
 
 const AppRoutes = () => {
     return (
@@ -13,6 +14,7 @@ const AppRoutes = () => {
             <Route path="/users" element={<Operators />} />
             <Route path="/stations" element={<StationList />}/>
             <Route path="/esd-dashboard" element={<ESDDashboardPage />}/>
+            <Route path="/monitors" element={<Monitors/>}/>
         </Routes>
     );
 };

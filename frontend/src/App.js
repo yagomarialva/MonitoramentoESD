@@ -6,8 +6,13 @@ import "./i18n.js"; // ts => import './i18n.ts'
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Menu from "./pages/Menu/Menu.jsx";
+import { Helmet } from "react-helmet"
+import { useEffect } from "react"
 
 const App = () => {
+  useEffect(() => {
+    document.title = "FCT Auto Test"
+  }, [])
   const {
     t,
     i18n: { changeLanguage, language },
@@ -21,6 +26,10 @@ const App = () => {
 
   return (
     <>
+    <div className="App">
+
+    <Menu></Menu>
+    </div>
       {/* <div className="App">
         <h1>
           Our Translated Header:
@@ -31,7 +40,6 @@ const App = () => {
           Change Language
         </button>
       </div> */}
-      <Menu></Menu>
       {/* <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>

@@ -16,7 +16,7 @@
         "CONFORTABLE": "Confortável"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM-TEXT":"Deseja excluir a estação ESD?",
+        "CONFIRM-TEXT": "Deseja excluir a estação ESD?",
         "CLOSE": "Fechar",
         "SAVE": "Salvar",
         "DELETE_STATION": "Excluir Operador"
@@ -27,11 +27,11 @@
         "CREATE_STATION": "Adicionar Operador",
         "EDIT_STATION": "Editar Operador"
       },
-      "TOAST":{
-        "CREATE_SUCCESS":"Operador criada com sucesso",
-        "TOAST_ERROR":"Operação não pode ser concluída",
-        "DELETE_SUCCESS":"Operador Excluída com sucesso",
-        "UPDATE_SUCCESS":"Operador atualizada com sucesso"
+      "TOAST": {
+        "CREATE_SUCCESS": "Operador criada com sucesso",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Operador Excluída com sucesso",
+        "UPDATE_SUCCESS": "Operador atualizada com sucesso"
       }
     },
     "ESD_OPERATOR": {
@@ -44,13 +44,13 @@
         "COLUMNS": "Filtrar Colunas",
         "DENSITY": "Ajustar Exibição",
         "SEARCH": "Pesquisar",
-        "ROLE":"Cargo",
+        "ROLE": "Cargo",
         "COMPACT": "Compacto",
         "STANDARD": "Padrão",
         "CONFORTABLE": "Confortável"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM-TEXT":"Deseja excluir o Operador?",
+        "CONFIRM-TEXT": "Deseja excluir o Operador?",
         "CLOSE": "Fechar",
         "SAVE": "Excluir",
         "DELETE_STATION": "Excluir Operador"
@@ -61,14 +61,47 @@
         "CREATE_STATION": "Adicionar Operador",
         "EDIT_STATION": "Editar Operador"
       },
-      "TOAST":{
-        "CREATE_SUCCESS":"Operador criado com sucesso",
-        "TOAST_ERROR":"Operação não pode ser concluída",
-        "DELETE_SUCCESS":"Operador Excluído com sucesso",
-        "UPDATE_SUCCESS":"Operador atualizado com sucesso"
+      "TOAST": {
+        "CREATE_SUCCESS": "Operador criado com sucesso",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Operador Excluído com sucesso",
+        "UPDATE_SUCCESS": "Operador atualizado com sucesso"
       }
     },
-
+    "ESD_MONITOR": {
+      "TABLE_HEADER": "Monitores ESD",
+      "ADD_MONITOR": "Adicionar Monitor",
+      "TABLE": {
+        "USER_ID": "Número de Série",
+        "NAME": "Monitor",
+        "ACTIONS": "Ações",
+        "COLUMNS": "Filtrar Colunas",
+        "DENSITY": "Ajustar Exibição",
+        "SEARCH": "Pesquisar",
+        "STATION": "Estação",
+        "COMPACT": "Compacto",
+        "STANDARD": "Padrão",
+        "CONFORTABLE": "Confortável"
+      },
+      "CONFIRM_DIALOG": {
+        "CONFIRM-TEXT": "Deseja excluir o Monitor?",
+        "CLOSE": "Fechar",
+        "SAVE": "Excluir",
+        "DELETE_STATION": "Excluir Monitor"
+      },
+      "DIALOG": {
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "CREATE_STATION": "Adicionar Monitor",
+        "EDIT_STATION": "Editar Monitor"
+      },
+      "TOAST": {
+        "CREATE_SUCCESS": "Monitor criado com sucesso",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Monitor Excluído com sucesso",
+        "UPDATE_SUCCESS": "Monitor atualizado com sucesso"
+      }
+    },
     "FCT_Home_Page": {
       "Header": "Página Inicial",
       "Label": "FCT para automação dos testes"

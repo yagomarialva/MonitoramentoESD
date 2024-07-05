@@ -1,0 +1,14 @@
+.header-title {
+  background-color: #41a24d !important; /* Cor para mensagens de erro */
+  color: white !important;
+  color: #fff;
+  position: static;
+  width: 100%;
+  margin-bottom: 10px;
+  border-bottom: #41a24d 2px;
+  /* border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 16px;
+        border-top: 1px solid;
+    font-weight: 400; */
+}

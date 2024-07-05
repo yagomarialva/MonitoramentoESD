@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  getAllOperators,
-  createOperators,
-  deleteOperators,
-  updateOperators,
-} from "../../../../api/operatorsAPI";
+  getAllMonitors,
+  createMonitors,
+  deleteMonitors,
+  updateMonitors,
+} from "../../../../api/monitorApi";
 import {
   IconButton,
   Box,
@@ -23,26 +23,26 @@ import {
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
-import OperatorModal from "../OperatorModal/OperatorModal";
-import ESDForm from "../OperatorForm/OperatorForm";
-import ESDEditForm from "../OperatorEditForm/ESDEditForm";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
-import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
+import MonitorModal from "../MonitorModal/MonitorModal";
+import MonitorForm from "../MonitorForm/MonitorForm";
+import MonitorConfirmModal from "../MonitorConfirmModal/MonitorConfirmModal";
+import MonitorEditForm from "../MonitorEditForm/MonitorEditForm";
 
-const OperatorTable = () => {
+const MonitorTable = () => {
   const { t } = useTranslation();
 
   const [state, setState] = useState({
-    allOperators: [],
-    operator: {},
+    allMonitors: [],
+    monitor: {},
     open: false,
     openModal: false,
     openEditModal: false,
     editCell: null,
     editData: null,
     deleteConfirmOpen: false,
-    operatorToDelete: null,
+    monitorToDelete: null,
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
@@ -60,37 +60,33 @@ const OperatorTable = () => {
     });
   };
 
-  const handleOpen = (operator) => handleStateChange({ operator, open: true });
+  const handleOpen = (monitor) => handleStateChange({ monitor, open: true });
   const handleClose = () => handleStateChange({ open: false });
   const handleEditClose = () =>
     handleStateChange({ openEditModal: false, editData: null });
   const handleOpenModal = () => handleStateChange({ openModal: true });
   const handleCloseModal = () => handleStateChange({ openModal: false });
-  const handleDeleteOpen = (operator) =>
-    handleStateChange({ operatorToDelete: operator, deleteConfirmOpen: true });
+  const handleDeleteOpen = (monitor) =>
+    handleStateChange({ monitorToDelete: monitor, deleteConfirmOpen: true });
   const handleDeleteClose = () =>
-    handleStateChange({ deleteConfirmOpen: false, operatorToDelete: null });
+    handleStateChange({ deleteConfirmOpen: false, monitorToDelete: null });
 
-  const handleEditOpen = (operator) => {
-    handleStateChange({ editData: operator, openEditModal: true });
+  const handleEditOpen = (monitor) => {
+    handleStateChange({ editData: monitor, openEditModal: true });
   };
 
-  const handleCreateOperator = async (operator) => {
-    const newOperator = { ...operator, id: Date.now() };
+  const handleCreateMonitor = async (monitor) => {
+    const newMonitor = { ...monitor, id: Date.now() };
     try {
-      const response = await createOperators(newOperator);
-      handleStateChange({ allOperators: [...state.allOperators, newOperator] });
+      const response = await createMonitors(newMonitor);
+      handleStateChange({ allMonitors: [...state.allMonitors, newMonitor] });
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", {
-          appName: "App for Translations",
-        })
+        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
       );
       return response.data;
     } catch (error) {
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
-          appName: "App for Translations",
-        }),
+        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -98,22 +94,18 @@ const OperatorTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteOperators(id);
+      await deleteMonitors(id);
       handleStateChange({
-        allOperators: state.allOperators.filter(
-          (operator) => operator.id !== id
+        allMonitors: state.allMonitors.filter(
+          (monitor) => monitor.id !== id
         ),
       });
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.DELETE_SUCCESS", {
-          appName: "App for Translations",
-        })
+        t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" })
       );
     } catch (error) {
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
-          appName: "App for Translations",
-        }),
+        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -121,31 +113,26 @@ const OperatorTable = () => {
 
   const handleEditCellChange = async (params) => {
     try {
-      const updatedOperator = {
-        ...state.operator,
-        phone: params.phone,
-        name: params.name,
-        username: params.username,
+      const updatedMonitor = {
+        ...state.monitor,
+        title: params.title,
+        userId: params.userId,
+        completed: params.completed,
       };
-      const updatedItem = await updateOperators(params.id, updatedOperator);
+      const updatedItem = await updateMonitors(params.id, updatedMonitor);
 
       handleStateChange({
-        allOperators: state.allOperators.map((item) =>
+        allMonitors: state.allMonitors.map((item) =>
           item.id === params.id ? updatedItem : item
         ),
       });
 
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {
-          appName: "App for Translations",
-        })
+        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" })
       );
     } catch (error) {
-      console.log(error);
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
-          appName: "App for Translations",
-        }),
+        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -154,8 +141,8 @@ const OperatorTable = () => {
   useEffect(() => {
     const fetchDataAllUsers = async () => {
       try {
-        const result = await getAllOperators();
-        handleStateChange({ allOperators: result });
+        const result = await getAllMonitors();
+        handleStateChange({ allMonitors: result });
       } catch (error) {
         showSnackbar(t(error.message));
       }
@@ -164,8 +151,8 @@ const OperatorTable = () => {
   }, []);
 
   const handleConfirmDelete = async () => {
-    if (state.operatorToDelete) {
-      await handleDelete(state.operatorToDelete.id);
+    if (state.monitorToDelete) {
+      await handleDelete(state.monitorToDelete.id);
       handleDeleteClose();
     }
   };
@@ -181,7 +168,7 @@ const OperatorTable = () => {
         color="success"
         onClick={handleOpenModal}
       >
-        {t("ESD_OPERATOR.ADD_STATION", { appName: "App for Translations" })}
+        {t("ESD_MONITOR.ADD_MONITOR", { appName: "App for Translations" })}
       </Button>
     </GridToolbarContainer>
   );
@@ -189,30 +176,37 @@ const OperatorTable = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     {
-      field: "phone",
-      headerName: t("ESD_OPERATOR.TABLE.USER_ID", {
+      field: "userId",
+      headerName: t("ESD_MONITOR.TABLE.USER_ID", {
         appName: "App for Translations",
       }),
       sortable: false,
       width: 160,
     },
     {
-      field: "name",
-      headerName: t("ESD_OPERATOR.TABLE.NAME", {
-        appName: "App for Translations",
-      }),
+      field: "title",
+      headerName: t("ESD_MONITOR.TABLE.NAME", { appName: "App for Translations" }),
       width: 250,
     },
+    { field: "body", headerName: "Completed", width: 250 },
     {
-      field: "username",
-      headerName: t("ESD_OPERATOR.TABLE.ROLE", {
-        appName: "App for Translations",
-      }),
-      width: 250,
+      field: "status",
+      headerName: "Status",
+      sortable: false,
+      renderCell: (params) => (
+        <Stack spacing={1} alignItems="right" style={{ marginTop: "10px" }}>
+          <Stack direction="row" spacing={1}>
+            <Chip
+              label={params.row.completed ? "PASS" : "FAIL"}
+              color={params.row.completed ? "success" : "error"}
+            />
+          </Stack>
+        </Stack>
+      ),
     },
     {
       field: "actions",
-      headerName: t("ESD_OPERATOR.TABLE.ACTIONS", {
+      headerName: t("ESD_MONITOR.TABLE.ACTIONS", {
         appName: "App for Translations",
       }),
       sortable: false,
@@ -245,7 +239,8 @@ const OperatorTable = () => {
     },
   ];
 
-  const rows = state.allOperators;
+  const rows = state.allMonitors;
+
   return (
     <Box sx={{ p: 3 }}>
       <div className="grid-table">
@@ -253,22 +248,22 @@ const OperatorTable = () => {
           rows={rows}
           columns={columns}
           localeText={{
-            toolbarColumns: t("ESD_OPERATOR.TABLE.COLUMNS", {
+            toolbarColumns: t("ESD_MONITOR.TABLE.COLUMNS", {
               appName: "App for Translations",
             }),
-            toolbarFilters: t("ESD_OPERATOR.TABLE.SEARCH", {
+            toolbarFilters: t("ESD_MONITOR.TABLE.SEARCH", {
               appName: "App for Translations",
             }),
-            toolbarDensity: t("ESD_OPERATOR.TABLE.DENSITY", {
+            toolbarDensity: t("ESD_MONITOR.TABLE.DENSITY", {
               appName: "App for Translations",
             }),
-            toolbarDensityCompact: t("ESD_OPERATOR.TABLE.COMPACT", {
+            toolbarDensityCompact: t("ESD_MONITOR.TABLE.COMPACT", {
               appName: "App for Translations",
             }),
-            toolbarDensityStandard: t("ESD_OPERATOR.TABLE.STANDARD", {
+            toolbarDensityStandard: t("ESD_MONITOR.TABLE.STANDARD", {
               appName: "App for Translations",
             }),
-            toolbarDensityComfortable: t("ESD_OPERATOR.TABLE.CONFORTABLE", {
+            toolbarDensityComfortable: t("ESD_MONITOR.TABLE.CONFORTABLE", {
               appName: "App for Translations",
             }),
           }}
@@ -283,31 +278,31 @@ const OperatorTable = () => {
           onCellEditCommit={handleEditCellChange}
         />
       </div>
-      <OperatorModal
+      <MonitorModal
         open={state.open}
         handleClose={handleClose}
-        operatorName={state.operator.name}
-        operator={state.operator}
+        monitorName={state.monitor.title}
+        monitor={state.monitor}
       />
-      <ESDForm
+      <MonitorForm
         open={state.openModal}
         handleClose={handleCloseModal}
-        onSubmit={handleCreateOperator}
+        onSubmit={handleCreateMonitor}
       />
-      <ESDEditForm
+      <MonitorEditForm
         open={state.openEditModal}
         handleClose={handleEditClose}
         onSubmit={handleEditCellChange}
         initialData={state.editData}
       />
-      <OperatorConfirmModal
+      <MonitorConfirmModal
         open={state.deleteConfirmOpen}
         handleClose={handleDeleteClose}
         handleConfirm={handleConfirmDelete}
-        title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_STATION", {
+        title={t("ESD_MONITOR.CONFIRM_DIALOG.DELETE_STATION", {
           appName: "App for Translations",
         })}
-        description={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
+        description={t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
           appName: "App for Translations",
         })}
       />
@@ -337,4 +332,4 @@ const OperatorTable = () => {
   );
 };
 
-export default OperatorTable;
+export default MonitorTable;
