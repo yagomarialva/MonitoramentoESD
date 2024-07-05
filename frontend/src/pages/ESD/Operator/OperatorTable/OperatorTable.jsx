@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  getAllBracelets,
-  createBracelets,
-  deleteBracelets,
-  updateBracelets,
-} from "../../../../api/braceletApi";
+  getAllOperators,
+  createOperators,
+  deleteOperators,
+  updateOperators,
+} from "../../../../api/operatorsAPI";
 import {
   IconButton,
   Box,
@@ -23,26 +23,26 @@ import {
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
-import ESDModal from "../ESDModal/ESDModal";
-import ESDForm from "../ESDForm/ESDForm";
-import ESDEditForm from "../ESDEditForm/ESDEditForm";
-import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
+import OperatorModal from "../OperatorModal/OperatorModal";
+import ESDForm from "../OperatorForm/OperatorForm";
+import ESDEditForm from "../OperatorEditForm/ESDEditForm";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
+import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
 
-const ESDTable = () => {
+const OperatorTable = () => {
   const { t } = useTranslation();
 
   const [state, setState] = useState({
-    allBracelets: [],
-    bracelet: {},
+    allOperators: [],
+    operator: {},
     open: false,
     openModal: false,
     openEditModal: false,
     editCell: null,
     editData: null,
     deleteConfirmOpen: false,
-    braceletToDelete: null,
+    operatorToDelete: null,
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
@@ -60,33 +60,37 @@ const ESDTable = () => {
     });
   };
 
-  const handleOpen = (bracelet) => handleStateChange({ bracelet, open: true });
+  const handleOpen = (operator) => handleStateChange({ operator, open: true });
   const handleClose = () => handleStateChange({ open: false });
   const handleEditClose = () =>
     handleStateChange({ openEditModal: false, editData: null });
   const handleOpenModal = () => handleStateChange({ openModal: true });
   const handleCloseModal = () => handleStateChange({ openModal: false });
-  const handleDeleteOpen = (bracelet) =>
-    handleStateChange({ braceletToDelete: bracelet, deleteConfirmOpen: true });
+  const handleDeleteOpen = (operator) =>
+    handleStateChange({ operatorToDelete: operator, deleteConfirmOpen: true });
   const handleDeleteClose = () =>
-    handleStateChange({ deleteConfirmOpen: false, braceletToDelete: null });
+    handleStateChange({ deleteConfirmOpen: false, operatorToDelete: null });
 
-  const handleEditOpen = (bracelet) => {
-    handleStateChange({ editData: bracelet, openEditModal: true });
+  const handleEditOpen = (operator) => {
+    handleStateChange({ editData: operator, openEditModal: true });
   };
 
-  const handleCreateBracelet = async (bracelet) => {
-    const newBracelet = { ...bracelet, id: Date.now() };
+  const handleCreateOperator = async (operator) => {
+    const newOperator = { ...operator, id: Date.now() };
     try {
-      const response = await createBracelets(newBracelet);
-      handleStateChange({ allBracelets: [...state.allBracelets, newBracelet] });
+      const response = await createOperators(newOperator);
+      handleStateChange({ allOperators: [...state.allOperators, newOperator] });
       showSnackbar(
-        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", {
+          appName: "App for Translations",
+        })
       );
       return response.data;
     } catch (error) {
       showSnackbar(
-        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
+          appName: "App for Translations",
+        }),
         "error"
       );
     }
@@ -94,18 +98,22 @@ const ESDTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteBracelets(id);
+      await deleteOperators(id);
       handleStateChange({
-        allBracelets: state.allBracelets.filter(
-          (bracelet) => bracelet.id !== id
+        allOperators: state.allOperators.filter(
+          (operator) => operator.id !== id
         ),
       });
       showSnackbar(
-        t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_OPERATOR.TOAST.DELETE_SUCCESS", {
+          appName: "App for Translations",
+        })
       );
     } catch (error) {
       showSnackbar(
-        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
+          appName: "App for Translations",
+        }),
         "error"
       );
     }
@@ -113,26 +121,31 @@ const ESDTable = () => {
 
   const handleEditCellChange = async (params) => {
     try {
-      const updatedBracelet = {
-        ...state.bracelet,
-        title: params.title,
-        userId: params.userId,
-        completed: params.completed,
+      const updatedOperator = {
+        ...state.operator,
+        phone: params.phone,
+        name: params.name,
+        username: params.username,
       };
-      const updatedItem = await updateBracelets(params.id, updatedBracelet);
+      const updatedItem = await updateOperators(params.id, updatedOperator);
 
       handleStateChange({
-        allBracelets: state.allBracelets.map((item) =>
+        allOperators: state.allOperators.map((item) =>
           item.id === params.id ? updatedItem : item
         ),
       });
 
       showSnackbar(
-        t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {
+          appName: "App for Translations",
+        })
       );
     } catch (error) {
+      console.log(error);
       showSnackbar(
-        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
+          appName: "App for Translations",
+        }),
         "error"
       );
     }
@@ -141,8 +154,8 @@ const ESDTable = () => {
   useEffect(() => {
     const fetchDataAllUsers = async () => {
       try {
-        const result = await getAllBracelets();
-        handleStateChange({ allBracelets: result });
+        const result = await getAllOperators();
+        handleStateChange({ allOperators: result });
       } catch (error) {
         showSnackbar(t(error.message));
       }
@@ -151,8 +164,8 @@ const ESDTable = () => {
   }, []);
 
   const handleConfirmDelete = async () => {
-    if (state.braceletToDelete) {
-      await handleDelete(state.braceletToDelete.id);
+    if (state.operatorToDelete) {
+      await handleDelete(state.operatorToDelete.id);
       handleDeleteClose();
     }
   };
@@ -168,7 +181,7 @@ const ESDTable = () => {
         color="success"
         onClick={handleOpenModal}
       >
-        {t("ESD_TEST.ADD_STATION", { appName: "App for Translations" })}
+        {t("ESD_OPERATOR.ADD_STATION", { appName: "App for Translations" })}
       </Button>
     </GridToolbarContainer>
   );
@@ -176,37 +189,30 @@ const ESDTable = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     {
-      field: "userId",
-      headerName: t("ESD_TEST.TABLE.USER_ID", {
+      field: "phone",
+      headerName: t("ESD_OPERATOR.TABLE.USER_ID", {
         appName: "App for Translations",
       }),
       sortable: false,
       width: 160,
     },
     {
-      field: "title",
-      headerName: t("ESD_TEST.TABLE.NAME", { appName: "App for Translations" }),
+      field: "name",
+      headerName: t("ESD_OPERATOR.TABLE.NAME", {
+        appName: "App for Translations",
+      }),
       width: 250,
     },
-    { field: "completed", headerName: "Completed", width: 250 },
     {
-      field: "status",
-      headerName: "Status",
-      sortable: false,
-      renderCell: (params) => (
-        <Stack spacing={1} alignItems="right" style={{ marginTop: "10px" }}>
-          <Stack direction="row" spacing={1}>
-            <Chip
-              label={params.row.completed ? "PASS" : "FAIL"}
-              color={params.row.completed ? "success" : "error"}
-            />
-          </Stack>
-        </Stack>
-      ),
+      field: "username",
+      headerName: t("ESD_OPERATOR.TABLE.ROLE", {
+        appName: "App for Translations",
+      }),
+      width: 250,
     },
     {
       field: "actions",
-      headerName: t("ESD_TEST.TABLE.ACTIONS", {
+      headerName: t("ESD_OPERATOR.TABLE.ACTIONS", {
         appName: "App for Translations",
       }),
       sortable: false,
@@ -239,8 +245,8 @@ const ESDTable = () => {
     },
   ];
 
-  const rows = state.allBracelets;
-
+  const rows = state.allOperators;
+  console.log("rows", rows);
   return (
     <Box sx={{ p: 3 }}>
       <div className="grid-table">
@@ -248,22 +254,22 @@ const ESDTable = () => {
           rows={rows}
           columns={columns}
           localeText={{
-            toolbarColumns: t("ESD_TEST.TABLE.COLUMNS", {
+            toolbarColumns: t("ESD_OPERATOR.TABLE.COLUMNS", {
               appName: "App for Translations",
             }),
-            toolbarFilters: t("ESD_TEST.TABLE.SEARCH", {
+            toolbarFilters: t("ESD_OPERATOR.TABLE.SEARCH", {
               appName: "App for Translations",
             }),
-            toolbarDensity: t("ESD_TEST.TABLE.DENSITY", {
+            toolbarDensity: t("ESD_OPERATOR.TABLE.DENSITY", {
               appName: "App for Translations",
             }),
-            toolbarDensityCompact: t("ESD_TEST.TABLE.COMPACT", {
+            toolbarDensityCompact: t("ESD_OPERATOR.TABLE.COMPACT", {
               appName: "App for Translations",
             }),
-            toolbarDensityStandard: t("ESD_TEST.TABLE.STANDARD", {
+            toolbarDensityStandard: t("ESD_OPERATOR.TABLE.STANDARD", {
               appName: "App for Translations",
             }),
-            toolbarDensityComfortable: t("ESD_TEST.TABLE.CONFORTABLE", {
+            toolbarDensityComfortable: t("ESD_OPERATOR.TABLE.CONFORTABLE", {
               appName: "App for Translations",
             }),
           }}
@@ -278,16 +284,16 @@ const ESDTable = () => {
           onCellEditCommit={handleEditCellChange}
         />
       </div>
-      <ESDModal
+      <OperatorModal
         open={state.open}
         handleClose={handleClose}
-        braceletName={state.bracelet.title}
-        bracelet={state.bracelet}
+        operatorName={state.operator.name}
+        operator={state.operator}
       />
       <ESDForm
         open={state.openModal}
         handleClose={handleCloseModal}
-        onSubmit={handleCreateBracelet}
+        onSubmit={handleCreateOperator}
       />
       <ESDEditForm
         open={state.openEditModal}
@@ -295,14 +301,14 @@ const ESDTable = () => {
         onSubmit={handleEditCellChange}
         initialData={state.editData}
       />
-      <ESDConfirmModal
+      <OperatorConfirmModal
         open={state.deleteConfirmOpen}
         handleClose={handleDeleteClose}
         handleConfirm={handleConfirmDelete}
-        title={t("ESD_TEST.CONFIRM_DIALOG.DELETE_STATION", {
+        title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_STATION", {
           appName: "App for Translations",
         })}
-        description={t("ESD_TEST.CONFIRM_DIALOG.CONFIRM-TEXT", {
+        description={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
           appName: "App for Translations",
         })}
       />
@@ -332,4 +338,4 @@ const ESDTable = () => {
   );
 };
 
-export default ESDTable;
+export default OperatorTable;

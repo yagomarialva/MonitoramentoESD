@@ -9,6 +9,7 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+import { CardHeader } from "react-bootstrap";
 
 const ESDDashboardPage = () => {
   const [todos, setTodos] = useState([]);
@@ -51,17 +52,26 @@ const ESDDashboardPage = () => {
           <Grid item xs={12} sm={6} md={4} lg={3} key={todo.id}>
             <Card
               sx={{
-                backgroundColor: todo.completed ? "green" : "red",
-                color: "white",
+                backgroundColor: "white",
+                color: "black",
                 cursor: "pointer",
               }}
               onClick={() => handleOpen(todo)}
             >
-              <CardContent>
-                <Typography variant="h6">{todo.title}</Typography>
-                <Typography variant="body2">
+              <CardHeader>
+                <Typography
+                sx={{
+                  backgroundColor: todo.completed ? "#4caf50" : "#d32f2f",
+                  color: "white",
+                  cursor: "pointer",
+                  justifyContent: 'center'
+                }}
+                 variant="body2">
                   {todo.completed ? "PASS" : "FAIL"}
                 </Typography>
+              </CardHeader>
+              <CardContent>
+                <Typography variant="h6">Station: {todo.id}</Typography>
               </CardContent>
             </Card>
           </Grid>
