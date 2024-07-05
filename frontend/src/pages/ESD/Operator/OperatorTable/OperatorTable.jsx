@@ -181,7 +181,7 @@ const OperatorTable = () => {
         color="success"
         onClick={handleOpenModal}
       >
-        {t("ESD_OPERATOR.ADD_STATION", { appName: "App for Translations" })}
+        {t("ESD_OPERATOR.ADD_OPERATOR", { appName: "App for Translations" })}
       </Button>
     </GridToolbarContainer>
   );

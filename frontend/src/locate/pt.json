@@ -2,11 +2,11 @@
   "translation": {
     "headerTitle": "Meu Titulo do Cabecalho do {{appName}}",
     "ESD_TEST": {
-      "TABLE_HEADER": "Operadores ESD",
-      "ADD_STATION": "Adicionar Operador",
+      "TABLE_HEADER": "Estações ESD",
+      "ADD_STATION": "Adicionar Estação",
       "TABLE": {
         "USER_ID": "Número de Série",
-        "NAME": "Operador",
+        "NAME": "Operadores",
         "ACTIONS": "Ações",
         "COLUMNS": "Filtrar Colunas",
         "DENSITY": "Ajustar Exibição",
@@ -36,7 +36,7 @@
     },
     "ESD_OPERATOR": {
       "TABLE_HEADER": "Operadores ESD",
-      "ADD_STATION": "Adicionar Operador",
+      "ADD_OPERATOR": "Adicionar Operador",
       "TABLE": {
         "USER_ID": "Matrícula",
         "NAME": "Operador",
