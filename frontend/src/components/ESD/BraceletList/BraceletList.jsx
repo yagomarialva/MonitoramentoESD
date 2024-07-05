@@ -1,4 +1,4 @@
-import StationTable from "../../../pages/ESD/ESDTable/StationTable";
+import StationTable from "../../../pages/ESD/Stations/ESDTable/StationTable";
 
 function BraceletList() {
   return <StationTable></StationTable>;

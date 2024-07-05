@@ -5,7 +5,7 @@ import {
   createBracelets,
   deleteBracelets,
   updateBracelets,
-} from "../../../api/braceletApi";
+} from "../../../../api/braceletApi";
 import {
   IconButton,
   Box,
@@ -244,11 +244,11 @@ const StationTable = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <ESDHeader
+      {/* <ESDHeader
         variant="h4"
         gutterBottom
         title={t("ESD_TEST.TABLE_HEADER", { appName: "App for Translations" })}
-      />
+      /> */}
       <div className="grid-table">
         <DataGrid
           rows={rows}

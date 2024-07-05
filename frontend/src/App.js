@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import "./i18n.js"; // ts => import './i18n.ts'
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import Menu from "./pages/Menu/Menu.jsx";
 
 const App = () => {
   const {
@@ -30,7 +31,8 @@ const App = () => {
           Change Language
         </button>
       </div> */}
-      <AppBar position="static">
+      <Menu></Menu>
+      {/* <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             User Management
@@ -54,7 +56,7 @@ const App = () => {
       </AppBar>
       <Container sx={{ mt: 2 }}>
         <AppRoutes />
-      </Container>
+      </Container> */}
     </>
   );
 };
