@@ -27,11 +27,10 @@ import ESDModal from "../ESDModal/ESDModal";
 import ESDForm from "../ESDForm/ESDForm";
 import ESDEditForm from "../ESDEditForm/ESDEditForm";
 import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
-import ESDHeader from "../ESDHeader/ESDHeader";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
 
-const StationTable = () => {
+const ESDTable = () => {
   const { t } = useTranslation();
 
   const [state, setState] = useState({
@@ -145,7 +144,7 @@ const StationTable = () => {
         const result = await getAllBracelets();
         handleStateChange({ allBracelets: result });
       } catch (error) {
-        showSnackbar(t(error.message), "error");
+        showSnackbar(t(error.message));
       }
     };
     fetchDataAllUsers();
@@ -244,11 +243,6 @@ const StationTable = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      {/* <ESDHeader
-        variant="h4"
-        gutterBottom
-        title={t("ESD_TEST.TABLE_HEADER", { appName: "App for Translations" })}
-      /> */}
       <div className="grid-table">
         <DataGrid
           rows={rows}
@@ -338,4 +332,4 @@ const StationTable = () => {
   );
 };
 
-export default StationTable;
+export default ESDTable;

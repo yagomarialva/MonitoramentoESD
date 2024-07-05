@@ -47,7 +47,7 @@ export default function Menu() {
         {
           text: "Stations",
           icon: <PrecisionManufacturingOutlinedIcon />,
-          path: "/bracelets",
+          path: "/stations",
         },
         { text: "Monitors", icon: <SensorsOutlinedIcon />, path: "/monitors" },
       ].map((item) => (
