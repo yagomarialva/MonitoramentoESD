@@ -1,19 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Typography, Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import Menu from "../Menu/Menu";
+import { useAuth } from "../../context/AuthContext";
+import Login from "../Login/Login";
+import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const HomePage = () => {
-  const { t } = useTranslation();
+  const { user, logout } = useAuth();
+  // const userIsInactive = useFakeInactiveUser();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (user) {
+      // fake.logout();
+      navigate("/esd-dashboard");
+    } else {
+      navigate("/");
+    }
+  }, []);
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h3">
-        {t("FCT_Home_Page.Header", { appName: "App for Translations" })}
-      </Typography>
-      <Typography variant="body1">
-        {t("FCT_Home_Page.Label", { appName: "App for Translations" })}
-      </Typography>
-    </Box>
+    <>
+      {user ? (
+        <div>
+          <Menu></Menu>
+        </div>
+      ) : (
+        <Login></Login>
+
+      )}
+
+    </>
+
   );
 };
 

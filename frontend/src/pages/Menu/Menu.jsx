@@ -19,10 +19,12 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import SensorsOutlinedIcon from "@mui/icons-material/SensorsOutlined";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../context/AuthContext";
 
 const drawerWidth = 190;
 
 export default function Menu() {
+  const { user, logout } = useAuth();
   const {
     i18n: { changeLanguage, language },
   } = useTranslation();
@@ -91,6 +93,7 @@ export default function Menu() {
             FCT Auto Test
           </Typography>
           <Button color="inherit" onClick={handleChangeLanguage}>Change Language {currentLanguage}</Button>
+          <Button color="inherit" onClick={logout}>Logout</Button>
         </Toolbar>
       </AppBar>
       <Drawer
