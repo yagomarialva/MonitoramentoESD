@@ -18,7 +18,7 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<StationModel> GetByStationId(int id)
         {
-            return await _dbContext.Station.FirstOrDefaultAsync(x => x.Id == id) ?? new StationModel();
+            return await _dbContext.Station.FirstOrDefaultAsync(x => x.Id == id) ;
         }
         // Task realiza o include e update, include caso nao haja no banco, update caso o bracelet ja 
         // tenha alguma propriedade cadastrada.
@@ -38,11 +38,12 @@ namespace BiometricFaceApi.Repositories
             {
                 // update
                 repositoryStation.Name = stationModel.Name;
+                repositoryStation.Description = stationModel.Description;
                 repositoryStation.LastUpdated = DateTime.Now;
                 _dbContext.Station.Update(repositoryStation);
                 await _dbContext.SaveChangesAsync(); 
             }
-            var result = await _dbContext.Station.FirstAsync(x => x.Id == stationModel.Id);
+            var result = await _dbContext.Station.FirstAsync(x => x.Name == stationModel.Name);
 
             return result;
         }

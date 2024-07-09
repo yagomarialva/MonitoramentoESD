@@ -1,8 +1,11 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using System.Text.Json;
 
 namespace BiometricFaceApi.Controllers
 {
@@ -11,39 +14,118 @@ namespace BiometricFaceApi.Controllers
     public class ProduceActivityController : Controller
     {
         private readonly ProduceActivityService _service;
-        public ProduceActivityController(IProduceActivityRepository produceActivityRepository)
+        private readonly RecordStatusService _record;
+        public ProduceActivityController(IProduceActivityRepository produceActivityRepository, IRecordStatusRepository recordStatusRepository,IAuthenticationRepository authenticationRepository)
         {
-            _service = new ProduceActivityService(produceActivityRepository);
+            _record = new RecordStatusService(recordStatusRepository);
+            _service = new ProduceActivityService(produceActivityRepository, recordStatusRepository, authenticationRepository);
+
         }
+
+        /// <summary>
+        /// Busca todos
+        /// </summary>
+        /// <response code="200">Retorna dados de produção.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "Admin,Standard,Developer")]
         [HttpGet]
         [Route("/TodaProducao")]
         public async Task<ActionResult> BuscarTodaProducao()
         {
-            var list = await _service.GetAllProduceAct();
-            return Ok(list);
-        }
-        [HttpGet]
-        [Route("/TodaProducaoId")]
-        public async Task<ActionResult> BuscarTodaProducao(int id)
-        {
-            var item = await _service.GetProduceId(id);
-            return Ok(item);
+            var (result, statusCode) = await _service.GetAllProduceAct();
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            return StatusCode(statusCode, result);
+            
         }
 
+        /// <summary>
+        /// Buscar dados de produção
+        /// </summary>
+        /// <param name="id"> Buscar produção por id</param>
+        /// <response code="200">Retorna dados de produção.</response>
+        /// <response code="400">Dados incorretos ou inválidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "Admin,Operator,Developer")]
+        [HttpGet]
+        [Route("/BuscarProducaoId")]
+        public async Task<ActionResult> BuscarTodaProducao(int id)
+        {
+            var (result, statusCode) = await _service.GetProduceId(id);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            return StatusCode(statusCode, result);
+            
+        }
+
+        /// <summary>
+        /// Cadastra e Atualiza de dados de produç]ao.
+        /// </summary>
+        /// <remarks>Cadastra produção na base de dados; Para atualizar dados basta usar o id .</remarks>
+        /// <param name="model">Dados de cadastro do operador</param>
+        /// <response code="200">Dados atualizado com sucesso.</response>
+        /// <response code="201">Dados cadastrados com sucesso.</response>
+        /// <response code="400">Dados incorretos ou inválidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "Admin,Operator,Developer")]
         [HttpPost]
         [Route("/adicionarProducao")]
         public async Task<ActionResult> Include([FromBody] ProduceActivityModel model)
         {
-            var include = await _service.Include(model);
-            return Ok(include);
+            var (result, statusCode) = await _service.Include(model);
+            return StatusCode(statusCode, result);
         }
 
+        /// <summary>
+        /// Muda status da produção.
+        /// </summary>
+        /// <remarks>Cadastra o operador na base de dados; Para atualizar dados basta usar a matricula do operador.</remarks>
+        /// <param>Altera status para true ou false</param>
+        /// <response code="200">Dados atualizado com sucesso.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "Admin,Operator,Developer")]
+        [HttpPost]
+        [Route("/ChangeStatus")]
+        public async Task<ActionResult> ChangeStatus(int id, bool status, string? description)
+        {
+            var accessToken = Request.Headers[HeaderNames.Authorization];
+            var token = accessToken.ToString().Split(" ").LastOrDefault();
+            var (result, statusCode) = await _service.ChangeStatus(id, status, description, token);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            return StatusCode(statusCode, result);
+            
+        }
+
+        /// <summary>
+        /// Deletar produção
+        /// </summary>
+        /// <param name="id"> Deleta produção</param>
+        /// <returns></returns>
+        /// <response code="200">Remove dados do banco de dados.</response>
+        /// <response code="400">Dados incorretos ou inválidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "Admin,Operator,Developer")]
         [HttpDelete]
         [Route("/DeleteProducao{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var delete = await _service.Delete(id);
-            return Ok(delete);
+            var (result, statusCode) = await _service.Delete(id);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            if (!string.IsNullOrEmpty(jsonResponse))
+            {
+                return StatusCode(statusCode, result);
+            }
+            else
+            {
+                return StatusCode(statusCode);
+            }
         }
 
 

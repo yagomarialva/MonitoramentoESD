@@ -1,4 +1,5 @@
 ﻿using BiometricFaceApi.Data;
+//using BiometricFaceApi.Migrations;
 using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -18,45 +19,48 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.MonitorEsds.ToListAsync();
         }
-        public async Task<MonitorEsdModel> GetByMonitorId(int id)
+        public async Task<MonitorEsdModel?> GetByMonitorId(int id)
         {
-            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Id == id) ?? new MonitorEsdModel();
+            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Id == id);
         }
-        // Task realiza o include e update, include caso nao haja no banco, update caso o Monitor ja 
-        // tenha alguma propriedade cadastrada.
-        public async Task<MonitorEsdModel?> Inclue(MonitorEsdModel eventModel)
+        public async Task<MonitorEsdModel?> GetByMonitorSerial(string serial)
+        { 
+           return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.SerialNumber == serial);
+        }
+        // Task realiza o include e update
+        // include de novos dados
+        // update e feito atraves do MonitorModelyID, senso assim possibilitando a alteração de dados.
+        public async Task<MonitorEsdModel?> Include(MonitorEsdModel monitorModel)
         {
-            if (eventModel == null)
-            {
-                throw new ArgumentNullException("Valor do Evento não pode ser nulo");
-            }
-            MonitorEsdModel? eventModelUp = await GetByMonitorId(eventModel.Id);
-            if (eventModelUp == null)
+
+            MonitorEsdModel? monitorModelUp = await GetByMonitorId(monitorModel.Id);
+            if (monitorModelUp == null)
             {
                 // include
-                await _dbContext.MonitorEsds.AddAsync(eventModel);
+                await _dbContext.MonitorEsds.AddAsync(monitorModel);
                 await _dbContext.SaveChangesAsync();
-
-                var savedEevent = await _dbContext.MonitorEsds.FirstOrDefaultAsync(newEvent => newEvent.Id == eventModel.Id);
-                eventModel.Id = savedEevent.Id;
+                monitorModel = await GetByMonitorSerial(monitorModel.SerialNumber);
             }
             else
             {
                 // update
-                var update = await _dbContext.MonitorEsds.AsNoTracking().FirstOrDefaultAsync(x => x.Id == eventModel.Id);
-                eventModel.Id = eventModelUp.Id;
-                eventModelUp = eventModel;
-                await _dbContext.MonitorEsds.AddAsync(eventModel);
+                monitorModelUp.SerialNumber = monitorModel.SerialNumber;
+                monitorModelUp.Description = monitorModel.Description;
+                _dbContext.MonitorEsds.Update(monitorModelUp);
                 await _dbContext.SaveChangesAsync();
             }
-            return eventModel;
+            return monitorModel;
+          
         }
+
         public async Task<MonitorEsdModel> Delete(int id)
         {
-            MonitorEsdModel eventModelDel = await GetByMonitorId(id);
-            _dbContext.MonitorEsds.Remove(eventModelDel);
+            MonitorEsdModel monitorModelDel = await GetByMonitorId(id);
+            _dbContext.MonitorEsds.Remove(monitorModelDel);
             await _dbContext.SaveChangesAsync();
-            return eventModelDel;
+            return monitorModelDel;
         }
+
+        
     }
 }

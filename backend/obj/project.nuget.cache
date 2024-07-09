@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EtZ66ifBIa39YOHj9msyObRUQKZH5AW8XaSjgFNFzkGIeFP4vADBY/vDBrulF8xS+6AQRMuo0V5o+WQFAHFlug==",
+  "dgSpecHash": "YcjwFje/IKo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\bc4g9991\\source\\repos\\BiometricFaceApi\\BiometricFaceApi\\BiometricFaceApi.csproj",
+  "projectFilePath": "C:\\Users\\bc4g9991\\Documents\\Projeto_FCT\\fct_auto_test\\backend\\BiometricFaceApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\bc4g9991\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\bc4g9991\\.nuget\\packages\\bouncycastle.cryptography\\2.2.1\\bouncycastle.cryptography.2.2.1.nupkg.sha512",

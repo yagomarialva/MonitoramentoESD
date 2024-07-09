@@ -1,25 +1,69 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Runtime.InteropServices.ObjectiveC;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BiometricFaceApi.Services
 {
     public class MonitorEsdService
     {
-        private IMonitorEsdRepository repository;
+        private IMonitorEsdRepository _repository;
         public MonitorEsdService(IMonitorEsdRepository repository)
         {
-            this.repository = repository;
+            _repository = repository;
         }
-        public async Task<ActionResult<List<MonitorEsdModel>>> GetAllMonitorEsds()
+        public async Task<(object?, int)> GetAllMonitorEsds()
         {
-            List<MonitorEsdModel> monitor = await repository.GetAllMonitor();
-            return (monitor );
+            object? result;
+            int statusCode;
+            try
+            {
+                List<MonitorEsdModel> monitor = await _repository.GetAllMonitor();
+                if (!monitor.Any())
+                {
+                    result = "Nenhum monitor cadastrado.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+                result = monitor;
+                statusCode = StatusCodes.Status200OK;
+                return (result, statusCode);
+
+            }
+            catch (Exception exception)
+            {
+
+                result = exception.Message;
+                statusCode = StatusCodes.Status500InternalServerError;
+            }
+            return (result, statusCode);
+
         }
-        public async Task<MonitorEsdModel?> GetMonitorId(int id)
+        public async Task<(object?, int)> GetMonitorId(int id)
         {
-            return await repository.GetByMonitorId(id);
+            object? result;
+            int statusCode;
+            try
+            {
+                var monitor = await _repository.GetByMonitorId(id);
+                if (monitor == null)
+                {
+
+                    result = "Monitor Id não encontrado.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+                result = monitor;
+                statusCode = StatusCodes.Status200OK;
+                return (result, statusCode);
+            }
+            catch (Exception exception)
+            {
+                result = exception.Message;
+                statusCode = StatusCodes.Status400BadRequest;
+            }
+            return (result, statusCode);
         }
 
         public async Task<(object?, int)> Include(MonitorEsdModel monitorModel)
@@ -28,45 +72,46 @@ namespace BiometricFaceApi.Services
             object? response;
             try
             {
-                response = await repository.Inclue(monitorModel);
+                response = await _repository.Include(monitorModel);
+                statusCode = StatusCodes.Status200OK;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-
-                response = ex.Message;
+                response = exception.Message;
                 statusCode = StatusCodes.Status400BadRequest;
             }
             return (response, statusCode);
+
         }
+
         public async Task<(object?, int)> Delete(int id)
         {
             object? content;
             int statusCode;
             try
             {
-                var respositoryMonitor = await repository.GetByMonitorId(id);
+                var respositoryMonitor = await _repository.GetByMonitorId(id);
                 if (respositoryMonitor.Id > 0)
                 {
                     content = new
                     {
                         id = respositoryMonitor.Id,
-                        name = respositoryMonitor.Name,
-                        description = respositoryMonitor.Descrition
+                        serialNumber = respositoryMonitor.SerialNumber,
+                        description = respositoryMonitor.Description
                     };
-                    await repository.Delete(respositoryMonitor.Id);
+                    await _repository.Delete(respositoryMonitor.Id);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else
                 {
-                    content = "Dados incorretos ou inválidos.";
-                    statusCode = StatusCodes.Status404NotFound;
+                    throw new Exception("Dados incorretos ou inválidos.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
 
-                content = ex.Message;
-                statusCode = StatusCodes.Status500InternalServerError;
+                content = exception.Message;
+                statusCode = StatusCodes.Status400BadRequest;
             }
             return (content, statusCode);
         }

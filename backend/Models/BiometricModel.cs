@@ -8,6 +8,7 @@ namespace BiometricFaceApi.Models
     {
         public int? Id { get; set; }
         public string? Name { get; set; }
+        public string? RolesName { get; set; }
         public string? Badge { get; set; }
         [NotMapped]
         public IFormFile? Image { get; set; }

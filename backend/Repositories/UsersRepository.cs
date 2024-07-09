@@ -30,6 +30,10 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.Users.FirstOrDefaultAsync(x => x.Badge == badge) ?? new UserModel();
         }
+        public async Task<UserModel> ForRolesName(string rolesName)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(x => x.RoleName == rolesName) ?? new UserModel();
+        }
         public async Task<UserModel?> Include(UserModel user)
         {
             await _dbContext.Users.AddAsync(user);
@@ -63,6 +67,8 @@ namespace BiometricFaceApi.Repositories
             await _dbContext.SaveChangesAsync();
             return userModelDel;
         }
+
+        
     }
 }
 

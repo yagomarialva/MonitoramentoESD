@@ -1,6 +1,7 @@
 ﻿using BiometricFaceApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace BiometricFaceApi.Auth
@@ -12,14 +13,17 @@ namespace BiometricFaceApi.Auth
         {
             this.configuration = configuration;
         }
-        public string GenerateJSONWebToken()
+        public string GenerateJSONWebToken(LoginModel user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["jwt:secretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(configuration["jwt:issuer"],
               configuration["jwt:audience"],
-              null,
+              new List<Claim> { 
+                  new Claim(ClaimTypes.Name,user.Username),
+                  new Claim(ClaimTypes.Role,"Developer")
+              },
               expires: DateTime.Now.AddMinutes(120),
               signingCredentials: credentials);
 

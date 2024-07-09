@@ -12,8 +12,8 @@ using System.Reflection;
 using BiometricFaceApi.Security;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity;
 using BiometricFaceApi.Middleware;
+using BiometricFaceApi.SwaggerSettings;
 namespace BiometricFaceApi
 {
     public class Program
@@ -32,7 +32,7 @@ namespace BiometricFaceApi
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters =
-                new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -55,7 +55,8 @@ namespace BiometricFaceApi
                         Version = "v1"
                     });
 
-
+                //remove virtual properties
+                c.SchemaFilter<SwaggerSchemaFilter>();
                 // Jwt Autorization settings 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -107,14 +108,11 @@ namespace BiometricFaceApi
                 // Repositores
                 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
                 builder.Services.AddScoped<IImageRepository, ImageRepository>();
-
-                
-                //builder.Services.AddScoped<IBraceletAttributeRepository, BraceletAttributeRepository>();
-                builder.Services.AddScoped<IBraceletRepository, BraceletRepository>();
-                //builder.Services.AddScoped<ILinkOperatorToBraceletRepository, LinkOperatorToBraceletRepository>();
+                builder.Services.AddScoped<IRecordStatusRepository, RecordStatusRepository>();
                 builder.Services.AddScoped<IMonitorEsdRepository, MonitorEsdRepository>();
                 builder.Services.AddScoped<IProduceActivityRepository, ProduceActivityRepository>();
                 builder.Services.AddScoped<IStationRepository, StationRepository>();
+                builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 
 
                 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
@@ -129,12 +127,12 @@ namespace BiometricFaceApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("http://localhost:5051/swagger/v1/swagger.json",
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json",
                         "Biometric.backend v1");
                 });
             }
-            
-            app.UseMiddleware(typeof(GlobalErrorHandlingMiddleware));   
+
+            app.UseMiddleware(typeof(GlobalErrorHandlingMiddleware));
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

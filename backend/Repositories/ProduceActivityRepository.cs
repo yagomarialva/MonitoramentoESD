@@ -2,6 +2,7 @@
 using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ZstdSharp.Unsafe;
 
 namespace BiometricFaceApi.Repositories
@@ -17,54 +18,66 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.ProduceActivity.ToListAsync();
         }
-        public async Task<ProduceActivityModel> GetByProduceActivityId(int id)
+        public async Task<ProduceActivityModel?> GetByProduceActivityId(int id)
         {
-            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.Id == id) ?? new ProduceActivityModel();
+            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<ProduceActivityModel> GetByProduceBraceltId(int braceletProduce)
+        public async Task<ProduceActivityModel?> GetByProduceMonitorId(int monitorProduce)
         {
-            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.BraceletId == braceletProduce) ?? new ProduceActivityModel();
+            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.MonitorEsdId == monitorProduce);
         }
-        public async Task<ProduceActivityModel> GetByProduceMonitorId(int monitorProduce)
+        public async Task<ProduceActivityModel?> GetByProduceStationId(int stationProduce)
         {
-            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.MonitorEsdId == monitorProduce) ?? new ProduceActivityModel();
+            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.StationId == stationProduce);
         }
-        public async Task<ProduceActivityModel> GetByProduceStationId(int stationProduce)
+        public async Task<ProduceActivityModel?> GetByProduceUserId(int usersProduce)
         {
-            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.StationId == stationProduce) ?? new ProduceActivityModel();
+            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.UserId == usersProduce);
         }
-        public async Task<ProduceActivityModel> GetByProduceUserId(int usersProduce)
+
+        public async Task<ProduceActivityModel?> Islocked(int id, bool locked)
         {
-            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.UserId == usersProduce) ?? new ProduceActivityModel();
+            var result = await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.Id == id);
+            if (result != null)
+            {
+                result.IsLocked = locked;
+                _dbContext.ProduceActivity.Update(result);
+                await _dbContext.SaveChangesAsync();
+                return result;
+            }
+            else
+            {
+                throw new Exception("Id is invalid!");
+            }
+
         }
-        // Task realiza o include e update, include caso nao haja dados cadastrados no banco e update caso o ProduceEvent ja 
-        // tenha alguma propriedade cadastrada.
+
+        // Task realiza o include e update
+        // include de novos dados
+        // update e feito atraves do ProduceActivityID, senso assim possibilitando a alteração de dados.
         public async Task<ProduceActivityModel?> Include(ProduceActivityModel produceActivity)
         {
-            if (produceActivity == null)
-            {
-                throw new ArgumentNullException("Atividade de Produção não pode ser nulo.");
-            }
-            ProduceActivityModel produceActivityModelUp = await GetByProduceActivityId(produceActivity.Id);
+
+            ProduceActivityModel? produceActivityModelUp = await GetByProduceActivityId(produceActivity.Id);
             if (produceActivityModelUp == null)
             {
                 // include
                 await _dbContext.ProduceActivity.AddAsync(produceActivity);
                 await _dbContext.SaveChangesAsync();
+
             }
             else
             {
                 // update
-                var update = await _dbContext.ProduceActivity.AsNoTracking().FirstOrDefaultAsync(x => x.Id == produceActivity.Id);
-                produceActivity.Id = produceActivityModelUp.Id;
-                produceActivityModelUp = produceActivity;
-                await _dbContext.ProduceActivity.AddAsync(produceActivity);
+                produceActivityModelUp.UserId = produceActivity.UserId;
+                produceActivityModelUp.MonitorEsdId = produceActivity.MonitorEsdId;
+                produceActivityModelUp.StationId = produceActivity.StationId;
+                _dbContext.ProduceActivity.Update(produceActivityModelUp);
                 await _dbContext.SaveChangesAsync();
             }
-
             return produceActivity;
         }
-        public async Task<ProduceActivityModel> Delete(int id)
+        public async Task<ProduceActivityModel?> Delete(int id)
         {
             ProduceActivityModel produceActivityModelDel = await GetByProduceActivityId(id);
             if (produceActivityModelDel == null)
@@ -75,5 +88,7 @@ namespace BiometricFaceApi.Repositories
             await _dbContext.SaveChangesAsync();
             return produceActivityModelDel;
         }
+
+
     }
 }

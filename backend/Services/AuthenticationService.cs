@@ -4,6 +4,7 @@ using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Security;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.IdentityModel.Tokens;
+using MySqlX.XDevAPI;
 using Org.BouncyCastle.Asn1.Mozilla;
 using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Security;
@@ -17,17 +18,19 @@ namespace BiometricFaceApi.Services
     {
         private IAuthenticationRepository auths;
         private readonly SecurityService securityService;
-        public AuthenticationService(IAuthenticationRepository auths, JwtAuthentication jwt, SecurityService securityService)
+        private readonly IRolesRepository rolesRepository;
+        public AuthenticationService(IAuthenticationRepository auths, JwtAuthentication jwt, SecurityService securityService, IRolesRepository rolesRepository)
         {
             this.auths = auths;
             this.securityService = securityService;
+            this.rolesRepository = rolesRepository;
         }
 
         // User authentication method
         public async Task<AuthenticationModel?> AuthenticateUser(LoginModel login)
         {
             AuthenticationModel? user = null;
-            if (!string.IsNullOrEmpty(login?.Username.Trim()) && !string.IsNullOrEmpty(login?.Password.Trim()))
+            if (!string.IsNullOrEmpty(login?.Username?.Trim()) && !string.IsNullOrEmpty(login?.Password?.Trim()))
             {
                 user = await auths.AuthenticateUser(login.Username, securityService.EncryptAES(login.Password));
             }
@@ -42,6 +45,16 @@ namespace BiometricFaceApi.Services
 
             try
             {
+                //get all valid roles
+                var roles = await rolesRepository.GetAllRoles();
+                if (string.IsNullOrEmpty(auth.Username))
+                {
+                    throw new Exception("O nome do usuário não pode ser nulo");
+                }
+                if (roles != null && !roles.Where(r => r.RolesName?.ToLower() == auth.RolesName?.ToLower()).Any())
+                {
+                    throw new Exception("Perfil selecionado é inválido!");
+                }
                 if (auth != null)
                 {
                     auth.Password = securityService.EncryptAES(auth.Password);
@@ -49,14 +62,16 @@ namespace BiometricFaceApi.Services
                     if (repositoryAuths != null && repositoryAuths.Id > 0)
                     {
                         //update
+
                         repositoryAuths.Id = repositoryAuths.Id;
                         await auths.AuthUpdate(auth, repositoryAuths.Id);
                         var updateAuthentication = new AuthenticationModel
                         {
                             Id = repositoryAuths.Id,
                             Badge = auth.Badge,
-                            Login = auth.Login,
-                            Password = auth.Password
+                            Username = auth.Username,
+                            Password = auth.Password,
+                            RolesName = auth.RolesName?.ToLower()
                         };
                         content = updateAuthentication;
 
@@ -65,11 +80,11 @@ namespace BiometricFaceApi.Services
                     {
                         // include
 
+                        auth.RolesName = auth.RolesName?.ToLower();
                         repositoryAuths = await auths.AuthInclude(auth);
                         if (repositoryAuths == null)
                         {
-                            content = "Dados incorretos ou inválidos";
-                            throw new Exception($"{content}");
+                            throw new Exception("Dados incorretos ou inválidos.");
                         }
                         else
                         {
@@ -80,13 +95,12 @@ namespace BiometricFaceApi.Services
                 }
                 else
                 {
-                    content = "Objeto de autenticação inválido!";
-                    statusCode = StatusCodes.Status400BadRequest;
+                    throw new Exception("Objeto de autenticação inválido!");
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                content = ex.Message;
+                content = exception.Message;
                 statusCode = StatusCodes.Status400BadRequest;
             }
             return (content, statusCode);
@@ -106,9 +120,10 @@ namespace BiometricFaceApi.Services
                     content = new
                     {
                         Id = repositoryAtuhs.Id,
-                        Login = repositoryAtuhs.Login,
+                        Username = repositoryAtuhs.Username,
                         Badge = repositoryAtuhs.Badge,
-                        Password = repositoryAtuhs.Password
+                        Password = repositoryAtuhs.Password,
+                        RolesName = repositoryAtuhs.RolesName
                     };
                     statusCode = StatusCodes.Status200OK;
                 }
@@ -118,9 +133,9 @@ namespace BiometricFaceApi.Services
                     statusCode = StatusCodes.Status400BadRequest;
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                content = ex.Message;
+                content = exception.Message;
                 statusCode = StatusCodes.Status500InternalServerError;
             }
             return (content, statusCode);
@@ -140,7 +155,7 @@ namespace BiometricFaceApi.Services
                     content = new
                     {
                         Id = repositoryAtuhs.Id,
-                        Name = repositoryAtuhs.Login,
+                        UserName = repositoryAtuhs.Username,
                         Badge = repositoryAtuhs.Badge,
                     };
                     statusCode = StatusCodes.Status200OK;

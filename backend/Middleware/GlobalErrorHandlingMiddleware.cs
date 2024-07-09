@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using System.Net;
 using System.Text.Json;
 
 namespace BiometricFaceApi.Middleware
@@ -17,10 +19,10 @@ namespace BiometricFaceApi.Middleware
             {
                 await _next(context);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
 
-                await HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync(context, exception);
             }
         }
 
@@ -36,9 +38,10 @@ namespace BiometricFaceApi.Middleware
             {
                 mensagem = exception.Message;
                 status = HttpStatusCode.BadRequest;
-                stackTrace = exception.StackTrace;
+                stackTrace = (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIROMMENT") == "Development" ||
+                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIROMMENT") == "Production") ? exception.StackTrace : exception.Message;
             }
-          
+
             else
             {
                 mensagem = exception.Message;
@@ -46,12 +49,12 @@ namespace BiometricFaceApi.Middleware
                 stackTrace = exception.StackTrace;
             }
 
-
             var result = JsonSerializer.Serialize(new { status, mensagem, stackTrace });
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)status;
             return context.Response.WriteAsync(result);
         }
+
     }
 }

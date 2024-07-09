@@ -26,14 +26,16 @@ namespace BiometricFaceApi.Controllers
         protected readonly UserService _userService;
         protected readonly ImageService _imageService;
         protected readonly BiometricService _biometricService;
+        protected readonly RolesService _rolesService;
 
        
         
-        public BiometricController(IUsersRepository usersRepository, IImageRepository imageRepository)
+        public BiometricController(IUsersRepository usersRepository, IImageRepository imageRepository, IRolesRepository rolesRepository)
         {
             _userService = new UserService(usersRepository);
             _imageService = new ImageService(imageRepository);
-            _biometricService = new BiometricService(_userService, _imageService);
+            _rolesService = new RolesService(rolesRepository);
+            _biometricService = new BiometricService(_userService, _imageService, _rolesService);
  
            
         }
@@ -42,11 +44,10 @@ namespace BiometricFaceApi.Controllers
         /// </summary>
         /// <response code="200">Retorna dados de todos operadores.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <reponse  code="500">Erro do servidor interno!</reponse>
-        //[Authorize]
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "Admin,Operator,Developer")]
         [HttpGet]
-        [Route("/todosOp")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Retorna todos cadastrados.")]
+        [Route("/todosUsers")]
         public async Task<ActionResult> GetAllUsers()
         {
             return Ok(await _biometricService.GetAllUsers());
@@ -60,10 +61,9 @@ namespace BiometricFaceApi.Controllers
         /// <param name="biometric">Dados de cadastro do operador</param>
         /// <response code="200">Dados atualizado com sucesso.</response>
         /// <response code="201">Dados cadastrados com sucesso.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <reponse  code="500">Erro do servidor interno!</reponse>
-        //[Authorize]
+        /// <response  code="500">Erro do servidor interno!</response>
+        //[Authorize(Roles = "Admin,Standard,Developer")]
         [HttpPost]
         [Route("/adicionar")]
         public async Task<ActionResult> InsertBiometric([FromForm] BiometricModel biometric)
@@ -81,8 +81,8 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna dados do operador.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <reponse  code="500">Erro do servidor interno!</reponse>
-        //[Authorize]
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "Admin,Operator,Developer")]
         [HttpGet]
         [Route("/operador/{id}")]
         public async Task<ActionResult> GetUserById(int id)
@@ -101,8 +101,8 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <reponse  code="500">Erro do servidor interno!</reponse>
-        //[Authorize]
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "Admin,Operator,Developer")]
         [HttpDelete]
         [Route("/delete/{id}")]
         public async Task<ActionResult> DeleteBiometic(int id)

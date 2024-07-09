@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BiometricFaceApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4301ee6cf7f73a63382f88cb03401c6493f50c09")]
 [assembly: System.Reflection.AssemblyProductAttribute("BiometricFaceApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BiometricFaceApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

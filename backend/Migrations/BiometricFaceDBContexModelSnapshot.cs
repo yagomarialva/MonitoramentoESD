@@ -19,25 +19,6 @@ namespace BiometricFaceApi.Migrations
                 .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("BiometricFaceApi.Models.ActivityDetailsModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("ProduceActivityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProduceActivityId");
-
-                    b.ToTable("activityDetails");
-                });
-
             modelBuilder.Entity("BiometricFaceApi.Models.AuthenticationModel", b =>
                 {
                     b.Property<int>("Id")
@@ -47,10 +28,13 @@ namespace BiometricFaceApi.Migrations
                     b.Property<string>("Badge")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Login")
+                    b.Property<string>("Password")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("RolesName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Username")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -59,48 +43,16 @@ namespace BiometricFaceApi.Migrations
                         .IsUnique();
 
                     b.ToTable("authentication");
-                });
 
-            modelBuilder.Entity("BiometricFaceApi.Models.BraceletAttributeModel", b =>
-                {
-                    b.Property<int>("AttributeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("BraceletId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Property")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("AttributeId");
-
-                    b.HasIndex("BraceletId");
-
-                    b.HasIndex("Property")
-                        .IsUnique();
-
-                    b.ToTable("braceletsAtrribute");
-                });
-
-            modelBuilder.Entity("BiometricFaceApi.Models.BraceletModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Sn")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Sn")
-                        .IsUnique();
-
-                    b.ToTable("bracelets");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Badge = "ADM",
+                            Password = "JYfUfqgr+5J2Pp3iBV2DFA==",
+                            RolesName = "admin",
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.ImageModel", b =>
@@ -128,13 +80,16 @@ namespace BiometricFaceApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Descrition")
+                    b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SerialNumber")
+                        .IsUnique();
 
                     b.ToTable("monitorEsd");
                 });
@@ -145,14 +100,14 @@ namespace BiometricFaceApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BraceletId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DatatimeMonitorEsdEvent")
+                    b.Property<DateTime?>("DatatimeMonitorEsdEvent")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("MonitorEsdEventId")
-                        .HasColumnType("int");
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("MonitorEsdId")
                         .HasColumnType("int");
@@ -165,15 +120,72 @@ namespace BiometricFaceApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BraceletId");
-
-                    b.HasIndex("MonitorEsdEventId");
+                    b.HasIndex("MonitorEsdId");
 
                     b.HasIndex("StationId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("produceActivity");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.RecordStatusProduceModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DateEvent")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("ProduceActivityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProduceActivityId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("recordStatusProduce");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.RolesModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("RolesName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RolesName = "admininstrator"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            RolesName = "developer"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            RolesName = "operator"
+                        });
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.StationModel", b =>
@@ -217,34 +229,15 @@ namespace BiometricFaceApi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("RoleName")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Badge")
                         .IsUnique();
 
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("BiometricFaceApi.Models.ActivityDetailsModel", b =>
-                {
-                    b.HasOne("BiometricFaceApi.Models.ProduceActivityModel", "ProduceActivity")
-                        .WithMany()
-                        .HasForeignKey("ProduceActivityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProduceActivity");
-                });
-
-            modelBuilder.Entity("BiometricFaceApi.Models.BraceletAttributeModel", b =>
-                {
-                    b.HasOne("BiometricFaceApi.Models.BraceletModel", "Bracelet")
-                        .WithMany()
-                        .HasForeignKey("BraceletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Bracelet");
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.ImageModel", b =>
@@ -260,15 +253,11 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.ProduceActivityModel", b =>
                 {
-                    b.HasOne("BiometricFaceApi.Models.BraceletModel", "Bracelet")
+                    b.HasOne("BiometricFaceApi.Models.MonitorEsdModel", "MonitorEsd")
                         .WithMany()
-                        .HasForeignKey("BraceletId")
+                        .HasForeignKey("MonitorEsdId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("BiometricFaceApi.Models.MonitorEsdModel", "MonitorEsdEvent")
-                        .WithMany()
-                        .HasForeignKey("MonitorEsdEventId");
 
                     b.HasOne("BiometricFaceApi.Models.StationModel", "Station")
                         .WithMany()
@@ -282,11 +271,28 @@ namespace BiometricFaceApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Bracelet");
-
-                    b.Navigation("MonitorEsdEvent");
+                    b.Navigation("MonitorEsd");
 
                     b.Navigation("Station");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.RecordStatusProduceModel", b =>
+                {
+                    b.HasOne("BiometricFaceApi.Models.ProduceActivityModel", "ProduceActivity")
+                        .WithMany()
+                        .HasForeignKey("ProduceActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BiometricFaceApi.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProduceActivity");
 
                     b.Navigation("User");
                 });

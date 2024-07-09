@@ -15,12 +15,17 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<AuthenticationModel?> AuthenticateUser(string login, string password)
         {
-            var result = await _dbcontex.Auths.FirstOrDefaultAsync(auth => auth.Login == login && auth.Password == password);
+            var result = await _dbcontex.Auths.FirstOrDefaultAsync(auth => auth.Username == login && auth.Password == password);
             return result;
         }
         public async Task<AuthenticationModel?> AuthGetById(int id)
         {
             var result = await _dbcontex.Auths.FirstOrDefaultAsync(_auth => _auth.Id == id);
+            return result;
+        }
+        public async Task<AuthenticationModel?> AuthGetByUsername(string username)
+        {
+            var result = await _dbcontex.Auths.FirstOrDefaultAsync(_auth => _auth.Username == username);
             return result;
         }
         public async Task<AuthenticationModel?> AuthGetByBadge(string? badge)
@@ -30,10 +35,10 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<AuthenticationModel?> AuthInclude(AuthenticationModel login)
         {
-
+           
             await _dbcontex.Auths.AddAsync(login);
             await _dbcontex.SaveChangesAsync();
-            var result = await _dbcontex.Auths.FirstOrDefaultAsync(x => x.Login == login.Login);
+            var result = await _dbcontex.Auths.FirstOrDefaultAsync(x => x.Username == login.Username);
             return result;
 
 
@@ -46,8 +51,9 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception($"O usuário para ID:{id} não foi encontrado no banco de dados.");
             }
             var update = await _dbcontex.Auths.AsNoTracking().FirstOrDefaultAsync(x => x.Id == login.Id);
-            authGetById.Login = login.Login;
+            authGetById.Username = login.Username;
             authGetById.Password = login.Password;
+            authGetById.RolesName = login.RolesName;
             await _dbcontex.SaveChangesAsync();
             return authGetById;
         }
