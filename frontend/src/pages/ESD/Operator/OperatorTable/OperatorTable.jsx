@@ -29,6 +29,7 @@ import ESDEditForm from "../OperatorEditForm/ESDEditForm";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
 import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
+import Menu from "../../../Menu/Menu";
 
 const OperatorTable = () => {
   const { t } = useTranslation();
@@ -47,6 +48,8 @@ const OperatorTable = () => {
     snackbarMessage: "",
     snackbarSeverity: "success",
   });
+  const isAuthenticated = localStorage.getItem('token') !== null;
+  console.log('isAuthenticated', isAuthenticated)
 
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -247,6 +250,8 @@ const OperatorTable = () => {
 
   const rows = state.allOperators;
   return (
+    <>    
+    <Menu></Menu>
     <Box sx={{ p: 3 }}>
       <div className="grid-table">
         <DataGrid
@@ -334,6 +339,7 @@ const OperatorTable = () => {
         </Alert>
       </Snackbar>
     </Box>
+    </>
   );
 };
 

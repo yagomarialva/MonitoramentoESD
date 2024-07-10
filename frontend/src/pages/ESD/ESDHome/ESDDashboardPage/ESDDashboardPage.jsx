@@ -10,6 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import { CardHeader } from "react-bootstrap";
+import Menu from "../../../Menu/Menu";
 
 const ESDDashboardPage = () => {
   const [todos, setTodos] = useState([]);
@@ -43,6 +44,7 @@ const ESDDashboardPage = () => {
   };
 
   return (
+    <>
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
         Controle das Estações
@@ -137,6 +139,7 @@ const ESDDashboardPage = () => {
         </Box>
       </Modal>
     </Box>
+    </>
   );
 };
 

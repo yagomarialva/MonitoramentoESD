@@ -29,6 +29,7 @@ import MonitorModal from "../MonitorModal/MonitorModal";
 import MonitorForm from "../MonitorForm/MonitorForm";
 import MonitorConfirmModal from "../MonitorConfirmModal/MonitorConfirmModal";
 import MonitorEditForm from "../MonitorEditForm/MonitorEditForm";
+import Menu from "../../../Menu/Menu";
 
 const MonitorTable = () => {
   const { t } = useTranslation();
@@ -242,6 +243,8 @@ const MonitorTable = () => {
   const rows = state.allMonitors;
 
   return (
+    <>
+    <Menu></Menu>    
     <Box sx={{ p: 3 }}>
       <div className="grid-table">
         <DataGrid
@@ -329,6 +332,7 @@ const MonitorTable = () => {
         </Alert>
       </Snackbar>
     </Box>
+    </>
   );
 };
 

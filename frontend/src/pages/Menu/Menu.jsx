@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,11 +12,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link } from "react-router-dom";
-import { Container } from "@mui/material";
-import AppRoutes from "../../routes/Routes";
 import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SensorsOutlinedIcon from "@mui/icons-material/SensorsOutlined";
+import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
@@ -24,23 +23,14 @@ import { useAuth } from "../../context/AuthContext";
 const drawerWidth = 190;
 
 export default function Menu() {
-  const { user, logout } = useAuth();
-  const {
-    i18n: { changeLanguage, language },
-  } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
-  const handleChangeLanguage = () => {
-    const newLanguage = currentLanguage === "en" ? "pt" : "en";
-    setCurrentLanguage(newLanguage);
-    changeLanguage(newLanguage);
-  };
+  const { user, logout} = useAuth()
+  const navigate = useNavigate()
   const [open] = React.useState(true);
-
-
+  console.log('user',user)
   const list = () => (
     <List>
       {[
-        { text: "Controller", icon: <HomeIcon />, path: "/esd-dashboard" },
+        { text: "Controller", icon: <HomeIcon />, path: "/dashboard" },
         {
           text: "Operators",
           icon: <AccountCircleOutlinedIcon />,
@@ -78,7 +68,7 @@ export default function Menu() {
       ))}
     </List>
   );
-
+// console.log('token in menu', token)
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
@@ -92,8 +82,8 @@ export default function Menu() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             FCT Auto Test
           </Typography>
-          <Button color="inherit" onClick={handleChangeLanguage}>Change Language {currentLanguage}</Button>
-          <Button color="inherit" onClick={logout}>Logout</Button>
+          {/* <Button color="inherit" onClick={handleChangeLanguage}>Change Language {currentLanguage}</Button> */}
+          <Button onClick={logout} color="inherit" >Logout</Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -125,12 +115,9 @@ export default function Menu() {
           mt: "64px",
         }}
       >
-        <Typography paragraph>
-          <Container sx={{ mt: -3, ml: -10 }}>
-            <AppRoutes />
-          </Container>
-        </Typography>
       </Box>
     </Box>
-  );
+  )
+
+  
 }

@@ -29,6 +29,7 @@ import ESDEditForm from "../ESDEditForm/ESDEditForm";
 import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
+import Menu from "../../../Menu/Menu";
 
 const ESDTable = () => {
   const { t } = useTranslation();
@@ -242,6 +243,8 @@ const ESDTable = () => {
   const rows = state.allBracelets;
 
   return (
+    <>    
+    <Menu></Menu>
     <Box sx={{ p: 3 }}>
       <div className="grid-table">
         <DataGrid
@@ -329,6 +332,7 @@ const ESDTable = () => {
         </Alert>
       </Snackbar>
     </Box>
+    </>
   );
 };
 
