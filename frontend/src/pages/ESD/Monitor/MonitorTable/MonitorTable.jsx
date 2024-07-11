@@ -14,6 +14,8 @@ import {
   Button,
   Chip,
   Stack,
+  Container,
+  Typography,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
 import {
@@ -97,9 +99,7 @@ const MonitorTable = () => {
     try {
       await deleteMonitors(id);
       handleStateChange({
-        allMonitors: state.allMonitors.filter(
-          (monitor) => monitor.id !== id
-        ),
+        allMonitors: state.allMonitors.filter((monitor) => monitor.id !== id),
       });
       showSnackbar(
         t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" })
@@ -129,7 +129,9 @@ const MonitorTable = () => {
       });
 
       showSnackbar(
-        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
+          appName: "App for Translations",
+        })
       );
     } catch (error) {
       showSnackbar(
@@ -186,7 +188,9 @@ const MonitorTable = () => {
     },
     {
       field: "title",
-      headerName: t("ESD_MONITOR.TABLE.NAME", { appName: "App for Translations" }),
+      headerName: t("ESD_MONITOR.TABLE.NAME", {
+        appName: "App for Translations",
+      }),
       width: 250,
     },
     { field: "body", headerName: "Completed", width: 250 },
@@ -244,94 +248,101 @@ const MonitorTable = () => {
 
   return (
     <>
-    <Menu></Menu>    
-    <Box sx={{ p: 3 }}>
-      <div className="grid-table">
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          localeText={{
-            toolbarColumns: t("ESD_MONITOR.TABLE.COLUMNS", {
-              appName: "App for Translations",
-            }),
-            toolbarFilters: t("ESD_MONITOR.TABLE.SEARCH", {
-              appName: "App for Translations",
-            }),
-            toolbarDensity: t("ESD_MONITOR.TABLE.DENSITY", {
-              appName: "App for Translations",
-            }),
-            toolbarDensityCompact: t("ESD_MONITOR.TABLE.COMPACT", {
-              appName: "App for Translations",
-            }),
-            toolbarDensityStandard: t("ESD_MONITOR.TABLE.STANDARD", {
-              appName: "App for Translations",
-            }),
-            toolbarDensityComfortable: t("ESD_MONITOR.TABLE.CONFORTABLE", {
-              appName: "App for Translations",
-            }),
-          }}
-          components={{ Toolbar: CustomToolbar }}
-          componentsProps={{ toolbar: { onAdd: () => handleOpen(null) } }}
-          slots={{ toolbar: CustomToolbar }}
-          slotProps={{ toolbar: { showQuickFilter: true } }}
-          initialState={{
-            pagination: { paginationModel: { page: 0, pageSize: 25 } },
-          }}
-          pageSizeOptions={[5, 10, 25, 50, 75, 100]}
-          onCellEditCommit={handleEditCellChange}
-        />
-      </div>
-      <MonitorModal
-        open={state.open}
-        handleClose={handleClose}
-        monitorName={state.monitor.title}
-        monitor={state.monitor}
-      />
-      <MonitorForm
-        open={state.openModal}
-        handleClose={handleCloseModal}
-        onSubmit={handleCreateMonitor}
-      />
-      <MonitorEditForm
-        open={state.openEditModal}
-        handleClose={handleEditClose}
-        onSubmit={handleEditCellChange}
-        initialData={state.editData}
-      />
-      <MonitorConfirmModal
-        open={state.deleteConfirmOpen}
-        handleClose={handleDeleteClose}
-        handleConfirm={handleConfirmDelete}
-        title={t("ESD_MONITOR.CONFIRM_DIALOG.DELETE_STATION", {
-          appName: "App for Translations",
-        })}
-        description={t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
-          appName: "App for Translations",
-        })}
-      />
-      <Snackbar
-        open={state.snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => handleStateChange({ snackbarOpen: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        className={`snackbar-content snackbar-${state.snackbarSeverity}`}
-      >
-        <Alert
-          onClose={() => handleStateChange({ snackbarOpen: false })}
-          severity={state.snackbarSeverity}
-          sx={{
-            backgroundColor: "inherit",
-            color: "inherit",
-            fontWeight: "inherit",
-            boxShadow: "inherit",
-            borderRadius: "inherit",
-            padding: "inherit",
-          }}
-        >
-          {state.snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </Box>
+      <Menu></Menu>
+      <Typography paragraph>
+        <Container sx={{ mt: -7, ml: 22 }}>
+          <Box sx={{ p: 3 }}>
+            <div className="grid-table">
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                localeText={{
+                  toolbarColumns: t("ESD_MONITOR.TABLE.COLUMNS", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarFilters: t("ESD_MONITOR.TABLE.SEARCH", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensity: t("ESD_MONITOR.TABLE.DENSITY", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensityCompact: t("ESD_MONITOR.TABLE.COMPACT", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensityStandard: t("ESD_MONITOR.TABLE.STANDARD", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensityComfortable: t(
+                    "ESD_MONITOR.TABLE.CONFORTABLE",
+                    {
+                      appName: "App for Translations",
+                    }
+                  ),
+                }}
+                components={{ Toolbar: CustomToolbar }}
+                componentsProps={{ toolbar: { onAdd: () => handleOpen(null) } }}
+                slots={{ toolbar: CustomToolbar }}
+                slotProps={{ toolbar: { showQuickFilter: true } }}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 25 } },
+                }}
+                pageSizeOptions={[5, 10, 25, 50, 75, 100]}
+                onCellEditCommit={handleEditCellChange}
+              />
+            </div>
+            <MonitorModal
+              open={state.open}
+              handleClose={handleClose}
+              monitorName={state.monitor.title}
+              monitor={state.monitor}
+            />
+            <MonitorForm
+              open={state.openModal}
+              handleClose={handleCloseModal}
+              onSubmit={handleCreateMonitor}
+            />
+            <MonitorEditForm
+              open={state.openEditModal}
+              handleClose={handleEditClose}
+              onSubmit={handleEditCellChange}
+              initialData={state.editData}
+            />
+            <MonitorConfirmModal
+              open={state.deleteConfirmOpen}
+              handleClose={handleDeleteClose}
+              handleConfirm={handleConfirmDelete}
+              title={t("ESD_MONITOR.CONFIRM_DIALOG.DELETE_STATION", {
+                appName: "App for Translations",
+              })}
+              description={t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
+                appName: "App for Translations",
+              })}
+            />
+            <Snackbar
+              open={state.snackbarOpen}
+              autoHideDuration={6000}
+              onClose={() => handleStateChange({ snackbarOpen: false })}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+            >
+              <Alert
+                onClose={() => handleStateChange({ snackbarOpen: false })}
+                severity={state.snackbarSeverity}
+                sx={{
+                  backgroundColor: "inherit",
+                  color: "inherit",
+                  fontWeight: "inherit",
+                  boxShadow: "inherit",
+                  borderRadius: "inherit",
+                  padding: "inherit",
+                }}
+              >
+                {state.snackbarMessage}
+              </Alert>
+            </Snackbar>
+          </Box>
+        </Container>
+      </Typography>
     </>
   );
 };

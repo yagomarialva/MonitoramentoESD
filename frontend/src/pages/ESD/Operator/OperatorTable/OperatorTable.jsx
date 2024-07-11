@@ -30,6 +30,7 @@ import "./SnackbarStyles.css";
 import "./ESDTable.css";
 import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
 import Menu from "../../../Menu/Menu";
+import { Container, Typography } from "@mui/material";
 
 const OperatorTable = () => {
   const { t } = useTranslation();
@@ -48,8 +49,8 @@ const OperatorTable = () => {
     snackbarMessage: "",
     snackbarSeverity: "success",
   });
-  const isAuthenticated = localStorage.getItem('token') !== null;
-  console.log('isAuthenticated', isAuthenticated)
+  const isAuthenticated = localStorage.getItem("token") !== null;
+  console.log("isAuthenticated", isAuthenticated);
 
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -250,95 +251,102 @@ const OperatorTable = () => {
 
   const rows = state.allOperators;
   return (
-    <>    
-    <Menu></Menu>
-    <Box sx={{ p: 3 }}>
-      <div className="grid-table">
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          localeText={{
-            toolbarColumns: t("ESD_OPERATOR.TABLE.COLUMNS", {
-              appName: "App for Translations",
-            }),
-            toolbarFilters: t("ESD_OPERATOR.TABLE.SEARCH", {
-              appName: "App for Translations",
-            }),
-            toolbarDensity: t("ESD_OPERATOR.TABLE.DENSITY", {
-              appName: "App for Translations",
-            }),
-            toolbarDensityCompact: t("ESD_OPERATOR.TABLE.COMPACT", {
-              appName: "App for Translations",
-            }),
-            toolbarDensityStandard: t("ESD_OPERATOR.TABLE.STANDARD", {
-              appName: "App for Translations",
-            }),
-            toolbarDensityComfortable: t("ESD_OPERATOR.TABLE.CONFORTABLE", {
-              appName: "App for Translations",
-            }),
-          }}
-          components={{ Toolbar: CustomToolbar }}
-          componentsProps={{ toolbar: { onAdd: () => handleOpen(null) } }}
-          slots={{ toolbar: CustomToolbar }}
-          slotProps={{ toolbar: { showQuickFilter: true } }}
-          initialState={{
-            pagination: { paginationModel: { page: 0, pageSize: 25 } },
-          }}
-          pageSizeOptions={[5, 10, 25, 50, 75, 100]}
-          onCellEditCommit={handleEditCellChange}
-        />
-      </div>
-      <OperatorModal
-        open={state.open}
-        handleClose={handleClose}
-        operatorName={state.operator.name}
-        operator={state.operator}
-      />
-      <ESDForm
-        open={state.openModal}
-        handleClose={handleCloseModal}
-        onSubmit={handleCreateOperator}
-      />
-      <ESDEditForm
-        open={state.openEditModal}
-        handleClose={handleEditClose}
-        onSubmit={handleEditCellChange}
-        initialData={state.editData}
-      />
-      <OperatorConfirmModal
-        open={state.deleteConfirmOpen}
-        handleClose={handleDeleteClose}
-        handleConfirm={handleConfirmDelete}
-        title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_STATION", {
-          appName: "App for Translations",
-        })}
-        description={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
-          appName: "App for Translations",
-        })}
-      />
-      <Snackbar
-        open={state.snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => handleStateChange({ snackbarOpen: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        className={`snackbar-content snackbar-${state.snackbarSeverity}`}
-      >
-        <Alert
-          onClose={() => handleStateChange({ snackbarOpen: false })}
-          severity={state.snackbarSeverity}
-          sx={{
-            backgroundColor: "inherit",
-            color: "inherit",
-            fontWeight: "inherit",
-            boxShadow: "inherit",
-            borderRadius: "inherit",
-            padding: "inherit",
-          }}
-        >
-          {state.snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </Box>
+    <>
+      <Menu></Menu>
+      <Typography paragraph>
+        <Container sx={{ mt: -7, ml: 22 }}>
+          <Box sx={{ p: 3 }}>
+            <div className="grid-table">
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                localeText={{
+                  toolbarColumns: t("ESD_OPERATOR.TABLE.COLUMNS", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarFilters: t("ESD_OPERATOR.TABLE.SEARCH", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensity: t("ESD_OPERATOR.TABLE.DENSITY", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensityCompact: t("ESD_OPERATOR.TABLE.COMPACT", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensityStandard: t("ESD_OPERATOR.TABLE.STANDARD", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensityComfortable: t(
+                    "ESD_OPERATOR.TABLE.CONFORTABLE",
+                    {
+                      appName: "App for Translations",
+                    }
+                  ),
+                }}
+                components={{ Toolbar: CustomToolbar }}
+                componentsProps={{ toolbar: { onAdd: () => handleOpen(null) } }}
+                slots={{ toolbar: CustomToolbar }}
+                slotProps={{ toolbar: { showQuickFilter: true } }}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 25 } },
+                }}
+                pageSizeOptions={[5, 10, 25, 50, 75, 100]}
+                onCellEditCommit={handleEditCellChange}
+              />
+            </div>
+            <OperatorModal
+              open={state.open}
+              handleClose={handleClose}
+              operatorName={state.operator.name}
+              operator={state.operator}
+            />
+            <ESDForm
+              open={state.openModal}
+              handleClose={handleCloseModal}
+              onSubmit={handleCreateOperator}
+            />
+            <ESDEditForm
+              open={state.openEditModal}
+              handleClose={handleEditClose}
+              onSubmit={handleEditCellChange}
+              initialData={state.editData}
+            />
+            <OperatorConfirmModal
+              open={state.deleteConfirmOpen}
+              handleClose={handleDeleteClose}
+              handleConfirm={handleConfirmDelete}
+              title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_STATION", {
+                appName: "App for Translations",
+              })}
+              description={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
+                appName: "App for Translations",
+              })}
+            />
+            <Snackbar
+              open={state.snackbarOpen}
+              autoHideDuration={6000}
+              onClose={() => handleStateChange({ snackbarOpen: false })}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+            >
+              <Alert
+                onClose={() => handleStateChange({ snackbarOpen: false })}
+                severity={state.snackbarSeverity}
+                sx={{
+                  backgroundColor: "inherit",
+                  color: "inherit",
+                  fontWeight: "inherit",
+                  boxShadow: "inherit",
+                  borderRadius: "inherit",
+                  padding: "inherit",
+                }}
+              >
+                {state.snackbarMessage}
+              </Alert>
+            </Snackbar>
+          </Box>
+        </Container>
+      </Typography>
     </>
   );
 };

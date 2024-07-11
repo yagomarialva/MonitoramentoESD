@@ -83,7 +83,7 @@ export default function Menu() {
             FCT Auto Test
           </Typography>
           {/* <Button color="inherit" onClick={handleChangeLanguage}>Change Language {currentLanguage}</Button> */}
-          <Button onClick={logout} color="inherit" >Logout</Button>
+          <Button onClick={logout} color="inherit" component={Link} to="/">Logout</Button>
         </Toolbar>
       </AppBar>
       <Drawer

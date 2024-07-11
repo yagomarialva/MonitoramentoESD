@@ -37,12 +37,11 @@ const LoginPage = () => {
     }).catch((e) => {
       setError(e.response.data.error)
     }).finally(() => {
-      const userData = { name: localStorage.getItem('token') };
+      const userData = { token: localStorage.getItem('token') };
       login(userData);
       setLoading(false)
     })
   }
-  console.log('username',username)
 
   return (
     <Container sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -52,7 +51,7 @@ const LoginPage = () => {
         </Alert>
       </Snackbar>
 
-      <Card sx={{ mt: 5, pt: 5, px: 10, width: '40%', display: 'flex', alignItems: 'center', flexDirection: 'column', }}>
+      <Card sx={{ mt: 5,ml:5, mb:10, pt: 5, px: 10, width: '40%', display: 'flex', alignItems: 'center', flexDirection: 'column', }}>
         <Typography variant='h4' align="center">LOGIN</Typography>
         <img src={Logo} alt="" width="200px" style={{ marginTop: '20px' }} />
 

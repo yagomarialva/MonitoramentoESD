@@ -13,12 +13,11 @@ const token = localStorage.getItem("token");
 root.render(
   <AuthProvider>
     <HashRouter>
-      {/* <Menu></Menu> */}
-      <Typography paragraph>
-        <Container sx={{ mt: -7, ml: 22 }}>
+      {/* <Typography paragraph>
+        <Container sx={{ mt: -7, ml: 22 }}> */}
           <AppRoutes />
-        </Container>
-      </Typography>
+        {/* </Container>
+      </Typography> */}
     </HashRouter>
   </AuthProvider>
 );

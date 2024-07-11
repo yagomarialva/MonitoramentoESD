@@ -30,6 +30,7 @@ import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
 import Menu from "../../../Menu/Menu";
+import { Container, Typography } from "@mui/material";
 
 const ESDTable = () => {
   const { t } = useTranslation();
@@ -243,95 +244,99 @@ const ESDTable = () => {
   const rows = state.allBracelets;
 
   return (
-    <>    
-    <Menu></Menu>
-    <Box sx={{ p: 3 }}>
-      <div className="grid-table">
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          localeText={{
-            toolbarColumns: t("ESD_TEST.TABLE.COLUMNS", {
-              appName: "App for Translations",
-            }),
-            toolbarFilters: t("ESD_TEST.TABLE.SEARCH", {
-              appName: "App for Translations",
-            }),
-            toolbarDensity: t("ESD_TEST.TABLE.DENSITY", {
-              appName: "App for Translations",
-            }),
-            toolbarDensityCompact: t("ESD_TEST.TABLE.COMPACT", {
-              appName: "App for Translations",
-            }),
-            toolbarDensityStandard: t("ESD_TEST.TABLE.STANDARD", {
-              appName: "App for Translations",
-            }),
-            toolbarDensityComfortable: t("ESD_TEST.TABLE.CONFORTABLE", {
-              appName: "App for Translations",
-            }),
-          }}
-          components={{ Toolbar: CustomToolbar }}
-          componentsProps={{ toolbar: { onAdd: () => handleOpen(null) } }}
-          slots={{ toolbar: CustomToolbar }}
-          slotProps={{ toolbar: { showQuickFilter: true } }}
-          initialState={{
-            pagination: { paginationModel: { page: 0, pageSize: 25 } },
-          }}
-          pageSizeOptions={[5, 10, 25, 50, 75, 100]}
-          onCellEditCommit={handleEditCellChange}
-        />
-      </div>
-      <ESDModal
-        open={state.open}
-        handleClose={handleClose}
-        braceletName={state.bracelet.title}
-        bracelet={state.bracelet}
-      />
-      <ESDForm
-        open={state.openModal}
-        handleClose={handleCloseModal}
-        onSubmit={handleCreateBracelet}
-      />
-      <ESDEditForm
-        open={state.openEditModal}
-        handleClose={handleEditClose}
-        onSubmit={handleEditCellChange}
-        initialData={state.editData}
-      />
-      <ESDConfirmModal
-        open={state.deleteConfirmOpen}
-        handleClose={handleDeleteClose}
-        handleConfirm={handleConfirmDelete}
-        title={t("ESD_TEST.CONFIRM_DIALOG.DELETE_STATION", {
-          appName: "App for Translations",
-        })}
-        description={t("ESD_TEST.CONFIRM_DIALOG.CONFIRM-TEXT", {
-          appName: "App for Translations",
-        })}
-      />
-      <Snackbar
-        open={state.snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => handleStateChange({ snackbarOpen: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        className={`snackbar-content snackbar-${state.snackbarSeverity}`}
-      >
-        <Alert
-          onClose={() => handleStateChange({ snackbarOpen: false })}
-          severity={state.snackbarSeverity}
-          sx={{
-            backgroundColor: "inherit",
-            color: "inherit",
-            fontWeight: "inherit",
-            boxShadow: "inherit",
-            borderRadius: "inherit",
-            padding: "inherit",
-          }}
-        >
-          {state.snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </Box>
+    <>
+      <Menu></Menu>
+      <Typography paragraph>
+        <Container sx={{ mt: -7, ml: 22 }}>
+          <Box sx={{ p: 3 }}>
+            <div className="grid-table">
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                localeText={{
+                  toolbarColumns: t("ESD_TEST.TABLE.COLUMNS", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarFilters: t("ESD_TEST.TABLE.SEARCH", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensity: t("ESD_TEST.TABLE.DENSITY", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensityCompact: t("ESD_TEST.TABLE.COMPACT", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensityStandard: t("ESD_TEST.TABLE.STANDARD", {
+                    appName: "App for Translations",
+                  }),
+                  toolbarDensityComfortable: t("ESD_TEST.TABLE.CONFORTABLE", {
+                    appName: "App for Translations",
+                  }),
+                }}
+                components={{ Toolbar: CustomToolbar }}
+                componentsProps={{ toolbar: { onAdd: () => handleOpen(null) } }}
+                slots={{ toolbar: CustomToolbar }}
+                slotProps={{ toolbar: { showQuickFilter: true } }}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 25 } },
+                }}
+                pageSizeOptions={[5, 10, 25, 50, 75, 100]}
+                onCellEditCommit={handleEditCellChange}
+              />
+            </div>
+            <ESDModal
+              open={state.open}
+              handleClose={handleClose}
+              braceletName={state.bracelet.title}
+              bracelet={state.bracelet}
+            />
+            <ESDForm
+              open={state.openModal}
+              handleClose={handleCloseModal}
+              onSubmit={handleCreateBracelet}
+            />
+            <ESDEditForm
+              open={state.openEditModal}
+              handleClose={handleEditClose}
+              onSubmit={handleEditCellChange}
+              initialData={state.editData}
+            />
+            <ESDConfirmModal
+              open={state.deleteConfirmOpen}
+              handleClose={handleDeleteClose}
+              handleConfirm={handleConfirmDelete}
+              title={t("ESD_TEST.CONFIRM_DIALOG.DELETE_STATION", {
+                appName: "App for Translations",
+              })}
+              description={t("ESD_TEST.CONFIRM_DIALOG.CONFIRM-TEXT", {
+                appName: "App for Translations",
+              })}
+            />
+            <Snackbar
+              open={state.snackbarOpen}
+              autoHideDuration={6000}
+              onClose={() => handleStateChange({ snackbarOpen: false })}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+            >
+              <Alert
+                onClose={() => handleStateChange({ snackbarOpen: false })}
+                severity={state.snackbarSeverity}
+                sx={{
+                  backgroundColor: "inherit",
+                  color: "inherit",
+                  fontWeight: "inherit",
+                  boxShadow: "inherit",
+                  borderRadius: "inherit",
+                  padding: "inherit",
+                }}
+              >
+                {state.snackbarMessage}
+              </Alert>
+            </Snackbar>
+          </Box>
+        </Container>
+      </Typography>
     </>
   );
 };
