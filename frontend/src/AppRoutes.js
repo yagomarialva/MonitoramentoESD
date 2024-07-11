@@ -10,6 +10,7 @@ import StationList from "./components/ESD/StationList/StationList.jsx";
 import Monitors from "./components/ESD/Monitors/Monitors.jsx";
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
+import SignUpPage from "./pages/SignUpPage/SignUpPage.jsx";
 
 const AppRoutes = () => {
   const { user} = useAuth()
@@ -22,7 +23,8 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={user ? <HomePage /> : <Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/register" element={<SignUpPage />} />
+        <Route path="/dashboard" element={user ? <DashboardPage /> : <Navigate to="/login" />}/>
         <Route
           path="/users"
           element={user ? <Operators /> : <Navigate to="/login" />}

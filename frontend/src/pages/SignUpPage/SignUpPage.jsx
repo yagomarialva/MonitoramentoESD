@@ -12,15 +12,19 @@ import Logo from "./logo.png";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import TokenApi from "../../api/TokenApi";
-import { useAuth } from "../../context/AuthContext";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
-const LoginPage = () => {
+const SignUpPage = () => {
   const navigate = useNavigate();
   const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
   const [error] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const [rolesName, setRole] = useState("");
+  const [badge, setBadge] = useState("");
   const [state, setState] = useState({
     snackbarOpen: false,
     snackbarMessage: "",
@@ -29,32 +33,44 @@ const LoginPage = () => {
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
-  const handleClick = () => {
-    setLoading(true);
-    TokenApi.post("/api/Authentication", {
-      username: username,
-      password: password,
-    })
-      .then(({ data }) => {
-        localStorage.setItem("token", data.token);
-        navigate("/");
-      })
-      .catch(() => {
-        showSnackbar('Login ou senha invalidos, tente novamente!');
-      })
-      .finally(() => {
-        const userData = { token: localStorage.getItem("token") };
-        login(userData);
-        setLoading(false);
-      });
+
+  const handleChange = (event) => {
+    setRole(event.target.value);
   };
 
-  const showSnackbar = (message, severity = "error") => {
+  const showSnackbar = (message, severity) => {
     handleStateChange({
       snackbarMessage: message,
       snackbarSeverity: severity,
       snackbarOpen: true,
     });
+  };
+  
+  const handleClick = () => {
+    setLoading(true);
+    TokenApi.post("/criacao", {
+      username: username,
+      password: password,
+      rolesName: rolesName,
+      badge: badge
+    })
+      .then(({ data }) => {
+        console.log(data)
+        setusername('')
+        setPassword('')
+        setRole('')
+        setBadge('')
+        showSnackbar("Usuário criado com sucesso!", "success");
+      })
+      .catch((e) => {
+        console.log(e);
+        showSnackbar(e.response.data, "error");
+      })
+      .finally(() => {
+        // const userData = { token: localStorage.getItem("token") };
+        // login(userData);
+        setLoading(false);
+      });
   };
 
   return (
@@ -83,16 +99,22 @@ const LoginPage = () => {
         }}
       >
         <Typography variant="h4" align="center">
-          LOGIN
+          Cadastro
         </Typography>
         <img src={Logo} alt="" width="200px" style={{ marginTop: "20px" }} />
-
         <TextField
           label="E-mail"
           sx={{ my: 3 }}
           fullWidth
           onChange={(e) => setusername(e.target.value)}
           value={username}
+        />
+        <TextField
+          label="Matricula"
+          sx={{ mb: 3 }}
+          fullWidth
+          onChange={(e) => setBadge(e.target.value)}
+          value={badge}
         />
         <TextField
           label="Senha"
@@ -102,7 +124,24 @@ const LoginPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           value={password}
         />
-
+        <FormControl sx={{ mb: 3, minWidth: 300 }} size="normal">
+          <InputLabel id="demo-select-normal-label">Função</InputLabel>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-select-small"
+            value={rolesName}
+            label="Função"
+            onChange={handleChange}
+          >
+            <MenuItem value="">
+              <em>Selecione uma Função</em>
+            </MenuItem>
+            {/* "Admin,Operator,Developer" */}
+            <MenuItem value={"admininstrator"}>Administrador</MenuItem>
+            <MenuItem value={"Operator"}>Operador</MenuItem>
+            <MenuItem value={"Developer"}>Desenvolvedor</MenuItem>
+          </Select>
+        </FormControl>
         <LoadingButton
           loading={loading}
           color="primary"
@@ -110,16 +149,15 @@ const LoginPage = () => {
           fullWidth
           onClick={handleClick}
         >
-          Fazer Login
+          Cadastrar
         </LoadingButton>
-
         <Button
           sx={{ mt: 2, mb: 1 }}
           onClick={() => {
-            navigate("/register");
+            navigate("/login");
           }}
         >
-          Cadastrar Operador
+          Voltar para login
         </Button>
       </Card>
       <Snackbar
@@ -148,4 +186,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignUpPage;
