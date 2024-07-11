@@ -10,7 +10,6 @@ import {
 import React, { useState } from "react";
 import Logo from "./logo.png";
 import { useNavigate } from "react-router-dom";
-// import api from '../../services/api'
 import { LoadingButton } from "@mui/lab";
 import TokenApi from "../../api/TokenApi";
 import { useAuth } from "../../context/AuthContext";
@@ -20,7 +19,6 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const [username, setusername] = useState('')
   const [password, setPassword] = useState('')
-  const [token, setToken] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { login } = useAuth();

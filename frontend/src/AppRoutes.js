@@ -9,7 +9,7 @@ import Operators from "./components/ESD/Operators/Operators.jsx";
 import StationList from "./components/ESD/StationList/StationList.jsx";
 import Monitors from "./components/ESD/Monitors/Monitors.jsx";
 import { Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./pages/Login/LoginPage.jsx";
+import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 
 const AppRoutes = () => {
   const { user} = useAuth()
