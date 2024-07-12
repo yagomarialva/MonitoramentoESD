@@ -49,8 +49,6 @@ const OperatorTable = () => {
     snackbarMessage: "",
     snackbarSeverity: "success",
   });
-  const isAuthenticated = localStorage.getItem("token") !== null;
-  console.log("isAuthenticated", isAuthenticated);
 
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -159,7 +157,8 @@ const OperatorTable = () => {
     const fetchDataAllUsers = async () => {
       try {
         const result = await getAllOperators();
-        handleStateChange({ allOperators: result });
+        console.log(result)
+        handleStateChange({ allOperators: result.value });
       } catch (error) {
         showSnackbar(t(error.message));
       }
@@ -193,7 +192,7 @@ const OperatorTable = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     {
-      field: "phone",
+      field: "badge",
       headerName: t("ESD_OPERATOR.TABLE.USER_ID", {
         appName: "App for Translations",
       }),
@@ -208,7 +207,7 @@ const OperatorTable = () => {
       width: 250,
     },
     {
-      field: "username",
+      field: "roleName",
       headerName: t("ESD_OPERATOR.TABLE.ROLE", {
         appName: "App for Translations",
       }),

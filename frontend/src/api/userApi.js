@@ -1,15 +1,18 @@
 import axios from 'axios';
+import TokenApi from "./TokenApi";
+
 
 const API_URL = process.env.REACT_APP_API_URL;
 const API_URL_USERS = process.env.REACT_APP_API_URL;
 
 export const getUsers = async () => {
-    const response = await axios.get(`${API_URL}/users`);
+    const response = await TokenApi.get('/todosUsers');
     return response.data;
 };
 
 export const getAllUsers = async () => {
-    const response = await axios.get(`http://localhost:5051/allusers`);
+    const response = await TokenApi.get('/todosUsers');
+    console.log('response', response)
     return response.data.value;
 };
 

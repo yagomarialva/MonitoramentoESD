@@ -1,11 +1,13 @@
 import axios from 'axios';
+import TokenApi from "./TokenApi";
 
 const REACT_APP_API_MOCKED_URL = process.env.REACT_APP_API_MOCKED_URL;
 // const API_URL_USERS = process.env.REACT_APP_API_URL;
 
 
 export const getAllOperators = async () => {
-    const response = await axios.get(`${REACT_APP_API_MOCKED_URL}/users`);
+    const response = await TokenApi.get('/todosUsers');
+    console.log('response', response)
     return response.data;
 };
 
