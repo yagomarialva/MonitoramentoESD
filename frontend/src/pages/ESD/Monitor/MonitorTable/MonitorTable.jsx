@@ -79,21 +79,29 @@ const MonitorTable = () => {
   };
 
   const handleCreateMonitor = async (monitor) => {
-    const newMonitor = { ...monitor, id: Date.now() };
+    // Determina o próximo id baseado no maior id atual
+    const maxId = state.allMonitors.reduce((max, monitor) => Math.max(max, monitor.id), 0);
+    const newId = maxId + 1;
+
+    // Cria o novo monitor com o próximo id
+    const newMonitor = { id: newId, ...monitor };
+    console.log('newMonitor', newMonitor);
+
     try {
-      const response = await createMonitors(newMonitor);
-      handleStateChange({ allMonitors: [...state.allMonitors, newMonitor] });
-      showSnackbar(
-        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
-      );
-      return response.data;
+        const response = await createMonitors(newMonitor);
+        handleStateChange({ allMonitors: [...state.allMonitors, newMonitor] });
+        showSnackbar(
+            t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+        );
+        return response.data;
     } catch (error) {
-      showSnackbar(
-        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
-        "error"
-      );
+        showSnackbar(
+            t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+            "error"
+        );
     }
-  };
+};
+
 
   const handleDelete = async (id) => {
     try {
@@ -114,14 +122,15 @@ const MonitorTable = () => {
 
   const handleEditCellChange = async (params) => {
     try {
+      console.log('params',params)
       const updatedMonitor = {
         ...state.monitor,
-        title: params.title,
-        userId: params.userId,
-        completed: params.completed,
+        id: params.id,
+        description: params.description,
+        serialNumber: params.serialNumber,
       };
-      const updatedItem = await updateMonitors(params.id, updatedMonitor);
-
+      const updatedItem = await createMonitors( updatedMonitor);
+      console.log('updatedMonitor',updatedItem)
       handleStateChange({
         allMonitors: state.allMonitors.map((item) =>
           item.id === params.id ? updatedItem : item
@@ -179,7 +188,7 @@ const MonitorTable = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     {
-      field: "userId",
+      field: "serialNumber",
       headerName: t("ESD_MONITOR.TABLE.USER_ID", {
         appName: "App for Translations",
       }),
@@ -187,27 +196,11 @@ const MonitorTable = () => {
       width: 160,
     },
     {
-      field: "title",
+      field: "description",
       headerName: t("ESD_MONITOR.TABLE.NAME", {
         appName: "App for Translations",
       }),
       width: 250,
-    },
-    { field: "body", headerName: "Completed", width: 250 },
-    {
-      field: "status",
-      headerName: "Status",
-      sortable: false,
-      renderCell: (params) => (
-        <Stack spacing={1} alignItems="right" style={{ marginTop: "10px" }}>
-          <Stack direction="row" spacing={1}>
-            <Chip
-              label={params.row.completed ? "PASS" : "FAIL"}
-              color={params.row.completed ? "success" : "error"}
-            />
-          </Stack>
-        </Stack>
-      ),
     },
     {
       field: "actions",
@@ -245,17 +238,17 @@ const MonitorTable = () => {
   ];
 
   const rows = state.allMonitors;
-
   return (
     <>
       <Menu></Menu>
       <Typography paragraph>
-        <Container sx={{ mt: -7, ml: 22 }}>
+        <Container sx={{ mt: -7, ml: 22, width: 860 }}>
           <Box sx={{ p: 3 }}>
-            <div className="grid-table">
               <DataGrid
+                
                 rows={rows}
                 columns={columns}
+                getRowId={(row) => row.serialNumber}
                 localeText={{
                   toolbarColumns: t("ESD_MONITOR.TABLE.COLUMNS", {
                     appName: "App for Translations",
@@ -289,11 +282,10 @@ const MonitorTable = () => {
                 pageSizeOptions={[5, 10, 25, 50, 75, 100]}
                 onCellEditCommit={handleEditCellChange}
               />
-            </div>
             <MonitorModal
               open={state.open}
               handleClose={handleClose}
-              monitorName={state.monitor.title}
+              monitorName={state.monitor.serialNumber}
               monitor={state.monitor}
             />
             <MonitorForm

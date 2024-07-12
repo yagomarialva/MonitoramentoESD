@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  getAllBracelets,
-  createBracelets,
-  deleteBracelets,
-  updateBracelets,
-} from "../../../../api/braceletApi";
+  getAllStations,
+  createStations,
+  deleteStations,
+  updateStations,
+} from "../../../../api/stationApi";
 import {
   IconButton,
   Box,
@@ -36,15 +36,15 @@ const ESDTable = () => {
   const { t } = useTranslation();
 
   const [state, setState] = useState({
-    allBracelets: [],
-    bracelet: {},
+    allStations: [],
+    station: {},
     open: false,
     openModal: false,
     openEditModal: false,
     editCell: null,
     editData: null,
     deleteConfirmOpen: false,
-    braceletToDelete: null,
+    stationToDelete: null,
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
@@ -54,7 +54,7 @@ const ESDTable = () => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
 
-  const showSnackbar = (message, severity = "success") => {
+  const showSnackbar = (message, severity) => {
     handleStateChange({
       snackbarMessage: message,
       snackbarSeverity: severity,
@@ -62,48 +62,55 @@ const ESDTable = () => {
     });
   };
 
-  const handleOpen = (bracelet) => handleStateChange({ bracelet, open: true });
+  const handleOpen = (station) => handleStateChange({ station, open: true });
   const handleClose = () => handleStateChange({ open: false });
   const handleEditClose = () =>
     handleStateChange({ openEditModal: false, editData: null });
   const handleOpenModal = () => handleStateChange({ openModal: true });
   const handleCloseModal = () => handleStateChange({ openModal: false });
-  const handleDeleteOpen = (bracelet) =>
-    handleStateChange({ braceletToDelete: bracelet, deleteConfirmOpen: true });
+  const handleDeleteOpen = (station) =>
+    handleStateChange({ stationToDelete: station, deleteConfirmOpen: true });
   const handleDeleteClose = () =>
-    handleStateChange({ deleteConfirmOpen: false, braceletToDelete: null });
+    handleStateChange({ deleteConfirmOpen: false, stationToDelete: null });
 
-  const handleEditOpen = (bracelet) => {
-    handleStateChange({ editData: bracelet, openEditModal: true });
+  const handleEditOpen = (station) => {
+    handleStateChange({ editData: station, openEditModal: true });
   };
 
-  const handleCreateBracelet = async (bracelet) => {
-    const newBracelet = { ...bracelet, id: Date.now() };
-    try {
-      const response = await createBracelets(newBracelet);
-      handleStateChange({ allBracelets: [...state.allBracelets, newBracelet] });
-      showSnackbar(
-        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
-      );
-      return response.data;
-    } catch (error) {
-      showSnackbar(
-        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
-        "error"
-      );
-    }
+  const handleCreateMonitor = async (station) => {
+     // Determina o próximo id baseado no maior id atual
+     const maxId = state.allStations.reduce((max, station) => Math.max(max, station.id), 0);
+     const newId = maxId + 1;
+ 
+     // Cria o novo monitor com o próximo id
+     const newStation = { id: newId, ...station };
+     console.log('newStation', newStation);
+ 
+     try {
+         const response = await createStations(newStation);
+         handleStateChange({ allStations: [...state.allStations, newStation] });
+         showSnackbar(
+             t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+         );
+         return response.data;
+     } catch (error) {
+         showSnackbar(
+             t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+             "error"
+         );
+     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await deleteBracelets(id);
+      await deleteStations(id);
       handleStateChange({
-        allBracelets: state.allBracelets.filter(
-          (bracelet) => bracelet.id !== id
+        allStations: state.allStations.filter(
+          (station) => station.id !== id
         ),
       });
       showSnackbar(
-        t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" }),"success"
       );
     } catch (error) {
       showSnackbar(
@@ -116,21 +123,21 @@ const ESDTable = () => {
   const handleEditCellChange = async (params) => {
     try {
       const updatedBracelet = {
-        ...state.bracelet,
-        title: params.title,
-        userId: params.userId,
-        completed: params.completed,
+        ...state.station,
+        id: params.id,
+        name: params.name,
+        description: params.description,
       };
-      const updatedItem = await updateBracelets(params.id, updatedBracelet);
+      const updatedItem = await updateStations(updatedBracelet);
 
       handleStateChange({
-        allBracelets: state.allBracelets.map((item) =>
+        allStations: state.allStations.map((item) =>
           item.id === params.id ? updatedItem : item
         ),
       });
 
       showSnackbar(
-        t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" }),"success"
       );
     } catch (error) {
       showSnackbar(
@@ -143,18 +150,18 @@ const ESDTable = () => {
   useEffect(() => {
     const fetchDataAllUsers = async () => {
       try {
-        const result = await getAllBracelets();
-        handleStateChange({ allBracelets: result });
+        const result = await getAllStations();
+        handleStateChange({ allStations: result });
       } catch (error) {
-        showSnackbar(t(error.message));
+        showSnackbar(t(error.message),'error');
       }
     };
     fetchDataAllUsers();
   }, []);
 
   const handleConfirmDelete = async () => {
-    if (state.braceletToDelete) {
-      await handleDelete(state.braceletToDelete.id);
+    if (state.stationToDelete) {
+      await handleDelete(state.stationToDelete.id);
       handleDeleteClose();
     }
   };
@@ -178,7 +185,7 @@ const ESDTable = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     {
-      field: "userId",
+      field: "name",
       headerName: t("ESD_TEST.TABLE.USER_ID", {
         appName: "App for Translations",
       }),
@@ -186,25 +193,9 @@ const ESDTable = () => {
       width: 160,
     },
     {
-      field: "title",
+      field: "description",
       headerName: t("ESD_TEST.TABLE.NAME", { appName: "App for Translations" }),
       width: 250,
-    },
-    { field: "completed", headerName: "Completed", width: 250 },
-    {
-      field: "status",
-      headerName: "Status",
-      sortable: false,
-      renderCell: (params) => (
-        <Stack spacing={1} alignItems="right" style={{ marginTop: "10px" }}>
-          <Stack direction="row" spacing={1}>
-            <Chip
-              label={params.row.completed ? "PASS" : "FAIL"}
-              color={params.row.completed ? "success" : "error"}
-            />
-          </Stack>
-        </Stack>
-      ),
     },
     {
       field: "actions",
@@ -241,13 +232,13 @@ const ESDTable = () => {
     },
   ];
 
-  const rows = state.allBracelets;
+  const rows = state.allStations;
 
   return (
     <>
       <Menu></Menu>
       <Typography paragraph>
-        <Container sx={{ mt: -7, ml: 22 }}>
+        <Container sx={{ mt: -7, ml: 22, width: 860 }}>
           <Box sx={{ p: 3 }}>
             <div className="grid-table">
               <DataGrid
@@ -287,13 +278,13 @@ const ESDTable = () => {
             <ESDModal
               open={state.open}
               handleClose={handleClose}
-              braceletName={state.bracelet.title}
-              bracelet={state.bracelet}
+              stationName={state.station.name}
+              station={state.station}
             />
             <ESDForm
               open={state.openModal}
               handleClose={handleCloseModal}
-              onSubmit={handleCreateBracelet}
+              onSubmit={handleCreateMonitor}
             />
             <ESDEditForm
               open={state.openEditModal}

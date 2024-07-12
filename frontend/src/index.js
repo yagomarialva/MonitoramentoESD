@@ -6,7 +6,6 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { AuthProvider } from "./context/AuthContext.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-// const token = localStorage.getItem("token");
 
 root.render(
   <AuthProvider>

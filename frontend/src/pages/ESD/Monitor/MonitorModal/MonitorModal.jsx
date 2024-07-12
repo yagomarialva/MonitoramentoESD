@@ -38,7 +38,7 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
           id="contained-modal-title-vcenter"
           gutterBottom
         >
-          {monitor.title}
+          Monitor: {monitor.serialNumber}
         </Typography>
         <Box component="form" noValidate autoComplete="off">
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -49,7 +49,7 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
               label={t("ESD_TEST.TABLE.USER_ID", {
                 appName: "App for Translations",
               })}
-              defaultValue={monitor.userId}
+              defaultValue={monitor.serialNumber}
               margin="normal"
             />
           </Typography>
@@ -61,17 +61,7 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
               label={t("ESD_TEST.TABLE.NAME", {
                 appName: "App for Translations",
               })}
-              defaultValue={monitor.title}
-              margin="normal"
-            />
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              disabled
-              required
-              label="Completed"
-              defaultValue={monitor.body}
+              defaultValue={monitor.description}
               margin="normal"
             />
           </Typography>

@@ -26,7 +26,6 @@ export default function Menu() {
   const { user, logout} = useAuth()
   const navigate = useNavigate()
   const [open] = React.useState(true);
-  console.log('user',user)
   const list = () => (
     <List>
       {[

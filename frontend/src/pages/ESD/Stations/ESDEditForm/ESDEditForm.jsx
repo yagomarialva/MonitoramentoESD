@@ -37,21 +37,20 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     changeLanguage(newLanguage);
   };
 
-  const [bracelet, setBracelet] = useState({
-    userId: "",
-    title: "",
-    completed: false,
+  const [station, setStation] = useState({
+    name: "",
+    description: "",
   });
 
   useEffect(() => {
     if (initialData) {
-      setBracelet(initialData);
+      setStation(initialData);
     }
   }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setBracelet((prev) => ({
+    setStation((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -60,10 +59,10 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await onSubmit(bracelet);
+      await onSubmit(station);
       handleClose();
     } catch (error) {
-      console.error("Error creating or updating bracelet:", error);
+      console.error("Error creating or updating station:", error);
     }
   };
 
@@ -85,40 +84,26 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             required
             fullWidth
             margin="normal"
-            id="outlined-userId"
-            name="userId"
+            id="outlined-name"
+            name="name"
             label={t("ESD_TEST.TABLE.USER_ID", {
               appName: "App for Translations",
             })}
-            value={bracelet.userId}
+            value={station.name}
             onChange={handleChange}
           />
           <TextField
             required
             fullWidth
             margin="normal"
-            id="outlined-title"
-            name="title"
+            id="outlined-description"
+            name="description"
             label={t("ESD_TEST.TABLE.NAME", {
               appName: "App for Translations",
             })}
-            value={bracelet.title}
+            value={station.description}
             onChange={handleChange}
           />
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="completed-label">Completed</InputLabel>
-            <Select
-              labelId="completed-label"
-              id="completed"
-              name="completed"
-              label="completed"
-              value={bracelet.completed}
-              onChange={handleChange}
-            >
-              <MenuItem value={true}>True</MenuItem>
-              <MenuItem value={false}>False</MenuItem>
-            </Select>
-          </FormControl>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button
               onClick={handleClose}

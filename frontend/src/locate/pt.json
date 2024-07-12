@@ -6,7 +6,7 @@
       "ADD_STATION": "Adicionar Estação",
       "TABLE": {
         "USER_ID": "Número de Série",
-        "NAME": "Operadores",
+        "NAME": "Descrição",
         "ACTIONS": "Ações",
         "COLUMNS": "Filtrar Colunas",
         "DENSITY": "Ajustar Exibição",

@@ -30,9 +30,8 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
   } = useTranslation();
 
   const [station, setStation] = useState({
-    userId: "",
-    title: "",
-    completed: false,
+    name: "",
+    description: ""
   });
 
   const handleChange = (e) => {
@@ -71,8 +70,8 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
             required
             fullWidth
             margin="normal"
-            id="userId"
-            name="userId"
+            id="name"
+            name="name"
             label={t("ESD_TEST.TABLE.USER_ID", {
               appName: "App for Translations",
             })}
@@ -82,26 +81,13 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
             required
             fullWidth
             margin="normal"
-            id="title"
-            name="title"
+            id="description"
+            name="description"
             label={t("ESD_TEST.TABLE.NAME", {
               appName: "App for Translations",
             })}
             onChange={handleChange}
           />
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="completed-label">Completed</InputLabel>
-            <Select
-              labelId="completed-label"
-              id="completed"
-              name="completed"
-              label="completed"
-              onChange={handleChange}
-            >
-              <MenuItem value={true}>True</MenuItem>
-              <MenuItem value={false}>False</MenuItem>
-            </Select>
-          </FormControl>
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
           <Button
             type="submit"

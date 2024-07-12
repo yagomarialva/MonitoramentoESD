@@ -34,9 +34,8 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   };
 
   const [monitor, setBracelet] = useState({
-    userId: "",
-    title: "",
-    completed: false,
+    description: "",
+    serialNumber: "",
   });
 
   useEffect(() => {
@@ -82,11 +81,11 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             fullWidth
             margin="normal"
             id="outlined-userId"
-            name="userId"
+            name="description"
             label={t("ESD_MONITOR.TABLE.USER_ID", {
               appName: "App for Translations",
             })}
-            value={monitor.userId}
+            value={monitor.description}
             onChange={handleChange}
           />
           <TextField
@@ -94,25 +93,14 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             fullWidth
             margin="normal"
             id="outlined-title"
-            name="title"
+            name="serialNumber"
             label={t("ESD_MONITOR.TABLE.NAME", {
               appName: "App for Translations",
             })}
-            value={monitor.title}
+            value={monitor.serialNumber}
             onChange={handleChange}
           />
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            id="outlined-title"
-            name="body"
-            label={t("ESD_MONITOR.TABLE.USER_ID", {
-              appName: "App for Translations",
-            })}
-            value={monitor.body}
-            onChange={handleChange}
-          />
+
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button
               onClick={handleClose}

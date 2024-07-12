@@ -20,7 +20,7 @@ const style = {
   p: 4,
 };
 
-const ESDModal = ({ open, handleClose, bracelet }) => {
+const ESDModal = ({ open, handleClose, station }) => {
   const {
     t,
   } = useTranslation();
@@ -38,7 +38,7 @@ const ESDModal = ({ open, handleClose, bracelet }) => {
           id="contained-modal-title-vcenter"
           gutterBottom
         >
-          {bracelet.title}
+          {station.name}
         </Typography>
         <Box component="form" noValidate autoComplete="off">
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -49,7 +49,7 @@ const ESDModal = ({ open, handleClose, bracelet }) => {
               label={t("ESD_TEST.TABLE.USER_ID", {
                 appName: "App for Translations",
               })}
-              defaultValue={bracelet.userId}
+              defaultValue={station.description}
               margin="normal"
             />
           </Typography>
@@ -61,17 +61,7 @@ const ESDModal = ({ open, handleClose, bracelet }) => {
               label={t("ESD_TEST.TABLE.NAME", {
                 appName: "App for Translations",
               })}
-              defaultValue={bracelet.title}
-              margin="normal"
-            />
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              disabled
-              required
-              label="Completed"
-              defaultValue={bracelet.completed}
+              defaultValue={station.name}
               margin="normal"
             />
           </Typography>

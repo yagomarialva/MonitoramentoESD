@@ -6,7 +6,7 @@
       "ADD_STATION": "Add Station",
       "TABLE": {
         "USER_ID": "Serial Number",
-        "NAME": "Operators",
+        "NAME": "Description",
         "ROLE": "Role",
         "ACTIONS": "Actions",
         "COLUMNS": "Filter Columns",
