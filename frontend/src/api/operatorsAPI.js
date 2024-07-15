@@ -1,32 +1,38 @@
-import axios from 'axios';
 import TokenApi from "./TokenApi";
-
-const REACT_APP_API_MOCKED_URL = process.env.REACT_APP_API_MOCKED_URL;
-// const API_URL_USERS = process.env.REACT_APP_API_URL;
 
 
 export const getAllOperators = async () => {
     const response = await TokenApi.get('/todosUsers');
-    console.log('response', response)
     return response.data;
 };
 
 export const getOperators = async (id) => {
-    const response = await axios.get(`${REACT_APP_API_MOCKED_URL}/users/${id}`);
-    console.log(response.data)
+    const response = await TokenApi.get(`/BuscarOperatores${id}`);
+    console.log(response.value);
+    return response.value;
+};
+
+// export const createOperators = async (operator) => {
+//     const response = await TokenApi.post('adicionar',operator);
+//     return response.data;
+// };
+
+export const createOperators = async (operator) => {
+    const form = new FormData()
+    // form.append("id", operator.id)
+    form.append("name", operator.name)
+    form.append("badge", operator.badge)
+    console.log(operator)
+    const response = await TokenApi.post('/adicionar', form);
     return response.data;
 };
 
-export const createOperators = async (operators) => {
-    const response = await axios.post(`${REACT_APP_API_MOCKED_URL}/users`, operators);
-    return response.data;
-};
 
-export const updateOperators = async (id, operators) => {
-    const response = await axios.put(`${REACT_APP_API_MOCKED_URL}/users/${id}`, operators);
+export const updateOperators = async (operator) => {
+    const response = await TokenApi.post('adicionar', operator);
     return response.data;
 };
 
 export const deleteOperators = async (id) => {
-    await axios.delete(`${REACT_APP_API_MOCKED_URL}/users/${id}`);
+    await TokenApi.delete(`/delete/${id}`);
 };

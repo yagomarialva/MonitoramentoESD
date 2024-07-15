@@ -22,14 +22,11 @@ const style = {
 };
 
 const OperatorForm = ({ open, handleClose, onSubmit }) => {
-  const {
-    t,
-  } = useTranslation();
+  const { t } = useTranslation();
 
   const [station, setStation] = useState({
-    userId: "",
-    title: "",
-    completed: false,
+    name: "",
+    badge: "",
   });
 
   const handleChange = (e) => {
@@ -70,44 +67,27 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
             margin="normal"
             id="name"
             name="name"
-            label={t("ESD_TEST.TABLE.USER_ID", {
-              appName: "App for Translations",
-            })}
+            label="Name"
             onChange={handleChange}
           />
           <TextField
             required
             fullWidth
             margin="normal"
-            id="phone"
-            name="phone"
-            label={t("ESD_TEST.TABLE.NAME", {
-              appName: "App for Translations",
-            })}
+            id="badge"
+            name="badge"
+           label="Badge"
             onChange={handleChange}
           />
-          <FormControl fullWidth margin="normal">
-            <TextField
-            required
-            fullWidth
-            margin="normal"
-            id="username"
-            name="username"
-            label={t("ESD_OPERATOR.TABLE.ROLE", {
-              appName: "App for Translations",
-            })}
-            onChange={handleChange}
-          />
-          </FormControl>
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
-          >
-            {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
-          </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
+            >
+              {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
+            </Button>
           </Box>
         </Box>
       </Paper>

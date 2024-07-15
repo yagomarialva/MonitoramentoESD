@@ -25,12 +25,14 @@ import {
 } from "@mui/x-data-grid";
 import OperatorModal from "../OperatorModal/OperatorModal";
 import ESDForm from "../OperatorForm/OperatorForm";
-import ESDEditForm from "../OperatorEditForm/ESDEditForm";
+import ESDEditForm from "../OperatorEditForm/OperatorEditForm";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
 import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
 import Menu from "../../../Menu/Menu";
 import { Container, Typography } from "@mui/material";
+import OperatorForm from "../OperatorForm/OperatorForm";
+import OperatorEditForm from "../OperatorEditForm/OperatorEditForm";
 
 const OperatorTable = () => {
   const { t } = useTranslation();
@@ -78,23 +80,22 @@ const OperatorTable = () => {
   };
 
   const handleCreateOperator = async (operator) => {
-    const newOperator = { ...operator, id: Date.now() };
     try {
-      const response = await createOperators(newOperator);
-      handleStateChange({ allOperators: [...state.allOperators, newOperator] });
-      showSnackbar(
-        t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", {
-          appName: "App for Translations",
-        })
-      );
-      return response.data;
+        const response = await createOperators(operator);
+        // handleStateChange({ allOperators: [...state.allOperators, operator] });
+
+        const result = await getAllOperators();
+        handleStateChange({ allOperators: result.value });
+
+        showSnackbar(
+            t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+        );
+        return response.data;
     } catch (error) {
-      showSnackbar(
-        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
-          appName: "App for Translations",
-        }),
-        "error"
-      );
+        showSnackbar(
+            t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+            "error"
+        );
     }
   };
 
@@ -122,14 +123,14 @@ const OperatorTable = () => {
   };
 
   const handleEditCellChange = async (params) => {
+    console.log('params', params)
     try {
       const updatedOperator = {
         ...state.operator,
-        phone: params.phone,
         name: params.name,
-        username: params.username,
+        badge: params.badge,
       };
-      const updatedItem = await updateOperators(params.id, updatedOperator);
+      const updatedItem = await createOperators(updatedOperator);
 
       handleStateChange({
         allOperators: state.allOperators.map((item) =>
@@ -192,14 +193,6 @@ const OperatorTable = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     {
-      field: "badge",
-      headerName: t("ESD_OPERATOR.TABLE.USER_ID", {
-        appName: "App for Translations",
-      }),
-      sortable: false,
-      width: 160,
-    },
-    {
       field: "name",
       headerName: t("ESD_OPERATOR.TABLE.NAME", {
         appName: "App for Translations",
@@ -207,11 +200,12 @@ const OperatorTable = () => {
       width: 250,
     },
     {
-      field: "roleName",
-      headerName: t("ESD_OPERATOR.TABLE.ROLE", {
+      field: "badge",
+      headerName: t("ESD_OPERATOR.TABLE.USER_ID", {
         appName: "App for Translations",
       }),
-      width: 250,
+      sortable: false,
+      width: 160,
     },
     {
       field: "actions",
@@ -299,12 +293,12 @@ const OperatorTable = () => {
               operatorName={state.operator.name}
               operator={state.operator}
             />
-            <ESDForm
+            <OperatorForm
               open={state.openModal}
               handleClose={handleCloseModal}
               onSubmit={handleCreateOperator}
             />
-            <ESDEditForm
+            <OperatorEditForm
               open={state.openEditModal}
               handleClose={handleEditClose}
               onSubmit={handleEditCellChange}

@@ -24,7 +24,7 @@ const style = {
   p: 4,
 };
 
-const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
+const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   const {
     t,
     i18n: { changeLanguage, language },
@@ -38,9 +38,8 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   };
 
   const [operator, setOperator] = useState({
-    userId: "",
-    title: "",
-    completed: false,
+    name: "",
+    badge: "",
   });
 
   useEffect(() => {
@@ -86,22 +85,8 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             fullWidth
             margin="normal"
             id="outlined-name"
-            name="phone"
-            label={t("ESD_TEST.TABLE.USER_ID", {
-              appName: "App for Translations",
-            })}
-            value={operator.phone}
-            onChange={handleChange}
-          />
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            id="outlined-title"
             name="name"
-            label={t("ESD_TEST.TABLE.NAME", {
-              appName: "App for Translations",
-            })}
+            label="Name"
             value={operator.name}
             onChange={handleChange}
           />
@@ -110,13 +95,11 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             required
             fullWidth
             margin="normal"
-            id="outlined-title"
-            name="username"
-            label={t("ESD_TEST.TABLE.NAME", {
-              appName: "App for Translations",
-            })}
-            value={operator.username}
-            onChange={handleChange}
+            id="outlined-badge"
+            name="badge"
+            label="Badge"
+            disabled
+            value={operator.badge}
           />
           </FormControl>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
@@ -138,4 +121,4 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   );
 };
 
-export default ESDEditForm;
+export default OperatorEditForm;

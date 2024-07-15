@@ -49,7 +49,7 @@ const OperatorModal = ({ open, handleClose, operator }) => {
               label={t("ESD_OPERATOR.TABLE.USER_ID", {
                 appName: "App for Translations",
               })}
-              defaultValue={operator.phone}
+              defaultValue={operator.badge}
               margin="normal"
             />
           </Typography>
@@ -62,18 +62,6 @@ const OperatorModal = ({ open, handleClose, operator }) => {
                 appName: "App for Translations",
               })}
               defaultValue={operator.name}
-              margin="normal"
-            />
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              disabled
-              required
-              label={t("ESD_OPERATOR.TABLE.ROLE", {
-                appName: "App for Translations",
-              })}
-              defaultValue={operator.username}
               margin="normal"
             />
           </Typography>
