@@ -72,7 +72,7 @@ namespace BiometricFaceApi.Services
             {
                 if (!string.IsNullOrEmpty(model.Description) & model.UserId == 0 & model.ProduceActivityId == 0)
                 {
-                    throw new Exception("Preencher campos obrigatórios");
+                    throw new Exception("Preencher campos obrigatórios.");
                 }
                 result = await _repository.Include(model);
             }
@@ -108,7 +108,7 @@ namespace BiometricFaceApi.Services
                 }
                 else
                 {
-                    content = "Dados incorretos ou inválidos";
+                    content = "Dados incorretos ou inválidos.";
                     statusCode = StatusCodes.Status400BadRequest;
                 }
             }

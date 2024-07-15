@@ -27,7 +27,7 @@ namespace BiometricFaceApi.Models
         
         public bool IsLocked { get; set; }
         public string? Description { get; set; }
-        public DateTime? DatatimeMonitorEsdEvent { get; set; }
+        public DateTime? DataTimeMonitorEsdEvent { get; set; }
 
     }
 }

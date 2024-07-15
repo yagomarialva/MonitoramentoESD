@@ -47,7 +47,7 @@ namespace BiometricFaceApi.Repositories
             }
             else
             {
-                throw new Exception("Id is invalid!");
+                throw new Exception("Id inválido.");
             }
 
         }

@@ -27,7 +27,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/todasStations")]
         public async Task<ActionResult> BuscarTodasStations()
@@ -46,7 +46,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/buscarStationId{id}")]
         public async Task<ActionResult> BuscarStationId(int id)
@@ -66,7 +66,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="201">Dados cadastrados com sucesso.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/gerenciarStation")]
         public async Task<ActionResult> Include(StationModel model)
@@ -87,9 +87,9 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
-        [Route("/deleteSation/{id}")]
+        [Route("/deleteStation/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             var (result, statusCode) = await _service.Delete(id);

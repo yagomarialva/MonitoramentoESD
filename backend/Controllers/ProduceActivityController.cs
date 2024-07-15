@@ -28,7 +28,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna dados de produção.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Standard,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/TodaProducao")]
         public async Task<ActionResult> BuscarTodaProducao()
@@ -48,7 +48,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarProducaoId")]
         public async Task<ActionResult> BuscarTodaProducao(int id)
@@ -70,7 +70,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/adicionarProducao")]
         public async Task<ActionResult> Include([FromBody] ProduceActivityModel model)
@@ -87,7 +87,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Dados atualizado com sucesso.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/ChangeStatus")]
         public async Task<ActionResult> ChangeStatus(int id, bool status, string? description)
@@ -110,7 +110,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
         [Route("/DeleteProducao{id}")]
         public async Task<ActionResult> Delete(int id)

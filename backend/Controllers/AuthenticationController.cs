@@ -44,7 +44,7 @@ namespace BiometricFaceApi.Controllers
 
             if (user != null)
             {
-                var tokenString = auth.GenerateJSONWebToken(login);
+                var tokenString = auth.GenerateJSONWebToken(user);
                 response = Ok(new { token = tokenString });
             }
             return response;
@@ -61,7 +61,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "Admin,Developer")]
+        [Authorize(Roles = "administrator,developer")]
         [HttpPost]
         [Route("/criacao")]
         public async Task<ActionResult> InsertAuths(AuthenticationModel authModel)
@@ -79,7 +79,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Developer")]
+        [Authorize(Roles = "administrator,developer")]
         [HttpGet]
         [Route("/{id}")]
         public async Task<ActionResult> GetAuthsById(int id)
@@ -99,7 +99,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Developer")]
+        [Authorize(Roles = "administrator,developer")]
         [HttpDelete]
         [Route("/{id}")]
         public async Task<ActionResult> DeleteAtuhs(int id)

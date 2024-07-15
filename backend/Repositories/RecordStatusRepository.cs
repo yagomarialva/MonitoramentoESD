@@ -34,9 +34,6 @@ namespace BiometricFaceApi.Repositories
         }
 
 
-        // Task realiza o include e update
-        // include de novos dados
-        // update e feito atraves do RecordStatusProduceModelID, senso assim possibilitando a alteração de dados.
         public async Task<RecordStatusProduceModel?> Include(RecordStatusProduceModel recordModel)
         {
             RecordStatusProduceModel recordStatusUp = await GetByRecordStatusId(recordModel.Id);
@@ -50,13 +47,7 @@ namespace BiometricFaceApi.Repositories
             }
             else
             {
-                // update
-                recordStatusUp.UserId = recordModel.UserId;
-                recordStatusUp.ProduceActivityId = recordModel.ProduceActivityId;
-                recordStatusUp.Description = recordModel.Description;
-                recordStatusUp.DateEvent = recordModel.DateEvent;
-                _dbContext.RecordStatusProduce.Update(recordStatusUp);
-                await _dbContext.SaveChangesAsync();
+              throw new Exception("Registro com o mesmo indice já foi cadastrado.");
             }
             return recordStatusUp;
         }

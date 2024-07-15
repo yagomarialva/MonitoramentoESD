@@ -22,7 +22,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna todos os roles.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/todosRoles")]
         public async Task<ActionResult> BuscarTodos()
@@ -41,7 +41,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/buscaRoles/{id}")]
         public async Task<ActionResult> GetStatusAsync(int id)
@@ -52,16 +52,16 @@ namespace BiometricFaceApi.Controllers
             return StatusCode(statusCode, result);
         }
 
-        ///// <summary>
-        ///// Cadastra e Atualiza roles.
-        ///// </summary>
-        ///// <remarks>Altera roles .</remarks>
-        ///// <param name="model">Dados de cadastro de roles</param>
-        ///// <response code="200">Dados atualizado com sucesso.</response>
-        ///// <response code="201">Dados cadastrados com sucesso.</response>
-        ///// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        ///// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Developer")]
+        /// <summary>
+        /// Cadastra e Atualiza roles.
+        /// </summary>
+        /// <remarks>Altera roles .</remarks>
+        /// <param name="model">Dados de cadastro de roles</param>
+        /// <response code="200">Dados atualizado com sucesso.</response>
+        /// <response code="201">Dados cadastrados com sucesso.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/adicionarRoles")]
         public async Task<ActionResult> ManagerMonitor(RolesModel model)
@@ -71,15 +71,15 @@ namespace BiometricFaceApi.Controllers
             return StatusCode(result.Item2, result.Item1);
         }
 
-        ///// <summary>
-        ///// Deletar roles
-        ///// </summary>
-        ///// <param name="id"> Deleta roles</param>
-        ///// <returns></returns>
-        ///// <response code="200">Remove dados do banco de dados.</response>
-        ///// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        ///// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Developer")]
+        /// <summary>
+        /// Deletar roles
+        /// </summary>
+        /// <param name="id"> Deleta roles</param>
+        /// <returns></returns>
+        /// <response code="200">Remove dados do banco de dados.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
         [Route("/deleteRoles/{id}")]
         public async Task<ActionResult> Delete(int id)

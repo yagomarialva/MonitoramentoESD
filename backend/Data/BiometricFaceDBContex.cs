@@ -29,7 +29,7 @@ namespace BiometricFaceApi.Data
             {
                 new RolesModel
                 {Id=1,
-                   RolesName = "admininstrator"
+                   RolesName = "administrator"
                 },
                  new RolesModel
                 {Id =2,
@@ -46,8 +46,8 @@ namespace BiometricFaceApi.Data
                 {Id=1,
                     Username = "admin",
                     Badge = "ADM",
-                    RolesName = "admin",
-                    Password = securityService.EncryptAES("1compal")
+                    RolesName = "administrator",
+                    Password = securityService.EncryptAES("admcompal")
                 }
             });
         }

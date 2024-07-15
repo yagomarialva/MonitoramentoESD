@@ -24,14 +24,14 @@ namespace BiometricFaceApi.Services
 
         protected readonly UserService _userService;
         protected readonly ImageService _imageService;
-        protected readonly RolesService _rolesService;
+        
 
 
-        public BiometricService(UserService userService, ImageService imageService, RolesService rolesService)
+        public BiometricService(UserService userService, ImageService imageService)
         {
             _userService = userService;
             _imageService = imageService;
-            _rolesService = rolesService;
+            
         }
 
         // Na rota ManagerOperator é possível atualizar e inserir operadores
@@ -43,24 +43,20 @@ namespace BiometricFaceApi.Services
             try
             {
 
-                var user = new UserModel { Badge = biometric.Badge, Name = biometric.Name, RoleName = biometric.RolesName };
+                var user = new UserModel { Badge = biometric.Badge, Name = biometric.Name};
                 var image = new ImageModel { ImageFile = biometric.Image };
-                var role = new RolesModel { RolesName = biometric.RolesName };
                 var repositoryUser = await _userService.GetUserByBadge(user.Badge);
                 if (repositoryUser.Id > 0)
                 {
                     // update
                     image.UserId = repositoryUser.Id;
-                    role.RolesName = repositoryUser.RoleName;
                     await _userService.Update(user, repositoryUser.Id);
                     await _imageService.Update(image);
-                    await _rolesService.Include(role);
                     var updatedBiometric = new BiometricModel
                     {
                         Id = repositoryUser.Id,
                         Badge = biometric.Badge,
                         Name = biometric.Name,
-                        RolesName = biometric.RolesName,
                         Image = biometric.Image
                     };
 
@@ -73,32 +69,26 @@ namespace BiometricFaceApi.Services
                 {
                     if (string.IsNullOrEmpty(user.Name))
                     {
-                        throw new Exception("O nome do usuário não pode ser nulo");
+                        throw new Exception("O nome do usuário não pode ser nulo.");
                     }
 
                     if (string.IsNullOrEmpty(user.Badge))
                     {
-                        throw new Exception("O identificador do usuário não pode ser nulo");
+                        throw new Exception("O identificador do usuário não pode ser nulo.");
                     }
-                    if (string.IsNullOrEmpty(user.RoleName))
-                    {
-                        throw new Exception("O Função do usuário não pode ser nulo");
-                    }
+                    
                     // include
                     user.Born = DateTime.Now;
                     var newUser = await _userService.Include(user);
                     if (newUser != null)
                     {
                         image.UserId = newUser.Id;
-                        role.RolesName = newUser.RoleName;
                         await _imageService.AddImage(image);
-                        await _rolesService.Include(role);
                         var includeBiometric = new BiometricModel
                         {
                             Id = newUser.Id,
                             Badge = biometric.Badge,
                             Name = biometric.Name,
-                            RolesName= biometric.RolesName,
                             Image = biometric.Image
                         };
 
@@ -108,7 +98,7 @@ namespace BiometricFaceApi.Services
                     }
                     else
                     {
-                        content = "Dados incorretos ou inválidos";
+                        content = "Dados incorretos ou inválidos.";
                         statusCode = StatusCodes.Status404NotFound;
                     }
                 }
@@ -144,7 +134,7 @@ namespace BiometricFaceApi.Services
                 }
                 else
                 {
-                    content = "Dados incorretos ou inválidos";
+                    content = "Dados incorretos ou inválidos.";
                     statusCode = StatusCodes.Status404NotFound;
                 }
             }
@@ -185,7 +175,7 @@ namespace BiometricFaceApi.Services
                 }
                 else
                 {
-                    content = "Dados incorretos ou inválidos";
+                    content = "Dados incorretos ou inválidos.";
                     statusCode = StatusCodes.Status404NotFound;
                 }
             }

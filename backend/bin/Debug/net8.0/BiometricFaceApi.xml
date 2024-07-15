@@ -96,7 +96,16 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:BiometricFaceApi.Controllers.MonitorEsdController.BuscarIdMonitor(System.Int32)" -->
+        <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.BuscarIdMonitor(System.Int32)">
+            <summary>
+            Buscar monitor
+            </summary>
+            <param name="id"> Buscar monitor por Id</param>
+            <response code="200">Retorna monitor</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
         <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.ManagerMonitor(BiometricFaceApi.Models.MonitorEsdModel)">
             <summary>
             Cadastra e Atualiza de dados do monitor.
@@ -227,6 +236,27 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
+        <member name="M:BiometricFaceApi.Controllers.RolesController.ManagerMonitor(BiometricFaceApi.Models.RolesModel)">
+            <summary>
+            Cadastra e Atualiza roles.
+            </summary>
+            <remarks>Altera roles .</remarks>
+            <param name="model">Dados de cadastro de roles</param>
+            <response code="200">Dados atualizado com sucesso.</response>
+            <response code="201">Dados cadastrados com sucesso.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.RolesController.Delete(System.Int32)">
+            <summary>
+            Deletar roles
+            </summary>
+            <param name="id"> Deleta roles</param>
+            <returns></returns>
+            <response code="200">Remove dados do banco de dados.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
         <member name="M:BiometricFaceApi.Controllers.StationController.BuscarTodasStations">
             <summary>
             Buscar todos 
@@ -269,16 +299,16 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
-        <member name="T:BiometricFaceApi.Migrations.rolesmigrationperfil">
+        <member name="T:BiometricFaceApi.Migrations.first">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.rolesmigrationperfil.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.first.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.rolesmigrationperfil.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.first.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.rolesmigrationperfil.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.first.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

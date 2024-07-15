@@ -23,7 +23,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna todos os status.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Standard,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/todosStatus")]
         public async Task<ActionResult> BuscarTodos() 
@@ -42,7 +42,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/buscasStatus/{id}")]
         public async Task<ActionResult> GetStatusAsync(int id) 
@@ -62,7 +62,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="201">Dados cadastrados com sucesso.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/adicionarStatus")]
         public async Task<ActionResult> ManagerMonitor(RecordStatusProduceModel model)
@@ -80,7 +80,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
         [Route("/deleteStatus/{id}")]
         public async Task<ActionResult> Delete(int id)

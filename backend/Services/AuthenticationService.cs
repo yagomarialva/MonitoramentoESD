@@ -49,7 +49,7 @@ namespace BiometricFaceApi.Services
                 var roles = await rolesRepository.GetAllRoles();
                 if (string.IsNullOrEmpty(auth.Username))
                 {
-                    throw new Exception("O nome do usuário não pode ser nulo");
+                    throw new Exception("O nome do usuário não pode ser nulo.");
                 }
                 if (roles != null && !roles.Where(r => r.RolesName?.ToLower() == auth.RolesName?.ToLower()).Any())
                 {

@@ -47,8 +47,8 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna monitor</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</reporesponsense>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarMonitores{id}")]
         public async Task<ActionResult> BuscarIdMonitor(int id)
@@ -69,7 +69,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/adicionarMonitor")]
         public async Task<ActionResult> ManagerMonitor(MonitorEsdModel model)
@@ -87,7 +87,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "Admin,Operator,Developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
         [Route("/deleteMonitor")]
         public async Task<ActionResult> Delete(int id)

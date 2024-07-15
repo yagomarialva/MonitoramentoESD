@@ -13,7 +13,7 @@ namespace BiometricFaceApi.Auth
         {
             this.configuration = configuration;
         }
-        public string GenerateJSONWebToken(LoginModel user)
+        public string GenerateJSONWebToken(AuthenticationModel user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["jwt:secretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -22,7 +22,7 @@ namespace BiometricFaceApi.Auth
               configuration["jwt:audience"],
               new List<Claim> { 
                   new Claim(ClaimTypes.Name,user.Username),
-                  new Claim(ClaimTypes.Role,"Developer")
+                  new Claim(ClaimTypes.Role, user.RolesName)
               },
               expires: DateTime.Now.AddMinutes(120),
               signingCredentials: credentials);
