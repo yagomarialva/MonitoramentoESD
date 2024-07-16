@@ -19,9 +19,11 @@ namespace BiometricFaceApi.Data
         public DbSet<AuthenticationModel> Auths { get; set; }
         public DbSet<MonitorEsdModel> MonitorEsds { get; set; }
         public DbSet<ProduceActivityModel> ProduceActivity { get; set; }
-        public DbSet<StationModel> Station { get; set; }
+        public DbSet<JigModel> Jigs { get; set; }
         public DbSet<RecordStatusProduceModel> RecordStatusProduce { get; set; }
         public DbSet<RolesModel> Roles { get; set; }
+        public DbSet<LineProductionModel> LineProduction { get; set; }
+        public DbSet<LineViewModel> LineViews { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RolesModel>().Property(p => p.RolesName).IsRequired();

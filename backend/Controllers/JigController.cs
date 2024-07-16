@@ -10,26 +10,26 @@ namespace BiometricFaceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StationController : Controller
+    public class JigController : Controller
     {
-        private readonly StationService _service;
-        public StationController(IStationRepository stationRepository)
+        private readonly JigService _service;
+        public JigController(IJigRepository stationRepository)
         {
-            _service = new StationService(stationRepository);
+            _service = new JigService(stationRepository);
         }
 
 
         /// <summary>
         /// Buscar todos 
         /// </summary>
-        /// <param > Buscar todas estaçõs</param>
+        /// <param > Buscar todos jigs</param>
         /// <response code="200">Retorna todos.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/todasStations")]
+        [Route("/todosJigs")]
         public async Task<ActionResult> BuscarTodasStations()
         {
             var (result, statusCode) = await _service.GetAllStation();
@@ -39,19 +39,19 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Buscar estação por id
+        /// Buscar jig por id
         /// </summary>
-        /// <param name="id"> Buscar estação por id</param>
-        /// <response code="200">Retorna dados de estação.</response>
+        /// <param name="id"> Buscar jig por id</param>
+        /// <response code="200">Retorna dados de jig.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/buscarStationId{id}")]
+        [Route("/buscarJig/{id}")]
         public async Task<ActionResult> BuscarStationId(int id)
         {
-            var (result, statusCode) = await _service.GetStationId(id);
+            var (result, statusCode) = await _service.GetJigId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
@@ -60,7 +60,7 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Cadastra e Atualiza status.
         /// </summary>
-        /// <remarks>Cadastra estação na base de dados; Para atualizar dados basta usar o id da estção.</remarks>
+        /// <remarks>Cadastra jig na base de dados; Para atualizar dados basta usar o id do jig.</remarks>
         /// <param name="model">Dados de cadastro do operador</param>
         /// <response code="200">Dados atualizado com sucesso.</response>
         /// <response code="201">Dados cadastrados com sucesso.</response>
@@ -68,8 +68,8 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
-        [Route("/gerenciarStation")]
-        public async Task<ActionResult> Include(StationModel model)
+        [Route("/gerenciarJigs")]
+        public async Task<ActionResult> Include(JigModel model)
         {
             var (result,statusCode) = await _service.Include(model);
 
@@ -79,9 +79,9 @@ namespace BiometricFaceApi.Controllers
 
 
         /// <summary>
-        /// Deleta estação
+        /// Deleta jig
         /// </summary>
-        /// <param name="id"> Deleta estção</param>
+        /// <param name="id"> Deleta jig</param>
         /// <returns></returns>
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
@@ -89,7 +89,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
-        [Route("/deleteStation/{id}")]
+        [Route("/deleteJigs/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             var (result, statusCode) = await _service.Delete(id);

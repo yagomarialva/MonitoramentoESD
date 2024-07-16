@@ -58,7 +58,7 @@ namespace BiometricFaceApi.Services
                 var monitor = await _repository.GetByProduceActivityId(id);
                 if (monitor == null)
                 {
-                    result = "Producção não encontrado.";
+                    result = "Produção não encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
                     return (result, statusCode);
                 }
@@ -78,9 +78,9 @@ namespace BiometricFaceApi.Services
         {
             return await _repository.GetByProduceMonitorId(monitorProduce);
         }
-        public async Task<ProduceActivityModel?> GetProduceStationId(int stationProduce)
+        public async Task<ProduceActivityModel?> GetProduceJigId(int jigProduce)
         {
-            return await _repository.GetByProduceStationId(stationProduce);
+            return await _repository.GetByProduceJigId(jigProduce);
         }
         public async Task<ProduceActivityModel?> GetProduceUserId(int userProduce)
         {
@@ -134,7 +134,7 @@ namespace BiometricFaceApi.Services
             object? result;
             try
             {
-                if (produceModel.UserId == 0 & produceModel.StationId == 0 & produceModel.MonitorEsdId == 0)
+                if (produceModel.UserId == 0 & produceModel.JigId == 0 & produceModel.MonitorEsdId == 0)
                 {
                     throw new Exception("Todos os campos são obrigatórios.");
                 }
@@ -164,7 +164,7 @@ namespace BiometricFaceApi.Services
                         Id = repositoryProduceActv.Id,
                         UserId = repositoryProduceActv.UserId,
                         MonitorEsdId = repositoryProduceActv.MonitorEsdId,
-                        StationId = repositoryProduceActv.StationId
+                        JigId = repositoryProduceActv.JigId
                     };
                     await _repository.Delete(repositoryProduceActv.Id);
                     statusCode = StatusCodes.Status200OK;

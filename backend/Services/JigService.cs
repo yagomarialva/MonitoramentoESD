@@ -3,10 +3,10 @@ using BiometricFaceApi.Repositories.Interfaces;
 
 namespace BiometricFaceApi.Services
 {
-    public class StationService
+    public class JigService
     {
-        private IStationRepository _repository;
-        public StationService(IStationRepository repository)
+        private IJigRepository _repository;
+        public JigService(IJigRepository repository)
         {
             _repository = repository;
         }
@@ -16,7 +16,7 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                List<StationModel> station = await _repository.GetAllStation();
+                List<JigModel> station = await _repository.GetAllJig();
                 if (!station.Any())
                 {
                     result = ("Nenhuma estação cadastrada.");
@@ -34,13 +34,13 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
-        public async Task<(object?, int)> GetStationId(int id)
+        public async Task<(object?, int)> GetJigId(int id)
         {
             object? result;
             int statusCode;
             try
             {
-                var station = await _repository.GetByStationId(id);
+                var station = await _repository.GetByJigId(id);
                 if (station == null)
                 {
                     result = ("Monitor Id não encontrado.");
@@ -57,7 +57,7 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
-        public async Task<(object?, int)> Include(StationModel model)
+        public async Task<(object?, int)> Include(JigModel model)
         {
             var statusCode = StatusCodes.Status200OK;
             object? response;
@@ -79,7 +79,7 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                var repositorStation = await _repository.GetByStationId(id);
+                var repositorStation = await _repository.GetByJigId(id);
                 if (repositorStation.Id > 0)
                 {
                     content = new

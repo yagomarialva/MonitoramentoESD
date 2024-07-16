@@ -12,13 +12,15 @@ namespace BiometricFaceApi.Models
 
         [ForeignKey("users")]
         public int UserId { get; set; }
+        //[ForeignKey("users")]
+        //public string? UserName { get; set; }
         [IgnoreDataMember]
         public virtual UserModel? User { get; set; }
         
-        [ForeignKey("station")] 
-        public int StationId { get; set; }
+        [ForeignKey("jig")] 
+        public int JigId { get; set; }
         [IgnoreDataMember]
-        public virtual StationModel? Station { get; set; }
+        public virtual JigModel? Jig { get; set; }
 
         [ForeignKey("monitorEsd")]
         public int MonitorEsdId { get; set; }

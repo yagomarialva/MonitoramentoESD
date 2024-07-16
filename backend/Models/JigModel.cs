@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BiometricFaceApi.Models
 {
-    [Table ("station")]
+    [Table ("jig")]
     [Index(nameof(Name), IsUnique = true)]
-    public class StationModel
+    public class JigModel
     {
         [Key]
         public int Id { get; set; }

@@ -26,9 +26,9 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.MonitorEsdId == monitorProduce);
         }
-        public async Task<ProduceActivityModel?> GetByProduceStationId(int stationProduce)
+        public async Task<ProduceActivityModel?> GetByProduceJigId(int jigProduce)
         {
-            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.StationId == stationProduce);
+            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.JigId == jigProduce);
         }
         public async Task<ProduceActivityModel?> GetByProduceUserId(int usersProduce)
         {
@@ -71,7 +71,7 @@ namespace BiometricFaceApi.Repositories
                 // update
                 produceActivityModelUp.UserId = produceActivity.UserId;
                 produceActivityModelUp.MonitorEsdId = produceActivity.MonitorEsdId;
-                produceActivityModelUp.StationId = produceActivity.StationId;
+                produceActivityModelUp.JigId = produceActivity.JigId;
                 _dbContext.ProduceActivity.Update(produceActivityModelUp);
                 await _dbContext.SaveChangesAsync();
             }
