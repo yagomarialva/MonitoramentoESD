@@ -21,9 +21,7 @@ const style = {
 };
 
 const OperatorModal = ({ open, handleClose, operator }) => {
-  const {
-    t,
-  } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Modal
@@ -42,6 +40,18 @@ const OperatorModal = ({ open, handleClose, operator }) => {
         </Typography>
         <Box component="form" noValidate autoComplete="off">
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              <TextField
+                fullWidth
+                disabled
+                required
+                label={t("ESD_OPERATOR.TABLE.NAME", {
+                  appName: "App for Translations",
+                })}
+                defaultValue={operator.name}
+                margin="normal"
+              />
+            </Typography>
             <TextField
               fullWidth
               disabled
@@ -53,22 +63,12 @@ const OperatorModal = ({ open, handleClose, operator }) => {
               margin="normal"
             />
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              disabled
-              required
-              label={t("ESD_OPERATOR.TABLE.NAME", {
-                appName: "App for Translations",
-              })}
-              defaultValue={operator.name}
-              margin="normal"
-            />
-          </Typography>
         </Box>
         <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
           <Button variant="contained" color="success" onClick={handleClose}>
-            {t("ESD_OPERATOR.DIALOG.CLOSE", { appName: "App for Translations" })}
+            {t("ESD_OPERATOR.DIALOG.CLOSE", {
+              appName: "App for Translations",
+            })}
           </Button>
         </Box>
       </Paper>

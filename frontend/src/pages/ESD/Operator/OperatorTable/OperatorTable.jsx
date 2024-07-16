@@ -125,24 +125,29 @@ const OperatorTable = () => {
   const handleEditCellChange = async (params) => {
     console.log('params', params)
     try {
-      const updatedOperator = {
-        ...state.operator,
-        name: params.name,
-        badge: params.badge,
-      };
-      const updatedItem = await createOperators(updatedOperator);
+      // const updatedOperator = {
+      //   ...state.operator,
+      //   name: params.name,
+      //   badge: params.badge,
+      // };
+      // const updatedItem = await createOperators(updatedOperator);
 
-      handleStateChange({
-        allOperators: state.allOperators.map((item) =>
-          item.id === params.id ? updatedItem : item
-        ),
-      });
-
+      // handleStateChange({
+      //   allOperators: state.allOperators.map((item) =>
+      //     item.id === params.id ? updatedItem : item
+      //   ),
+      // });
+      // handleStateChange({ allOperators: [...state.allOperators, operator] });
+      
+      const response = await createOperators(params);
+      const result = await getAllOperators();
+      handleStateChange({ allOperators: result.value });
       showSnackbar(
         t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
+      return response.data;
     } catch (error) {
       console.log(error);
       showSnackbar(

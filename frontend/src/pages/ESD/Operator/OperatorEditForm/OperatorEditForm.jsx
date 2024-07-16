@@ -80,17 +80,17 @@ const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
           })}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            id="outlined-name"
-            name="name"
-            label="Name"
-            value={operator.name}
-            onChange={handleChange}
-          />
           <FormControl fullWidth margin="normal">
+            <TextField
+              required
+              fullWidth
+              margin="normal"
+              id="outlined-name"
+              name="name"
+              label="Name"
+              value={operator.name}
+              onChange={handleChange}
+            />
           <TextField
             required
             fullWidth

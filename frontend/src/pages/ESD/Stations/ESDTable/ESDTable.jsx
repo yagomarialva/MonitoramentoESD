@@ -238,7 +238,7 @@ const ESDTable = () => {
     <>
       <Menu></Menu>
       <Typography paragraph>
-        <Container sx={{ mt: -7, ml: 22, width: 860 }}>
+        <Container sx={{ mt: -7, ml: 22, width: 900 }}>
           <Box sx={{ p: 3 }}>
             <div className="grid-table">
               <DataGrid

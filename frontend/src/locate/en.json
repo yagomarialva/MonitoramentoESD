@@ -1,114 +1,110 @@
 {
   "translation": {
-    "headerTitle": "My {{appName}} Header Title",
+    "headerTitle": "Meu Titulo do Cabecalho do {{appName}}",
     "ESD_TEST": {
-      "TABLE_HEADER": "ESD Station",
-      "ADD_STATION": "Add Station",
+      "TABLE_HEADER": "Estações ESD",
+      "ADD_STATION": "Adicionar Estação",
       "TABLE": {
-        "USER_ID": "Serial Number",
-        "NAME": "Description",
-        "ROLE": "Role",
-        "ACTIONS": "Actions",
-        "COLUMNS": "Filter Columns",
-        "DENSITY": "Adjust Density",
-        "SEARCH": "Search",
-        "COMPACT": "Compact",
-        "STANDARD": "Standard",
-        "CONFORTABLE": "Confortable"
+        "USER_ID": "Número de Série",
+        "NAME": "Descrição",
+        "ACTIONS": "Ações",
+        "COLUMNS": "Filtrar Colunas",
+        "DENSITY": "Ajustar Exibição",
+        "SEARCH": "Pesquisar",
+        "COMPACT": "Compacto",
+        "STANDARD": "Padrão",
+        "CONFORTABLE": "Confortável"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM-TEXT": "Are you sure you want to delete this ESD Station?",
-        "CLOSE": "Close",
-        "SAVE": "Save",
-        "DELETE_STATION": "Delete Station"
+        "CONFIRM-TEXT": "Deseja excluir a estação ESD?",
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "DELETE_STATION": "Excluir Operador"
       },
       "DIALOG": {
-        "CLOSE": "Close",
-        "SAVE": "Save",
-        "CREATE_STATION": "Create Station",
-        "EDIT_STATION": "Edit Sation"
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "CREATE_STATION": "Adicionar Operador",
+        "EDIT_STATION": "Editar Operador"
       },
       "TOAST": {
-        "CREATE_SUCCESS": "Station created successfully",
-        "TOAST_ERROR": "Operation not completed successfully",
-        "CREATE_ERROR": "Operation not completed successfully",
-        "DELETE_SUCCESS": "Station successfully deleted",
-        "UPDATE_SUCCESS": "Station successfully updated"
+        "CREATE_SUCCESS": "Operador criada com sucesso",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Operador Excluída com sucesso",
+        "UPDATE_SUCCESS": "Operador atualizada com sucesso"
       }
     },
     "ESD_OPERATOR": {
-      "TABLE_HEADER": "ESD Operator",
-      "ADD_OPERATOR": "Add Operator",
+      "TABLE_HEADER": "Operadores ESD",
+      "ADD_OPERATOR": "Adicionar Operador",
       "TABLE": {
-        "USER_ID": "Badge",
-        "NAME": "Operator",
-        "ROLE": "Role",
-        "ACTIONS": "Actions",
-        "COLUMNS": "Filter Columns",
-        "DENSITY": "Adjust Density",
-        "SEARCH": "Search",
-        "COMPACT": "Compact",
-        "STANDARD": "Standard",
-        "CONFORTABLE": "Confortable"
+        "USER_ID": "Matrícula",
+        "NAME": "Operador",
+        "ACTIONS": "Ações",
+        "COLUMNS": "Filtrar Colunas",
+        "DENSITY": "Ajustar Exibição",
+        "SEARCH": "Pesquisar",
+        "ROLE": "Cargo",
+        "COMPACT": "Compacto",
+        "STANDARD": "Padrão",
+        "CONFORTABLE": "Confortável"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM-TEXT": "Are you sure you want to delete this ESD Operator?",
-        "CLOSE": "Close",
-        "SAVE": "Delete",
-        "DELETE_STATION": "Delete Operator"
+        "CONFIRM-TEXT": "Deseja excluir o Operador?",
+        "CLOSE": "Fechar",
+        "SAVE": "Excluir",
+        "DELETE_STATION": "Excluir Operador"
       },
       "DIALOG": {
-        "CLOSE": "Close",
-        "SAVE": "Save",
-        "CREATE_STATION": "Create Operator",
-        "EDIT_STATION": "Edit Sation"
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "CREATE_STATION": "Adicionar Operador",
+        "EDIT_STATION": "Editar Operador"
       },
       "TOAST": {
-        "CREATE_SUCCESS": "Operator created successfully",
-        "TOAST_ERROR": "Operation not completed successfully",
-        "CREATE_ERROR": "Operation not completed successfully",
-        "DELETE_SUCCESS": "Operator successfully deleted",
-        "UPDATE_SUCCESS": "Operator successfully updated"
+        "CREATE_SUCCESS": "Operador criado com sucesso",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Operador Excluído com sucesso",
+        "UPDATE_SUCCESS": "Operador atualizado com sucesso"
       }
     },
     "ESD_MONITOR": {
-      "TABLE_HEADER": "ESD Monitor",
-      "ADD_MONITOR": "Add Monitor",
+      "TABLE_HEADER": "Monitores ESD",
+      "ADD_MONITOR": "Adicionar Monitor",
       "TABLE": {
-        "USER_ID": "Serial Number",
+        "USER_ID": "Número de Série",
         "NAME": "Monitor",
-        "ROLE": "Serial Number",
-        "ACTIONS": "Actions",
-        "COLUMNS": "Filter Columns",
-        "DENSITY": "Adjust Density",
-        "SEARCH": "Search",
-        "COMPACT": "Compact",
-        "STANDARD": "Standard",
-        "CONFORTABLE": "Confortable"
+        "ACTIONS": "Ações",
+        "COLUMNS": "Filtrar Colunas",
+        "DENSITY": "Ajustar Exibição",
+        "SEARCH": "Pesquisar",
+        "STATION": "Estação",
+        "COMPACT": "Compacto",
+        "STANDARD": "Padrão",
+        "CONFORTABLE": "Confortável"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM-TEXT": "Are you sure you want to delete this ESD Monitor?",
-        "CLOSE": "Close",
-        "SAVE": "Delete",
-        "DELETE_STATION": "Delete Monitor"
+        "CONFIRM-TEXT": "Deseja excluir o Monitor?",
+        "CLOSE": "Fechar",
+        "SAVE": "Excluir",
+        "DELETE_STATION": "Excluir Monitor"
       },
       "DIALOG": {
-        "CLOSE": "Close",
-        "SAVE": "Save",
-        "CREATE_STATION": "Create Monitor",
-        "EDIT_STATION": "Edit Sation"
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "CREATE_STATION": "Adicionar Monitor",
+        "EDIT_STATION": "Editar Monitor"
       },
       "TOAST": {
-        "CREATE_SUCCESS": "Monitor created successfully",
-        "TOAST_ERROR": "Operation not completed successfully",
-        "CREATE_ERROR": "Operation not completed successfully",
-        "DELETE_SUCCESS": "Monitor successfully deleted",
-        "UPDATE_SUCCESS": "Monitor successfully updated"
+        "CREATE_SUCCESS": "Monitor criado com sucesso",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Monitor Excluído com sucesso",
+        "UPDATE_SUCCESS": "Monitor atualizado com sucesso"
       }
     },
     "FCT_Home_Page": {
-      "Header": "Home Page",
-      "Label": "FCT for test automation"
+      "Header": "Página Inicial",
+      "Label": "FCT para automação dos testes"
     }
   }
 }

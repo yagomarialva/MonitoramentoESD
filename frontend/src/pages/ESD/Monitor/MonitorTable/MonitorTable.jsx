@@ -95,6 +95,7 @@ const MonitorTable = () => {
         );
         return response.data;
     } catch (error) {
+        console.log(error)
         showSnackbar(
             t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
             "error"
@@ -242,7 +243,7 @@ const MonitorTable = () => {
     <>
       <Menu></Menu>
       <Typography paragraph>
-        <Container sx={{ mt: -7, ml: 22, width: 860 }}>
+        <Container sx={{ mt: -7, ml: 22, width: 900 }}>
           <Box sx={{ p: 3 }}>
               <DataGrid
                 
