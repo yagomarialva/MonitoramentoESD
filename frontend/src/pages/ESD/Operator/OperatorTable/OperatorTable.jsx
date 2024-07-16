@@ -149,14 +149,24 @@ const OperatorTable = () => {
       );
       return response.data;
     } catch (error) {
-      console.log(error);
-      showSnackbar(
-        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
-          appName: "App for Translations",
-        }),
-        "error"
-      );
-    }
+      const result = await getAllOperators();
+      if(result){
+        console.log(result)
+        handleStateChange({ allOperators: result.value });
+        showSnackbar(
+          t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {
+            appName: "App for Translations",
+          })
+        );
+      } else {
+        showSnackbar(
+          t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
+            appName: "App for Translations",
+          }),
+          "error"
+        );
+      }
+      }
   };
 
   useEffect(() => {
