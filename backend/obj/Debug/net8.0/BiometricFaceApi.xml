@@ -311,5 +311,17 @@
         <member name="M:BiometricFaceApi.Migrations.first.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:BiometricFaceApi.Migrations.BiometricFaceDBContexModelSnapshotcs">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.BiometricFaceDBContexModelSnapshotcs.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.BiometricFaceDBContexModelSnapshotcs.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:BiometricFaceApi.Migrations.BiometricFaceDBContexModelSnapshotcs.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

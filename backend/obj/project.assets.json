@@ -4650,19 +4650,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\bc4g9991\\.nuget\\packages\\": {}
+    "C:\\Users\\BC4G9992\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\bc4g9991\\Documents\\Projeto_FCT\\Develop\\BiometricFaceApi.csproj",
+      "projectUniqueName": "C:\\Users\\BC4G9992\\Documents\\fct_backend\\fct_auto_test\\fct_auto_test\\backend\\BiometricFaceApi.csproj",
       "projectName": "BiometricFaceApi",
-      "projectPath": "C:\\Users\\bc4g9991\\Documents\\Projeto_FCT\\Develop\\BiometricFaceApi.csproj",
-      "packagesPath": "C:\\Users\\bc4g9991\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\bc4g9991\\Documents\\Projeto_FCT\\Develop\\obj\\",
+      "projectPath": "C:\\Users\\BC4G9992\\Documents\\fct_backend\\fct_auto_test\\fct_auto_test\\backend\\BiometricFaceApi.csproj",
+      "packagesPath": "C:\\Users\\BC4G9992\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\BC4G9992\\Documents\\fct_backend\\fct_auto_test\\fct_auto_test\\backend\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\bc4g9991\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\BC4G9992\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4762,7 +4767,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
