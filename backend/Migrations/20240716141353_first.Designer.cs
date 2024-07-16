@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiometricFaceApi.Migrations
 {
     [DbContext(typeof(BiometricFaceDBContex))]
-    [Migration("20240712140514_first")]
+    [Migration("20240716141353_first")]
     partial class first
     {
         /// <inheritdoc />
@@ -146,6 +146,9 @@ namespace BiometricFaceApi.Migrations
 
                     b.Property<int>("ProduceActivityId")
                         .HasColumnType("int");
+
+                    b.Property<bool?>("Status")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

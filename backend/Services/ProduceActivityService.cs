@@ -107,7 +107,7 @@ namespace BiometricFaceApi.Services
                     if (claim.Any())
                     {
                         var user = await _authenticationRepository.AuthGetByUsername(claim.FirstOrDefault().Value);
-                        var recordModel = new RecordStatusProduceModel { Description = description, ProduceActivityId = id, DateEvent = DateAndTime.Now, UserId = user.Id };
+                        var recordModel = new RecordStatusProduceModel { Description = description, ProduceActivityId = id,Status = status, DateEvent = DateAndTime.Now, UserId = user.Id };
                         result = await _repository.Islocked(id, status);
                         await _recordStatusRepository.Include(recordModel);
                         statusCode = StatusCodes.Status200OK;

@@ -144,6 +144,9 @@ namespace BiometricFaceApi.Migrations
                     b.Property<int>("ProduceActivityId")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("Status")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 

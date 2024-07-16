@@ -163,6 +163,7 @@ namespace BiometricFaceApi.Migrations
                     ProduceActivityId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: true),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     DateEvent = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>

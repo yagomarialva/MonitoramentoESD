@@ -20,6 +20,8 @@ namespace BiometricFaceApi.Models
         [IgnoreDataMember]
         public virtual UserModel? User { get; set; }
         public string? Description { get; set; }
+        public bool? Status { get; set; }
         public DateTime? DateEvent { get; set; }
+        
     }
 }
