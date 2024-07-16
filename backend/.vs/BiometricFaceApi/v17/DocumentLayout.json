@@ -3,20 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141353_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20240716141353_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141328_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20240716141328_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\produceactivityservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\produceactivityservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\biometricservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\biometricservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\models\\recordstatusmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:models\\recordstatusmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\recordstatuscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\recordstatuscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\recordstatusservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\recordstatusservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\migrations\\20240716141353_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:migrations\\20240716141353_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141328_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20240716141328_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\repositories\\recordstatusrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -27,20 +43,12 @@
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\produceactivityrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\recordstatusservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\recordstatusservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716140309_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20240716140309_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716140159_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20240716140159_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\recordstatuscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\recordstatuscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\monitoresdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -61,10 +69,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\data\\biometricfacedbcontex.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:data\\biometricfacedbcontex.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\biometricservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\biometricservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\swaggersettings\\swaggerschemafilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -137,10 +141,6 @@
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\interfaces\\iusersrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bc4g9991\\Documents\\Projeto_FCT\\Develop\\Migrations\\20240712135536_first.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -159,58 +159,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "20240716141353_first.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141353_first.cs",
-              "RelativeDocumentMoniker": "Migrations\\20240716141353_first.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141353_first.cs",
-              "RelativeToolTip": "Migrations\\20240716141353_first.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T14:13:53.892Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "20240716141328_first.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141328_first.cs",
-              "RelativeDocumentMoniker": "Migrations\\20240716141328_first.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141328_first.cs",
-              "RelativeToolTip": "Migrations\\20240716141328_first.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T14:13:28.439Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "ProduceActivityService.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\ProduceActivityService.cs",
               "RelativeDocumentMoniker": "Services\\ProduceActivityService.cs",
               "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\ProduceActivityService.cs",
               "RelativeToolTip": "Services\\ProduceActivityService.cs",
-              "ViewState": "AQIAAFUAAAAAAAAAAAAUwG4AAABIAAAA",
+              "ViewState": "AQIAAHgAAAAAAAAAAAAiwIwAAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-16T14:06:08.759Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "20240716140309_first.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716140309_first.cs",
-              "RelativeDocumentMoniker": "Migrations\\20240716140309_first.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716140309_first.cs",
-              "RelativeToolTip": "Migrations\\20240716140309_first.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T14:03:09.883Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "AuthenticationController.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\AuthenticationController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthenticationController.cs",
@@ -222,20 +183,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 4,
               "Title": "RecordStatusController.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\RecordStatusController.cs",
               "RelativeDocumentMoniker": "Controllers\\RecordStatusController.cs",
               "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\RecordStatusController.cs",
               "RelativeToolTip": "Controllers\\RecordStatusController.cs",
-              "ViewState": "AQIAAA0AAAAAAAAAAAAmwBkAAAApAAAA",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAcwBkAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-12T13:12:51.886Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-12T13:12:51.886Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "RecordStatusRepository.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\RecordStatusRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\RecordStatusRepository.cs",
@@ -243,25 +203,98 @@
               "RelativeToolTip": "Repositories\\RecordStatusRepository.cs",
               "ViewState": "AQIAABUAAAAAAAAAAAAowBgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-12T14:30:00.56Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-12T14:30:00.56Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 5,
               "Title": "RecordStatusService.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\RecordStatusService.cs",
               "RelativeDocumentMoniker": "Services\\RecordStatusService.cs",
               "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\RecordStatusService.cs",
               "RelativeToolTip": "Services\\RecordStatusService.cs",
-              "ViewState": "AQIAABgAAAAAAAAAAAAowG4AAAA9AAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAQwBEAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-15T15:07:49.483Z",
+              "WhenOpened": "2024-07-15T15:07:49.483Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RecordStatusModel.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\RecordStatusModel.cs",
+              "RelativeDocumentMoniker": "Models\\RecordStatusModel.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\RecordStatusModel.cs",
+              "RelativeToolTip": "Models\\RecordStatusModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-12T13:46:11.857Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
+              "Title": "UserModel.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\UserModel.cs",
+              "RelativeDocumentMoniker": "Models\\UserModel.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\UserModel.cs",
+              "RelativeToolTip": "Models\\UserModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-12T13:57:20.077Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BiometricService.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\BiometricService.cs",
+              "RelativeDocumentMoniker": "Services\\BiometricService.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\BiometricService.cs",
+              "RelativeToolTip": "Services\\BiometricService.cs",
+              "ViewState": "AQIAADkAAAAAAAAAAAAAAFAAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-12T13:57:34.63Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "20240716140309_first.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716140309_first.cs",
+              "RelativeDocumentMoniker": "Migrations\\20240716140309_first.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716140309_first.cs",
+              "RelativeToolTip": "Migrations\\20240716140309_first.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-16T14:03:09.883Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "20240716141353_first.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141353_first.cs",
+              "RelativeDocumentMoniker": "Migrations\\20240716141353_first.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141353_first.cs",
+              "RelativeToolTip": "Migrations\\20240716141353_first.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-16T14:13:53.892Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "20240716141328_first.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141328_first.cs",
+              "RelativeDocumentMoniker": "Migrations\\20240716141328_first.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716141328_first.cs",
+              "RelativeToolTip": "Migrations\\20240716141328_first.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-16T14:13:28.439Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "ProduceActivityRepository.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\ProduceActivityRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\ProduceActivityRepository.cs",
@@ -269,25 +302,11 @@
               "RelativeToolTip": "Repositories\\ProduceActivityRepository.cs",
               "ViewState": "AQIAAB8AAAAAAAAAAAAcwDEAAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-15T15:08:31.189Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-15T15:08:31.189Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "RecordStatusModel.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\RecordStatusModel.cs",
-              "RelativeDocumentMoniker": "Models\\RecordStatusModel.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\RecordStatusModel.cs",
-              "RelativeToolTip": "Models\\RecordStatusModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAApAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-12T13:46:11.857Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "MonitorEsdController.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\MonitorEsdController.cs",
               "RelativeDocumentMoniker": "Controllers\\MonitorEsdController.cs",
@@ -295,12 +314,11 @@
               "RelativeToolTip": "Controllers\\MonitorEsdController.cs",
               "ViewState": "AQIAAAIAAAAAAAAAAAAiwCEAAAA1AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-12T13:11:15.819Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-12T13:11:15.819Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -312,7 +330,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "BiometricFaceDBContex.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Data\\BiometricFaceDBContex.cs",
               "RelativeDocumentMoniker": "Data\\BiometricFaceDBContex.cs",
@@ -324,7 +342,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "20240716140159_first.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240716140159_first.cs",
               "RelativeDocumentMoniker": "Migrations\\20240716140159_first.cs",
@@ -332,12 +350,11 @@
               "RelativeToolTip": "Migrations\\20240716140159_first.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-16T14:01:59.97Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-16T14:01:59.97Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "ProduceActivityController.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\ProduceActivityController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProduceActivityController.cs",
@@ -349,7 +366,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "BiometricFaceApi",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\BiometricFaceApi.csproj",
               "RelativeDocumentMoniker": "BiometricFaceApi.csproj",
@@ -360,19 +377,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "BiometricService.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\BiometricService.cs",
-              "RelativeDocumentMoniker": "Services\\BiometricService.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\BiometricService.cs",
-              "RelativeToolTip": "Services\\BiometricService.cs",
-              "ViewState": "AQIAAFEAAAAAAAAAAAAAAFQAAAAyAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-12T13:57:34.63Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "StationRepository.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\StationRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\StationRepository.cs",
@@ -384,7 +389,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "AuthenticationService.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\AuthenticationService.cs",
               "RelativeDocumentMoniker": "Services\\AuthenticationService.cs",
@@ -396,7 +401,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "MonitorEsdService.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\MonitorEsdService.cs",
               "RelativeDocumentMoniker": "Services\\MonitorEsdService.cs",
@@ -408,7 +413,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "BiometricFaceApi.http",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\BiometricFaceApi.http",
               "RelativeDocumentMoniker": "BiometricFaceApi.http",
@@ -420,7 +425,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "SwaggerSchemaFilter.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\SwaggerSettings\\SwaggerSchemaFilter.cs",
               "RelativeDocumentMoniker": "SwaggerSettings\\SwaggerSchemaFilter.cs",
@@ -432,7 +437,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "UsersRepository.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\UsersRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\UsersRepository.cs",
@@ -444,7 +449,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "libman.json",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\libman.json",
               "RelativeDocumentMoniker": "libman.json",
@@ -456,7 +461,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 29,
               "Title": "BiometricController.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\BiometricController.cs",
               "RelativeDocumentMoniker": "Controllers\\BiometricController.cs",
@@ -468,7 +473,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "JwtAuthentication.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Authentication\\JwtAuthentication.cs",
               "RelativeDocumentMoniker": "Authentication\\JwtAuthentication.cs",
@@ -480,7 +485,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "SecurityService.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Security\\SecurityService.cs",
               "RelativeDocumentMoniker": "Security\\SecurityService.cs",
@@ -492,7 +497,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "RolesController.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\RolesController.cs",
               "RelativeDocumentMoniker": "Controllers\\RolesController.cs",
@@ -504,7 +509,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 27,
               "Title": "StationController.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\StationController.cs",
               "RelativeDocumentMoniker": "Controllers\\StationController.cs",
@@ -528,19 +533,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
-              "Title": "UserModel.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\UserModel.cs",
-              "RelativeDocumentMoniker": "Models\\UserModel.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\UserModel.cs",
-              "RelativeToolTip": "Models\\UserModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAANAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-12T13:57:20.077Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 30,
               "Title": "20240712140244_first.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\Documents\\Projeto_FCT\\Develop\\Migrations\\20240712140244_first.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\Documents\\Projeto_FCT\\Develop\\Migrations\\20240712140244_first.cs",
@@ -552,7 +545,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 33,
               "Title": "20240712135958_first.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\Documents\\Projeto_FCT\\Develop\\Migrations\\20240712135958_first.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\Documents\\Projeto_FCT\\Develop\\Migrations\\20240712135958_first.cs",
@@ -564,7 +557,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 32,
               "Title": "AuthenticationModel.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\AuthenticationModel.cs",
               "RelativeDocumentMoniker": "Models\\AuthenticationModel.cs",
@@ -576,7 +569,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 31,
               "Title": "BiometricModel.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\BiometricModel.cs",
               "RelativeDocumentMoniker": "Models\\BiometricModel.cs",
@@ -588,7 +581,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 34,
               "Title": "IUsersRepository.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\Interfaces\\IUsersRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\Interfaces\\IUsersRepository.cs",

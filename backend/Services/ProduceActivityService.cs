@@ -138,6 +138,7 @@ namespace BiometricFaceApi.Services
                 {
                     throw new Exception("Todos os campos são obrigatórios.");
                 }
+                produceModel.DataTimeMonitorEsdEvent = DateTime.Now;
                 result = await _repository.Include(produceModel);
 
             }
