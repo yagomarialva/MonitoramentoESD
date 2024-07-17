@@ -93,8 +93,8 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarEstavaoDeProducaoId{id}")]
-        public async Task<ActionResult> BuscarEstavaoDeProducaoId(int id)
+        [Route("/BuscarEstacaoDeProducaoId{id}")]
+        public async Task<ActionResult> BuscarEstacaoDeProducaoId(int id)
         {
             var (result, statusCode) = await _stationRepository.GetByStationProductionId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -104,7 +104,7 @@ namespace BiometricFaceApi.Controllers
 
 
         /// <summary>
-        /// Cadastra e Atualiza de dados do Estaação View.
+        /// Cadastra e Atualiza de dados do Estação View.
         /// </summary>
         /// <remarks>Cadastra monitor na base de dados; Para atualizar dados basta usar Id da Estação View.</remarks>
         /// <param name="model">Dados de cadastro da Estavação View</param>
@@ -125,9 +125,9 @@ namespace BiometricFaceApi.Controllers
 
 
         /// <summary>
-        /// Deletar Linew View
+        /// Deletar Estação View
         /// </summary>
-        /// <param name="id"> Deleta Estacao View</param>
+        /// <param name="id"> Deleta Estação View</param>
         /// <returns></returns>
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
