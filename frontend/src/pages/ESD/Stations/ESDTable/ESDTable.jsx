@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  getAllStations,
-  createStations,
-  deleteStations,
-  updateStations,
+  getAllJigs,
+  createJigs,
+  deleteJigs,
+  updateJigs,
 } from "../../../../api/stationApi";
 import {
   IconButton,
@@ -12,17 +12,16 @@ import {
   Snackbar,
   Alert,
   Button,
-  Chip,
-  Stack,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  TextField,
+  Container,
+  TablePagination,
+  Typography,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
-import {
-  DataGrid,
-  GridToolbarContainer,
-  GridToolbarColumnsButton,
-  GridToolbarDensitySelector,
-  GridToolbarQuickFilter,
-} from "@mui/x-data-grid";
 import ESDModal from "../ESDModal/ESDModal";
 import ESDForm from "../ESDForm/ESDForm";
 import ESDEditForm from "../ESDEditForm/ESDEditForm";
@@ -30,13 +29,16 @@ import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
 import Menu from "../../../Menu/Menu";
-import { Container, Typography } from "@mui/material";
 
 const ESDTable = () => {
   const { t } = useTranslation();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const [state, setState] = useState({
-    allStations: [],
+    allJigs: [],
     station: {},
     open: false,
     openModal: false,
@@ -48,6 +50,8 @@ const ESDTable = () => {
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
+    filterName: "",
+    filterDescription: "",
   });
 
   const handleStateChange = (changes) => {
@@ -78,39 +82,37 @@ const ESDTable = () => {
   };
 
   const handleCreateMonitor = async (station) => {
-     // Determina o próximo id baseado no maior id atual
-     const maxId = state.allStations.reduce((max, station) => Math.max(max, station.id), 0);
-     const newId = maxId + 1;
- 
-     // Cria o novo monitor com o próximo id
-     const newStation = { id: newId, ...station };
-     console.log('newStation', newStation);
- 
-     try {
-         const response = await createStations(newStation);
-         handleStateChange({ allStations: [...state.allStations, newStation] });
-         showSnackbar(
-             t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
-         );
-         return response.data;
-     } catch (error) {
-         showSnackbar(
-             t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
-             "error"
-         );
-     }
+    const maxId = state.allJigs.reduce(
+      (max, station) => Math.max(max, station.id),
+      0
+    );
+    const newId = maxId + 1;
+    const newJig = { id: newId, ...station };
+
+    try {
+      const response = await createJigs(newJig);
+      handleStateChange({ allJigs: [...state.allJigs, newJig] });
+      showSnackbar(
+        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+      );
+      return response.data;
+    } catch (error) {
+      showSnackbar(
+        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        "error"
+      );
+    }
   };
 
   const handleDelete = async (id) => {
     try {
-      await deleteStations(id);
+      await deleteJigs(id);
       handleStateChange({
-        allStations: state.allStations.filter(
-          (station) => station.id !== id
-        ),
+        allJigs: state.allJigs.filter((station) => station.id !== id),
       });
       showSnackbar(
-        t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" }),"success"
+        t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" }),
+        "success"
       );
     } catch (error) {
       showSnackbar(
@@ -128,16 +130,17 @@ const ESDTable = () => {
         name: params.name,
         description: params.description,
       };
-      const updatedItem = await updateStations(updatedBracelet);
+      const updatedItem = await updateJigs(updatedBracelet);
 
       handleStateChange({
-        allStations: state.allStations.map((item) =>
+        allJigs: state.allJigs.map((item) =>
           item.id === params.id ? updatedItem : item
         ),
       });
 
       showSnackbar(
-        t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" }),"success"
+        t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" }),
+        "success"
       );
     } catch (error) {
       showSnackbar(
@@ -146,14 +149,23 @@ const ESDTable = () => {
       );
     }
   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
 
   useEffect(() => {
     const fetchDataAllUsers = async () => {
       try {
-        const result = await getAllStations();
-        handleStateChange({ allStations: result });
+        const result = await getAllJigs();
+        handleStateChange({ allJigs: result });
       } catch (error) {
-        showSnackbar(t(error.message),'error');
+        showSnackbar(t(error.message), "error");
       }
     };
     fetchDataAllUsers();
@@ -166,113 +178,112 @@ const ESDTable = () => {
     }
   };
 
-  const CustomToolbar = () => (
-    <GridToolbarContainer className="gridToolbar">
-      <GridToolbarQuickFilter />
-      <GridToolbarColumnsButton />
-      <GridToolbarDensitySelector GridLocaleText={{}} />
-      <Button
-        id="add-button"
-        variant="outlined"
-        color="success"
-        onClick={handleOpenModal}
-      >
-        {t("ESD_TEST.ADD_STATION", { appName: "App for Translations" })}
-      </Button>
-    </GridToolbarContainer>
-  );
+  const filterJigs = () => {
+    return state.allJigs.filter((jig) => {
+      return (
+        jig.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        jig.badge.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
+  };
 
-  const columns = [
-    { field: "id", headerName: "ID", width: 70 },
-    {
-      field: "name",
-      headerName: t("ESD_TEST.TABLE.USER_ID", {
-        appName: "App for Translations",
-      }),
-      sortable: false,
-      width: 160,
-    },
-    {
-      field: "description",
-      headerName: t("ESD_TEST.TABLE.NAME", { appName: "App for Translations" }),
-      width: 250,
-    },
-    {
-      field: "actions",
-      headerName: t("ESD_TEST.TABLE.ACTIONS", {
-        appName: "App for Translations",
-      }),
-      sortable: false,
-      width: 120,
-      renderCell: (params) => (
-        <>
-          <IconButton
-            onClick={() => handleEditOpen(params.row)}
-            edge="start"
-            aria-label="edit"
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            edge="start"
-            aria-label="info"
-            onClick={() => handleOpen(params.row)}
-          >
-            <Info />
-          </IconButton>
-          <IconButton
-            onClick={() => handleDeleteOpen(params.row)}
-            edge="start"
-            aria-label="delete"
-          >
-            <Delete />
-          </IconButton>
-        </>
-      ),
-    },
-  ];
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    handleStateChange({ [name]: value });
+  };
 
-  const rows = state.allStations;
+  const filteredJigs = state.allJigs.filter((station) => {
+    return (
+      station.name.toLowerCase().includes(state.filterName.toLowerCase()) &&
+      station.description
+        .toLowerCase()
+        .includes(state.filterDescription.toLowerCase())
+    );
+  });
 
   return (
     <>
-      <Menu></Menu>
+      <Menu />
       <Typography paragraph>
         <Container sx={{ mt: -7, ml: 22, width: 900 }}>
           <Box sx={{ p: 3 }}>
-            <div className="grid-table">
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                localeText={{
-                  toolbarColumns: t("ESD_TEST.TABLE.COLUMNS", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarFilters: t("ESD_TEST.TABLE.SEARCH", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensity: t("ESD_TEST.TABLE.DENSITY", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensityCompact: t("ESD_TEST.TABLE.COMPACT", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensityStandard: t("ESD_TEST.TABLE.STANDARD", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensityComfortable: t("ESD_TEST.TABLE.CONFORTABLE", {
-                    appName: "App for Translations",
-                  }),
-                }}
-                components={{ Toolbar: CustomToolbar }}
-                componentsProps={{ toolbar: { onAdd: () => handleOpen(null) } }}
-                slots={{ toolbar: CustomToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true } }}
-                initialState={{
-                  pagination: { paginationModel: { page: 0, pageSize: 25 } },
-                }}
-                pageSizeOptions={[5, 10, 25, 50, 75, 100]}
-                onCellEditCommit={handleEditCellChange}
+            <div>
+              <TextField
+                name="filterName"
+                label={t("ESD_TEST.TABLE.USER_ID", {
+                  appName: "App for Translations",
+                })}
+                variant="outlined"
+                value={state.filterName}
+                onChange={handleFilterChange}
+                sx={{ mb: 2, mr: 2 }}
+              />
+              <TextField
+                name="filterDescription"
+                label={t("ESD_TEST.TABLE.NAME", {
+                  appName: "App for Translations",
+                })}
+                variant="outlined"
+                value={state.filterDescription}
+                onChange={handleFilterChange}
+                sx={{ mb: 2 }}
+              />
+              <Button
+                id="add-button"
+                variant="outlined"
+                color="success"
+                onClick={handleOpenModal}
+                sx={{ mb: 2, ml: 2 }}
+              >
+                {t("ESD_TEST.ADD_STATION", { appName: "App for Translations" })}
+              </Button>
+              <List>
+                {filteredJigs.map((station) => (
+                  <ListItem key={station.id}>
+                    <ListItemText
+                      primary={station.name}
+                      secondary={station.description}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => handleEditOpen(station)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="info"
+                        onClick={() => handleOpen(station)}
+                      >
+                        <Info />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDeleteOpen(station)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+              </List>
+              <TablePagination
+                component="div"
+                count={filterJigs().length}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[10, 25, 59, 75, 100, 125, 150]}
+                labelRowsPerPage={t("ESD_OPERATOR.TABLE.ROWS_PER_PAGE", {
+                  appName: "App for Translations",
+                })}
+                labelDisplayedRows={({ from, to, count }) =>
+                  `${from}-${to} de ${count}`
+                }
               />
             </div>
             <ESDModal

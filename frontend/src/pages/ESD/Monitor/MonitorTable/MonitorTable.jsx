@@ -12,21 +12,15 @@ import {
   Snackbar,
   Alert,
   Button,
-  Chip,
-  Stack,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  TextField,
   Container,
   Typography,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
-import {
-  DataGrid,
-  GridToolbarContainer,
-  GridToolbarColumnsButton,
-  GridToolbarDensitySelector,
-  GridToolbarQuickFilter,
-} from "@mui/x-data-grid";
-import "./SnackbarStyles.css";
-import "./ESDTable.css";
 import MonitorModal from "../MonitorModal/MonitorModal";
 import MonitorForm from "../MonitorForm/MonitorForm";
 import MonitorConfirmModal from "../MonitorConfirmModal/MonitorConfirmModal";
@@ -49,6 +43,8 @@ const MonitorTable = () => {
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
+    filterSerialNumber: "",
+    filterDescription: "",
   });
 
   const handleStateChange = (changes) => {
@@ -79,30 +75,24 @@ const MonitorTable = () => {
   };
 
   const handleCreateMonitor = async (monitor) => {
-    // Determina o próximo id baseado no maior id atual
     const maxId = state.allMonitors.reduce((max, monitor) => Math.max(max, monitor.id), 0);
     const newId = maxId + 1;
 
-    // Cria o novo monitor com o próximo id
     const newMonitor = { id: newId, ...monitor };
-    console.log('newMonitor', newMonitor);
-
     try {
-        const response = await createMonitors(newMonitor);
-        handleStateChange({ allMonitors: [...state.allMonitors, newMonitor] });
-        showSnackbar(
-            t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
-        );
-        return response.data;
+      const response = await createMonitors(newMonitor);
+      handleStateChange({ allMonitors: [...state.allMonitors, newMonitor] });
+      showSnackbar(
+        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+      );
+      return response.data;
     } catch (error) {
-        console.log(error)
-        showSnackbar(
-            t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
-            "error"
-        );
+      showSnackbar(
+        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        "error"
+      );
     }
-};
-
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -123,15 +113,13 @@ const MonitorTable = () => {
 
   const handleEditCellChange = async (params) => {
     try {
-      console.log('params',params)
       const updatedMonitor = {
         ...state.monitor,
         id: params.id,
         description: params.description,
         serialNumber: params.serialNumber,
       };
-      const updatedItem = await createMonitors( updatedMonitor);
-      console.log('updatedMonitor',updatedItem)
+      const updatedItem = await updateMonitors(updatedMonitor);
       handleStateChange({
         allMonitors: state.allMonitors.map((item) =>
           item.id === params.id ? updatedItem : item
@@ -170,119 +158,88 @@ const MonitorTable = () => {
     }
   };
 
-  const CustomToolbar = () => (
-    <GridToolbarContainer className="gridToolbar">
-      <GridToolbarQuickFilter />
-      <GridToolbarColumnsButton />
-      <GridToolbarDensitySelector GridLocaleText={{}} />
-      <Button
-        id="add-button"
-        variant="outlined"
-        color="success"
-        onClick={handleOpenModal}
-      >
-        {t("ESD_MONITOR.ADD_MONITOR", { appName: "App for Translations" })}
-      </Button>
-    </GridToolbarContainer>
-  );
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    handleStateChange({ [name]: value });
+  };
 
-  const columns = [
-    { field: "id", headerName: "ID", width: 70 },
-    {
-      field: "serialNumber",
-      headerName: t("ESD_MONITOR.TABLE.USER_ID", {
-        appName: "App for Translations",
-      }),
-      sortable: false,
-      width: 160,
-    },
-    {
-      field: "description",
-      headerName: t("ESD_MONITOR.TABLE.NAME", {
-        appName: "App for Translations",
-      }),
-      width: 250,
-    },
-    {
-      field: "actions",
-      headerName: t("ESD_MONITOR.TABLE.ACTIONS", {
-        appName: "App for Translations",
-      }),
-      sortable: false,
-      width: 120,
-      renderCell: (params) => (
-        <>
-          <IconButton
-            onClick={() => handleEditOpen(params.row)}
-            edge="start"
-            aria-label="edit"
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            edge="start"
-            aria-label="info"
-            onClick={() => handleOpen(params.row)}
-          >
-            <Info />
-          </IconButton>
-          <IconButton
-            onClick={() => handleDeleteOpen(params.row)}
-            edge="start"
-            aria-label="delete"
-          >
-            <Delete />
-          </IconButton>
-        </>
-      ),
-    },
-  ];
+  const filteredMonitors = state.allMonitors.filter((monitor) => {
+    return (
+      monitor.serialNumber.toLowerCase().includes(state.filterSerialNumber.toLowerCase()) &&
+      monitor.description.toLowerCase().includes(state.filterDescription.toLowerCase())
+    );
+  });
 
-  const rows = state.allMonitors;
   return (
     <>
-      <Menu></Menu>
+      <Menu />
       <Typography paragraph>
         <Container sx={{ mt: -7, ml: 22, width: 900 }}>
           <Box sx={{ p: 3 }}>
-              <DataGrid
-                
-                rows={rows}
-                columns={columns}
-                getRowId={(row) => row.serialNumber}
-                localeText={{
-                  toolbarColumns: t("ESD_MONITOR.TABLE.COLUMNS", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarFilters: t("ESD_MONITOR.TABLE.SEARCH", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensity: t("ESD_MONITOR.TABLE.DENSITY", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensityCompact: t("ESD_MONITOR.TABLE.COMPACT", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensityStandard: t("ESD_MONITOR.TABLE.STANDARD", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensityComfortable: t(
-                    "ESD_MONITOR.TABLE.CONFORTABLE",
-                    {
-                      appName: "App for Translations",
-                    }
-                  ),
-                }}
-                components={{ Toolbar: CustomToolbar }}
-                componentsProps={{ toolbar: { onAdd: () => handleOpen(null) } }}
-                slots={{ toolbar: CustomToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true } }}
-                initialState={{
-                  pagination: { paginationModel: { page: 0, pageSize: 25 } },
-                }}
-                pageSizeOptions={[5, 10, 25, 50, 75, 100]}
-                onCellEditCommit={handleEditCellChange}
+            <div>
+              <TextField
+                name="filterSerialNumber"
+                label={t("ESD_MONITOR.TABLE.USER_ID", {
+                  appName: "App for Translations",
+                })}
+                variant="outlined"
+                value={state.filterSerialNumber}
+                onChange={handleFilterChange}
+                sx={{ mb: 2, mr: 2 }}
               />
+              <TextField
+                name="filterDescription"
+                label={t("ESD_MONITOR.TABLE.NAME", {
+                  appName: "App for Translations",
+                })}
+                variant="outlined"
+                value={state.filterDescription}
+                onChange={handleFilterChange}
+                sx={{ mb: 2 }}
+              />
+              <Button
+                id="add-button"
+                variant="outlined"
+                color="success"
+                onClick={handleOpenModal}
+                sx={{ mb: 2, ml: 2 }}
+              >
+                {t("ESD_MONITOR.ADD_MONITOR", { appName: "App for Translations" })}
+              </Button>
+              <List>
+                {filteredMonitors.map((monitor) => (
+                  <ListItem key={monitor.id}>
+                    <ListItemText
+                      primary={monitor.serialNumber}
+                      secondary={monitor.description}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => handleEditOpen(monitor)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="info"
+                        onClick={() => handleOpen(monitor)}
+                      >
+                        <Info />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDeleteOpen(monitor)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+              </List>
+            </div>
             <MonitorModal
               open={state.open}
               handleClose={handleClose}
