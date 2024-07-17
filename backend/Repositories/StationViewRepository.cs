@@ -18,45 +18,41 @@ namespace BiometricFaceApi.Repositories
             return await _dbContext.StationViews.ToListAsync();
         }
 
-        public async Task<StationViewModel> GetByStationViewId(int id)
+        public async Task<StationViewModel?> GetByStationViewId(int id)
         {
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<StationViewModel> GetByJigId(int id)
+        public async Task<StationViewModel?> GetByJigId(int id)
         {
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task<StationViewModel> GetByStationProductionId(int id)
+        public async Task<StationViewModel?> GetByStationProductionId(int id)
         {
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         // Task realiza o include e update, include caso nao haja no banco, update caso ja 
         // tenha alguma propriedade cadastrada.
-        public async Task<StationViewModel?> Include(StationViewModel stationViewModel)
+        public async Task<StationViewModel?> Include(StationViewModel stationView)
         {
-            StationViewModel? stationView = await GetByStationViewId(stationViewModel.Id);
-            if (stationView is null)
+
+            StationViewModel? stationModelUp = await GetByStationViewId(stationView.Id);
+            if (stationModelUp == null)
             {
                 // include
-
-                
                 await _dbContext.StationViews.AddAsync(stationView);
                 await _dbContext.SaveChangesAsync();
+
             }
             else
             {
                 // update
-
-                stationView.JigId = stationViewModel.JigId;
-                stationView.StationId = stationViewModel.StationId;
-                stationView.LastUpdated = DateTime.Now;
-                _dbContext.StationViews.Update(stationView);
+                stationModelUp.JigId = stationView.JigId;
+                stationModelUp.StationId = stationView.StationId;
+                _dbContext.StationViews.Update(stationModelUp);
                 await _dbContext.SaveChangesAsync();
             }
-            var result = await _dbContext.StationViews.FirstAsync(x => x.Id == stationViewModel.Id);
-
-            return result;
+            return stationView;
         }
         public async Task<StationViewModel> Delete(int id)
         {
@@ -70,6 +66,6 @@ namespace BiometricFaceApi.Repositories
             return lineviewDel;
         }
 
-       
+
     }
 }

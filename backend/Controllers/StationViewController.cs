@@ -102,6 +102,7 @@ namespace BiometricFaceApi.Controllers
             return StatusCode(statusCode, result);
         }
 
+
         /// <summary>
         /// Cadastra e Atualiza de dados do Estaação View.
         /// </summary>
@@ -121,6 +122,7 @@ namespace BiometricFaceApi.Controllers
 
             return StatusCode(result.Item2, result.Item1);
         }
+
 
         /// <summary>
         /// Deletar Linew View

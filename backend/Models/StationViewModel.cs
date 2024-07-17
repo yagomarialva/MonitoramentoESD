@@ -6,6 +6,7 @@ using System.Xml.Linq;
 namespace BiometricFaceApi.Models
 {
     [Table("stationView")]
+    [Index(nameof(JigId), IsUnique = true)]
     public class StationViewModel
     {
         public int Id { get; set; }

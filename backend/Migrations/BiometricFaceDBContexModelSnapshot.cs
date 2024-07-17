@@ -262,7 +262,8 @@ namespace BiometricFaceApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("JigId");
+                    b.HasIndex("JigId")
+                        .IsUnique();
 
                     b.HasIndex("StationId");
 

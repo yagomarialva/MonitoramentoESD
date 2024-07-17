@@ -126,19 +126,17 @@ namespace BiometricFaceApi.Services
             object? result;
             try
             {
-                
+                if (stationViewModel.JigId == 0 & stationViewModel.StationId == 0)
+                {
+                    throw new Exception("Todos os campos são obrigatórios.");
+                }
                 stationViewModel.Created = DateTime.Now;
                 stationViewModel.LastUpdated = DateTime.Now;
-
-                
-                
-
-
                 result = await _stationViewRepository.Include(stationViewModel);
+
             }
             catch (Exception)
             {
-
                 result = "Não foi possível salvar as alterações. Verifique se todos os itens estão cadastrados.";
 
                 statusCode = StatusCodes.Status400BadRequest;

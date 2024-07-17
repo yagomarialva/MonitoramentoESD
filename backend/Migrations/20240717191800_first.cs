@@ -307,7 +307,8 @@ namespace BiometricFaceApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_stationView_JigId",
                 table: "stationView",
-                column: "JigId");
+                column: "JigId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_stationView_StationId",

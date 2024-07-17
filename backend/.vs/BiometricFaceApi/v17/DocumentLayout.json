@@ -3,16 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\stationviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\stationviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\models\\jigmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:models\\jigmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\produceactivitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\produceactivitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\models\\stationviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:models\\stationviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\stationviewcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\stationviewcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\produceactivityservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\produceactivityservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\stationviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\stationviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\repositories\\stationviewrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\stationviewrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,61 +39,79 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "JigModel.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\JigModel.cs",
+              "RelativeDocumentMoniker": "Models\\JigModel.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\JigModel.cs",
+              "RelativeToolTip": "Models\\JigModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-17T19:15:31.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "StationViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\StationViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\StationViewModel.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\StationViewModel.cs",
+              "RelativeToolTip": "Models\\StationViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-17T18:53:41.099Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ProduceActivityController.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\ProduceActivityController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProduceActivityController.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\ProduceActivityController.cs",
+              "RelativeToolTip": "Controllers\\ProduceActivityController.cs",
+              "ViewState": "AQIAADsAAAAAAAAAAAAwwEoAAAA/AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-17T18:51:09.869Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "StationViewRepository.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\StationViewRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\StationViewRepository.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\StationViewRepository.cs",
+              "RelativeToolTip": "Repositories\\StationViewRepository.cs",
+              "ViewState": "AQIAACMAAAAAAAAAAAA5wDYAAAAeAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-17T18:40:45.282Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "StationViewService.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\StationViewService.cs",
               "RelativeDocumentMoniker": "Services\\StationViewService.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\StationViewService.cs*",
-              "RelativeToolTip": "Services\\StationViewService.cs*",
-              "ViewState": "AQIAAC8AAAAAAAAAAAA9wIQAAAAQAAAA",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\StationViewService.cs",
+              "RelativeToolTip": "Services\\StationViewService.cs",
+              "ViewState": "AQIAAEgAAAAAAAAAAAAxwIUAAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-17T18:21:02.822Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "StationViewController.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\StationViewController.cs",
               "RelativeDocumentMoniker": "Controllers\\StationViewController.cs",
               "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\StationViewController.cs",
               "RelativeToolTip": "Controllers\\StationViewController.cs",
-              "ViewState": "AQIAACoAAAAAAAAAAAAowCYAAAAnAAAA",
+              "ViewState": "AQIAAFsAAAAAAAAAAAAQwH0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-17T18:10:55.853Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Orientation": 0,
-      "VerticalTabListWidth": 256,
-      "FloatingWindowState": {
-        "Id": "0a2e9e17-6ab8-4a2f-9665-ee8b2ec75ebd",
-        "Display": 0,
-        "X": 347,
-        "Y": 294,
-        "Width": 1578,
-        "Height": 791,
-        "WindowState": 2
-      },
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ProduceActivityService.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\ProduceActivityService.cs",
-              "RelativeDocumentMoniker": "Services\\ProduceActivityService.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\ProduceActivityService.cs",
-              "RelativeToolTip": "Services\\ProduceActivityService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwBIAAABEAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-17T14:09:11.803Z",
               "EditorCaption": ""
             }
           ]
