@@ -12,27 +12,23 @@ import {
   Snackbar,
   Alert,
   Button,
-  Chip,
-  Stack,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  Container,
+  Typography,
+  TablePagination,
+  TextField,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
-import {
-  DataGrid,
-  GridToolbarContainer,
-  GridToolbarColumnsButton,
-  GridToolbarDensitySelector,
-  GridToolbarQuickFilter,
-} from "@mui/x-data-grid";
 import OperatorModal from "../OperatorModal/OperatorModal";
-import ESDForm from "../OperatorForm/OperatorForm";
-import ESDEditForm from "../OperatorEditForm/OperatorEditForm";
-import "./SnackbarStyles.css";
-import "./ESDTable.css";
-import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
-import Menu from "../../../Menu/Menu";
-import { Container, Typography } from "@mui/material";
 import OperatorForm from "../OperatorForm/OperatorForm";
 import OperatorEditForm from "../OperatorEditForm/OperatorEditForm";
+import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
+import Menu from "../../../Menu/Menu";
+import "./SnackbarStyles.css";
+import "./ESDTable.css";
 
 const OperatorTable = () => {
   const { t } = useTranslation();
@@ -51,6 +47,10 @@ const OperatorTable = () => {
     snackbarMessage: "",
     snackbarSeverity: "success",
   });
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -81,21 +81,18 @@ const OperatorTable = () => {
 
   const handleCreateOperator = async (operator) => {
     try {
-        const response = await createOperators(operator);
-        // handleStateChange({ allOperators: [...state.allOperators, operator] });
-
-        const result = await getAllOperators();
-        handleStateChange({ allOperators: result.value });
-
-        showSnackbar(
-            t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
-        );
-        return response.data;
+      const response = await createOperators(operator);
+      const result = await getAllOperators();
+      handleStateChange({ allOperators: result.value });
+      showSnackbar(
+        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+      );
+      return response.data;
     } catch (error) {
-        showSnackbar(
-            t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
-            "error"
-        );
+      showSnackbar(
+        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        "error"
+      );
     }
   };
 
@@ -123,22 +120,7 @@ const OperatorTable = () => {
   };
 
   const handleEditCellChange = async (params) => {
-    console.log('params', params)
     try {
-      // const updatedOperator = {
-      //   ...state.operator,
-      //   name: params.name,
-      //   badge: params.badge,
-      // };
-      // const updatedItem = await createOperators(updatedOperator);
-
-      // handleStateChange({
-      //   allOperators: state.allOperators.map((item) =>
-      //     item.id === params.id ? updatedItem : item
-      //   ),
-      // });
-      // handleStateChange({ allOperators: [...state.allOperators, operator] });
-      
       const response = await createOperators(params);
       const result = await getAllOperators();
       handleStateChange({ allOperators: result.value });
@@ -150,8 +132,7 @@ const OperatorTable = () => {
       return response.data;
     } catch (error) {
       const result = await getAllOperators();
-      if(result){
-        console.log(result)
+      if (result) {
         handleStateChange({ allOperators: result.value });
         showSnackbar(
           t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {
@@ -166,14 +147,13 @@ const OperatorTable = () => {
           "error"
         );
       }
-      }
+    }
   };
 
   useEffect(() => {
     const fetchDataAllUsers = async () => {
       try {
         const result = await getAllOperators();
-        console.log(result)
         handleStateChange({ allOperators: result.value });
       } catch (error) {
         showSnackbar(t(error.message));
@@ -189,119 +169,107 @@ const OperatorTable = () => {
     }
   };
 
-  const CustomToolbar = () => (
-    <GridToolbarContainer className="gridToolbar">
-      <GridToolbarQuickFilter />
-      <GridToolbarColumnsButton />
-      <GridToolbarDensitySelector GridLocaleText={{}} />
-      <Button
-        id="add-button"
-        variant="outlined"
-        color="success"
-        onClick={handleOpenModal}
-      >
-        {t("ESD_OPERATOR.ADD_OPERATOR", { appName: "App for Translations" })}
-      </Button>
-    </GridToolbarContainer>
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filterOperators = () => {
+    return state.allOperators.filter((operator) => {
+      return (
+        operator.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        operator.badge.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
+  };
+
+  const displayOperators = filterOperators().slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
   );
 
-  const columns = [
-    { field: "id", headerName: "ID", width: 70 },
-    {
-      field: "name",
-      headerName: t("ESD_OPERATOR.TABLE.NAME", {
-        appName: "App for Translations",
-      }),
-      width: 250,
-    },
-    {
-      field: "badge",
-      headerName: t("ESD_OPERATOR.TABLE.USER_ID", {
-        appName: "App for Translations",
-      }),
-      sortable: false,
-      width: 160,
-    },
-    {
-      field: "actions",
-      headerName: t("ESD_OPERATOR.TABLE.ACTIONS", {
-        appName: "App for Translations",
-      }),
-      sortable: false,
-      width: 120,
-      renderCell: (params) => (
-        <>
-          <IconButton
-            onClick={() => handleEditOpen(params.row)}
-            edge="start"
-            aria-label="edit"
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            edge="start"
-            aria-label="info"
-            onClick={() => handleOpen(params.row)}
-          >
-            <Info />
-          </IconButton>
-          <IconButton
-            onClick={() => handleDeleteOpen(params.row)}
-            edge="start"
-            aria-label="delete"
-          >
-            <Delete />
-          </IconButton>
-        </>
-      ),
-    },
-  ];
-
-  const rows = state.allOperators;
   return (
     <>
-      <Menu></Menu>
+      <Menu />
       <Typography paragraph>
         <Container sx={{ mt: -7, ml: 22 }}>
           <Box sx={{ p: 3 }}>
-            <div className="grid-table">
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                localeText={{
-                  toolbarColumns: t("ESD_OPERATOR.TABLE.COLUMNS", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarFilters: t("ESD_OPERATOR.TABLE.SEARCH", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensity: t("ESD_OPERATOR.TABLE.DENSITY", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensityCompact: t("ESD_OPERATOR.TABLE.COMPACT", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensityStandard: t("ESD_OPERATOR.TABLE.STANDARD", {
-                    appName: "App for Translations",
-                  }),
-                  toolbarDensityComfortable: t(
-                    "ESD_OPERATOR.TABLE.CONFORTABLE",
-                    {
-                      appName: "App for Translations",
-                    }
-                  ),
-                }}
-                components={{ Toolbar: CustomToolbar }}
-                componentsProps={{ toolbar: { onAdd: () => handleOpen(null) } }}
-                slots={{ toolbar: CustomToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true } }}
-                initialState={{
-                  pagination: { paginationModel: { page: 0, pageSize: 25 } },
-                }}
-                pageSizeOptions={[5, 10, 25, 50, 75, 100]}
-                onCellEditCommit={handleEditCellChange}
-              />
-            </div>
+            <Button
+              id="add-button"
+              variant="outlined"
+              color="success"
+              onClick={handleOpenModal}
+              sx={{ mb: 2 }}
+            >
+              {t("ESD_OPERATOR.ADD_OPERATOR", {
+                appName: "App for Translations",
+              })}
+            </Button>
+            <TextField
+              label={t("ESD_OPERATOR.TABLE.SEARCH", {
+                appName: "App for Translations",
+              })}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              onChange={handleSearchChange}
+            />
+            <List>
+              {displayOperators.map((operator) => (
+                <ListItem key={operator.id} divider>
+                  <ListItemText
+                    primary={operator.name}
+                    secondary={operator.badge}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="edit"
+                      onClick={() => handleEditOpen(operator)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="info"
+                      onClick={() => handleOpen(operator)}
+                    >
+                      <Info />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleDeleteOpen(operator)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+            <TablePagination
+              component="div"
+              count={filterOperators().length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[10, 25, 59, 75, 100, 125, 150]}
+              labelRowsPerPage={t("ESD_OPERATOR.TABLE.ROWS_PER_PAGE", {
+                appName: "App for Translations",
+              })}
+              labelDisplayedRows={({ from, to, count }) =>
+                `${from}-${to} de ${count}`
+              }
+            />
             <OperatorModal
               open={state.open}
               handleClose={handleClose}

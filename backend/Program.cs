@@ -21,7 +21,8 @@ namespace BiometricFaceApi
         {
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
-            var secretKey = configuration["jwt:secretKey"] ?? "";
+            var secretKey = configuration["JWT_SECRET_KEY"] ?? "";
+            var allowedOrigins = configuration["ALLOWED_ORIGINS"] ?? "http://localhost:3000";
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
             // Adicionar e configurar CORS
@@ -30,17 +31,17 @@ namespace BiometricFaceApi
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:3000")
+                                      policy.WithOrigins(allowedOrigins.Split(","))
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
                                             .AllowCredentials();
                                   });
             });
 
-            // Configuração do AutoMapper
+            // ConfiguraÃ§Ã£o do AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
 
-            // Adicionar serviços ao container.
+            // Adicionar serviÃ§os ao container.
             builder.Services.AddControllers();
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -52,8 +53,8 @@ namespace BiometricFaceApi
                             ValidateAudience = true,
                             ValidateLifetime = true,
                             ValidateIssuerSigningKey = true,
-                            ValidIssuer = configuration["jwt:issuer"],
-                            ValidAudience = configuration["jwt:audience"],
+                            ValidIssuer = configuration["JWT_ISSUER"],
+                            ValidAudience = configuration["JWT_AUDIENCE"],
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                         };
                 });
@@ -66,7 +67,7 @@ namespace BiometricFaceApi
                 // Remove propriedades virtuais
                 c.SchemaFilter<SwaggerSchemaFilter>();
 
-                // Configurações de autenticação JWT
+                // ConfiguraÃ§Ãµes de autenticaÃ§Ã£o JWT
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below. \r\n\r\nExample: 'Bearer 12345abcdef'",
@@ -94,7 +95,7 @@ namespace BiometricFaceApi
                     }
                 });
 
-                // Variável de documentação
+                // VariÃ¡vel de documentaÃ§Ã£o
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
@@ -102,16 +103,16 @@ namespace BiometricFaceApi
             });
 
             // Connection String
-            var connectionString = builder.Configuration.GetConnectionString("my");
-            var securityKeyA = builder.Configuration["security:key"];
-            var securityKeyB = builder.Configuration["security:iv"];
+            var connectionString = builder.Configuration.GetConnectionString("MY_CONNECTION_STRING");
+            var securityKeyA = builder.Configuration["SECURITY_KEY_A"];
+            var securityKeyB = builder.Configuration["SECURITY_KEY_B"];
 
             if (connectionString is not null)
             {
                 builder.Services.AddDbContext<BiometricFaceDBContex>(
                     options => options.UseMySQL(connectionString));
 
-                // Repositórios
+                // RepositÃ³rios
                 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
                 builder.Services.AddScoped<IImageRepository, ImageRepository>();
                 builder.Services.AddScoped<IRecordStatusRepository, RecordStatusRepository>();
@@ -127,7 +128,7 @@ namespace BiometricFaceApi
 
             var app = builder.Build();
 
-            // Configure o pipeline de requisição HTTP.
+            // Configure o pipeline de requisiÃ§Ã£o HTTP.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

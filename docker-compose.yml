@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "7080:7080"
+  
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  # electron:
+  #   build: ./electron
+  #   depends_on:
+  #     - frontend
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #   environment:
+  #     - DISPLAY=${DISPLAY}

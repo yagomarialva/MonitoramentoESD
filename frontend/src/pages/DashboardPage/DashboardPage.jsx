@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Chart from "react-apexcharts";
 import Menu from "../Menu/Menu";
-import ESDDashboardPage from "../ESD/ESDHome/ESDDashboardPage/ESDDashboardPage";
+import ESDHomeDashboardPage from "../ESD/ESDHome/ESDHomeDashboardPage/ESDHomeDashboardPage";
 
 class DashboardPage extends Component {
   // constructor(props) {
@@ -29,7 +29,7 @@ class DashboardPage extends Component {
     return (
       <>
       <Menu></Menu>
-      <ESDDashboardPage></ESDDashboardPage>
+      <ESDHomeDashboardPage></ESDHomeDashboardPage>
       </>
     );
   }

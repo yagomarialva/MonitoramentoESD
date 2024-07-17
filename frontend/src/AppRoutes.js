@@ -3,7 +3,6 @@ import "./i18n.js"; // ts => import './i18n.ts'
 import { useEffect } from "react";
 import { useAuth } from "./context/AuthContext.js";
 import HomePage from "./pages/HomePage/HomePage.jsx";
-import ESDDashboardPage from "./pages/ESD/ESDHome/ESDDashboardPage/ESDDashboardPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
 import Operators from "./components/ESD/Operators/Operators.jsx";
 import StationList from "./components/ESD/StationList/StationList.jsx";
@@ -12,6 +11,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import SignUpPage from "./pages/SignUpPage/SignUpPage.jsx";
 import ProtectedRoute from "./ProtectedRoute";
+import ESDHomeDashboardPage from "./pages/ESD/ESDHome/ESDHomeDashboardPage/ESDHomeDashboardPage.jsx";
 
 const AppRoutes = () => {
   useEffect(() => {
@@ -25,7 +25,7 @@ const AppRoutes = () => {
           path="/"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <ESDHomeDashboardPage />
             </ProtectedRoute>
           }
         />
@@ -59,7 +59,7 @@ const AppRoutes = () => {
           path="/esd-dashboard"
           element={
             <ProtectedRoute>
-              <ESDDashboardPage />
+              <ESDHomeDashboardPage />
             </ProtectedRoute>
           }
         />
