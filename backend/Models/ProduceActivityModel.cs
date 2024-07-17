@@ -12,8 +12,6 @@ namespace BiometricFaceApi.Models
 
         [ForeignKey("users")]
         public int UserId { get; set; }
-        //[ForeignKey("users")]
-        //public string? UserName { get; set; }
         [IgnoreDataMember]
         public virtual UserModel? User { get; set; }
         
@@ -27,6 +25,10 @@ namespace BiometricFaceApi.Models
         [IgnoreDataMember]
         public virtual MonitorEsdModel? MonitorEsd { get; set; }
         
+        [ForeignKey("station")]
+        public int StationId { get; set; }
+        [IgnoreDataMember]
+        public virtual StationModel? Station { get; set; }
         public bool IsLocked { get; set; }
         public string? Description { get; set; }
         public DateTime? DataTimeMonitorEsdEvent { get; set; }

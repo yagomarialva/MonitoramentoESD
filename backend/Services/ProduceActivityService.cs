@@ -1,6 +1,7 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Pomelo.EntityFrameworkCore.MySql.Metadata.Internal;
@@ -21,6 +22,8 @@ namespace BiometricFaceApi.Services
             _repository = repository;
             _recordStatusRepository = recordStatusRepository;
             _authenticationRepository = authenticationRepository;
+           
+
         }
         public async Task<(object?, int)> GetAllProduceAct()
         {
@@ -150,6 +153,7 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
+
         public async Task<(object?, int)> Delete(int id)
         {
             object? content;
@@ -164,7 +168,8 @@ namespace BiometricFaceApi.Services
                         Id = repositoryProduceActv.Id,
                         UserId = repositoryProduceActv.UserId,
                         MonitorEsdId = repositoryProduceActv.MonitorEsdId,
-                        JigId = repositoryProduceActv.JigId
+                        JigId = repositoryProduceActv.JigId,
+                        StationId = repositoryProduceActv.StationId
                     };
                     await _repository.Delete(repositoryProduceActv.Id);
                     statusCode = StatusCodes.Status200OK;

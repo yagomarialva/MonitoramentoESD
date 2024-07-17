@@ -3,23 +3,23 @@ using BiometricFaceApi.Repositories.Interfaces;
 
 namespace BiometricFaceApi.Services
 {
-    public class LineProdutionService
+    public class StationService
     {
-        private ILineProductionRepository _lineProductionRepository;
-        public LineProdutionService(ILineProductionRepository lineProductionRepository)
+        private IStationRepository _stationRepository;
+        public StationService(IStationRepository lineProductionRepository)
         {
-            _lineProductionRepository = lineProductionRepository;
+            _stationRepository = lineProductionRepository;
         }
-        public async Task<(object?, int)> GetAllLineProduction()
+        public async Task<(object?, int)> GetAllStation()
         {
             object? result;
             int statusCode;
             try
             {
-                List<LineProductionModel> lineProdution = await _lineProductionRepository.GetAllLines();
+                List<StationModel> lineProdution = await _stationRepository.GetAllStation();
                 if (!lineProdution.Any())
                 {
-                    result = "Nenhuma Linha de Produção cadastrada.";
+                    result = "Nenhuma Estação cadastrada.";
                     statusCode = StatusCodes.Status404NotFound;
                 }
                 result = lineProdution;
@@ -36,13 +36,13 @@ namespace BiometricFaceApi.Services
             return (result, statusCode);
 
         }
-        public async Task<(object?, int)> GetLineProductionId(int id)
+        public async Task<(object?, int)> GetStationId(int id)
         {
             object? result;
             int statusCode;
             try
             {
-                var monitor = await _lineProductionRepository.GetByLineId(id);
+                var monitor = await _stationRepository.GetByStationId(id);
                 if (monitor == null)
                 {
 
@@ -60,38 +60,19 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
-
-        public async Task<(object?, int)> GetByProduceActId(int id)
-        {
-            object? result;
-            int statusCode;
-            try
-            {
-                var monitor = await _lineProductionRepository.GetByProduceActId(id);
-                if (monitor == null)
-                {
-
-                    result = "Atividade de Produção não encontrada.";
-                    statusCode = StatusCodes.Status404NotFound;
-                }
-                result = monitor;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
-            }
-            catch (Exception exception)
-            {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
-            }
-            return (result, statusCode);
-        }
-        public async Task<(object?, int)> Include(LineProductionModel lineProductionModel)
+        public async Task<(object?, int)> Include(StationModel stationModel)
         {
             var statusCode = StatusCodes.Status200OK;
             object? response;
             try
             {
-                response = await _lineProductionRepository.Include(lineProductionModel);
+                if (string.IsNullOrEmpty(stationModel.Name))
+                {
+                    throw new Exception("Nome obrigatório.");
+                }
+                stationModel.Created = DateTime.Now;
+                stationModel.LastUpdated = DateTime.Now;
+                response = await _stationRepository.Include(stationModel);
                 statusCode = StatusCodes.Status200OK;
             }
             catch (Exception exception)
@@ -102,24 +83,23 @@ namespace BiometricFaceApi.Services
             return (response, statusCode);
 
         }
-
         public async Task<(object?, int)> Delete(int id)
         {
             object? content;
             int statusCode;
             try
             {
-                var respositoryLinewProd = await _lineProductionRepository.GetByLineId(id);
+                var respositoryLinewProd = await _stationRepository.GetByStationId(id);
                 if (respositoryLinewProd.Id > 0)
                 {
                     content = new
                     {
                         Id = respositoryLinewProd.Id,
                         Nmae = respositoryLinewProd.Name,
-                        ProduceActivityId = respositoryLinewProd.ProduceActivityId,
+                        
                         
                     };
-                    await _lineProductionRepository.Delete(respositoryLinewProd.Id);
+                    await _stationRepository.Delete(respositoryLinewProd.Id);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else

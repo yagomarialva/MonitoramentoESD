@@ -35,6 +35,11 @@ namespace BiometricFaceApi.Repositories
             return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.UserId == usersProduce);
         }
 
+        public async Task<ProduceActivityModel?> GetByStationId(int station)
+        {
+            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.StationId == station);
+        }
+
         public async Task<ProduceActivityModel?> Islocked(int id, bool locked)
         {
             var result = await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.Id == id);
@@ -72,6 +77,7 @@ namespace BiometricFaceApi.Repositories
                 produceActivityModelUp.UserId = produceActivity.UserId;
                 produceActivityModelUp.MonitorEsdId = produceActivity.MonitorEsdId;
                 produceActivityModelUp.JigId = produceActivity.JigId;
+                produceActivityModelUp.StationId = produceActivity.StationId;
                 _dbContext.ProduceActivity.Update(produceActivityModelUp);
                 await _dbContext.SaveChangesAsync();
             }
@@ -89,6 +95,6 @@ namespace BiometricFaceApi.Repositories
             return produceActivityModelDel;
         }
 
-
+       
     }
 }

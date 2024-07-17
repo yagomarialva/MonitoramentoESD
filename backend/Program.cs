@@ -113,8 +113,8 @@ namespace BiometricFaceApi
                 builder.Services.AddScoped<IProduceActivityRepository, ProduceActivityRepository>();
                 builder.Services.AddScoped<IJigRepository, JigRepository>();
                 builder.Services.AddScoped<IRolesRepository, RolesRepository>();
-                builder.Services.AddScoped<ILineProductionRepository, LineProductionRepository>();
-                builder.Services.AddScoped<ILineViewRepository, LineViewRepository>();
+                builder.Services.AddScoped<IStationRepository, StationRepository>();
+                builder.Services.AddScoped<IStationViewRepository, StationViewRepository>();
 
 
                 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();

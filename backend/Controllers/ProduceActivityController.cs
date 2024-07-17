@@ -15,9 +15,11 @@ namespace BiometricFaceApi.Controllers
     {
         private readonly ProduceActivityService _service;
         private readonly RecordStatusService _record;
-        public ProduceActivityController(IProduceActivityRepository produceActivityRepository, IRecordStatusRepository recordStatusRepository,IAuthenticationRepository authenticationRepository)
+        
+        public ProduceActivityController(IProduceActivityRepository produceActivityRepository, IRecordStatusRepository recordStatusRepository, IAuthenticationRepository authenticationRepository)
         {
             _record = new RecordStatusService(recordStatusRepository);
+            
             _service = new ProduceActivityService(produceActivityRepository, recordStatusRepository, authenticationRepository);
 
         }
@@ -37,7 +39,7 @@ namespace BiometricFaceApi.Controllers
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
-            
+
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace BiometricFaceApi.Controllers
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
-            
+
         }
 
         /// <summary>
@@ -70,11 +72,12 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer")]
+        //[Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/adicionarProducao")]
-        public async Task<ActionResult> Include([FromBody] ProduceActivityModel model)
+        public async Task<ActionResult> Include([FromBody]ProduceActivityModel model)
         {
+            
             var (result, statusCode) = await _service.Include(model);
             return StatusCode(statusCode, result);
         }
@@ -98,7 +101,7 @@ namespace BiometricFaceApi.Controllers
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
-            
+
         }
 
         /// <summary>

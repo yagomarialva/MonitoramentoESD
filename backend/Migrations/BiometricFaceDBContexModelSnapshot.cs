@@ -100,67 +100,6 @@ namespace BiometricFaceApi.Migrations
                     b.ToTable("jig");
                 });
 
-            modelBuilder.Entity("BiometricFaceApi.Models.LineProductionModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("ProduceActivityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("ProduceActivityId");
-
-                    b.ToTable("lineProduction");
-                });
-
-            modelBuilder.Entity("BiometricFaceApi.Models.LineViewModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("JigId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("JigsModelId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("LineId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LineProductionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JigsModelId");
-
-                    b.HasIndex("LineProductionId");
-
-                    b.ToTable("lineView");
-                });
-
             modelBuilder.Entity("BiometricFaceApi.Models.MonitorEsdModel", b =>
                 {
                     b.Property<int>("Id")
@@ -202,6 +141,9 @@ namespace BiometricFaceApi.Migrations
                     b.Property<int>("MonitorEsdId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StationId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -210,6 +152,8 @@ namespace BiometricFaceApi.Migrations
                     b.HasIndex("JigId");
 
                     b.HasIndex("MonitorEsdId");
+
+                    b.HasIndex("StationId");
 
                     b.HasIndex("UserId");
 
@@ -278,6 +222,53 @@ namespace BiometricFaceApi.Migrations
                         });
                 });
 
+            modelBuilder.Entity("BiometricFaceApi.Models.StationModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("station");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.StationViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("JigId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("StationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JigId");
+
+                    b.HasIndex("StationId");
+
+                    b.ToTable("stationView");
+                });
+
             modelBuilder.Entity("BiometricFaceApi.Models.UserModel", b =>
                 {
                     b.Property<int>("Id")
@@ -312,32 +303,6 @@ namespace BiometricFaceApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BiometricFaceApi.Models.LineProductionModel", b =>
-                {
-                    b.HasOne("BiometricFaceApi.Models.ProduceActivityModel", "ProduceActivity")
-                        .WithMany()
-                        .HasForeignKey("ProduceActivityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProduceActivity");
-                });
-
-            modelBuilder.Entity("BiometricFaceApi.Models.LineViewModel", b =>
-                {
-                    b.HasOne("BiometricFaceApi.Models.JigModel", "JigsModel")
-                        .WithMany()
-                        .HasForeignKey("JigsModelId");
-
-                    b.HasOne("BiometricFaceApi.Models.LineProductionModel", "LineProduction")
-                        .WithMany()
-                        .HasForeignKey("LineProductionId");
-
-                    b.Navigation("JigsModel");
-
-                    b.Navigation("LineProduction");
-                });
-
             modelBuilder.Entity("BiometricFaceApi.Models.ProduceActivityModel", b =>
                 {
                     b.HasOne("BiometricFaceApi.Models.JigModel", "Jig")
@@ -352,6 +317,12 @@ namespace BiometricFaceApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BiometricFaceApi.Models.StationModel", "Station")
+                        .WithMany()
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BiometricFaceApi.Models.UserModel", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -361,6 +332,8 @@ namespace BiometricFaceApi.Migrations
                     b.Navigation("Jig");
 
                     b.Navigation("MonitorEsd");
+
+                    b.Navigation("Station");
 
                     b.Navigation("User");
                 });
@@ -382,6 +355,25 @@ namespace BiometricFaceApi.Migrations
                     b.Navigation("ProduceActivity");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.StationViewModel", b =>
+                {
+                    b.HasOne("BiometricFaceApi.Models.JigModel", "Jig")
+                        .WithMany()
+                        .HasForeignKey("JigId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BiometricFaceApi.Models.StationModel", "Station")
+                        .WithMany()
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jig");
+
+                    b.Navigation("Station");
                 });
 #pragma warning restore 612, 618
         }

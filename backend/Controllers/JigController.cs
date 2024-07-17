@@ -30,9 +30,9 @@ namespace BiometricFaceApi.Controllers
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/todosJigs")]
-        public async Task<ActionResult> BuscarTodasStations()
+        public async Task<ActionResult> BuscarTodosJigs()
         {
-            var (result, statusCode) = await _service.GetAllStation();
+            var (result, statusCode) = await _service.GetAllJigs();
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
@@ -49,7 +49,7 @@ namespace BiometricFaceApi.Controllers
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/buscarJig/{id}")]
-        public async Task<ActionResult> BuscarStationId(int id)
+        public async Task<ActionResult> BuscarJigId(int id)
         {
             var (result, statusCode) = await _service.GetJigId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };

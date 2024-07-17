@@ -10,67 +10,66 @@ namespace BiometricFaceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LineProductionController : Controller
+    public class StationController : Controller
     {
-        private readonly LineProdutionService _service;
-        public LineProductionController(ILineProductionRepository lineProductionRepository)
+        private readonly StationService _service;
+        public StationController(IStationRepository stationRepository)
         {
-            _service = new LineProdutionService(lineProductionRepository);
+            _service = new StationService(stationRepository);
         }
 
         /// <summary>
         /// Buscar todos
         /// </summary>
-        /// <param > Buscar toda Linha de Produção</param>
+        /// <param > Buscar todas Estações</param>
         /// <response code="200">Retorna todos.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/todosLineProduction")]
+        [Route("/todosEstacoes")]
         public async Task<ActionResult> BuscarTodos()
         {
-            var (result, statusCode) = await _service.GetAllLineProduction();
+            var (result, statusCode) = await _service.GetAllStation();
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
 
         }
-
         /// <summary>
-        /// Buscar Linha de Produção
+        /// Buscar id 
         /// </summary>
-        /// <param name="id"> Buscar  Linha de Produção por Id</param>
-        /// <response code="200">Retorna  Linha de Produção</response>
+        /// <param name="id"> Buscar Estação por Id</param>
+        /// <response code="200">Retorna  Estação </response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarLineProduction{id}")]
-        public async Task<ActionResult> BuscarLinhaProducao(int id)
+        [Route("/BuscarEstacao{id}")]
+        public async Task<ActionResult> BuscarEstacaoId(int id)
         {
-            var (result, statusCode) = await _service.GetByProduceActId(id);
+            var (result, statusCode) = await _service.GetStationId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
         }
 
-        ///// <summary>
-        ///// Cadastra e Atualiza de dados de Linha de Produção.
-        ///// </summary>
-        ///// <remarks>Cadastra monitor na base de dados; Para atualizar dados basta usar Id da Linha de Produção.</remarks>
-        ///// <param name="model">Dados de cadastro da Linha de Produção</param>
-        ///// <response code="200">Dados atualizado com sucesso.</response>
-        ///// <response code="201">Dados cadastrados com sucesso.</response>
-        ///// <response code="400">Dados incorretos ou inválidos.</response>
-        ///// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        ///// <response  code="500">Erro do servidor interno!</response>
+        /// <summary>
+        /// Cadastra e Atualiza de dados da Estação.
+        /// </summary>
+        /// <remarks>Cadastra estação na base de dados; Para atualizar dados basta usar Id da estação.</remarks>
+        /// <param name="model">Dados de cadastro da estação</param>
+        /// <response code="200">Dados atualizado com sucesso.</response>
+        /// <response code="201">Dados cadastrados com sucesso.</response>
+        /// <response code="400">Dados incorretos ou inválidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
-        [Route("/adicionarLineProduction")]
-        public async Task<ActionResult> ManagerMonitor(LineProductionModel model)
+        [Route("/adicionarEstacao")]
+        public async Task<ActionResult> ManagerEstacao(StationModel model)
         {
             var result = await _service.Include(model);
 
@@ -78,16 +77,16 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Deletar Linha de Produção
+        /// Deletar Estação
         /// </summary>
-        /// <param name="id"> Deleta  Linha de Produção</param>
+        /// <param name="id"> Deleta  Estação</param>
         /// <returns></returns>
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
-        [Route("/deleteLineProduction")]
+        [Route("/deleteEstação")]
         public async Task<ActionResult> Delete(int id)
         {
             var (result, statusCode) = await _service.Delete(id);

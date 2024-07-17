@@ -3,32 +3,35 @@ using BiometricFaceApi.Repositories.Interfaces;
 
 namespace BiometricFaceApi.Services
 {
-    public class LineViewService
+    public class StationViewService
     {
-       // protected readonly IJigRepository _jigrepository;
-       //protected readonly ILineProductionRepository _lineProduction;
-        protected readonly ILineViewRepository _lineViewRepository;
+        
+        protected readonly IStationViewRepository _stationViewRepository;
+        protected readonly IJigRepository _jigRepository;
+        protected readonly IStationRepository _stationRepository;
 
-        public LineViewService(/*IJigRepository jigRepository, ILineProductionRepository lineProductionRepository,*/ ILineViewRepository lineViewRepository)
+        public StationViewService(IStationViewRepository stationViewRepository, IJigRepository jigRepository, IStationRepository stationRepository)
         {
-            //_jigrepository = jigRepository;
-            //_lineProduction = lineProductionRepository;
-            _lineViewRepository = lineViewRepository;
+            
+            _stationViewRepository = stationViewRepository;
+            _jigRepository = jigRepository;
+            _stationRepository = stationRepository;
         }
-        public async Task<(object?, int)> GetAllLineView()
+        public async Task<(object?, int)> GetAllStationView()
         {
             object? result;
             int statusCode;
             try
             {
-                List<LineViewModel> lineView = await _lineViewRepository.GetAllLineView();
-                if (!lineView.Any())
+                List<StationViewModel> stationView = await _stationViewRepository.GetAllStationView();
+                if (!stationView.Any())
                 {
                     result = "Nenhuma Linha de Producção foi encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
                     return (result, statusCode);
                 }
-                result = lineView;
+
+                result = stationView;
                 statusCode = StatusCodes.Status200OK;
                 return (result, statusCode);
 
@@ -42,14 +45,13 @@ namespace BiometricFaceApi.Services
             }
 
         }
-
-        public async Task<(object?, int)> GetLineViewId(int id)
+        public async Task<(object?, int)> GetStationViewId(int id)
         {
             object? result;
             int statusCode;
             try
             {
-                var monitor = await _lineViewRepository.GetByLineViewId(id);
+                var monitor = await _stationViewRepository.GetByStationViewId(id);
                 if (monitor == null)
                 {
                     result = " Linha de Produção não encontrado.";
@@ -68,14 +70,13 @@ namespace BiometricFaceApi.Services
             return (result, statusCode);
 
         }
-
         public async Task<(object?, int)> GetJigId(int id)
         {
             object? result;
             int statusCode;
             try
             {
-                var monitor = await _lineViewRepository.GetByJigId(id);
+                var monitor = await _stationViewRepository.GetByJigId(id);
                 if (monitor == null)
                 {
                     result = "Jig não encontrado.";
@@ -94,16 +95,16 @@ namespace BiometricFaceApi.Services
             return (result, statusCode);
 
         }
-        public async Task<(object?, int)> GetLineProduction(int id)
+        public async Task<(object?, int)> GetByStationProductionId(int id)
         {
             object? result;
             int statusCode;
             try
             {
-                var monitor = await _lineViewRepository.GetByLineProductionId(id);
+                var monitor = await _stationViewRepository.GetByStationProductionId(id);
                 if (monitor == null)
                 {
-                    result = "Linha de Produção não encontrado.";
+                    result = "Linha de produção não encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
                     return (result, statusCode);
                 }
@@ -119,19 +120,21 @@ namespace BiometricFaceApi.Services
             return (result, statusCode);
 
         }
-
-        public async Task<(object?, int)> Include(LineViewModel lineViewNodel)
+        public async Task<(object?, int)> Include(StationViewModel stationViewModel)
         {
             var statusCode = StatusCodes.Status200OK;
             object? result;
             try
             {
-                if (lineViewNodel.JigId == 0 & lineViewNodel.LineId == 0)
-                {
-                    throw new Exception("Todos os campos são obrigatórios.");
-                }
-                lineViewNodel.Created = DateTime.Now;
-                result = await _lineViewRepository.Include(lineViewNodel);
+                
+                stationViewModel.Created = DateTime.Now;
+                stationViewModel.LastUpdated = DateTime.Now;
+
+                
+                
+
+
+                result = await _stationViewRepository.Include(stationViewModel);
             }
             catch (Exception)
             {
@@ -142,24 +145,23 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
-
         public async Task<(object?, int)> Delete(int id)
         {
             object? content;
             int statusCode;
             try
             {
-                var repositoryLineViewDel = await _lineViewRepository.GetByLineViewId(id);
-                if (repositoryLineViewDel != null)
+                var repositoryStationViewDel = await _stationViewRepository.GetByStationViewId(id);
+                if (repositoryStationViewDel != null)
                 {
                     content = new
                     {
-                        Id = repositoryLineViewDel.Id,
-                        LineId = repositoryLineViewDel.LineId,
-                        JigId = repositoryLineViewDel.JigId,
+                        Id = repositoryStationViewDel.Id,
+                        JigId = repositoryStationViewDel.JigId,
+                        StationId = repositoryStationViewDel.StationId
 
                     };
-                    await _lineViewRepository.Delete(repositoryLineViewDel.Id);
+                    await _stationViewRepository.Delete(repositoryStationViewDel.Id);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else
