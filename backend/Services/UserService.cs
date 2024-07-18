@@ -26,6 +26,11 @@ namespace BiometricFaceApi.Services
 
             return await users.ForBadge(badge);
         }
+
+        public async Task<UserModel?>GetByName (string name)
+        {
+            return await users.GetByName(name);
+        }
         public async Task<UserModel?> Include(UserModel user)
         {
            return await users.Include(user);

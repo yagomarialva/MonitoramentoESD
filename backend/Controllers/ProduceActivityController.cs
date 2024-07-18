@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using Microsoft.VisualBasic;
 using System.Text.Json;
 
 namespace BiometricFaceApi.Controllers
@@ -15,11 +16,11 @@ namespace BiometricFaceApi.Controllers
     {
         private readonly ProduceActivityService _service;
         private readonly RecordStatusService _record;
-        
+
         public ProduceActivityController(IProduceActivityRepository produceActivityRepository, IRecordStatusRepository recordStatusRepository, IAuthenticationRepository authenticationRepository)
         {
             _record = new RecordStatusService(recordStatusRepository);
-            
+
             _service = new ProduceActivityService(produceActivityRepository, recordStatusRepository, authenticationRepository);
 
         }
@@ -35,8 +36,8 @@ namespace BiometricFaceApi.Controllers
         [Route("/TodaProducao")]
         public async Task<ActionResult> BuscarTodaProducao()
         {
-            var (result, statusCode) = await _service.GetAllProduceAct();
-            var options = new JsonSerializerOptions { WriteIndented = true };
+            var(result, statusCode) = await _service.GetAllProduceAct();
+        var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
 
@@ -75,9 +76,9 @@ namespace BiometricFaceApi.Controllers
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/adicionarProducao")]
-        public async Task<ActionResult> Include([FromBody]ProduceActivityModel model)
+        public async Task<ActionResult> Include([FromBody] ProduceActivityModel model)
         {
-            
+
             var (result, statusCode) = await _service.Include(model);
             return StatusCode(statusCode, result);
         }

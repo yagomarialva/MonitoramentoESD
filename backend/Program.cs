@@ -23,11 +23,25 @@ namespace BiometricFaceApi
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
             var secretKey = configuration["jwt:secretKey"] ?? "";
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
             // Configuração do AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
             // Add services to the container.
             builder.Services.AddControllers();
+
+            // Adicionar e configurar CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:3000")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod()
+                                            .AllowCredentials();
+                                  });
+            });
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -136,6 +150,7 @@ namespace BiometricFaceApi
 
             app.UseMiddleware(typeof(GlobalErrorHandlingMiddleware));
             app.UseHttpsRedirection();
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

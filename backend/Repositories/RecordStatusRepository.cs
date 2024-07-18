@@ -2,6 +2,7 @@
 using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 using ZstdSharp.Unsafe;
 
 namespace BiometricFaceApi.Repositories
@@ -47,7 +48,7 @@ namespace BiometricFaceApi.Repositories
             }
             else
             {
-              throw new Exception("Registro com o mesmo indice já foi cadastrado.");
+                throw new Exception("Registro com o mesmo indice já foi cadastrado.");
             }
             return recordStatusUp;
         }

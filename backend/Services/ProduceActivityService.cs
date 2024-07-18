@@ -27,28 +27,30 @@ namespace BiometricFaceApi.Services
         }
         public async Task<(object?, int)> GetAllProduceAct()
         {
-            object? result;
+            object? content;
             int statusCode;
             try
             {
                 List<ProduceActivityModel> monitor = await _repository.GetAllProduceActivity();
+                var prod = new ProduceActivityModel {};
+               
                 if (!monitor.Any())
                 {
-                    result = "Nenhum Producção foi encontrado.";
+                    content = "Nenhum Producção foi encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
-                    return (result, statusCode);
+                    return (content, statusCode);
                 }
-                result = monitor;
+                content = monitor;
                 statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
+                return (content, statusCode);
 
             }
             catch (Exception exception)
             {
 
-                result = exception.Message;
+                content = exception.Message;
                 statusCode = StatusCodes.Status400BadRequest;
-                return (result, statusCode);
+                return (content, statusCode);
             }
 
         }
@@ -133,25 +135,63 @@ namespace BiometricFaceApi.Services
         }
         public async Task<(object?, int)> Include(ProduceActivityModel produceModel)
         {
-            var statusCode = StatusCodes.Status200OK;
-            object? result;
+            object? content;
+            int statusCode;
             try
             {
+                var user = new UserModel { Id = produceModel.UserId, Name = produceModel.UserName };
+                var monitor = new MonitorEsdModel { Id = produceModel.MonitorEsdId, SerialNumber = produceModel.MonitorEsdSn };
+                var jig = new JigModel { Id = produceModel.JigId, Name = produceModel.JigName };
+                var station = new StationModel { Id = produceModel.StationId, Name = produceModel.StationName };
+
                 if (produceModel.UserId == 0 & produceModel.JigId == 0 & produceModel.MonitorEsdId == 0)
                 {
                     throw new Exception("Todos os campos são obrigatórios.");
                 }
+
                 produceModel.DataTimeMonitorEsdEvent = DateTime.Now;
-                result = await _repository.Include(produceModel);
+                var newProd = await _repository.Include(produceModel);
+                if (newProd != null)
+                {
+
+                    user.Id = newProd.Id;
+                    user.Name = newProd.UserName;
+                    monitor.Id = newProd.MonitorEsdId;
+                    monitor.SerialNumber = newProd.MonitorEsdSn;
+                    jig.Id = newProd.JigId;
+                    jig.Name = newProd.JigName;
+                    station.Id = newProd.StationId;
+                    station.Name = newProd.StationName;
+
+                    var include = new ProduceActivityModel
+                    {
+                        Id = newProd.Id,
+                        UserId = produceModel.UserId,
+                        UserName = produceModel.UserName,
+                        MonitorEsdId = produceModel.MonitorEsdId,
+                        MonitorEsdSn = produceModel.MonitorEsdSn,
+                        JigId = produceModel.JigId,
+                        JigName = produceModel.JigName,
+                        StationId = produceModel.StationId,
+                        StationName = produceModel.StationName
+                    };
+                    content = include;
+                    statusCode = StatusCodes.Status200OK;
+                }
+                else
+                {
+                    content = "Dados incorretos ou inválidos.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
 
             }
             catch (Exception)
             {
-                result = "Não foi possível salvar as alterações. Verifique se todos os itens estão cadastrados.";
+                content = "Não foi possível salvar as alterações. Verifique se todos os itens estão cadastrados.";
 
                 statusCode = StatusCodes.Status400BadRequest;
             }
-            return (result, statusCode);
+            return (content, statusCode);
         }
 
         public async Task<(object?, int)> Delete(int id)

@@ -30,7 +30,11 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.Users.FirstOrDefaultAsync(x => x.Badge == badge) ?? new UserModel();
         }
-        
+        public async Task<UserModel?> GetByName(string name)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == name) ?? new UserModel();
+        }
+
         public async Task<UserModel?> Include(UserModel user)
         {
             await _dbContext.Users.AddAsync(user);

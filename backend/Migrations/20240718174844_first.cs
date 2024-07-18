@@ -169,9 +169,13 @@ namespace BiometricFaceApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "longtext", nullable: true),
                     JigId = table.Column<int>(type: "int", nullable: false),
+                    JigName = table.Column<string>(type: "longtext", nullable: true),
                     MonitorEsdId = table.Column<int>(type: "int", nullable: false),
+                    MonitorEsdSn = table.Column<string>(type: "longtext", nullable: true),
                     StationId = table.Column<int>(type: "int", nullable: false),
+                    StationName = table.Column<string>(type: "longtext", nullable: true),
                     IsLocked = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: true),
                     DataTimeMonitorEsdEvent = table.Column<DateTime>(type: "datetime(6)", nullable: true)

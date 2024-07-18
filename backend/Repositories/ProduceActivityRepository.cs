@@ -62,7 +62,6 @@ namespace BiometricFaceApi.Repositories
         // update e feito atraves do ProduceActivityID, senso assim possibilitando a alteração de dados.
         public async Task<ProduceActivityModel?> Include(ProduceActivityModel produceActivity)
         {
-
             ProduceActivityModel? produceActivityModelUp = await GetByProduceActivityId(produceActivity.Id);
             if (produceActivityModelUp == null)
             {
@@ -75,9 +74,13 @@ namespace BiometricFaceApi.Repositories
             {
                 // update
                 produceActivityModelUp.UserId = produceActivity.UserId;
+                produceActivityModelUp.UserName = produceActivity.UserName;
                 produceActivityModelUp.MonitorEsdId = produceActivity.MonitorEsdId;
+                produceActivity.MonitorEsdSn = produceActivity.MonitorEsdSn;
                 produceActivityModelUp.JigId = produceActivity.JigId;
+                produceActivity.JigName = produceActivity.JigName;
                 produceActivityModelUp.StationId = produceActivity.StationId;
+                produceActivity.StationName = produceActivity.StationName;
                 _dbContext.ProduceActivity.Update(produceActivityModelUp);
                 await _dbContext.SaveChangesAsync();
             }
