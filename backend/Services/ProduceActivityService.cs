@@ -1,7 +1,9 @@
 ﻿using BiometricFaceApi.Models;
+using BiometricFaceApi.Repositories;
 using BiometricFaceApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Pomelo.EntityFrameworkCore.MySql.Metadata.Internal;
@@ -22,7 +24,7 @@ namespace BiometricFaceApi.Services
             _repository = repository;
             _recordStatusRepository = recordStatusRepository;
             _authenticationRepository = authenticationRepository;
-           
+
 
         }
         public async Task<(object?, int)> GetAllProduceAct()
@@ -32,8 +34,8 @@ namespace BiometricFaceApi.Services
             try
             {
                 List<ProduceActivityModel> monitor = await _repository.GetAllProduceActivity();
-                var prod = new ProduceActivityModel {};
-               
+                var prod = new ProduceActivityModel { };
+
                 if (!monitor.Any())
                 {
                     content = "Nenhum Producção foi encontrado.";
@@ -91,7 +93,6 @@ namespace BiometricFaceApi.Services
         {
             return await _repository.GetByProduceUserId(userProduce);
         }
-
         public async Task<(object?, int)> ChangeStatus(int id, bool status, string? description, string jwt)
         {
             object? result;
@@ -112,7 +113,7 @@ namespace BiometricFaceApi.Services
                     if (claim.Any())
                     {
                         var user = await _authenticationRepository.AuthGetByUsername(claim.FirstOrDefault().Value);
-                        var recordModel = new RecordStatusProduceModel { Description = description, ProduceActivityId = id,Status = status, DateEvent = DateAndTime.Now, UserId = user.Id };
+                        var recordModel = new RecordStatusProduceModel { Description = description, ProduceActivityId = id, Status = status, DateEvent = DateAndTime.Now, UserId = user.Id };
                         result = await _repository.Islocked(id, status);
                         await _recordStatusRepository.Include(recordModel);
                         statusCode = StatusCodes.Status200OK;
@@ -135,65 +136,26 @@ namespace BiometricFaceApi.Services
         }
         public async Task<(object?, int)> Include(ProduceActivityModel produceModel)
         {
-            object? content;
-            int statusCode;
+            var statusCode = StatusCodes.Status200OK;
+            object? response;
             try
             {
-                var user = new UserModel { Id = produceModel.UserId, Name = produceModel.UserName };
-                var monitor = new MonitorEsdModel { Id = produceModel.MonitorEsdId, SerialNumber = produceModel.MonitorEsdSn };
-                var jig = new JigModel { Id = produceModel.JigId, Name = produceModel.JigName };
-                var station = new StationModel { Id = produceModel.StationId, Name = produceModel.StationName };
-
                 if (produceModel.UserId == 0 & produceModel.JigId == 0 & produceModel.MonitorEsdId == 0)
                 {
-                    throw new Exception("Todos os campos são obrigatórios.");
+                    throw new Exception("Id obrigatório.");
                 }
 
                 produceModel.DataTimeMonitorEsdEvent = DateTime.Now;
-                var newProd = await _repository.Include(produceModel);
-                if (newProd != null)
-                {
-
-                    user.Id = newProd.Id;
-                    user.Name = newProd.UserName;
-                    monitor.Id = newProd.MonitorEsdId;
-                    monitor.SerialNumber = newProd.MonitorEsdSn;
-                    jig.Id = newProd.JigId;
-                    jig.Name = newProd.JigName;
-                    station.Id = newProd.StationId;
-                    station.Name = newProd.StationName;
-
-                    var include = new ProduceActivityModel
-                    {
-                        Id = newProd.Id,
-                        UserId = produceModel.UserId,
-                        UserName = produceModel.UserName,
-                        MonitorEsdId = produceModel.MonitorEsdId,
-                        MonitorEsdSn = produceModel.MonitorEsdSn,
-                        JigId = produceModel.JigId,
-                        JigName = produceModel.JigName,
-                        StationId = produceModel.StationId,
-                        StationName = produceModel.StationName
-                    };
-                    content = include;
-                    statusCode = StatusCodes.Status200OK;
-                }
-                else
-                {
-                    content = "Dados incorretos ou inválidos.";
-                    statusCode = StatusCodes.Status404NotFound;
-                }
-
+                response = await _repository.Include(produceModel);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                content = "Não foi possível salvar as alterações. Verifique se todos os itens estão cadastrados.";
-
+                response = exception.Message;
                 statusCode = StatusCodes.Status400BadRequest;
             }
-            return (content, statusCode);
-        }
+            return (response, statusCode);
 
+        }
         public async Task<(object?, int)> Delete(int id)
         {
             object? content;

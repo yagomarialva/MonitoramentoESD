@@ -60,6 +60,63 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
+        /// Buscar Operador
+        /// </summary>
+        /// <param name="id"> Buscar Operador Id</param>
+        /// <response code="200">Retorna monitor</response>
+        /// <response code="400">Dados incorretos ou inválidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrator,operator,developer")]
+        [HttpGet]
+        [Route("/BuscarOpId{id}")]
+        public async Task<ActionResult> BuscarIdOp(int id)
+        {
+            var (result, statusCode) = await _service.GetUserId(id);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            return StatusCode(statusCode, result);
+        }
+
+        /// <summary>
+        /// Buscar Posição X
+        /// </summary>
+        /// <param name="id"> Buscar Posição X</param>
+        /// <response code="200">Retorna Posição X</response>
+        /// <response code="400">Dados incorretos ou inválidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrator,operator,developer")]
+        [HttpGet]
+        [Route("/BuscarPosicaoX{x}")]
+        public async Task<ActionResult> BuscarPosicaoX(int x)
+        {
+            var (result, statusCode) = await _service.GetPositionX(x);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            return StatusCode(statusCode, result);
+        }
+
+        /// <summary>
+        /// Buscar Posição Y
+        /// </summary>
+        /// <param name="id"> Buscar Posição Y</param>
+        /// <response code="200">Retorna Posição Y</response>
+        /// <response code="400">Dados incorretos ou inválidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrator,operator,developer")]
+        [HttpGet]
+        [Route("/BuscarPosicaoY{y}")]
+        public async Task<ActionResult> BuscarPosicaoY(int y)
+        {
+            var (result, statusCode) = await _service.GetPositionY(y);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            return StatusCode(statusCode, result);
+        }
+
+        /// <summary>
         /// Cadastra e Atualiza de dados do monitor.
         /// </summary>
         /// <remarks>Cadastra monitor na base de dados; Para atualizar dados basta usar Id do monitor.</remarks>

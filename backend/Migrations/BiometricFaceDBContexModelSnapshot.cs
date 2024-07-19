@@ -106,16 +106,36 @@ namespace BiometricFaceApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DateHour")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime>("LastDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("PositionX")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PositionY")
+                        .HasColumnType("int");
+
                     b.Property<string>("SerialNumber")
                         .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SerialNumber")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("monitorEsd");
                 });
@@ -138,26 +158,14 @@ namespace BiometricFaceApi.Migrations
                     b.Property<int>("JigId")
                         .HasColumnType("int");
 
-                    b.Property<string>("JigName")
-                        .HasColumnType("longtext");
-
                     b.Property<int>("MonitorEsdId")
                         .HasColumnType("int");
-
-                    b.Property<string>("MonitorEsdSn")
-                        .HasColumnType("longtext");
 
                     b.Property<int>("StationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("StationName")
-                        .HasColumnType("longtext");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -306,6 +314,17 @@ namespace BiometricFaceApi.Migrations
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.ImageModel", b =>
+                {
+                    b.HasOne("BiometricFaceApi.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.MonitorEsdModel", b =>
                 {
                     b.HasOne("BiometricFaceApi.Models.UserModel", "User")
                         .WithMany()

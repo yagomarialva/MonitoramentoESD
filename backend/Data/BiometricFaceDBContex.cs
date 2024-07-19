@@ -2,6 +2,8 @@
 using BiometricFaceApi.Security;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
 
 namespace BiometricFaceApi.Data
 {
@@ -52,6 +54,7 @@ namespace BiometricFaceApi.Data
                     Password = securityService.EncryptAES("admcompal")
                 }
             });
+
         }
     }
 }

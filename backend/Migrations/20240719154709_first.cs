@@ -52,21 +52,6 @@ namespace BiometricFaceApi.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "monitorEsd",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    SerialNumber = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_monitorEsd", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "roles",
                 columns: table => new
                 {
@@ -163,19 +148,42 @@ namespace BiometricFaceApi.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "monitorEsd",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    SerialNumber = table.Column<string>(type: "varchar(255)", nullable: true),
+                    PositionX = table.Column<int>(type: "int", nullable: false),
+                    PositionY = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "longtext", nullable: true),
+                    Description = table.Column<string>(type: "longtext", nullable: true),
+                    DateHour = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    LastDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_monitorEsd", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_monitorEsd_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "produceActivity",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "longtext", nullable: true),
                     JigId = table.Column<int>(type: "int", nullable: false),
-                    JigName = table.Column<string>(type: "longtext", nullable: true),
                     MonitorEsdId = table.Column<int>(type: "int", nullable: false),
-                    MonitorEsdSn = table.Column<string>(type: "longtext", nullable: true),
                     StationId = table.Column<int>(type: "int", nullable: false),
-                    StationName = table.Column<string>(type: "longtext", nullable: true),
                     IsLocked = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: true),
                     DataTimeMonitorEsdEvent = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -277,6 +285,11 @@ namespace BiometricFaceApi.Migrations
                 table: "monitorEsd",
                 column: "SerialNumber",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_monitorEsd_UserId",
+                table: "monitorEsd",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_produceActivity_JigId",

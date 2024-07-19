@@ -68,19 +68,14 @@ namespace BiometricFaceApi.Repositories
                 // include
                 await _dbContext.ProduceActivity.AddAsync(produceActivity);
                 await _dbContext.SaveChangesAsync();
-
             }
             else
             {
                 // update
                 produceActivityModelUp.UserId = produceActivity.UserId;
-                produceActivityModelUp.UserName = produceActivity.UserName;
                 produceActivityModelUp.MonitorEsdId = produceActivity.MonitorEsdId;
-                produceActivity.MonitorEsdSn = produceActivity.MonitorEsdSn;
                 produceActivityModelUp.JigId = produceActivity.JigId;
-                produceActivity.JigName = produceActivity.JigName;
                 produceActivityModelUp.StationId = produceActivity.StationId;
-                produceActivity.StationName = produceActivity.StationName;
                 _dbContext.ProduceActivity.Update(produceActivityModelUp);
                 await _dbContext.SaveChangesAsync();
             }
