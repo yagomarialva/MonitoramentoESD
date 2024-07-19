@@ -185,12 +185,13 @@ const OperatorTable = () => {
   const filterOperators = () => {
     return state.allOperators.filter((operator) => {
       return (
-        operator.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        operator.name.toLowerCase().includes(searchQuery.toLowerCase()) 
+        ||
         operator.badge.toLowerCase().includes(searchQuery.toLowerCase())
       );
     });
   };
-
+  
   const displayOperators = filterOperators().slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
@@ -200,8 +201,8 @@ const OperatorTable = () => {
     <>
       <Menu />
       <Typography paragraph>
-        <Container sx={{ mt: -7, ml: 22 }}>
-          <Box sx={{ p: 3 }}>
+        <Container >
+          <Box>
             <Button
               id="add-button"
               variant="outlined"

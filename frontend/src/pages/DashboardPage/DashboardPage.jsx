@@ -28,7 +28,6 @@ class DashboardPage extends Component {
   render() {
     return (
       <>
-      <Menu></Menu>
       <ESDHomeDashboardPage></ESDHomeDashboardPage>
       </>
     );

@@ -1,5 +1,6 @@
 import mysql.connector
 from datetime import date
+import random
 
 # Connect to MySQL
 mydb = mysql.connector.connect(
@@ -12,45 +13,49 @@ mydb = mysql.connector.connect(
 # Create a cursor
 mycursor = mydb.cursor()
 
+# SQL statements to insert data
+sql_users = "INSERT INTO users (Id, Name, Badge, Born) VALUES (%s, %s, %s, %s)"
+sql_monitor = "INSERT INTO monitoresd (Id, UserId, SerialNumber, PositionX, PositionY, Status, Description, DateHour, LastDate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-# SQL statement to insert data
-sql_users = "INSERT INTO users (id, Name, Badge, Born) VALUES (%s, %s, %s, %s)"
-sql_monitor = "INSERT INTO monitoresd (Id, SerialNumber, Description) VALUES (%s, %s, %s)"
-sql_station = "INSERT INTO jig (Id, Name, Description, Created, LastUpdated) VALUES (%s, %s, %s, %s, %s )"
-# sql_produce = "INSERT INTO produceactivity (Id, UserId, JigId, StationId, MonitorEsdId, IsLocked, Description, DataTimeMonitorEsdEvent) VALUES (%s, %s, %s, %s, %s, %s, %s, %s )"
+# Generate data for users
+val_users = []
+for i in range(1, 301):
+    val_users.append((i, f'User Test {i:04d}', f'XQDL {i}', date.today()))
 
-
-
-
+# Generate data for monitors
 val_monitor = []
-for i in range(1, 300):
-    val_monitor.append((i, f'AXY{i:06}', f'Monitor da Estação {i}'))
+rows, cols = 20, 14  # Dimensions of the matrix
+for i in range(1, 281):
+    row = (i - 1) // cols + 1  # Calculate row number (1-based index)
+    col = (i - 1) % cols + 1   # Calculate column number (1-based index)
+    status = random.choice(['PASS', 'FAIL'])  # Randomly choose 'PASS' or 'FAIL'
+    val_monitor.append((
+        i, 
+        i, 
+        f'AXY{i:06}', 
+        row, 
+        col, 
+        status, 
+        f'Monitor for compal stations {i}', 
+        date.today(), 
+        date.today()
+    ))
 
-val_users = [
-]
-for i in range(1, 300):
-    val_users.append((i, f'User Test {i:04d}', f'XQDL {i}',  date.today()))
-#  ('1', 'John Doe', 'XQDL123', date.today()),
-
-val_stations = []
-for i in range(1, 300):
-    station_id = f'Station {i:02}'
-    station_desc = f'Station for ARCHERS {i} MLK'
-    val_stations.append((i, station_id, station_desc, date.today(), date.today()))
+# Insert data
+try:
+    # Insert into users table
+    mycursor.executemany(sql_users, val_users)
     
+    # Insert into monitoresd table
+    mycursor.executemany(sql_monitor, val_monitor)
     
-# val_produce = []
-# for i in range(1, 300):
-#     val_produce.append((i, i, i, i, i, 1, f'Station for New JIGs {i}', date.today()))
+    # Commit the transaction
+    mydb.commit()
+    print(mycursor.rowcount, "record(s) inserted.")
+except mysql.connector.Error as err:
+    print(f"Error: {err}")
+    mydb.rollback()
 
-# Insert data with tqdm progress bar
-mycursor.executemany(sql_monitor, val_monitor)
-mycursor.executemany(sql_users, val_users)
-mycursor.executemany(sql_station, val_stations)
-# mycursor.executemany(sql_produce, val_produce)
-
-# Commit the transaction
-mydb.commit()
-
-# Verify insertion by checking the row count
-print(mycursor.rowcount, "record inserted.")
+# Close the cursor and connection
+mycursor.close()
+mydb.close()

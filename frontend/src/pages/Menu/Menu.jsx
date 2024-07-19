@@ -15,16 +15,17 @@ import { Link } from "react-router-dom";
 import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SensorsOutlinedIcon from "@mui/icons-material/SensorsOutlined";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
+import "./Menu.css";
 
 const drawerWidth = 190;
 
 export default function Menu() {
-  const { user, logout} = useAuth()
-  const navigate = useNavigate()
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [open] = React.useState(true);
   const list = () => (
     <List>
@@ -46,19 +47,9 @@ export default function Menu() {
           <ListItemButton
             component={Link}
             to={item.path}
-            sx={{
-              minHeight: 48,
-              justifyContent: open ? "initial" : "center",
-              px: 2.5,
-            }}
+            className="list-itens-buttons"
           >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : "auto",
-                justifyContent: "center",
-              }}
-            >
+            <ListItemIcon className="list-itens-buttons-icons">
               {item.icon}
             </ListItemIcon>
             <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
@@ -67,7 +58,7 @@ export default function Menu() {
       ))}
     </List>
   );
-// console.log('token in menu', token)
+  // console.log('token in menu', token)
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
@@ -82,26 +73,13 @@ export default function Menu() {
             FCT Auto Test
           </Typography>
           {/* <Button color="inherit" onClick={handleChangeLanguage}>Change Language {currentLanguage}</Button> */}
-          <Button onClick={logout} color="inherit" component={Link} to="/">Logout</Button>
+          <Button onClick={logout} color="inherit" component={Link} to="/">
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: open ? drawerWidth : 64,
-          flexShrink: 0,
-          ml: "-100px",
-          whiteSpace: "nowrap",
-          [`& .MuiDrawer-paper`]: {
-            width: open ? drawerWidth : 64,
-            boxSizing: "border-box",
-            mt: "64px",
-            ml: "10px",
-            transition: "width 0.3s",
-          },
-        }}
-      >
-        {list()}
+      <Drawer variant="permanent">
+        <div className="drawer-paper">{list()}</div>
       </Drawer>
       <Box
         component="main"
@@ -113,10 +91,7 @@ export default function Menu() {
           transition: "margin-left 0.3s",
           mt: "64px",
         }}
-      >
-      </Box>
+      ></Box>
     </Box>
-  )
-
-  
+  );
 }

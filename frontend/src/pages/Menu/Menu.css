@@ -1,0 +1,20 @@
+.list-itens-buttons {
+    min-height: 48%;
+    justify-content: center;
+    padding-right: 3.5;
+    padding-left: 2.5;
+}
+
+.list-itens-buttons-icons {
+    min-width: 0;
+    margin-right: 4;
+    justify-content: initial;
+}
+
+  .drawer-paper {
+    box-sizing: border-box;
+    margin-top: 64px;
+    margin-left: 10px;
+    transition: width 0.3s;
+  }
+  

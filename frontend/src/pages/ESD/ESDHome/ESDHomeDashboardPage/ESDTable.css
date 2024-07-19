@@ -14,3 +14,36 @@
   height: 1100;
   width: 1050;
 }
+
+.box {
+  background-color: gray;
+  margin-left: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+.ok {
+  background-color: green;
+}
+
+.ng {
+  background-color: red;
+
+}
+
+.container {
+  display: flex;
+}
+
+.mRight {
+  margin-right: 30px;
+}
+
+.mBottom {
+  /* margin-top: 50px; */
+}
+
+.container {
+  /* margin-left: 10% !important;
+  margin-top: -10% !important; */
+}

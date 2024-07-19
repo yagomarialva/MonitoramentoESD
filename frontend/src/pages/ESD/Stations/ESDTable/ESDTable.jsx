@@ -205,8 +205,8 @@ const ESDTable = () => {
     <>
       <Menu />
       <Typography paragraph>
-        <Container sx={{ mt: -7, ml: 22, width: 900 }}>
-          <Box sx={{ p: 3 }}>
+        <Container>
+          <Box>
             <div>
               <TextField
                 name="filterName"
