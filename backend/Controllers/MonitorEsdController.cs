@@ -50,7 +50,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarMonitores{id}")]
+        [Route("/BuscarMonitores/{id}")]
         public async Task<ActionResult> BuscarIdMonitor(int id)
         {
             var (result, statusCode) = await _service.GetMonitorId(id);
@@ -69,7 +69,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarOpId{id}")]
+        [Route("/BuscarOpId/{id}")]
         public async Task<ActionResult> BuscarIdOp(int id)
         {
             var (result, statusCode) = await _service.GetUserId(id);
@@ -88,7 +88,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarPosicaoX{x}")]
+        [Route("/BuscarPosicaoX/{x}")]
         public async Task<ActionResult> BuscarPosicaoX(int x)
         {
             var (result, statusCode) = await _service.GetPositionX(x);
@@ -107,7 +107,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarPosicaoY{y}")]
+        [Route("/BuscarPosicaoY/{y}")]
         public async Task<ActionResult> BuscarPosicaoY(int y)
         {
             var (result, statusCode) = await _service.GetPositionY(y);

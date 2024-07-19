@@ -55,7 +55,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarEstacaView{id}")]
+        [Route("/BuscarEstacaView/{id}")]
         public async Task<ActionResult> BuscarIdEstacaoView(int id)
         {
             var (result, statusCode) = await _stationRepository.GetStationViewId(id);
@@ -74,7 +74,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarEstViewJigs{id}")]
+        [Route("/BuscarEstViewJigs/{id}")]
         public async Task<ActionResult> BuscarJigId(int id)
         {
             var (result, statusCode) = await _stationRepository.GetJigId(id);
@@ -93,7 +93,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarEstacaoDeProducaoId{id}")]
+        [Route("/BuscarEstacaoDeProducaoId/{id}")]
         public async Task<ActionResult> BuscarEstacaoDeProducaoId(int id)
         {
             var (result, statusCode) = await _stationRepository.GetByStationProductionId(id);
@@ -134,7 +134,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
-        [Route("/deleteLineView")]
+        [Route("/deleteLineView/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             var (result, statusCode) = await _stationRepository.Delete(id);

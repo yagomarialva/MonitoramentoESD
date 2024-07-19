@@ -53,7 +53,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarProducaoId")]
+        [Route("/BuscarProducaoId/{id}")]
         public async Task<ActionResult> BuscarTodaProducao(int id)
         {
             var (result, statusCode) = await _service.GetProduceId(id);
@@ -116,7 +116,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
-        [Route("/DeleteProducao{id}")]
+        [Route("/DeleteProducao/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             var (result, statusCode) = await _service.Delete(id);

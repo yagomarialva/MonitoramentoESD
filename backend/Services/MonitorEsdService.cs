@@ -144,27 +144,17 @@ namespace BiometricFaceApi.Services
             object? response;
             try
             {
-                if (monitorModel.PositionX == monitorModel.PositionY)
+                bool exists = await _repository.PositionExistsAsync(monitorModel.PositionX, monitorModel.PositionY);
+                if (exists)
                 {
-                    response = "PosiçãoX não pode ser igual a PosiçãoY.";
+                    response = "A combinação já existe no bando de dados";
                     statusCode = StatusCodes.Status400BadRequest;
                 }
-                else 
+                else
                 {
-                    bool exists = await _repository.PositionExistsAsync(monitorModel.PositionX, monitorModel.PositionY);
-                    if (exists)
-                    {
-                        response = "A combinação já existe no bando de dados";
-                        statusCode = StatusCodes.Status400BadRequest;
-                    }
-                    else
-                    {
-                        response = await _repository.Include(monitorModel);
-                        statusCode = StatusCodes.Status200OK;
-                    }
+                    response = await _repository.Include(monitorModel);
+                    statusCode = StatusCodes.Status200OK;
                 }
-                
-                
             }
             catch (Exception)
             {
@@ -205,6 +195,6 @@ namespace BiometricFaceApi.Services
             }
             return (content, statusCode);
         }
-    
+
     }
 }

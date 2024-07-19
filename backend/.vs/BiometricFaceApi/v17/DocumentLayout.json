@@ -7,6 +7,18 @@
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\monitoresdservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\stationviewcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\stationviewcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\stationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\stationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\produceactivitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\produceactivitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\monitoresdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\monitoresdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -50,11 +62,50 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StationViewController.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\StationViewController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StationViewController.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\StationViewController.cs",
+              "RelativeToolTip": "Controllers\\StationViewController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-19T19:48:39.317Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "StationController.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\StationController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StationController.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\StationController.cs",
+              "RelativeToolTip": "Controllers\\StationController.cs",
+              "ViewState": "AQIAAE0AAAAAAAAAAAAIwDEAAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-19T19:48:32.464Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "ProduceActivityController.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\ProduceActivityController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProduceActivityController.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\ProduceActivityController.cs",
+              "RelativeToolTip": "Controllers\\ProduceActivityController.cs",
+              "ViewState": "AQIAAFkAAAAAAAAAAAAIwHYAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-19T19:47:43.311Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "IMonitorEsdRepository.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\Interfaces\\IMonitorEsdRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\Interfaces\\IMonitorEsdRepository.cs",
@@ -62,12 +113,11 @@
               "RelativeToolTip": "Repositories\\Interfaces\\IMonitorEsdRepository.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAqwAwAAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-19T18:45:55.018Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-19T18:45:55.018Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "MonitorEsdRepository.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\MonitorEsdRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\MonitorEsdRepository.cs",
@@ -75,8 +125,7 @@
               "RelativeToolTip": "Repositories\\MonitorEsdRepository.cs",
               "ViewState": "AQIAABIAAAAAAAAAAAAowCAAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-19T18:10:18.002Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-19T18:10:18.002Z"
             },
             {
               "$type": "Document",
@@ -86,14 +135,14 @@
               "RelativeDocumentMoniker": "Services\\MonitorEsdService.cs",
               "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\MonitorEsdService.cs",
               "RelativeToolTip": "Services\\MonitorEsdService.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAAAxwHoAAAA4AAAA",
+              "ViewState": "AQIAAHsAAAAAAAAAAAAiwMgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-19T18:10:04.221Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "ProduceActivityModel.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\ProduceActivityModel.cs",
               "RelativeDocumentMoniker": "Models\\ProduceActivityModel.cs",
@@ -101,12 +150,11 @@
               "RelativeToolTip": "Models\\ProduceActivityModel.cs",
               "ViewState": "AQIAAA0AAAAAAAAAAAAgwB8AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-19T15:45:22.575Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-19T15:45:22.575Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "RecordStatusRepository.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\RecordStatusRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\RecordStatusRepository.cs",
@@ -114,12 +162,11 @@
               "RelativeToolTip": "Repositories\\RecordStatusRepository.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-19T15:45:09.031Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-19T15:45:09.031Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "20240719154409_first.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Migrations\\20240719154409_first.cs",
               "RelativeDocumentMoniker": "Migrations\\20240719154409_first.cs",
@@ -127,25 +174,24 @@
               "RelativeToolTip": "Migrations\\20240719154409_first.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-19T15:44:09.128Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-19T15:44:09.128Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "MonitorEsdController.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\MonitorEsdController.cs",
               "RelativeDocumentMoniker": "Controllers\\MonitorEsdController.cs",
               "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\MonitorEsdController.cs",
               "RelativeToolTip": "Controllers\\MonitorEsdController.cs",
-              "ViewState": "AQIAAHAAAAAAAAAAAAAwwIgAAAAIAAAA",
+              "ViewState": "AQIAAGIAAAAAAAAAAAAowDQAAAAhAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-19T15:42:38.765Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -153,12 +199,11 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AQIAAHEAAAAAAAAAAAAAAJEAAABBAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-19T15:42:28.465Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-19T15:42:28.465Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "ProduceActivityRepository.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\ProduceActivityRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\ProduceActivityRepository.cs",
@@ -166,12 +211,11 @@
               "RelativeToolTip": "Repositories\\ProduceActivityRepository.cs",
               "ViewState": "AQIAADIAAAAAAAAAAAAAwAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-19T15:41:56.606Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-19T15:41:56.606Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "ProduceActivityService.cs",
               "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\ProduceActivityService.cs",
               "RelativeDocumentMoniker": "Services\\ProduceActivityService.cs",
@@ -179,8 +223,7 @@
               "RelativeToolTip": "Services\\ProduceActivityService.cs",
               "ViewState": "AQIAAA0AAAAAAAAAAAAmwJ0AAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-19T15:34:29.606Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-19T15:34:29.606Z"
             }
           ]
         }
