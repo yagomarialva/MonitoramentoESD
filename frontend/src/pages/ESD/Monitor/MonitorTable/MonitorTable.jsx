@@ -194,7 +194,7 @@ const MonitorTable = () => {
       <Menu />
       <Typography paragraph>
         <Container >
-          <Box sx={{ p: 3 }}>
+          <Box>
             <div>
               <TextField
                 name="filterSerialNumber"

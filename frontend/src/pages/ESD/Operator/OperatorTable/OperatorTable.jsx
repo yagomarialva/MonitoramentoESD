@@ -20,6 +20,7 @@ import {
   Typography,
   TablePagination,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
 import OperatorModal from "../OperatorModal/OperatorModal";
@@ -50,7 +51,8 @@ const OperatorTable = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchName, setSearchName] = useState("");
+  const [searchBadge, setSearchBadge] = useState("");
 
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -178,20 +180,23 @@ const OperatorTable = () => {
     setPage(0);
   };
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
+  const handleSearchNameChange = (event) => {
+    setSearchName(event.target.value);
+  };
+
+  const handleSearchBadgeChange = (event) => {
+    setSearchBadge(event.target.value);
   };
 
   const filterOperators = () => {
     return state.allOperators.filter((operator) => {
       return (
-        operator.name.toLowerCase().includes(searchQuery.toLowerCase()) 
-        ||
-        operator.badge.toLowerCase().includes(searchQuery.toLowerCase())
+        operator.name.toLowerCase().includes(searchName.toLowerCase()) &&
+        operator.badge.toLowerCase().includes(searchBadge.toLowerCase())
       );
     });
   };
-  
+
   const displayOperators = filterOperators().slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
@@ -200,37 +205,48 @@ const OperatorTable = () => {
   return (
     <>
       <Menu />
-      <Typography paragraph>
-        <Container >
-          <Box>
-            <Button
-              id="add-button"
-              variant="outlined"
-              color="success"
-              onClick={handleOpenModal}
-              sx={{ mb: 2 }}
-            >
-              {t("ESD_OPERATOR.ADD_OPERATOR", {
-                appName: "App for Translations",
-              })}
-            </Button>
-            <TextField
-              label={t("ESD_OPERATOR.TABLE.SEARCH", {
-                appName: "App for Translations",
-              })}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              onChange={handleSearchChange}
-            />
-            <List>
-              {displayOperators.map((operator) => (
-                <ListItem key={operator.id} divider>
-                  <ListItemText
-                    primary={operator.name}
-                    secondary={operator.badge}
-                  />
-                  <ListItemSecondaryAction>
+      <Container>
+        <TextField
+          name="filterName"
+          label="Nome"
+          variant="outlined"
+          value={state.filterName}
+          onChange={handleSearchNameChange}
+          sx={{ mb: 2, mr: 2 }}
+        />
+        <TextField
+          name="filterDescription"
+          label="Matricula"
+          variant="outlined"
+          value={state.filterDescription}
+          onChange={handleSearchBadgeChange}
+          sx={{ mb: 2 }}
+        />
+        <Button
+          id="add-button"
+          variant="outlined"
+          color="success"
+          onClick={handleOpenModal}
+          sx={{ mb: 2, ml: 2 }}
+        >
+          {t("ESD_OPERATOR.ADD_OPERATOR", {
+            appName: "App for Translations",
+          })}
+        </Button>
+        <Box>
+          <List>
+            {displayOperators.map((operator) => (
+              <ListItem
+                key={operator.id}
+                divider
+                sx={{ display: "flex", alignItems: "center" }}
+              >
+                <ListItemText
+                  primary={operator.name}
+                  secondary={operator.badge}
+                />
+                <ListItemSecondaryAction>
+                  <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
                     <IconButton
                       edge="end"
                       aria-label="edit"
@@ -238,6 +254,8 @@ const OperatorTable = () => {
                     >
                       <EditIcon />
                     </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t("ESD_OPERATOR.INFO_OPERATOR")}>
                     <IconButton
                       edge="end"
                       aria-label="info"
@@ -245,6 +263,8 @@ const OperatorTable = () => {
                     >
                       <Info />
                     </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
                     <IconButton
                       edge="end"
                       aria-label="delete"
@@ -252,76 +272,72 @@ const OperatorTable = () => {
                     >
                       <Delete />
                     </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
-            <TablePagination
-              component="div"
-              count={filterOperators().length}
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              rowsPerPageOptions={[10, 25, 59, 75, 100, 125, 150]}
-              labelRowsPerPage='Exibir por páginas                   '
-              labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} de ${count}`
-              }
-            />
-            <OperatorModal
-              open={state.open}
-              handleClose={handleClose}
-              operatorName={state.operator.name}
-              operator={state.operator}
-            />
-            <OperatorForm
-              open={state.openModal}
-              handleClose={handleCloseModal}
-              onSubmit={handleCreateOperator}
-            />
-            <OperatorEditForm
-              open={state.openEditModal}
-              handleClose={handleEditClose}
-              onSubmit={handleEditCellChange}
-              initialData={state.editData}
-            />
-            <OperatorConfirmModal
-              open={state.deleteConfirmOpen}
-              handleClose={handleDeleteClose}
-              handleConfirm={handleConfirmDelete}
-              title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_STATION", {
-                appName: "App for Translations",
-              })}
-              description={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
-                appName: "App for Translations",
-              })}
-            />
-            <Snackbar
-              open={state.snackbarOpen}
-              autoHideDuration={6000}
-              onClose={() => handleStateChange({ snackbarOpen: false })}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              className={`snackbar-content snackbar-${state.snackbarSeverity}`}
-            >
-              <Alert
-                onClose={() => handleStateChange({ snackbarOpen: false })}
-                severity={state.snackbarSeverity}
-                sx={{
-                  backgroundColor: "inherit",
-                  color: "inherit",
-                  fontWeight: "inherit",
-                  boxShadow: "inherit",
-                  borderRadius: "inherit",
-                  padding: "inherit",
-                }}
-              >
-                {state.snackbarMessage}
-              </Alert>
-            </Snackbar>
-          </Box>
-        </Container>
-      </Typography>
+                  </Tooltip>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+          <TablePagination
+            component="div"
+            count={filterOperators().length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[10, 25, 50, 75, 100]}
+          />
+        </Box>
+        <OperatorModal
+          open={state.open}
+          handleClose={handleClose}
+          operatorName={state.operator.name}
+          operator={state.operator}
+        />
+        <OperatorForm
+          open={state.openModal}
+          handleClose={handleCloseModal}
+          onSubmit={handleCreateOperator}
+        />
+        <OperatorEditForm
+          open={state.openEditModal}
+          handleClose={handleEditClose}
+          onSubmit={handleEditCellChange}
+          initialData={state.editData}
+        />
+        <OperatorConfirmModal
+          open={state.deleteConfirmOpen}
+          handleClose={handleDeleteClose}
+          handleConfirm={handleConfirmDelete}
+          title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_STATION", {
+            appName: "App for Translations",
+          })}
+          description={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM_TEXT", {
+            appName: "App for Translations",
+          })}
+        />
+        <Snackbar
+          open={state.snackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => handleStateChange({ snackbarOpen: false })}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+        >
+          <Alert
+            onClose={() => handleStateChange({ snackbarOpen: false })}
+            severity={state.snackbarSeverity}
+            sx={{
+              backgroundColor: "inherit",
+              color: "inherit",
+              fontWeight: "inherit",
+              boxShadow: "inherit",
+              borderRadius: "inherit",
+              padding: "inherit",
+            }}
+          >
+            {state.snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Container>
     </>
   );
 };

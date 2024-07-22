@@ -60,9 +60,7 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
     >
       <Paper sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          {t("ESD_TEST.DIALOG.CREATE_STATION", {
-            appName: "App for Translations",
-          })}
+         Adicionar Monitor
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField

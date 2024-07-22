@@ -27,7 +27,7 @@ import ESDForm from "../ESDForm/ESDForm";
 import ESDEditForm from "../ESDEditForm/ESDEditForm";
 import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 import "./SnackbarStyles.css";
-import "./ESDTable.css";
+// import "./ESDTable.css";
 import Menu from "../../../Menu/Menu";
 
 const ESDTable = () => {
