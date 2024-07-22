@@ -264,9 +264,7 @@ const OperatorTable = () => {
               rowsPerPage={rowsPerPage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               rowsPerPageOptions={[10, 25, 59, 75, 100, 125, 150]}
-              labelRowsPerPage={t("ESD_OPERATOR.TABLE.ROWS_PER_PAGE", {
-                appName: "App for Translations",
-              })}
+              labelRowsPerPage='Exibir por páginas                   '
               labelDisplayedRows={({ from, to, count }) =>
                 `${from}-${to} de ${count}`
               }

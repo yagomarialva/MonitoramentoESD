@@ -32,10 +32,7 @@ import Menu from "../../../Menu/Menu";
 
 const ESDTable = () => {
   const { t } = useTranslation();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
-
 
   const [state, setState] = useState({
     allJigs: [],
@@ -52,6 +49,8 @@ const ESDTable = () => {
     snackbarSeverity: "success",
     filterName: "",
     filterDescription: "",
+    page: 0,
+    rowsPerPage: 10,
   });
 
   const handleStateChange = (changes) => {
@@ -149,15 +148,6 @@ const ESDTable = () => {
       );
     }
   };
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
 
   useEffect(() => {
     const fetchDataAllUsers = async () => {
@@ -192,6 +182,17 @@ const ESDTable = () => {
     handleStateChange({ [name]: value });
   };
 
+  const handleChangePage = (event, newPage) => {
+    handleStateChange({ page: newPage });
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    handleStateChange({
+      rowsPerPage: parseInt(event.target.value, 10),
+      page: 0,
+    });
+  };
+
   const filteredJigs = state.allJigs.filter((station) => {
     return (
       station.name.toLowerCase().includes(state.filterName.toLowerCase()) &&
@@ -200,6 +201,11 @@ const ESDTable = () => {
         .includes(state.filterDescription.toLowerCase())
     );
   });
+
+  const paginatedJigs = filteredJigs.slice(
+    state.page * state.rowsPerPage,
+    state.page * state.rowsPerPage + state.rowsPerPage
+  );
 
   return (
     <>
@@ -238,7 +244,7 @@ const ESDTable = () => {
                 {t("ESD_TEST.ADD_STATION", { appName: "App for Translations" })}
               </Button>
               <List>
-                {filteredJigs.map((station) => (
+                {paginatedJigs.map((station) => (
                   <ListItem key={station.id}>
                     <ListItemText
                       primary={station.name}
@@ -272,18 +278,11 @@ const ESDTable = () => {
               </List>
               <TablePagination
                 component="div"
-                count={filterJigs().length}
-                page={page}
+                count={filteredJigs.length}
+                page={state.page}
                 onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
+                rowsPerPage={state.rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[10, 25, 59, 75, 100, 125, 150]}
-                labelRowsPerPage={t("ESD_OPERATOR.TABLE.ROWS_PER_PAGE", {
-                  appName: "App for Translations",
-                })}
-                labelDisplayedRows={({ from, to, count }) =>
-                  `${from}-${to} de ${count}`
-                }
               />
             </div>
             <ESDModal

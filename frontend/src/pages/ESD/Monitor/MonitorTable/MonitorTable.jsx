@@ -19,6 +19,7 @@ import {
   TextField,
   Container,
   Typography,
+  TablePagination,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
 import MonitorModal from "../MonitorModal/MonitorModal";
@@ -45,6 +46,8 @@ const MonitorTable = () => {
     snackbarSeverity: "success",
     filterSerialNumber: "",
     filterDescription: "",
+    page: 0,
+    rowsPerPage: 10,
   });
 
   const handleStateChange = (changes) => {
@@ -163,6 +166,17 @@ const MonitorTable = () => {
     handleStateChange({ [name]: value });
   };
 
+  const handleChangePage = (event, newPage) => {
+    handleStateChange({ page: newPage });
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    handleStateChange({
+      rowsPerPage: parseInt(event.target.value, 10),
+      page: 0,
+    });
+  };
+
   const filteredMonitors = state.allMonitors.filter((monitor) => {
     return (
       monitor.serialNumber.toLowerCase().includes(state.filterSerialNumber.toLowerCase()) &&
@@ -170,12 +184,17 @@ const MonitorTable = () => {
     );
   });
 
+  const paginatedMonitors = filteredMonitors.slice(
+    state.page * state.rowsPerPage,
+    state.page * state.rowsPerPage + state.rowsPerPage
+  );
+
   return (
     <>
       <Menu />
       <Typography paragraph>
-        <Container>
-          <Box >
+        <Container >
+          <Box sx={{ p: 3 }}>
             <div>
               <TextField
                 name="filterSerialNumber"
@@ -207,7 +226,7 @@ const MonitorTable = () => {
                 {t("ESD_MONITOR.ADD_MONITOR", { appName: "App for Translations" })}
               </Button>
               <List>
-                {filteredMonitors.map((monitor) => (
+                {paginatedMonitors.map((monitor) => (
                   <ListItem key={monitor.id}>
                     <ListItemText
                       primary={monitor.serialNumber}
@@ -239,6 +258,14 @@ const MonitorTable = () => {
                   </ListItem>
                 ))}
               </List>
+              <TablePagination
+                component="div"
+                count={filteredMonitors.length}
+                page={state.page}
+                onPageChange={handleChangePage}
+                rowsPerPage={state.rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
             </div>
             <MonitorModal
               open={state.open}
