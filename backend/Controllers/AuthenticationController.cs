@@ -45,7 +45,11 @@ namespace BiometricFaceApi.Controllers
             if (user != null)
             {
                 var tokenString = auth.GenerateJSONWebToken(user);
-                response = Ok(new { token = tokenString });
+                response = Ok(new
+                {
+                    Token = tokenString,
+                    Role = user.RolesName
+                });
             }
             return response;
 

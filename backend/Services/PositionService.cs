@@ -1,49 +1,31 @@
-﻿using AutoMapper.Internal.Mappers;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Runtime.InteropServices.ObjectiveC;
-using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
 
 namespace BiometricFaceApi.Services
 {
-    public class MonitorEsdService
+    public class PositionService
     {
-        private IMonitorEsdRepository _repository;
-        private IUsersRepository _usersRepository;
-        private IPositionRepository _positionRepository;
-        public MonitorEsdService(IMonitorEsdRepository repository, IUsersRepository usersRepository, IPositionRepository positionRepository)
+        private IPositionRepository _repository;
+        public PositionService(IPositionRepository repository)
         {
             _repository = repository;
-            _usersRepository = usersRepository;
-            _positionRepository = positionRepository;
         }
-        public async Task<(object?, int)> GetAllMonitorEsds()
+
+        public async Task<(object?, int)> GetAllPositions()
         {
             object? result;
             int statusCode;
             try
             {
-                List<MonitorEsdModel> monitor = await _repository.GetAllMonitor();
-                if (!monitor.Any())
+                List<PositionModel> position = await _repository.GetAllPositions();
+                if (!position.Any())
                 {
-                    result = "Nenhum monitor cadastrado.";
+                    result = "Nenhuma Posição cadastrada.";
                     statusCode = StatusCodes.Status404NotFound;
-                    return (result, statusCode);
                 }
-                else
-                {
-                    foreach (var _monitor in monitor.ToList())
-                    {
-
-                        _monitor.User = await _usersRepository.ForId(_monitor.Id);
-                        _monitor.Position = await _positionRepository.GetPositionId(_monitor.Id);
-                    }
-                    result = monitor;
-                    statusCode = StatusCodes.Status200OK;
-                }
+                result = position;
+                statusCode = StatusCodes.Status200OK;
                 return (result, statusCode);
 
             }
@@ -56,20 +38,20 @@ namespace BiometricFaceApi.Services
             return (result, statusCode);
 
         }
-        public async Task<(object?, int)> GetMonitorId(int id)
+        public async Task<(object?, int)> GetPositionId(int id)
         {
             object? result;
             int statusCode;
             try
             {
-                var monitor = await _repository.GetByMonitorId(id);
-                if (monitor == null)
+                var position = await _repository.GetPositionId(id);
+                if (position == null)
                 {
 
-                    result = "Monitor Id não encontrado.";
+                    result = $"{id} não encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
                 }
-                result = monitor;
+                result = position;
                 statusCode = StatusCodes.Status200OK;
                 return (result, statusCode);
             }
@@ -80,20 +62,20 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
-        public async Task<(object?, int)> GetUserId(int id)
+        public async Task<(object?, int)> GetSizeX(int id)
         {
             object? result;
             int statusCode;
             try
             {
-                var monitor = await _repository.GetUserId(id);
-                if (monitor == null)
+                var position = await _repository.GetSizeX(id);
+                if (position == null)
                 {
 
-                    result = "Usuário ID não encontrado.";
+                    result = $"Size X com {id}  não encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
                 }
-                result = monitor;
+                result = position;
                 statusCode = StatusCodes.Status200OK;
                 return (result, statusCode);
             }
@@ -104,13 +86,37 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
-        public async Task<(object?, int)> Include(MonitorEsdModel monitorModel)
+        public async Task<(object?, int)> GetSizeY(int id)
+        {
+            object? result;
+            int statusCode;
+            try
+            {
+                var position = await _repository.GetSizeY(id);
+                if (position == null)
+                {
+
+                    result = $"Size Y com {id} não encontrado.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+                result = position;
+                statusCode = StatusCodes.Status200OK;
+                return (result, statusCode);
+            }
+            catch (Exception exception)
+            {
+                result = exception.Message;
+                statusCode = StatusCodes.Status400BadRequest;
+            }
+            return (result, statusCode);
+        }
+        public async Task<(object?, int)> Include(PositionModel postionModel)
         {
             var statusCode = StatusCodes.Status200OK;
             object? response;
             try
             {
-                response = await _repository.Include(monitorModel);
+                response = await _repository.Include(postionModel);
                 statusCode = StatusCodes.Status201Created;
             }
             catch (Exception)
@@ -127,20 +133,17 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                var respositoryMonitor = await _repository.GetByMonitorId(id);
-                if (respositoryMonitor.Id > 0)
+                var respositorySize = await _repository.GetPositionId(id);
+                if (respositorySize.ID > 0)
                 {
                     content = new
                     {
-                        id = respositoryMonitor.Id,
-                        serialNumber = respositoryMonitor.SerialNumber,
-                        positionId = respositoryMonitor.PositionId,
-                        positionSeguence = respositoryMonitor.PositionSequence,
-                        status = respositoryMonitor.Status,
-                        UserID = respositoryMonitor.UserId,
-                        description = respositoryMonitor.Description
+                        id = respositorySize.ID,
+                        sizeX = (int)respositorySize.SizeX,
+                        sizeY = (int)respositorySize.SizeY,
+
                     };
-                    await _repository.Delete(respositoryMonitor.Id);
+                    await _repository.Delete(respositorySize.ID);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else
@@ -156,6 +159,5 @@ namespace BiometricFaceApi.Services
             }
             return (content, statusCode);
         }
-
     }
 }

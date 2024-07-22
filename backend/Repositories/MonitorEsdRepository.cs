@@ -27,24 +27,15 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Id == id);
         }
+        public async Task<MonitorEsdModel?> GetPositionId(int id)
+        {
+            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Id == id);
+        }
         public async Task<MonitorEsdModel?> GetByMonitorSerial(string serial)
         {
             return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.SerialNumber == serial);
         }
-        public async Task<MonitorEsdModel?> GetPositionX(int x)
-        {
-            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.PositionX == x);
-        }
-        public async Task<MonitorEsdModel?> GetPositionY(int y)
-        {
-            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.PositionY == y);
-        }
-        public async Task<bool> PositionExistsAsync(int positionX, int positionY)
-        {
-            return await _dbContext.MonitorEsds.AnyAsync(e => e.PositionX == positionX && e.PositionY == positionY);
-
-
-        }
+        
         public async Task<MonitorEsdModel?> GetStatus(string status)
         {
             return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Status == status);
@@ -71,8 +62,8 @@ namespace BiometricFaceApi.Repositories
                 // update
                 monitorModel.LastDate = DateTime.Now;
                 monitorModelUp.SerialNumber = monitorModel.SerialNumber;
-                monitorModel.PositionX = monitorModel.PositionX;
-                monitorModel.PositionY = monitorModel.PositionY;
+                monitorModel.PositionId = monitorModel.PositionId;
+                monitorModel.PositionSequence = monitorModel.PositionSequence;
                 monitorModel.Status = monitorModel.Status;
                 monitorModel.UserId = monitorModel.UserId;
                 monitorModelUp.Description = monitorModel.Description;
@@ -90,6 +81,6 @@ namespace BiometricFaceApi.Repositories
             return monitorModelDel;
         }
 
-        
+       
     }
 }

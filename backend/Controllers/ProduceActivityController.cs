@@ -16,13 +16,18 @@ namespace BiometricFaceApi.Controllers
     {
         private readonly ProduceActivityService _service;
         private readonly RecordStatusService _record;
+        private readonly UserService _user;
+        private readonly JigService _jig;
+        private readonly StationService _station;
 
-        public ProduceActivityController(IProduceActivityRepository produceActivityRepository, IRecordStatusRepository recordStatusRepository, IAuthenticationRepository authenticationRepository)
+        public ProduceActivityController(IProduceActivityRepository produceActivityRepository, IRecordStatusRepository recordStatusRepository, IUsersRepository usersRepository, IAuthenticationRepository authenticationRepository, IJigRepository jigRepository, IStationRepository stationRepository)
         {
             _record = new RecordStatusService(recordStatusRepository);
-
-            _service = new ProduceActivityService(produceActivityRepository, recordStatusRepository, authenticationRepository);
-
+            _user = new UserService (usersRepository);
+            _jig = new JigService (jigRepository);
+            _station = new StationService (stationRepository);
+            _service = new ProduceActivityService(produceActivityRepository, recordStatusRepository, authenticationRepository,usersRepository, jigRepository, stationRepository);
+            
         }
 
         /// <summary>
@@ -64,7 +69,7 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Cadastra e Atualiza de dados de produç]ao.
+        /// Cadastra e Atualiza de dados de produçao.
         /// </summary>
         /// <remarks>Cadastra produção na base de dados; Para atualizar dados basta usar o id .</remarks>
         /// <param name="model">Dados de cadastro do operador</param>

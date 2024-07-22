@@ -128,6 +128,57 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
+        <member name="M:BiometricFaceApi.Controllers.LineController.BuscarTodaLinha">
+            <summary>
+            Busca todos
+            </summary>
+            <response code="200">Retorna dados de linha.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LineController.BuscarLinha(System.Int32)">
+            <summary>
+            Buscar por ID
+            </summary>
+            <param name="id"> Buscar linha por id</param>
+            <response code="200">Retorna dados de linha.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LineController.BuscarNome(System.String)">
+            <summary>
+            Buscar dados de linha por nome
+            </summary>
+            <param name="id"> Buscar produção por nome</param>
+            <response code="200">Retorna dados de linha.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LineController.Include(BiometricFaceApi.Models.LineModel)">
+            <summary>
+            Cadastra e Atualiza dados da Linha
+            </summary>
+            <remarks>Cadastra produção na base de dados; Para atualizar dados basta usar o id .</remarks>
+            <param name="model">Dados de cadastro de linha</param>
+            <response code="200">Dados atualizado com sucesso.</response>
+            <response code="201">Dados cadastrados com sucesso.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LineController.Delete(System.Int32)">
+            <summary>
+            Deletar linha
+            </summary>
+            <param name="id"> Deleta linha</param>
+            <returns></returns>
+            <response code="200">Remove dados do banco de dados.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
         <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.BuscarTodos">
             <summary>
             Buscar todos 
@@ -158,26 +209,6 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
-        <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.BuscarPosicaoX(System.Int32)">
-            <summary>
-            Buscar Posição X
-            </summary>
-            <param name="id"> Buscar Posição X</param>
-            <response code="200">Retorna Posição X</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
-        </member>
-        <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.BuscarPosicaoY(System.Int32)">
-            <summary>
-            Buscar Posição Y
-            </summary>
-            <param name="id"> Buscar Posição Y</param>
-            <response code="200">Retorna Posição Y</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
-        </member>
         <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.ManagerMonitor(BiometricFaceApi.Models.MonitorEsdModel)">
             <summary>
             Cadastra e Atualiza de dados do monitor.
@@ -195,6 +226,48 @@
             Deletar monitor
             </summary>
             <param name="id"> Deleta monitor</param>
+            <returns></returns>
+            <response code="200">Remove dados do banco de dados.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.PositionController.BuscarTodos">
+            <summary>
+            Buscar todos 
+            </summary>
+            <param > Buscar todas posições</param>
+            <response code="200">Retorna todos.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.PositionController.BuscarPosicao(System.Int32)">
+            <summary>
+            Buscar posição
+            </summary>
+            <param name="id"> Buscar posição por Id</param>
+            <response code="200">Retorna monitor</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.PositionController.ManagerMonitor(BiometricFaceApi.Models.PositionModel)">
+            <summary>
+            Cadastra e Atualiza de posição, sizeX e seizY.
+            </summary>
+            <remarks>Cadastra monitor na base de dados; Para atualizar dados basta usar Id da posição.</remarks>
+            <param name="model">Dados de cadastro de posição</param>
+            <response code="200">Dados atualizado com sucesso.</response>
+            <response code="201">Dados cadastrados com sucesso.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.PositionController.Delete(System.Int32)">
+            <summary>
+            Deletar posição
+            </summary>
+            <param name="id"> Deleta posição</param>
             <returns></returns>
             <response code="200">Remove dados do banco de dados.</response>
             <response code="401">Acesso negado devido a credenciais inválidas</response>
@@ -220,7 +293,7 @@
         </member>
         <member name="M:BiometricFaceApi.Controllers.ProduceActivityController.Include(BiometricFaceApi.Models.ProduceActivityModel)">
             <summary>
-            Cadastra e Atualiza de dados de produç]ao.
+            Cadastra e Atualiza de dados de produçao.
             </summary>
             <remarks>Cadastra produção na base de dados; Para atualizar dados basta usar o id .</remarks>
             <param name="model">Dados de cadastro do operador</param>

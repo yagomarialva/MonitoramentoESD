@@ -35,6 +35,7 @@ namespace BiometricFaceApi.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -100,6 +101,20 @@ namespace BiometricFaceApi.Migrations
                     b.ToTable("jig");
                 });
 
+            modelBuilder.Entity("BiometricFaceApi.Models.LineModel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("line");
+                });
+
             modelBuilder.Entity("BiometricFaceApi.Models.MonitorEsdModel", b =>
                 {
                     b.Property<int>("Id")
@@ -115,10 +130,10 @@ namespace BiometricFaceApi.Migrations
                     b.Property<DateTime>("LastDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("PositionX")
+                    b.Property<int>("PositionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PositionY")
+                    b.Property<int>("PositionSequence")
                         .HasColumnType("int");
 
                     b.Property<string>("SerialNumber")
@@ -132,12 +147,31 @@ namespace BiometricFaceApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PositionId");
+
                     b.HasIndex("SerialNumber")
                         .IsUnique();
 
                     b.HasIndex("UserId");
 
                     b.ToTable("monitorEsd");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.PositionModel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("SizeX")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SizeY")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("position");
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.ProduceActivityModel", b =>
@@ -190,6 +224,7 @@ namespace BiometricFaceApi.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("ProduceActivityId")
@@ -254,10 +289,16 @@ namespace BiometricFaceApi.Migrations
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("LineID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LineID");
 
                     b.ToTable("station");
                 });
@@ -326,11 +367,19 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.MonitorEsdModel", b =>
                 {
+                    b.HasOne("BiometricFaceApi.Models.PositionModel", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BiometricFaceApi.Models.UserModel", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Position");
 
                     b.Navigation("User");
                 });
@@ -387,6 +436,17 @@ namespace BiometricFaceApi.Migrations
                     b.Navigation("ProduceActivity");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.StationModel", b =>
+                {
+                    b.HasOne("BiometricFaceApi.Models.LineModel", "Line")
+                        .WithMany()
+                        .HasForeignKey("LineID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Line");
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.StationViewModel", b =>

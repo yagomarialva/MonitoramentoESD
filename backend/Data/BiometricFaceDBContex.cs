@@ -26,6 +26,8 @@ namespace BiometricFaceApi.Data
         public DbSet<RolesModel> Roles { get; set; }
         public DbSet<StationModel> Station { get; set; }
         public DbSet<StationViewModel> StationViews { get; set; }
+        public DbSet<LineModel> lineModels { get; set; }
+        public DbSet<PositionModel> Position { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RolesModel>().Property(p => p.RolesName).IsRequired();

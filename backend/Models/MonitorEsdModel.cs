@@ -16,11 +16,15 @@ namespace BiometricFaceApi.Models
         [IgnoreDataMember]
         public virtual UserModel? User { get; set; }
         public string? SerialNumber { get; set; }
-        public int PositionX { get; set; }
-        public int PositionY { get; set; }
+
+        [ForeignKey("position")]
+        public int PositionId { get; set; }
+        [IgnoreDataMember]
+        public virtual PositionModel? Position { get; set; }
+        public int PositionSequence { get; set; }
         public string? Status { get; set; }
         public string? Description { get; set; }
-        public DateTime DateHour{ get; set; }
+        public DateTime DateHour { get; set; }
         public DateTime LastDate { get; set; }
     }
 }

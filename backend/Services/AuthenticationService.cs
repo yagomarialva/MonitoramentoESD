@@ -62,7 +62,6 @@ namespace BiometricFaceApi.Services
                     if (repositoryAuths != null && repositoryAuths.Id > 0)
                     {
                         //update
-
                         repositoryAuths.Id = repositoryAuths.Id;
                         await auths.AuthUpdate(auth, repositoryAuths.Id);
                         var updateAuthentication = new AuthenticationModel
@@ -79,7 +78,6 @@ namespace BiometricFaceApi.Services
                     else
                     {
                         // include
-
                         auth.RolesName = auth.RolesName?.ToLower();
                         repositoryAuths = await auths.AuthInclude(auth);
                         if (repositoryAuths == null)

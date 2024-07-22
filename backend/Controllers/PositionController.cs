@@ -1,93 +1,105 @@
 ﻿using BiometricFaceApi.Models;
-using BiometricFaceApi.Repositories;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MySqlX.XDevAPI.Common;
 using System.Text.Json;
 
 namespace BiometricFaceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-    public class MonitorEsdController : Controller
+    public class PositionController : Controller
     {
-        private readonly MonitorEsdService _service;
-        private readonly UserService _userService;
-        private readonly PositionService _positionService;
-        public MonitorEsdController(IMonitorEsdRepository monitorEsdRepository, IUsersRepository usersRepository, IPositionRepository positionRepository)
+        private readonly PositionService _service;
+        public PositionController(IPositionRepository positionRepository) 
         {
-            _service = new MonitorEsdService(monitorEsdRepository, usersRepository, positionRepository);
-            _userService = new UserService(usersRepository);
-            _positionService = new PositionService(positionRepository);
+            _service = new PositionService(positionRepository);
         }
 
         /// <summary>
         /// Buscar todos 
         /// </summary>
-        /// <param > Buscar todos monitores</param>
+        /// <param > Buscar todas posições</param>
         /// <response code="200">Retorna todos.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/todosMonitores")]
+        [Route("/todasPosicoes")]
         public async Task<ActionResult> BuscarTodos()
         {
-            var (result, statusCode) = await _service.GetAllMonitorEsds();
+            var (result, statusCode) = await _service.GetAllPositions();
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
-           
+
         }
 
         /// <summary>
-        /// Buscar monitor
+        /// Buscar posição
         /// </summary>
-        /// <param name="id"> Buscar monitor por Id</param>
+        /// <param name="id"> Buscar posição por Id</param>
         /// <response code="200">Retorna monitor</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarMonitores/{id}")]
-        public async Task<ActionResult> BuscarIdMonitor(int id)
+        [Route("/BuscarPosicao/{id}")]
+        public async Task<ActionResult> BuscarPosicao(int id)
         {
-            var (result, statusCode) = await _service.GetMonitorId(id);
+            var (result, statusCode) = await _service.GetPositionId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
         }
 
-        /// <summary>
-        /// Buscar Operador
-        /// </summary>
-        /// <param name="id"> Buscar Operador Id</param>
-        /// <response code="200">Retorna monitor</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer")]
-        [HttpGet]
-        [Route("/BuscarOpId/{id}")]
-        public async Task<ActionResult> BuscarIdOp(int id)
-        {
-            var (result, statusCode) = await _service.GetUserId(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            return StatusCode(statusCode, result);
-        }
+        ///// <summary>
+        ///// Buscar tamanho X por ID
+        ///// </summary>
+        ///// <param name="id"> Buscar tamanho X por ID/param>
+        ///// <response code="200">Retorna tamnho X</response>
+        ///// <response code="400">Dados incorretos ou inválidos.</response>
+        ///// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        ///// <response  code="500">Erro do servidor interno!</response>
+        //[Authorize(Roles = "administrator,operator,developer")]
+        //[HttpGet]
+        //[Route("/BuscarSizeX/{id}")]
+        //public async Task<ActionResult> BuscarSizeX(int id)
+        //{
+        //    var (result, statusCode) = await _service.GetSizeX(id);
+        //    var options = new JsonSerializerOptions { WriteIndented = true };
+        //    string jsonResponse = JsonSerializer.Serialize(result, options);
+        //    return StatusCode(statusCode, result);
+        //}
+
+        ///// <summary>
+        ///// Buscar tamanho Y por ID
+        ///// </summary>
+        ///// <param name="id"> Buscar tamanho Y por ID/param>
+        ///// <response code="200">Retorna tamnho Y</response>
+        ///// <response code="400">Dados incorretos ou inválidos.</response>
+        ///// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        ///// <response  code="500">Erro do servidor interno!</response>
+        //[Authorize(Roles = "administrator,operator,developer")]
+        //[HttpGet]
+        //[Route("/BuscarSizeY/{id}")]
+        //public async Task<ActionResult> BuscarSizeY(int id)
+        //{
+        //    var (result, statusCode) = await _service.GetSizeX(id);
+        //    var options = new JsonSerializerOptions { WriteIndented = true };
+        //    string jsonResponse = JsonSerializer.Serialize(result, options);
+        //    return StatusCode(statusCode, result);
+        //}
 
         /// <summary>
-        /// Cadastra e Atualiza de dados do monitor.
+        /// Cadastra e Atualiza de posição, sizeX e seizY.
         /// </summary>
-        /// <remarks>Cadastra monitor na base de dados; Para atualizar dados basta usar Id do monitor.</remarks>
-        /// <param name="model">Dados de cadastro do operador</param>
+        /// <remarks>Cadastra monitor na base de dados; Para atualizar dados basta usar Id da posição.</remarks>
+        /// <param name="model">Dados de cadastro de posição</param>
         /// <response code="200">Dados atualizado com sucesso.</response>
         /// <response code="201">Dados cadastrados com sucesso.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
@@ -95,8 +107,8 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
-        [Route("/adicionarMonitor")]
-        public async Task<ActionResult> ManagerMonitor(MonitorEsdModel model)
+        [Route("/adicionarPosicao")]
+        public async Task<ActionResult> ManagerMonitor(PositionModel model)
         {
             var result = await _service.Include(model);
 
@@ -104,16 +116,16 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Deletar monitor
+        /// Deletar posição
         /// </summary>
-        /// <param name="id"> Deleta monitor</param>
+        /// <param name="id"> Deleta posição</param>
         /// <returns></returns>
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
-        [Route("/deleteMonitor")]
+        [Route("/deletePosição")]
         public async Task<ActionResult> Delete(int id)
         {
             var (result, statusCode) = await _service.Delete(id);
@@ -128,6 +140,5 @@ namespace BiometricFaceApi.Controllers
                 return StatusCode(statusCode);
             }
         }
-
     }
 }

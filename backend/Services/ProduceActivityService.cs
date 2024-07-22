@@ -11,6 +11,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
+using ZstdSharp.Unsafe;
 
 namespace BiometricFaceApi.Services
 {
@@ -19,11 +20,18 @@ namespace BiometricFaceApi.Services
         private IProduceActivityRepository _repository;
         private IRecordStatusRepository _recordStatusRepository;
         private IAuthenticationRepository _authenticationRepository;
-        public ProduceActivityService(IProduceActivityRepository repository, IRecordStatusRepository recordStatusRepository, IAuthenticationRepository authenticationRepository)
+        private IUsersRepository _usersRepository;
+        private IJigRepository _jigRepository;
+        private IStationRepository _stationRepository;
+        
+        public ProduceActivityService(IProduceActivityRepository repository, IRecordStatusRepository recordStatusRepository, IAuthenticationRepository authenticationRepository, IUsersRepository usersRepository, IJigRepository jigRepository, IStationRepository stationRepository)
         {
             _repository = repository;
             _recordStatusRepository = recordStatusRepository;
             _authenticationRepository = authenticationRepository;
+            _usersRepository = usersRepository;
+            _jigRepository = jigRepository;
+            _stationRepository = stationRepository; 
 
 
         }
@@ -33,17 +41,26 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                List<ProduceActivityModel> monitor = await _repository.GetAllProduceActivity();
-                var prod = new ProduceActivityModel { };
-
-                if (!monitor.Any())
+                List<ProduceActivityModel> produce = await _repository.GetAllProduceActivity();
+                if (!produce.Any())
                 {
-                    content = "Nenhum Producção foi encontrado.";
+                    content = "Nenhum Produção foi encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
                     return (content, statusCode);
                 }
-                content = monitor;
+                else 
+                {
+                    produce.ForEach(async prod =>
+                    {
+                        prod.User =  await _usersRepository.ForId(prod.UserId);
+                        prod.Jig = await _jigRepository.GetByJigId(prod.JigId);
+                        prod.Station = await _stationRepository.GetByStationId(prod.StationId);
+                    });
+                   
+               
+                content = produce;
                 statusCode = StatusCodes.Status200OK;
+                }
                 return (content, statusCode);
 
             }
@@ -142,15 +159,22 @@ namespace BiometricFaceApi.Services
             {
                 if (produceModel.UserId == 0 & produceModel.JigId == 0 & produceModel.MonitorEsdId == 0)
                 {
-                    throw new Exception("Id obrigatório.");
+                    response = "Obrigatório Preencher todos os campos.";
+                    statusCode = StatusCodes.Status400BadRequest;
+
+
+                }
+                else
+                {
+                    produceModel.DataTimeMonitorEsdEvent = DateTime.Now;
+                    response = await _repository.Include(produceModel);
                 }
 
-                produceModel.DataTimeMonitorEsdEvent = DateTime.Now;
-                response = await _repository.Include(produceModel);
+
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                response = exception.Message;
+                response = "Verificar se todos os dados estão cadastrados.";
                 statusCode = StatusCodes.Status400BadRequest;
             }
             return (response, statusCode);

@@ -10,6 +10,8 @@ namespace BiometricFaceApi.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string? Username { get; set; }
         public string? RolesName { get; set; }
         public string? Badge { get; set; }
