@@ -67,15 +67,15 @@ namespace BiometricFaceApi.Services
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(user.Name))
-                    {
-                        throw new Exception("O nome do usuário não pode ser nulo.");
-                    }
+                    //if (string.IsNullOrEmpty(user.Name))
+                    //{
+                    //    throw new Exception("O nome do usuário não pode ser nulo.");
+                    //}
 
-                    if (string.IsNullOrEmpty(user.Badge))
-                    {
-                        throw new Exception("O identificador do usuário não pode ser nulo.");
-                    }
+                    //if (string.IsNullOrEmpty(user.Badge))
+                    //{
+                    //    throw new Exception("O identificador do usuário não pode ser nulo.");
+                    //}
                     
                     // include
                     user.Born = DateTime.Now;

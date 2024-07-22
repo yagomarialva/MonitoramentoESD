@@ -147,7 +147,7 @@ namespace BiometricFaceApi.Services
                 bool exists = await _repository.PositionExistsAsync(monitorModel.PositionX, monitorModel.PositionY);
                 if (exists)
                 {
-                    response = "A combinação já existe no bando de dados";
+                    response = "A combinação já existe no banco de dados";
                     statusCode = StatusCodes.Status400BadRequest;
                 }
                 else
@@ -177,6 +177,10 @@ namespace BiometricFaceApi.Services
                     {
                         id = respositoryMonitor.Id,
                         serialNumber = respositoryMonitor.SerialNumber,
+                        PositionX = respositoryMonitor.PositionX,
+                        PositionY = respositoryMonitor.PositionY,
+                        Status = respositoryMonitor.Status,
+                        UserID = respositoryMonitor.UserId,
                         description = respositoryMonitor.Description
                     };
                     await _repository.Delete(respositoryMonitor.Id);
