@@ -28,7 +28,6 @@
 
 .ng {
   background-color: red;
-
 }
 
 .container {
@@ -38,13 +37,4 @@
 
 .mRight {
   margin-right: 30px;
-}
-
-.mBottom {
-  /* margin-top: 50px; */
-}
-
-.container {
-  /* margin-left: 10% !important;
-  margin-top: -10% !important; */
 }
