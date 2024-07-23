@@ -21,7 +21,7 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.AuthenticationModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -38,7 +38,7 @@ namespace BiometricFaceApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("Badge")
                         .IsUnique();
@@ -48,7 +48,7 @@ namespace BiometricFaceApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            ID = 1,
                             Badge = "ADM",
                             Password = "inNWbDieA4KNSwWeLzW1cQ==",
                             RolesName = "administrator",
@@ -58,7 +58,7 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.ImageModel", b =>
                 {
-                    b.Property<int>("IdImage")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -68,7 +68,7 @@ namespace BiometricFaceApi.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("IdImage");
+                    b.HasKey("ID");
 
                     b.HasIndex("UserId");
 
@@ -77,7 +77,7 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.JigModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -93,7 +93,7 @@ namespace BiometricFaceApi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -108,6 +108,7 @@ namespace BiometricFaceApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("ID");
@@ -117,7 +118,7 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.MonitorEsdModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -145,7 +146,7 @@ namespace BiometricFaceApi.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("PositionId");
 
@@ -176,7 +177,7 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.ProduceActivityModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -201,7 +202,7 @@ namespace BiometricFaceApi.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("JigId");
 
@@ -216,7 +217,7 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.RecordStatusProduceModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -236,7 +237,7 @@ namespace BiometricFaceApi.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("ProduceActivityId");
 
@@ -247,7 +248,7 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.RolesModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -255,31 +256,31 @@ namespace BiometricFaceApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("roles");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            ID = 1,
                             RolesName = "administrator"
                         },
                         new
                         {
-                            Id = 2,
+                            ID = 2,
                             RolesName = "developer"
                         },
                         new
                         {
-                            Id = 3,
+                            ID = 3,
                             RolesName = "operator"
                         });
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.StationModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -296,7 +297,7 @@ namespace BiometricFaceApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("LineID");
 
@@ -305,7 +306,7 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.StationViewModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -321,7 +322,7 @@ namespace BiometricFaceApi.Migrations
                     b.Property<int>("StationId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("JigId")
                         .IsUnique();
@@ -333,7 +334,7 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.UserModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -346,7 +347,7 @@ namespace BiometricFaceApi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.HasIndex("Badge")
                         .IsUnique();

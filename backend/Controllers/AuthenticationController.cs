@@ -48,7 +48,8 @@ namespace BiometricFaceApi.Controllers
                 response = Ok(new
                 {
                     Token = tokenString,
-                    Role = user.RolesName
+                    Role = user.RolesName,
+                    Name = user.Username
                 });
             }
             return response;
