@@ -6,7 +6,6 @@ const HomePage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    console.log('token in home', token)
     if (token) {
       navigate('/dashboard')
     } else {

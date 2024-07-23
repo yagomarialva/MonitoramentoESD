@@ -1,7 +1,8 @@
 import OperatorTable from "../../../pages/ESD/Operator/OperatorTable/OperatorTable";
+import Menu from "../../../pages/Menu/Menu";
 
 function Operators() {
-    return <OperatorTable></OperatorTable>
+    return <Menu componentToShow={<OperatorTable/>}></Menu>
   }
   
   export default Operators;

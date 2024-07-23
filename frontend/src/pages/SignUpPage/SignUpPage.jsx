@@ -19,8 +19,9 @@ import Select from "@mui/material/Select";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const [username, setusername] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error] = useState("");
   const [loading, setLoading] = useState(false);
   const [rolesName, setRole] = useState("");
@@ -30,6 +31,7 @@ const SignUpPage = () => {
     snackbarMessage: "",
     snackbarSeverity: "success",
   });
+
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
@@ -45,30 +47,33 @@ const SignUpPage = () => {
       snackbarOpen: true,
     });
   };
-  
+
   const handleClick = () => {
+    if (password !== confirmPassword) {
+      showSnackbar("As senhas não coincidem.", "error");
+      return;
+    }
+
     setLoading(true);
     TokenApi.post("/criacao", {
       username: username,
       password: password,
       rolesName: rolesName,
-      badge: badge
+      badge: badge,
     })
       .then(({ data }) => {
-        console.log(data)
-        setusername('')
-        setPassword('')
-        setRole('')
-        setBadge('')
+        console.log(data);
+        setUsername('');
+        setPassword('');
+        setConfirmPassword('');
+        setRole('');
+        setBadge('');
         showSnackbar("Usuário criado com sucesso!", "success");
       })
       .catch((e) => {
-        console.log(e);
-        showSnackbar(e.response.data, "error");
+        showSnackbar(e.message, "error");
       })
       .finally(() => {
-        // const userData = { token: localStorage.getItem("token") };
-        // login(userData);
         setLoading(false);
       });
   };
@@ -101,12 +106,12 @@ const SignUpPage = () => {
         <Typography variant="h4" align="center">
           Cadastro
         </Typography>
-        <img src={Logo} alt="" width="200px" style={{ marginTop: "20px" }} />
+        <img src={Logo} alt="Logo" width="200px" style={{ marginTop: "20px" }} />
         <TextField
-          label="E-mail"
+          label="Nome"
           sx={{ my: 3 }}
           fullWidth
-          onChange={(e) => setusername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
           value={username}
         />
         <TextField
@@ -124,11 +129,19 @@ const SignUpPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           value={password}
         />
+        <TextField
+          label="Confirmar Senha"
+          type="password"
+          sx={{ mb: 3 }}
+          fullWidth
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={confirmPassword}
+        />
         <FormControl sx={{ mb: 3, minWidth: 300 }} size="normal">
-          <InputLabel id="demo-select-normal-label">Função</InputLabel>
+          <InputLabel id="role-select-label">Função</InputLabel>
           <Select
-            labelId="demo-select-small-label"
-            id="demo-select-small"
+            labelId="role-select-label"
+            id="role-select"
             value={rolesName}
             label="Função"
             onChange={handleChange}
@@ -136,10 +149,9 @@ const SignUpPage = () => {
             <MenuItem value="">
               <em>Selecione uma Função</em>
             </MenuItem>
-            {/* "Admin,Operator,Developer" */}
-            <MenuItem value={"admininstrator"}>Administrador</MenuItem>
-            <MenuItem value={"Operator"}>Operador</MenuItem>
-            <MenuItem value={"Developer"}>Desenvolvedor</MenuItem>
+            <MenuItem value="administrator">Administrador</MenuItem>
+            <MenuItem value="operator">Operador</MenuItem>
+            <MenuItem value="developer">Desenvolvedor</MenuItem>
           </Select>
         </FormControl>
         <LoadingButton
@@ -154,34 +166,34 @@ const SignUpPage = () => {
         <Button
           sx={{ mt: 2, mb: 1 }}
           onClick={() => {
-            navigate("/login");
+            navigate("/");
           }}
         >
-          Voltar para login
+          Voltar para home
         </Button>
       </Card>
       <Snackbar
-              open={state.snackbarOpen}
-              autoHideDuration={6000}
-              onClose={() => handleStateChange({ snackbarOpen: false })}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              className={`snackbar-content snackbar-${state.snackbarSeverity}`}
-            >
-              <Alert
-                onClose={() => handleStateChange({ snackbarOpen: false })}
-                severity={state.snackbarSeverity}
-                sx={{
-                  backgroundColor: "inherit",
-                  color: "inherit",
-                  fontWeight: "inherit",
-                  boxShadow: "inherit",
-                  borderRadius: "inherit",
-                  padding: "inherit",
-                }}
-              >
-                {state.snackbarMessage}
-              </Alert>
-            </Snackbar>
+        open={state.snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => handleStateChange({ snackbarOpen: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+      >
+        <Alert
+          onClose={() => handleStateChange({ snackbarOpen: false })}
+          severity={state.snackbarSeverity}
+          sx={{
+            backgroundColor: "inherit",
+            color: "inherit",
+            fontWeight: "inherit",
+            boxShadow: "inherit",
+            borderRadius: "inherit",
+            padding: "inherit",
+          }}
+        >
+          {state.snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

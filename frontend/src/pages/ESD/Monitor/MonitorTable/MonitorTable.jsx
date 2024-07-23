@@ -27,10 +27,11 @@ import MonitorForm from "../MonitorForm/MonitorForm";
 import MonitorConfirmModal from "../MonitorConfirmModal/MonitorConfirmModal";
 import MonitorEditForm from "../MonitorEditForm/MonitorEditForm";
 import Menu from "../../../Menu/Menu";
+import { useNavigate } from "react-router-dom";
 
 const MonitorTable = () => {
   const { t } = useTranslation();
-
+  const navigate = useNavigate()
   const [state, setState] = useState({
     allMonitors: [],
     monitor: {},
@@ -148,6 +149,10 @@ const MonitorTable = () => {
         const result = await getAllMonitors();
         handleStateChange({ allMonitors: result });
       } catch (error) {
+        if(error.message === 'Request failed with status code 401'){
+          localStorage.removeItem('token')
+          navigate('/')
+        }
         showSnackbar(t(error.message));
       }
     };
@@ -191,7 +196,6 @@ const MonitorTable = () => {
 
   return (
     <>
-      <Menu />
       <Typography paragraph>
         <Container >
           <Box>

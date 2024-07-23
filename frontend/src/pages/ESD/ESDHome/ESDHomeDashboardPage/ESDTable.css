@@ -33,6 +33,7 @@
 
 .container {
   display: flex;
+  margin-right: 1px !important;
 }
 
 .mRight {

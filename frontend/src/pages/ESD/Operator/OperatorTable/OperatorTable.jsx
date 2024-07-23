@@ -30,10 +30,11 @@ import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
 import Menu from "../../../Menu/Menu";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
+import { useNavigate } from "react-router-dom";
 
 const OperatorTable = () => {
+  const navigate = useNavigate()
   const { t } = useTranslation();
-
   const [state, setState] = useState({
     allOperators: [],
     operator: {},
@@ -46,7 +47,7 @@ const OperatorTable = () => {
     operatorToDelete: null,
     snackbarOpen: false,
     snackbarMessage: "",
-    snackbarSeverity: "success",
+    snackbarSeverity: "success"
   });
 
   const [page, setPage] = useState(0);
@@ -158,6 +159,10 @@ const OperatorTable = () => {
         const result = await getAllOperators();
         handleStateChange({ allOperators: result.value });
       } catch (error) {
+          if(error.message === 'Request failed with status code 401'){
+            localStorage.removeItem('token')
+            navigate('/')
+          }
         showSnackbar(t(error.message));
       }
     };
@@ -204,7 +209,6 @@ const OperatorTable = () => {
 
   return (
     <>
-      <Menu />
       <Container>
         <TextField
           name="filterName"

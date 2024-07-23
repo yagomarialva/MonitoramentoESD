@@ -37,6 +37,8 @@ const LoginPage = () => {
     })
       .then(({ data }) => {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("name", data.name);
         navigate("/");
       })
       .catch(() => {
@@ -88,7 +90,7 @@ const LoginPage = () => {
         <img src={Logo} alt="" width="200px" style={{ marginTop: "20px" }} />
 
         <TextField
-          label="E-mail"
+          label="Nome"
           sx={{ my: 3 }}
           fullWidth
           onChange={(e) => setusername(e.target.value)}
@@ -109,18 +111,11 @@ const LoginPage = () => {
           variant="contained"
           fullWidth
           onClick={handleClick}
+          sx={{ mb: 4 }}
         >
           Fazer Login
         </LoadingButton>
 
-        <Button
-          sx={{ mt: 2, mb: 1 }}
-          onClick={() => {
-            navigate("/register");
-          }}
-        >
-          Cadastrar Operador
-        </Button>
       </Card>
       <Snackbar
               open={state.snackbarOpen}

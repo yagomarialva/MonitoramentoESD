@@ -1,7 +1,8 @@
 import MonitorTable from "../../../pages/ESD/Monitor/MonitorTable/MonitorTable";
+import Menu from "../../../pages/Menu/Menu";
 
 function Monitors() {
-    return <MonitorTable></MonitorTable>
+  return <Menu componentToShow={<MonitorTable />}></Menu>;
   }
   
   export default Monitors;

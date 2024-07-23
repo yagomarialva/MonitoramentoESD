@@ -29,11 +29,12 @@ import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 import "./SnackbarStyles.css";
 // import "./ESDTable.css";
 import Menu from "../../../Menu/Menu";
+import { useNavigate } from "react-router-dom";
 
 const ESDTable = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-
+  const navigate = useNavigate()
   const [state, setState] = useState({
     allJigs: [],
     station: {},
@@ -155,6 +156,10 @@ const ESDTable = () => {
         const result = await getAllJigs();
         handleStateChange({ allJigs: result });
       } catch (error) {
+        if(error.message === 'Request failed with status code 401'){
+          localStorage.removeItem('token')
+          navigate('/')
+        }
         showSnackbar(t(error.message), "error");
       }
     };
@@ -209,7 +214,6 @@ const ESDTable = () => {
 
   return (
     <>
-      <Menu />
       <Typography paragraph>
         <Container>
           <Box>
