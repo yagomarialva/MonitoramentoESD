@@ -33,7 +33,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/todosMonitores")]
         public async Task<ActionResult> BuscarTodos()
@@ -74,7 +74,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarOpId/{id}")]
+        [Route("/BuscarOp/{id}")]
         public async Task<ActionResult> BuscarIdOp(int id)
         {
             var (result, statusCode) = await _service.GetUserId(id);

@@ -58,7 +58,7 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarProducaoId/{id}")]
+        [Route("/BuscarProducao/{id}")]
         public async Task<ActionResult> BuscarTodaProducao(int id)
         {
             var (result, statusCode) = await _service.GetProduceId(id);

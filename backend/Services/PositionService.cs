@@ -121,7 +121,7 @@ namespace BiometricFaceApi.Services
             }
             catch (Exception)
             {
-                response = "Verifique se todos os Dados estão cadastrados na Base de Dados";
+                response = "Verifique se todos os dados estão cadastrados na Base de Dados";
                 statusCode = StatusCodes.Status400BadRequest;
             }
             return (response, statusCode);

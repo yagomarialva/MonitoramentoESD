@@ -16,14 +16,17 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                List<StationModel> lineProdution = await _stationRepository.GetAllStation();
-                if (!lineProdution.Any())
+                List<StationModel> stationProdution = await _stationRepository.GetAllStation();
+                if (!stationProdution.Any())
                 {
                     result = "Nenhuma Estação cadastrada.";
                     statusCode = StatusCodes.Status404NotFound;
                 }
-                result = lineProdution;
-                statusCode = StatusCodes.Status200OK;
+                else
+                {
+                    result = stationProdution;
+                    statusCode = StatusCodes.Status200OK;
+                }
                 return (result, statusCode);
 
             }

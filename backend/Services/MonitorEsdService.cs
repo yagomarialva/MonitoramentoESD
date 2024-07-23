@@ -35,12 +35,7 @@ namespace BiometricFaceApi.Services
                 }
                 else
                 {
-                    foreach (var _monitor in monitor.ToList())
-                    {
-
-                        _monitor.User = await _usersRepository.ForId(_monitor.Id);
-                        _monitor.Position = await _positionRepository.GetPositionId(_monitor.Id);
-                    }
+                    
                     result = monitor;
                     statusCode = StatusCodes.Status200OK;
                 }

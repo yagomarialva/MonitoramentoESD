@@ -53,8 +53,8 @@ namespace BiometricFaceApi.Services
                     produce.ForEach(async prod =>
                     {
                         prod.User =  await _usersRepository.ForId(prod.UserId);
-                        prod.Jig = await _jigRepository.GetByJigId(prod.JigId);
-                        prod.Station = await _stationRepository.GetByStationId(prod.StationId);
+                        //prod.Jig = await _jigRepository.GetByJigId(prod.JigId);
+                        //prod.Station = await _stationRepository.GetByStationId(prod.StationId);
                     });
                    
                

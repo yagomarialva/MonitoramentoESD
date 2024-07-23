@@ -23,7 +23,7 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<UserModel> ForId(int id)
         {
-            var result = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id) ;
+            var result = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id) ?? new UserModel();
             return result;
         }
         public async Task<UserModel> ForBadge(string badge)

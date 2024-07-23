@@ -26,7 +26,7 @@ namespace BiometricFaceApi.Services
                 List<StationViewModel> stationView = await _stationViewRepository.GetAllStationView();
                 if (!stationView.Any())
                 {
-                    result = "Nenhuma Linha de Producção foi encontrado.";
+                    result = "Nenhuma Linha de Produção foi encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
                     return (result, statusCode);
                 }

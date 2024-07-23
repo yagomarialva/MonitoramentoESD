@@ -24,16 +24,20 @@ namespace BiometricFaceApi.Services
                 List<RecordStatusProduceModel> status = await _repository.GetAllRecordStatusProduces();
                 if (!status.Any())
                 {
-                    throw new Exception("Nenhum status encontrado.");
+                    result = "Nenhum status encontrado.";
+                    statusCode = StatusCodes.Status404NotFound;
                 }
-                result = status;
-                statusCode = StatusCodes.Status200OK;
+                else
+                {
+                    result = status;
+                    statusCode = StatusCodes.Status200OK;
+                }
                 return (result, statusCode);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
 
-                result = exception.Message;
+                result = "Falha de requisição";
                 statusCode = StatusCodes.Status400BadRequest;
             }
             return (result, statusCode);

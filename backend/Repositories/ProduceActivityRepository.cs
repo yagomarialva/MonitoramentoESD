@@ -60,26 +60,29 @@ namespace BiometricFaceApi.Repositories
         // Task realiza o include e update
         // include de novos dados
         // update e feito atraves do ProduceActivityID, senso assim possibilitando a alteração de dados.
-        public async Task<ProduceActivityModel?> Include(ProduceActivityModel produceActivity)
+        public async Task<ProduceActivityModel?> Include(ProduceActivityModel produceModel)
         {
-            ProduceActivityModel? produceActivityModelUp = await GetByProduceActivityId(produceActivity.Id);
+            ProduceActivityModel? produceActivityModelUp = await GetByProduceActivityId(produceModel.Id);
             if (produceActivityModelUp == null)
             {
                 // include
-                await _dbContext.ProduceActivity.AddAsync(produceActivity);
+                await _dbContext.ProduceActivity.AddAsync(produceModel);
                 await _dbContext.SaveChangesAsync();
+                produceActivityModelUp = await GetByProduceActivityId(produceModel.Id);
             }
             else
             {
                 // update
-                produceActivityModelUp.UserId = produceActivity.UserId;
-                produceActivityModelUp.MonitorEsdId = produceActivity.MonitorEsdId;
-                produceActivityModelUp.JigId = produceActivity.JigId;
-                produceActivityModelUp.StationId = produceActivity.StationId;
+                produceActivityModelUp.UserId = produceModel.UserId;
+                produceActivityModelUp.MonitorEsdId = produceModel.MonitorEsdId;
+                produceActivityModelUp.JigId = produceModel.JigId;
+                produceActivityModelUp.StationId = produceModel.StationId;
+                produceActivityModelUp.IsLocked = produceModel.IsLocked;
+                produceActivityModelUp.Description = produceModel.Description;
                 _dbContext.ProduceActivity.Update(produceActivityModelUp);
                 await _dbContext.SaveChangesAsync();
             }
-            return produceActivity;
+            return produceActivityModelUp;
         }
         public async Task<ProduceActivityModel?> Delete(int id)
         {
