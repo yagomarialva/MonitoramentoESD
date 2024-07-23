@@ -21,15 +21,15 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<MonitorEsdModel?> GetByMonitorId(int id)
         {
-            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Id == id);
+            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.ID == id);
         }
         public async Task<MonitorEsdModel?> GetUserId(int id)
         {
-            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Id == id);
+            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.ID == id);
         }
         public async Task<MonitorEsdModel?> GetPositionId(int id)
         {
-            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Id == id);
+            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.ID == id);
         }
         public async Task<MonitorEsdModel?> GetByMonitorSerial(string serial)
         {
@@ -46,7 +46,7 @@ namespace BiometricFaceApi.Repositories
         public async Task<MonitorEsdModel?> Include(MonitorEsdModel monitorModel)
         {
 
-            MonitorEsdModel? monitorModelUp = await GetByMonitorId(monitorModel.Id);
+            MonitorEsdModel? monitorModelUp = await GetByMonitorId(monitorModel.ID);
            
             if (monitorModelUp == null)
             {

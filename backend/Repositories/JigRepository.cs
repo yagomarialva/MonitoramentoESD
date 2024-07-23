@@ -18,13 +18,13 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<JigModel> GetByJigId(int id)
         {
-            return await _dbContext.Jigs.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Jigs.FirstOrDefaultAsync(x => x.ID == id);
         }
         // Task realiza o include e update, include caso nao haja no banco, update caso ja 
         // tenha alguma propriedade cadastrada.
         public async Task<JigModel?> Include(JigModel jigModel)
         {
-            var repositoryJig = await _dbContext.Jigs.FirstOrDefaultAsync(x => x.Id == jigModel.Id);
+            var repositoryJig = await _dbContext.Jigs.FirstOrDefaultAsync(x => x.ID == jigModel.ID);
             if (repositoryJig is null)
             {
                 // include

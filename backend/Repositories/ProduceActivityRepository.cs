@@ -20,7 +20,7 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<ProduceActivityModel?> GetByProduceActivityId(int id)
         {
-            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.ID == id);
         }
         public async Task<ProduceActivityModel?> GetByProduceMonitorId(int monitorProduce)
         {
@@ -42,7 +42,7 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<ProduceActivityModel?> Islocked(int id, bool locked)
         {
-            var result = await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.Id == id);
+            var result = await _dbContext.ProduceActivity.FirstOrDefaultAsync(x => x.ID == id);
             if (result != null)
             {
                 result.IsLocked = locked;
@@ -62,13 +62,13 @@ namespace BiometricFaceApi.Repositories
         // update e feito atraves do ProduceActivityID, senso assim possibilitando a alteração de dados.
         public async Task<ProduceActivityModel?> Include(ProduceActivityModel produceModel)
         {
-            ProduceActivityModel? produceActivityModelUp = await GetByProduceActivityId(produceModel.Id);
+            ProduceActivityModel? produceActivityModelUp = await GetByProduceActivityId(produceModel.ID);
             if (produceActivityModelUp == null)
             {
                 // include
                 await _dbContext.ProduceActivity.AddAsync(produceModel);
                 await _dbContext.SaveChangesAsync();
-                produceActivityModelUp = await GetByProduceActivityId(produceModel.Id);
+                produceActivityModelUp = await GetByProduceActivityId(produceModel.ID);
             }
             else
             {

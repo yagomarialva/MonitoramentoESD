@@ -8,8 +8,8 @@ namespace BiometricFaceApi.Models
 
     public class RolesModel
     {
-        [Key]
-        public int Id { get; set; }
+        
+        public int ID { get; set; }
         [Required]
         public string? RolesName { get; set; }
     }

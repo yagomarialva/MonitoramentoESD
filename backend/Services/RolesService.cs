@@ -111,16 +111,16 @@ namespace BiometricFaceApi.Services
             try
             {
                 var repositorRoles = await _repository.GetByRolesId(id);
-                if (repositorRoles.Id > 0)
+                if (repositorRoles.ID > 0)
                 {
                     content = new
                     {
-                        id = repositorRoles.Id,
+                        id = repositorRoles.ID,
                         rolesName = repositorRoles.RolesName,
 
 
                     };
-                    await _repository.Delete(repositorRoles.Id);
+                    await _repository.Delete(repositorRoles.ID);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else

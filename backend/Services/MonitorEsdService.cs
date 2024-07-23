@@ -123,11 +123,11 @@ namespace BiometricFaceApi.Services
             try
             {
                 var respositoryMonitor = await _repository.GetByMonitorId(id);
-                if (respositoryMonitor.Id > 0)
+                if (respositoryMonitor.ID > 0)
                 {
                     content = new
                     {
-                        id = respositoryMonitor.Id,
+                        id = respositoryMonitor.ID,
                         serialNumber = respositoryMonitor.SerialNumber,
                         positionId = respositoryMonitor.PositionId,
                         positionSeguence = respositoryMonitor.PositionSequence,
@@ -135,7 +135,7 @@ namespace BiometricFaceApi.Services
                         UserID = respositoryMonitor.UserId,
                         description = respositoryMonitor.Description
                     };
-                    await _repository.Delete(respositoryMonitor.Id);
+                    await _repository.Delete(respositoryMonitor.ID);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else

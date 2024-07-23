@@ -93,16 +93,16 @@ namespace BiometricFaceApi.Services
             try
             {
                 var respositoryLinewProd = await _stationRepository.GetByStationId(id);
-                if (respositoryLinewProd.Id > 0)
+                if (respositoryLinewProd.ID > 0)
                 {
                     content = new
                     {
-                        Id = respositoryLinewProd.Id,
+                        Id = respositoryLinewProd.ID,
                         Nmae = respositoryLinewProd.Name,
                         
                         
                     };
-                    await _stationRepository.Delete(respositoryLinewProd.Id);
+                    await _stationRepository.Delete(respositoryLinewProd.ID);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else

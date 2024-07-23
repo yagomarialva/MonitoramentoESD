@@ -20,15 +20,15 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<StationViewModel?> GetByStationViewId(int id)
         {
-            return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
         }
         public async Task<StationViewModel?> GetByJigId(int id)
         {
-            return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
         }
         public async Task<StationViewModel?> GetByStationProductionId(int id)
         {
-            return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
         }
 
         // Task realiza o include e update, include caso nao haja no banco, update caso ja 
@@ -36,7 +36,7 @@ namespace BiometricFaceApi.Repositories
         public async Task<StationViewModel?> Include(StationViewModel stationView)
         {
 
-            StationViewModel? stationModelUp = await GetByStationViewId(stationView.Id);
+            StationViewModel? stationModelUp = await GetByStationViewId(stationView.ID);
             if (stationModelUp == null)
             {
                 // include

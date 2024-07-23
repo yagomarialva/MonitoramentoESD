@@ -154,12 +154,12 @@ namespace BiometricFaceApi.Services
                 {
                     content = new
                     {
-                        Id = repositoryStationViewDel.Id,
+                        ID = repositoryStationViewDel.ID,
                         JigId = repositoryStationViewDel.JigId,
                         StationId = repositoryStationViewDel.StationId
 
                     };
-                    await _stationViewRepository.Delete(repositoryStationViewDel.Id);
+                    await _stationViewRepository.Delete(repositoryStationViewDel.ID);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else

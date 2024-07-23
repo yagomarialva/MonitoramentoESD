@@ -21,7 +21,7 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<ImageModel> ImageForId(int idImage)
         {
-            return await _dbContext.Images.FirstOrDefaultAsync(x => x.IdImage == idImage) ?? new ImageModel();
+            return await _dbContext.Images.FirstOrDefaultAsync(x => x.ID == idImage) ?? new ImageModel();
              
         }
         public async Task<ImageModel> ImageForUserId(int userId)
@@ -58,7 +58,7 @@ namespace BiometricFaceApi.Repositories
             _dbContext.Images.Update(nextEntityImage);
             await _dbContext.SaveChangesAsync();
 
-            return _dbContext.Images.FirstOrDefault(image => image.IdImage == nextEntityImage.IdImage);
+            return _dbContext.Images.FirstOrDefault(image => image.ID == nextEntityImage.ID);
         }
         public async Task<bool> Delete(int id)
         {

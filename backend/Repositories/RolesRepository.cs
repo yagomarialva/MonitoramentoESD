@@ -22,7 +22,7 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<RolesModel?> GetByRolesId(int id)
         {
-            return await _dbContext.Roles.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Roles.FirstOrDefaultAsync(x => x.ID == id);
         }
 
         public async Task<RolesModel?> GetByRolesName(string rolesName)
@@ -32,7 +32,7 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<RolesModel?> Include(RolesModel rolesModel)
         {
-            RolesModel? rolesUp = await GetByRolesId(rolesModel.Id);
+            RolesModel? rolesUp = await GetByRolesId(rolesModel.ID);
             if (rolesUp == null)
             {
                 // include
@@ -43,7 +43,7 @@ namespace BiometricFaceApi.Repositories
             else
             {
                 // update
-                rolesUp.Id = rolesModel.Id;
+                rolesUp.ID = rolesModel.ID;
                 rolesUp.RolesName = rolesModel.RolesName;
                 _dbContext.Roles.Update(rolesUp);
                 await _dbContext.SaveChangesAsync();

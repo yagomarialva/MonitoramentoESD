@@ -6,11 +6,11 @@ namespace BiometricFaceApi.Services
     public class JigService
     {
         private IJigRepository _repository;
-       
+
         public JigService(IJigRepository repository)
         {
             _repository = repository;
-           
+
         }
         public async Task<(object?, int)> GetAllJigs()
         {
@@ -65,7 +65,7 @@ namespace BiometricFaceApi.Services
             object? response;
             try
             {
-                
+
                 response = await _repository.Include(model);
                 statusCode = StatusCodes.Status200OK;
             }
@@ -83,16 +83,16 @@ namespace BiometricFaceApi.Services
             try
             {
                 var repositorStation = await _repository.GetByJigId(id);
-                if (repositorStation.Id > 0)
+                if (repositorStation.ID > 0)
                 {
                     content = new
                     {
-                        id = repositorStation.Id,
+                        id = repositorStation.ID,
                         name = repositorStation.Name,
 
 
                     };
-                    await _repository.Delete(repositorStation.Id);
+                    await _repository.Delete(repositorStation.ID);
 
                     statusCode = StatusCodes.Status200OK;
                 }

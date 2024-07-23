@@ -21,7 +21,7 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<RecordStatusProduceModel?> GetByRecordStatusId(int id)
         {
-            return await _dbContext.RecordStatusProduce.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.RecordStatusProduce.FirstOrDefaultAsync(x => x.ID == id);
         }
 
         public async Task<RecordStatusProduceModel?> GetByProduceActvId(int id)
@@ -37,7 +37,7 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<RecordStatusProduceModel?> Include(RecordStatusProduceModel recordModel)
         {
-            RecordStatusProduceModel recordStatusUp = await GetByRecordStatusId(recordModel.Id);
+            RecordStatusProduceModel recordStatusUp = await GetByRecordStatusId(recordModel.ID);
             if (recordStatusUp == null)
             {
                 // include

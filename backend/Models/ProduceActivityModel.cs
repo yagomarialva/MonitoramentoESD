@@ -8,7 +8,7 @@ namespace BiometricFaceApi.Models
     public class ProduceActivityModel
     {
         [Key]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         [ForeignKey("users")]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]

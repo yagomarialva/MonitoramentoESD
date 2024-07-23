@@ -59,14 +59,14 @@ namespace BiometricFaceApi.Services
                 {
                     auth.Password = securityService.EncryptAES(auth.Password);
                     var repositoryAuths = await auths.AuthGetByBadge(auth.Badge);
-                    if (repositoryAuths != null && repositoryAuths.Id > 0)
+                    if (repositoryAuths != null && repositoryAuths.ID > 0)
                     {
                         //update
-                        repositoryAuths.Id = repositoryAuths.Id;
-                        await auths.AuthUpdate(auth, repositoryAuths.Id);
+                        repositoryAuths.ID = repositoryAuths.ID;
+                        await auths.AuthUpdate(auth, repositoryAuths.ID);
                         var updateAuthentication = new AuthenticationModel
                         {
-                            Id = repositoryAuths.Id,
+                            ID = repositoryAuths.ID,
                             Badge = auth.Badge,
                             Username = auth.Username,
                             Password = auth.Password,
@@ -112,12 +112,12 @@ namespace BiometricFaceApi.Services
             try
             {
                 var repositoryAtuhs = await auths.AuthGetById(authId);
-                if (repositoryAtuhs != null && repositoryAtuhs.Id > 0)
+                if (repositoryAtuhs != null && repositoryAtuhs.ID > 0)
                 {
                     var result = await auths.AuthGetById(authId);
                     content = new
                     {
-                        Id = repositoryAtuhs.Id,
+                        ID = repositoryAtuhs.ID,
                         Username = repositoryAtuhs.Username,
                         Badge = repositoryAtuhs.Badge,
                         Password = repositoryAtuhs.Password,
@@ -147,12 +147,12 @@ namespace BiometricFaceApi.Services
             try
             {
                 var repositoryAtuhs = await auths.AuthGetById(id);
-                if (repositoryAtuhs != null && repositoryAtuhs.Id > 0)
+                if (repositoryAtuhs != null && repositoryAtuhs.ID > 0)
                 {
-                    await auths.AuthDelete(repositoryAtuhs.Id);
+                    await auths.AuthDelete(repositoryAtuhs.ID);
                     content = new
                     {
-                        Id = repositoryAtuhs.Id,
+                        ID = repositoryAtuhs.ID,
                         UserName = repositoryAtuhs.Username,
                         Badge = repositoryAtuhs.Badge,
                     };

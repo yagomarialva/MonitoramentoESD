@@ -8,8 +8,7 @@ namespace BiometricFaceApi.Models
     [Index(nameof(Badge), IsUnique = true)]
     public class AuthenticationModel
     {
-        [Key]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string? Username { get; set; }

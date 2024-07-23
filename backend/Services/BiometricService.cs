@@ -46,15 +46,15 @@ namespace BiometricFaceApi.Services
                 var user = new UserModel { Badge = biometric.Badge, Name = biometric.Name};
                 var image = new ImageModel { ImageFile = biometric.Image };
                 var repositoryUser = await _userService.GetUserByBadge(user.Badge);
-                if (repositoryUser.Id > 0)
+                if (repositoryUser.ID > 0)
                 {
                     // update
-                    image.UserId = repositoryUser.Id;
-                    await _userService.Update(user, repositoryUser.Id);
+                    image.UserId = repositoryUser.ID;
+                    await _userService.Update(user, repositoryUser.ID);
                     await _imageService.Update(image);
                     var updatedBiometric = new BiometricModel
                     {
-                        Id = repositoryUser.Id,
+                        ID = repositoryUser.ID,
                         Badge = biometric.Badge,
                         Name = biometric.Name,
                         Image = biometric.Image
@@ -72,11 +72,11 @@ namespace BiometricFaceApi.Services
                     var newUser = await _userService.Include(user);
                     if (newUser != null)
                     {
-                        image.UserId = newUser.Id;
+                        image.UserId = newUser.ID;
                         await _imageService.AddImage(image);
                         var includeBiometric = new BiometricModel
                         {
-                            Id = newUser.Id,
+                            ID = newUser.ID,
                             Badge = biometric.Badge,
                             Name = biometric.Name,
                             Image = biometric.Image
@@ -110,12 +110,12 @@ namespace BiometricFaceApi.Services
             try
             {
                 var respositoryUser = await _userService.GetUserById(userID);
-                if (respositoryUser.Id > 0)
+                if (respositoryUser.ID > 0)
                 {
                     var repositoryImage = await _imageService.GetImageByUserId(userID);
                     content = new
                     {
-                        Id = repositoryImage.User.Id,
+                        ID = repositoryImage.User.ID,
                         Name = repositoryImage.User.Name,
                         Badge = repositoryImage.User.Badge,
                         Image = repositoryImage.PictureStream
@@ -145,21 +145,21 @@ namespace BiometricFaceApi.Services
             try
             {
                 var repositoryUser = await _userService.GetUserById(userId);
-                if (repositoryUser.Id > 0)
+                if (repositoryUser.ID > 0)
                 {
                     var repositoryImage = await _imageService.GetImageByUserId(userId);
                     if (repositoryImage != null)
                     {
-                        await _imageService.Delete(repositoryImage.IdImage);
+                        await _imageService.Delete(repositoryImage.ID);
                     }
                     content = new
                     {
-                        Id = repositoryUser.Id,
+                        ID = repositoryUser.ID,
                         Name = repositoryUser.Name,
                         Badge = repositoryUser.Badge,
                         Image = repositoryImage?.PictureStream
                     };
-                    await _userService.Delete(repositoryUser.Id);
+                    await _userService.Delete(repositoryUser.ID);
 
                     statusCode = StatusCodes.Status200OK;
                 }

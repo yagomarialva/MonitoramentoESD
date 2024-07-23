@@ -12,7 +12,7 @@ namespace BiometricFaceApi.Models
     public class UserModel
     {
         [Key]
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string? Name { get; set; }
         public string? Badge { get; set; }
         public DateTime Born { get; set; }

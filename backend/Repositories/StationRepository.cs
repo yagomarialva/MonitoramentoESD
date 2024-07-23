@@ -20,14 +20,14 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<StationModel> GetByStationId(int id)
         {
-            return await _dbContext.Station.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Station.FirstOrDefaultAsync(x => x.ID == id);
         }
 
         // Task realiza o include e update, include caso nao haja no banco, update caso ja 
         // tenha alguma propriedade cadastrada.
         public async Task<StationModel?> Include(StationModel stationModel)
         {
-            StationModel? station = await GetByStationId(stationModel.Id);
+            StationModel? station = await GetByStationId(stationModel.ID);
             if (station is null)
             {
                 // include 
@@ -43,7 +43,7 @@ namespace BiometricFaceApi.Repositories
                 await _dbContext.SaveChangesAsync();
             }
 
-            var result = await _dbContext.Station.FirstOrDefaultAsync(x => x.Id == stationModel.Id);
+            var result = await _dbContext.Station.FirstOrDefaultAsync(x => x.ID == stationModel.ID);
             return result;
         }
         public async Task<StationModel> Delete(int id)

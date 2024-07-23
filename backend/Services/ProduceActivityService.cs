@@ -50,14 +50,11 @@ namespace BiometricFaceApi.Services
                 }
                 else 
                 {
-                    produce.ForEach(async prod =>
+                    foreach (var prod in produce) 
                     {
-                        prod.User =  await _usersRepository.ForId(prod.UserId);
-                        //prod.Jig = await _jigRepository.GetByJigId(prod.JigId);
-                        //prod.Station = await _stationRepository.GetByStationId(prod.StationId);
-                    });
+                        prod.User = await _usersRepository.ForId(prod.UserId);
+                    }
                    
-               
                 content = produce;
                 statusCode = StatusCodes.Status200OK;
                 }
@@ -130,7 +127,7 @@ namespace BiometricFaceApi.Services
                     if (claim.Any())
                     {
                         var user = await _authenticationRepository.AuthGetByUsername(claim.FirstOrDefault().Value);
-                        var recordModel = new RecordStatusProduceModel { Description = description, ProduceActivityId = id, Status = status, DateEvent = DateAndTime.Now, UserId = user.Id };
+                        var recordModel = new RecordStatusProduceModel { Description = description, ProduceActivityId = id, Status = status, DateEvent = DateAndTime.Now, UserId = user.ID };
                         result = await _repository.Islocked(id, status);
                         await _recordStatusRepository.Include(recordModel);
                         statusCode = StatusCodes.Status200OK;
@@ -191,13 +188,13 @@ namespace BiometricFaceApi.Services
                 {
                     content = new
                     {
-                        Id = repositoryProduceActv.Id,
+                        ID = repositoryProduceActv.ID,
                         UserId = repositoryProduceActv.UserId,
                         MonitorEsdId = repositoryProduceActv.MonitorEsdId,
                         JigId = repositoryProduceActv.JigId,
                         StationId = repositoryProduceActv.StationId
                     };
-                    await _repository.Delete(repositoryProduceActv.Id);
+                    await _repository.Delete(repositoryProduceActv.ID);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else

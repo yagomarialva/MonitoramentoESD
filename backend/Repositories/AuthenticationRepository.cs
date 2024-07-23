@@ -20,7 +20,7 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<AuthenticationModel?> AuthGetById(int id)
         {
-            var result = await _dbcontex.Auths.FirstOrDefaultAsync(_auth => _auth.Id == id);
+            var result = await _dbcontex.Auths.FirstOrDefaultAsync(_auth => _auth.ID == id);
             return result;
         }
         public async Task<AuthenticationModel?> AuthGetByUsername(string username)
@@ -50,7 +50,7 @@ namespace BiometricFaceApi.Repositories
             {
                 throw new Exception($"O usuário para ID:{id} não foi encontrado no banco de dados.");
             }
-            var update = await _dbcontex.Auths.AsNoTracking().FirstOrDefaultAsync(x => x.Id == login.Id);
+            var update = await _dbcontex.Auths.AsNoTracking().FirstOrDefaultAsync(x => x.ID == login.ID);
             authGetById.Username = login.Username;
             authGetById.Password = login.Password;
             authGetById.RolesName = login.RolesName;

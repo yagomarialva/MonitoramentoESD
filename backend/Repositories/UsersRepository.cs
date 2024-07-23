@@ -23,7 +23,7 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<UserModel> ForId(int id)
         {
-            var result = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id) ?? new UserModel();
+            var result = await _dbContext.Users.FirstOrDefaultAsync(x => x.ID == id) ?? new UserModel();
             return result;
         }
         public async Task<UserModel> ForBadge(string badge)
@@ -51,7 +51,7 @@ namespace BiometricFaceApi.Repositories
             {
                 throw new Exception($"O usuário para ID:{id} não foi encontrado no banco de dados.");
             }
-            var update = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == user.Id);
+            var update = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.ID == user.ID);
             userModelUp.Name = user.Name;
             _dbContext.Users.Update(userModelUp);
             await _dbContext.SaveChangesAsync();

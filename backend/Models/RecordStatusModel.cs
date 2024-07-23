@@ -7,8 +7,8 @@ namespace BiometricFaceApi.Models
     [Table("recordStatusProduce")]
     public class RecordStatusProduceModel
     {
-        [Key]
-        public int Id { get; set; }
+       
+        public int ID { get; set; }
 
         [ForeignKey("produceActivity")]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]

@@ -9,8 +9,7 @@ namespace BiometricFaceApi.Models
     [Table("images")]
     public class ImageModel
     {
-        [Key]
-        public int IdImage { get; set; }
+        public int ID { get; set; }
         [ForeignKey("users")]
         public int UserId { get; set; }
         public virtual UserModel? User { get; set; }

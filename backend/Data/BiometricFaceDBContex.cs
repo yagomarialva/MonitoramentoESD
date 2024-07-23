@@ -34,22 +34,22 @@ namespace BiometricFaceApi.Data
             modelBuilder.Entity<RolesModel>().HasData(new RolesModel[]
             {
                 new RolesModel
-                {Id=1,
+                {ID=1,
                    RolesName = "administrator"
                 },
                  new RolesModel
-                {Id =2,
+                {ID =2,
                    RolesName = "developer"
                 },
                  new RolesModel {
-                     Id=3,
+                     ID=3,
                      RolesName = "operator"
                  }
             });
             modelBuilder.Entity<AuthenticationModel>().HasData(new AuthenticationModel[]
             {
                 new AuthenticationModel
-                {Id=1,
+                {ID=1,
                     Username = "admin",
                     Badge = "ADM",
                     RolesName = "administrator",

@@ -9,7 +9,7 @@ namespace BiometricFaceApi.Models
     [Index(nameof(JigId), IsUnique = true)]
     public class StationViewModel
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         [ForeignKey("jig")]
         public int JigId { get; set; }
         [IgnoreDataMember]

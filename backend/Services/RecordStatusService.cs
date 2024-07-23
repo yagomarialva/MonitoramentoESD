@@ -96,18 +96,18 @@ namespace BiometricFaceApi.Services
             try
             {
                 var repositoryRecordStatus = await _repository.GetByRecordStatusId(id);
-                if (repositoryRecordStatus.Id > 0)
+                if (repositoryRecordStatus.ID > 0)
                 {
                     content = new 
                     {
-                        id = repositoryRecordStatus.Id,
+                        id = repositoryRecordStatus.ID,
                         produceActivityId = repositoryRecordStatus.ProduceActivityId,
                         userID = repositoryRecordStatus.UserId,
                         description = repositoryRecordStatus.Description,
                         
                     };
 
-                    await _repository.Delete(repositoryRecordStatus.Id);
+                    await _repository.Delete(repositoryRecordStatus.ID);
                     statusCode = StatusCodes.Status200OK;
                 }
                 else

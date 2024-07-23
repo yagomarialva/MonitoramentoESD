@@ -9,8 +9,8 @@ namespace BiometricFaceApi.Models
     [Index(nameof(SerialNumber), IsUnique = true)]
     public class MonitorEsdModel
     {
-        [Key]
-        public int Id { get; set; }
+       
+        public int ID{ get; set; }
         [ForeignKey("users")]
         public int UserId { get; set; }
         [IgnoreDataMember]
@@ -24,7 +24,7 @@ namespace BiometricFaceApi.Models
         public int PositionSequence { get; set; }
         public string? Status { get; set; }
         public string? Description { get; set; }
-        public DateTime DateHour { get; set; }
+        public DateTime DateHour { get; set; } 
         public DateTime LastDate { get; set; }
     }
 }
