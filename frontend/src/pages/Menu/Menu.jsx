@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,7 +11,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SensorsOutlinedIcon from "@mui/icons-material/SensorsOutlined";
@@ -87,8 +87,7 @@ export default function Menu({ componentToShow }) {
   const userRole = getUserRoleFromToken(token);
   const menuItems = getMenuItems(userRole);
   const { logout } = useAuth();
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
+  const [open] = useState(true);
 
   return (
     <Box sx={{ display: "flex" }}>

@@ -38,8 +38,18 @@ const ESDHomeModal = ({ open, handleClose, produce }) => {
                 fullWidth
                 disabled
                 required
-                label="Operador"
-                defaultValue={produce.userId}
+                label="Data"
+                defaultValue={"17/04/2024"}
+                margin="normal"
+              />
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              <TextField
+                fullWidth
+                disabled
+                required
+                label="Hora"
+                defaultValue={"17:45"}
                 margin="normal"
               />
             </Typography>
@@ -49,7 +59,7 @@ const ESDHomeModal = ({ open, handleClose, produce }) => {
                 disabled
                 required
                 label="Operador"
-                defaultValue={produce.monitorEsdId}
+                defaultValue={"John Doe"}
                 margin="normal"
               />
             </Typography>
@@ -58,18 +68,8 @@ const ESDHomeModal = ({ open, handleClose, produce }) => {
                 fullWidth
                 disabled
                 required
-                label="Operador"
-                defaultValue={produce.isLocked}
-                margin="normal"
-              />
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                disabled
-                required
-                label="Operador"
-                defaultValue={produce.description}
+                label="Logs"
+                defaultValue={"Lorem ipsum dolor sit amet, consectetur"}
                 margin="normal"
               />
             </Typography>
