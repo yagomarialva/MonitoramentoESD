@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiometricFaceApi.Migrations
 {
     [DbContext(typeof(BiometricFaceDBContex))]
-    [Migration("20240723184709_first")]
-    partial class first
+    [Migration("20240724140859_first-migration")]
+    partial class firstmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,6 +29,7 @@ namespace BiometricFaceApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Badge")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Password")
@@ -117,6 +118,33 @@ namespace BiometricFaceApi.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("line");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.LinkStationAndLineModel", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("LineID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StationID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LineID");
+
+                    b.HasIndex("StationID");
+
+                    b.ToTable("linkStationAndLine");
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.MonitorEsdModel", b =>
@@ -293,16 +321,11 @@ namespace BiometricFaceApi.Migrations
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("LineID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("LineID");
 
                     b.ToTable("station");
                 });
@@ -367,6 +390,25 @@ namespace BiometricFaceApi.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.LinkStationAndLineModel", b =>
+                {
+                    b.HasOne("BiometricFaceApi.Models.LineModel", "Line")
+                        .WithMany()
+                        .HasForeignKey("LineID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BiometricFaceApi.Models.StationModel", "Station")
+                        .WithMany()
+                        .HasForeignKey("StationID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Line");
+
+                    b.Navigation("Station");
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.MonitorEsdModel", b =>
@@ -440,17 +482,6 @@ namespace BiometricFaceApi.Migrations
                     b.Navigation("ProduceActivity");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BiometricFaceApi.Models.StationModel", b =>
-                {
-                    b.HasOne("BiometricFaceApi.Models.LineModel", "Line")
-                        .WithMany()
-                        .HasForeignKey("LineID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Line");
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.StationViewModel", b =>

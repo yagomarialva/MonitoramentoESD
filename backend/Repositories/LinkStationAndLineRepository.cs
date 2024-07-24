@@ -16,22 +16,22 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<List<LinkStationAndLineModel>> GetAllLinks()
         {
-            return await _dbContext.linkStationAndLines.ToListAsync();
+            return await _dbContext.LinkStationAndLines.ToListAsync();
         }
 
-        public async Task<LinkStationAndLineModel> GetByLineId(int id)
+        public async Task<LinkStationAndLineModel?> GetByLineId(int id)
         {
-            return await _dbContext.linkStationAndLines.FirstOrDefaultAsync(x => x.ID == id);
+            return await _dbContext.LinkStationAndLines.FirstOrDefaultAsync(x => x.ID == id);
         }
 
-        public async Task<LinkStationAndLineModel> GetByLinkStationAndLineId(int id)
+        public async Task<LinkStationAndLineModel?> GetByLinkStationAndLineId(int id)
         {
-            return await _dbContext.linkStationAndLines.FirstOrDefaultAsync(x => x.ID == id);
+            return await _dbContext.LinkStationAndLines.FirstOrDefaultAsync(x => x.ID == id);
         }
 
-        public async Task<LinkStationAndLineModel> GetByStationId(int id)
+        public async Task<LinkStationAndLineModel?> GetByStationId(int id)
         {
-            return await _dbContext.linkStationAndLines.FirstOrDefaultAsync(x => x.ID == id);
+            return await _dbContext.LinkStationAndLines.FirstOrDefaultAsync(x => x.ID == id);
         }
 
         public async Task<LinkStationAndLineModel?> Include(LinkStationAndLineModel model)
@@ -42,7 +42,7 @@ namespace BiometricFaceApi.Repositories
                 //include
                 model.Created = DateTime.Now;
                 model.LastUpdated = DateTime.Now;
-                await _dbContext.linkStationAndLines.AddAsync(model);
+                await _dbContext.LinkStationAndLines.AddAsync(model);
                 await _dbContext.SaveChangesAsync();
                 linkModel = await GetByLinkStationAndLineId(model.ID);
             }
@@ -53,7 +53,7 @@ namespace BiometricFaceApi.Repositories
                 linkModel.ID = model.ID;
                 linkModel.LineID = model.LineID;
                 linkModel.StationID = model.StationID;
-                _dbContext.linkStationAndLines.Update(linkModel);
+                _dbContext.LinkStationAndLines.Update(linkModel);
                 await _dbContext.SaveChangesAsync();
             }
             return linkModel;
@@ -66,7 +66,7 @@ namespace BiometricFaceApi.Repositories
             {
                 throw new Exception($"Linha com ID:{id} não foi encontrado no banco de dados.");
             }
-            _dbContext?.linkStationAndLines.Remove(linkModel);
+            _dbContext?.LinkStationAndLines.Remove(linkModel);
             await _dbContext.SaveChangesAsync();
             return linkModel;
         }

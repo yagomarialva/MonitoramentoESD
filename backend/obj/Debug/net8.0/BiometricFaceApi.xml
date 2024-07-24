@@ -179,6 +179,68 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
+        <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.BuscarTodos">
+            <summary>
+            Buscar todos
+            </summary>
+            <param > Buscar todos Links</param>
+            <response code="200">Retorna todos.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.BuscarLinkId(System.Int32)">
+            <summary>
+            Buscar id 
+            </summary>
+            <param name="id"> Buscar Link por Id</param>
+            <response code="200">Retorna  Estação </response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.BuscarLineId(System.Int32)">
+            <summary>
+            Buscar linha por id 
+            </summary>
+            <param name="id"> Buscar Linha por Id</param>
+            <response code="200">Retorna  Estação </response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.BuscarEstacaoId(System.Int32)">
+            <summary>
+            Buscar Estação por id 
+            </summary>
+            <param name="id"> Buscar Estação por Id</param>
+            <response code="200">Retorna  Estação </response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.ManagerEstacao(BiometricFaceApi.Models.LinkStationAndLineModel)">
+            <summary>
+            Cadastra e Atualiza de dados da Links .
+            </summary>
+            <remarks>Cadastra Link na base de dados; Para atualizar dados basta usar Id do Link.</remarks>
+            <param name="model">Dados de cadastro da Link</param>
+            <response code="200">Dados atualizado com sucesso.</response>
+            <response code="201">Dados cadastrados com sucesso.</response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.Delete(System.Int32)">
+            <summary>
+            Deletar Link
+            </summary>
+            <param name="id"> Deleta  Link</param>
+            <returns></returns>
+            <response code="200">Remove dados do banco de dados.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
         <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.BuscarTodos">
             <summary>
             Buscar todos 
@@ -506,16 +568,16 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
-        <member name="T:BiometricFaceApi.Migrations.first">
+        <member name="T:BiometricFaceApi.Migrations.firstmigration">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.first.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.firstmigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.first.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.firstmigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.first.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.firstmigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

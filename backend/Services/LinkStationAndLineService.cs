@@ -115,7 +115,7 @@ namespace BiometricFaceApi.Services
             object? response;
             try
             {
-
+                
                 response = await _repository.Include(model);
                 statusCode = StatusCodes.Status201Created;
             }
