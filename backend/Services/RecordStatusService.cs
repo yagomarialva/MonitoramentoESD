@@ -74,10 +74,6 @@ namespace BiometricFaceApi.Services
             object? result;
             try
             {
-                //if (!string.IsNullOrEmpty(model.Description) & model.UserId == 0 & model.ProduceActivityId == 0)
-                //{
-                //    throw new Exception("Preencher campos obrigatórios.");
-                //}
                 result = await _repository.Include(model);
             }
             catch (Exception execption)

@@ -15,14 +15,18 @@ namespace BiometricFaceApi.Controllers
     public class StationViewController : Controller
     {
         private readonly StationViewService _stationRepository;
-        private readonly JigService _jigService;
+        private readonly MonitorEsdService _monitorEsdService;
+        private readonly LinkStationAndLineService _linkStationAndLineService;
         private readonly StationService _stationService;
+        private readonly LineService _lineService;
+        private readonly PositionService _positionService;
+        
 
-        public StationViewController(IStationViewRepository stationViewRepository, IJigRepository jigRepository, IStationRepository stationRepository )
+        public StationViewController(IStationViewRepository stationViewRepository, IMonitorEsdRepository monitorEsdRepository, ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationRepository, ILineRepository lineRepository, IPositionRepository positionRepository )
         {
-            _stationRepository = new StationViewService(stationViewRepository, jigRepository, stationRepository);
-            _jigService = new JigService(jigRepository);
-            _stationService = new StationService(stationRepository);
+            _stationRepository = new StationViewService(stationViewRepository, monitorEsdRepository, linkStationAndLineRepository);
+            _monitorEsdService = new MonitorEsdService(monitorEsdRepository,positionRepository);
+            _linkStationAndLineService = new LinkStationAndLineService(linkStationAndLineRepository, stationRepository, lineRepository);
         }
 
         /// <summary>
@@ -56,7 +60,7 @@ namespace BiometricFaceApi.Controllers
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarEstacaView/{id}")]
-        public async Task<ActionResult> BuscarIdEstacaoView(int id)
+        public async Task<ActionResult> BuscarIdEstacaoView(Guid id)
         {
             var (result, statusCode) = await _stationRepository.GetStationViewId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -75,7 +79,7 @@ namespace BiometricFaceApi.Controllers
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarEstViewJigs/{id}")]
-        public async Task<ActionResult> BuscarJigId(int id)
+        public async Task<ActionResult> BuscarJigId(Guid id)
         {
             var (result, statusCode) = await _stationRepository.GetJigId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -94,7 +98,7 @@ namespace BiometricFaceApi.Controllers
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarEstacaoDeProducao/{id}")]
-        public async Task<ActionResult> BuscarEstacaoDeProducaoId(int id)
+        public async Task<ActionResult> BuscarEstacaoDeProducaoId(Guid id)
         {
             var (result, statusCode) = await _stationRepository.GetByStationProductionId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -135,7 +139,7 @@ namespace BiometricFaceApi.Controllers
         [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
         [Route("/deleteLineView/{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             var (result, statusCode) = await _stationRepository.Delete(id);
             var options = new JsonSerializerOptions { WriteIndented = true };

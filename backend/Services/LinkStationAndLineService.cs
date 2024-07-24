@@ -7,9 +7,13 @@ namespace BiometricFaceApi.Services
     public class LinkStationAndLineService
     {
         private ILinkStationAndLineRepository _repository;
-        public LinkStationAndLineService(ILinkStationAndLineRepository linkStationAndLineRepository)
+        private IStationRepository _stationRepository;
+        private ILineRepository _lineRepository;
+        public LinkStationAndLineService(ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationRepository, ILineRepository lineRepository)
         {
             _repository = linkStationAndLineRepository;
+            _stationRepository = stationRepository;
+            _lineRepository = lineRepository;
         }
         public async Task<(object?, int)> GetAllLinkStationAndLine()
         {
@@ -115,13 +119,22 @@ namespace BiometricFaceApi.Services
             object? response;
             try
             {
-                
-                response = await _repository.Include(model);
-                statusCode = StatusCodes.Status201Created;
+                var line = await _lineRepository.GetLineID(model.LineID);
+                var station = await _stationRepository.GetByStationId(model.StationID);
+                if (station is null || line is null)
+                    throw new Exception("Referência Id de linha ou estação nao é válido.");
+                else
+                {
+                    var existingCobination = _repository.GetByLineIdAndStationId(model.LineID, model.StationID);
+                    if (existingCobination is not null)
+                        throw new Exception("Esta combinação já constata na base.");
+                    response = await _repository.Include(model);
+                    statusCode = StatusCodes.Status201Created;
+                }
             }
-            catch (Exception)
+            catch (Exception excepition)
             {
-                response = "Verifique se todos os dados estão cadastrados na Base de Dados";
+                response = excepition.Message;
                 statusCode = StatusCodes.Status400BadRequest;
             }
             return (response, statusCode);

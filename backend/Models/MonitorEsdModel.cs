@@ -11,10 +11,6 @@ namespace BiometricFaceApi.Models
     {
        
         public int ID{ get; set; }
-        [ForeignKey("users")]
-        public int UserId { get; set; }
-        [IgnoreDataMember]
-        public virtual UserModel? User { get; set; }
         public string? SerialNumber { get; set; }
 
         [ForeignKey("position")]

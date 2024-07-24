@@ -6,9 +6,11 @@ namespace BiometricFaceApi.Services
     public class StationService
     {
         private IStationRepository _stationRepository;
-        public StationService(IStationRepository lineProductionRepository)
+        private IPositionRepository _positionRepository;
+        public StationService(IStationRepository lineProductionRepository, IPositionRepository positionRepository)
         {
             _stationRepository = lineProductionRepository;
+            _positionRepository = positionRepository;
         }
         public async Task<(object?, int)> GetAllStation()
         {
@@ -63,16 +65,61 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
+        public async Task<(object?, int)> GetSizeXId(int sizeXId)
+        {
+            object? result;
+            int statusCode;
+            try
+            {
+                var monitor = await _stationRepository.GetBySizeX(sizeXId);
+                if (monitor == null)
+                {
+
+                    result = "ID não encontrado.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+                result = monitor;
+                statusCode = StatusCodes.Status200OK;
+                return (result, statusCode);
+            }
+            catch (Exception exception)
+            {
+                result = exception.Message;
+                statusCode = StatusCodes.Status400BadRequest;
+            }
+            return (result, statusCode);
+        }
+        public async Task<(object?, int)> GetSizeYId(int sizeYId)
+        {
+            object? result;
+            int statusCode;
+            try
+            {
+                var monitor = await _stationRepository.GetBySizeY(sizeYId);
+                if (monitor == null)
+                {
+
+                    result = "ID não encontrado.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+                result = monitor;
+                statusCode = StatusCodes.Status200OK;
+                return (result, statusCode);
+            }
+            catch (Exception exception)
+            {
+                result = exception.Message;
+                statusCode = StatusCodes.Status400BadRequest;
+            }
+            return (result, statusCode);
+        }
         public async Task<(object?, int)> Include(StationModel stationModel)
         {
             var statusCode = StatusCodes.Status200OK;
             object? response;
             try
             {
-                if (string.IsNullOrEmpty(stationModel.Name))
-                {
-                    throw new Exception("Nome obrigatório.");
-                }
+                
                 stationModel.Created = DateTime.Now;
                 stationModel.LastUpdated = DateTime.Now;
                 response = await _stationRepository.Include(stationModel);

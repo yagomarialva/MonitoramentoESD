@@ -13,9 +13,11 @@ namespace BiometricFaceApi.Controllers
     public class StationController : Controller
     {
         private readonly StationService _service;
-        public StationController(IStationRepository stationRepository)
+        private readonly PositionService _positionService;
+        
+        public StationController(IStationRepository stationRepository, IPositionRepository positionRepository)
         {
-            _service = new StationService(stationRepository);
+            _service = new StationService(stationRepository, positionRepository);
         }
 
         /// <summary>
@@ -37,6 +39,46 @@ namespace BiometricFaceApi.Controllers
             return StatusCode(statusCode, result);
 
         }
+
+        /// <summary>
+        /// Buscar id 
+        /// </summary>
+        /// <param name="id"> Buscar SizeX por Id</param>
+        /// <response code="200">Retorna  SizeX </response>
+        /// <response code="400">Dados incorretos ou inválidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrator,operator,developer")]
+        [HttpGet]
+        [Route("/BuscarSizeX/{id}")]
+        public async Task<ActionResult> BuscarSizeXId(int id)
+        {
+            var (result, statusCode) = await _service.GetSizeXId(id);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            return StatusCode(statusCode, result);
+        }
+
+        /// <summary>
+        /// Buscar id 
+        /// </summary>
+        /// <param name="id"> Buscar SizY por Id</param>
+        /// <response code="200">Retorna  SizeX </response>
+        /// <response code="400">Dados incorretos ou inválidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrator,operator,developer")]
+        [HttpGet]
+        [Route("/BuscarSizeY/{id}")]
+        public async Task<ActionResult> BuscarSizeYId(int id)
+        {
+            var (result, statusCode) = await _service.GetSizeYId(id);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            return StatusCode(statusCode, result);
+        }
+
+
         /// <summary>
         /// Buscar id 
         /// </summary>
@@ -55,7 +97,6 @@ namespace BiometricFaceApi.Controllers
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
         }
-
         /// <summary>
         /// Cadastra e Atualiza de dados da Estação.
         /// </summary>

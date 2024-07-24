@@ -6,8 +6,9 @@ namespace BiometricFaceApi.Repositories.Interfaces
     {
         Task<List<LinkStationAndLineModel>> GetAllLinks();
         Task<LinkStationAndLineModel?> GetByLinkStationAndLineId(int id);
-        Task<LinkStationAndLineModel?> GetByLineId(int id);
-        Task<LinkStationAndLineModel?> GetByStationId(int id);
+        Task<List<LinkStationAndLineModel>?> GetByLineId(int id);
+        Task<List<LinkStationAndLineModel>?> GetByStationId(int id);
+        Task<LinkStationAndLineModel> GetByLineIdAndStationId(int lineId, int stationID);
         Task<LinkStationAndLineModel?> Include(LinkStationAndLineModel model);
         Task<LinkStationAndLineModel> Delete(int id);
     }

@@ -6,6 +6,8 @@ namespace BiometricFaceApi.Repositories.Interfaces
     {
         Task<List<StationModel>> GetAllStation();
         Task<StationModel> GetByStationId(int id);
+        Task<StationModel?>GetBySizeX(int id);
+        Task<StationModel?>GetBySizeY(int id);
         
         Task<StationModel?> Include(StationModel lineModel);
         Task<StationModel> Delete(int id);

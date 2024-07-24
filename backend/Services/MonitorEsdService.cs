@@ -12,12 +12,10 @@ namespace BiometricFaceApi.Services
     public class MonitorEsdService
     {
         private IMonitorEsdRepository _repository;
-        private IUsersRepository _usersRepository;
         private IPositionRepository _positionRepository;
-        public MonitorEsdService(IMonitorEsdRepository repository, IUsersRepository usersRepository, IPositionRepository positionRepository)
+        public MonitorEsdService(IMonitorEsdRepository repository, IPositionRepository positionRepository)
         {
             _repository = repository;
-            _usersRepository = usersRepository;
             _positionRepository = positionRepository;
         }
         public async Task<(object?, int)> GetAllMonitorEsds()
@@ -132,7 +130,6 @@ namespace BiometricFaceApi.Services
                         positionId = respositoryMonitor.PositionId,
                         positionSeguence = respositoryMonitor.PositionSequence,
                         status = respositoryMonitor.Status,
-                        UserID = respositoryMonitor.UserId,
                         description = respositoryMonitor.Description
                     };
                     await _repository.Delete(respositoryMonitor.ID);

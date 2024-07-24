@@ -13,9 +13,17 @@ namespace BiometricFaceApi.Controllers
     public class LinkStationAndLineController : Controller
     {
         private readonly LinkStationAndLineService _service;
-        public LinkStationAndLineController(ILinkStationAndLineRepository linkStationAndLineRepository)
+        private readonly StationService _stationService;
+        private readonly LineService _lineService;
+        private readonly PositionService _positionService;
+
+        public LinkStationAndLineController(ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationService, ILineRepository lineService, IPositionRepository positionRepository)
         {
-            _service = new LinkStationAndLineService(linkStationAndLineRepository);
+
+            _stationService = new StationService(stationService, positionRepository);
+            _lineService = new LineService(lineService);
+            _service = new LinkStationAndLineService(linkStationAndLineRepository, stationService, lineService);
+            _positionService = new PositionService(positionRepository);
         }
         /// <summary>
         /// Buscar todos
@@ -103,6 +111,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="201">Dados cadastrados com sucesso.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response code="404">Dados não encontrados.</response>
         /// <response  code="500">Erro do servidor interno!</response>
         //[Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]

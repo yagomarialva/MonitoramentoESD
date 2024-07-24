@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
@@ -6,18 +7,21 @@ using System.Xml.Linq;
 namespace BiometricFaceApi.Models
 {
     [Table("stationView")]
-    [Index(nameof(JigId), IsUnique = true)]
+    [Index(nameof(MonitorEsdId), IsUnique = true)]
     public class StationViewModel
     {
-        public int ID { get; set; }
-        [ForeignKey("jig")]
-        public int JigId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid ID { get; set; }
+        [ForeignKey("monitorEsd")]
+        public int MonitorEsdId { get; set; }
         [IgnoreDataMember]
-        public virtual JigModel? Jig { get; set; }
-        [ForeignKey("station")]
-        public int StationId { get; set; }
+        public virtual MonitorEsdModel? MonitorEsd { get; set; }
+
+        [ForeignKey("linkStationAndLine")]
+        public int LinkStationAndLineId { get; set; }
         [IgnoreDataMember]
-        public virtual StationModel? Station { get; set; }
+        public virtual LinkStationAndLineModel? linkStationAndLine { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? LastUpdated { get; set; }
     }

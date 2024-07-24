@@ -7,15 +7,15 @@ namespace BiometricFaceApi.Services
     {
         
         protected readonly IStationViewRepository _stationViewRepository;
-        protected readonly IJigRepository _jigRepository;
-        protected readonly IStationRepository _stationRepository;
+        protected readonly IMonitorEsdRepository _monitorEsdRepository;
+        protected readonly ILinkStationAndLineRepository _linkRepository;
 
-        public StationViewService(IStationViewRepository stationViewRepository, IJigRepository jigRepository, IStationRepository stationRepository)
+        public StationViewService(IStationViewRepository stationViewRepository, IMonitorEsdRepository monitorEsdRepository, ILinkStationAndLineRepository linkStationAndLineRepository)
         {
             
             _stationViewRepository = stationViewRepository;
-            _jigRepository = jigRepository;
-            _stationRepository = stationRepository;
+            _monitorEsdRepository = monitorEsdRepository;
+            _linkRepository = linkStationAndLineRepository;
         }
         public async Task<(object?, int)> GetAllStationView()
         {
@@ -45,7 +45,7 @@ namespace BiometricFaceApi.Services
             }
 
         }
-        public async Task<(object?, int)> GetStationViewId(int id)
+        public async Task<(object?, int)> GetStationViewId(Guid id)
         {
             object? result;
             int statusCode;
@@ -70,7 +70,7 @@ namespace BiometricFaceApi.Services
             return (result, statusCode);
 
         }
-        public async Task<(object?, int)> GetJigId(int id)
+        public async Task<(object?, int)> GetJigId(Guid id)
         {
             object? result;
             int statusCode;
@@ -95,7 +95,7 @@ namespace BiometricFaceApi.Services
             return (result, statusCode);
 
         }
-        public async Task<(object?, int)> GetByStationProductionId(int id)
+        public async Task<(object?, int)> GetByStationProductionId(Guid id)
         {
             object? result;
             int statusCode;
@@ -126,7 +126,8 @@ namespace BiometricFaceApi.Services
             object? result;
             try
             {
-                if (stationViewModel.JigId == 0 & stationViewModel.StationId == 0)
+                
+                if (stationViewModel.MonitorEsdId == 0 & stationViewModel.LinkStationAndLineId == 0)
                 {
                     throw new Exception("Todos os campos são obrigatórios.");
                 }
@@ -143,7 +144,7 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
-        public async Task<(object?, int)> Delete(int id)
+        public async Task<(object?, int)> Delete(Guid id)
         {
             object? content;
             int statusCode;
@@ -155,8 +156,8 @@ namespace BiometricFaceApi.Services
                     content = new
                     {
                         ID = repositoryStationViewDel.ID,
-                        JigId = repositoryStationViewDel.JigId,
-                        StationId = repositoryStationViewDel.StationId
+                        MonitorEsdId = repositoryStationViewDel.MonitorEsdId,
+                        LinkStationAndLineId = repositoryStationViewDel.LinkStationAndLineId
 
                     };
                     await _stationViewRepository.Delete(repositoryStationViewDel.ID);

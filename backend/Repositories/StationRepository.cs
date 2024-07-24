@@ -22,6 +22,15 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.Station.FirstOrDefaultAsync(x => x.ID == id);
         }
+        public async Task<StationModel?> GetBySizeX(int sizeXId)
+        {
+            return await _dbContext.Station.FirstOrDefaultAsync(x => x.SizeY == sizeXId);
+        }
+
+        public async Task<StationModel?> GetBySizeY(int sizeYId)
+        {
+            return await _dbContext.Station.FirstOrDefaultAsync(x => x.SizeX == sizeYId);
+        }
 
         // Task realiza o include e update, include caso nao haja no banco, update caso ja 
         // tenha alguma propriedade cadastrada.
@@ -38,6 +47,8 @@ namespace BiometricFaceApi.Repositories
             {
                 //update 
                 station.Name = stationModel.Name;
+                station.SizeX = stationModel.SizeX;
+                station.SizeY = stationModel.SizeY;
                 station.LastUpdated = DateTime.Now;
                 _dbContext.Station.Update(station);
                 await _dbContext.SaveChangesAsync();
@@ -58,6 +69,6 @@ namespace BiometricFaceApi.Repositories
             return lineProductionModelDel;
         }
 
-
+       
     }
 }

@@ -16,9 +16,18 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.Jigs.ToListAsync();
         }
-        public async Task<JigModel> GetByJigId(int id)
+        public async Task<JigModel?> GetByJigId(int jigId)
         {
-            return await _dbContext.Jigs.FirstOrDefaultAsync(x => x.ID == id);
+            return await _dbContext.Jigs.FirstOrDefaultAsync(x => x.ID == jigId);
+        }
+        public async Task<JigModel?> GetByName(string jigName)
+        {
+            return await _dbContext.Jigs.FirstOrDefaultAsync(x => x.Name == jigName);
+        }
+
+        public async Task<JigModel?> GetByPosition(int postionId)
+        {
+            return await _dbContext.Jigs.FirstOrDefaultAsync(x => x.PositionID == postionId);
         }
         // Task realiza o include e update, include caso nao haja no banco, update caso ja 
         // tenha alguma propriedade cadastrada.
@@ -38,6 +47,7 @@ namespace BiometricFaceApi.Repositories
             {
                 // update
                 repositoryJig.Name = jigModel.Name;
+                repositoryJig.Position = jigModel.Position;
                 repositoryJig.Description = jigModel.Description;
                 repositoryJig.LastUpdated = DateTime.Now;
                 _dbContext.Jigs.Update(repositoryJig);
@@ -58,5 +68,6 @@ namespace BiometricFaceApi.Repositories
             await _dbContext.SaveChangesAsync();
             return stationModelDel;
         }
+
     }
 }

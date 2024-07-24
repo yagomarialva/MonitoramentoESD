@@ -59,6 +59,29 @@ namespace BiometricFaceApi.Services
             }
             return (result, statusCode);
         }
+        public async Task<(object?, int)> GetName(string name)
+        {
+            object? result;
+            int statusCode;
+            try
+            {
+                var station = await _repository.GetByName(name);
+                if (station == null)
+                {
+                    result = ("Jig Id não encontrado.");
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+                result = station;
+                statusCode = StatusCodes.Status200OK;
+                return (result, statusCode);
+            }
+            catch (Exception exception)
+            {
+                result = exception.Message;
+                statusCode = StatusCodes.Status400BadRequest;
+            }
+            return (result, statusCode);
+        }
         public async Task<(object?, int)> Include(JigModel model)
         {
             var statusCode = StatusCodes.Status200OK;

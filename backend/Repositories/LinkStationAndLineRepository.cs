@@ -19,19 +19,22 @@ namespace BiometricFaceApi.Repositories
             return await _dbContext.LinkStationAndLines.ToListAsync();
         }
 
-        public async Task<LinkStationAndLineModel?> GetByLineId(int id)
+        public async Task<List<LinkStationAndLineModel>?> GetByLineId(int lineId)
         {
-            return await _dbContext.LinkStationAndLines.FirstOrDefaultAsync(x => x.ID == id);
+            return await _dbContext.LinkStationAndLines.Where(x => x.LineID == lineId).ToListAsync();
         }
-
+        public async Task<LinkStationAndLineModel?> GetByLineIdAndStationId(int lineId,int stationId)
+        {
+            return await _dbContext.LinkStationAndLines.FirstOrDefaultAsync(x => x.LineID==lineId && x.StationID == stationId);
+        }
         public async Task<LinkStationAndLineModel?> GetByLinkStationAndLineId(int id)
         {
             return await _dbContext.LinkStationAndLines.FirstOrDefaultAsync(x => x.ID == id);
         }
 
-        public async Task<LinkStationAndLineModel?> GetByStationId(int id)
+        public async Task<List<LinkStationAndLineModel>?> GetByStationId(int stationId)
         {
-            return await _dbContext.LinkStationAndLines.FirstOrDefaultAsync(x => x.ID == id);
+            return await _dbContext.LinkStationAndLines.Where(x => x.StationID == stationId).ToListAsync();
         }
 
         public async Task<LinkStationAndLineModel?> Include(LinkStationAndLineModel model)

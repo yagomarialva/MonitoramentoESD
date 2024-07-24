@@ -229,6 +229,7 @@
             <response code="201">Dados cadastrados com sucesso.</response>
             <response code="400">Dados incorretos ou inválidos.</response>
             <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response code="404">Dados não encontrados.</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.Delete(System.Int32)">
@@ -474,6 +475,26 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
+        <member name="M:BiometricFaceApi.Controllers.StationController.BuscarSizeXId(System.Int32)">
+            <summary>
+            Buscar id 
+            </summary>
+            <param name="id"> Buscar SizeX por Id</param>
+            <response code="200">Retorna  SizeX </response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.StationController.BuscarSizeYId(System.Int32)">
+            <summary>
+            Buscar id 
+            </summary>
+            <param name="id"> Buscar SizY por Id</param>
+            <response code="200">Retorna  SizeX </response>
+            <response code="400">Dados incorretos ou inválidos.</response>
+            <response code="401">Acesso negado devido a credenciais inválidas</response>
+            <response  code="500">Erro do servidor interno!</response>
+        </member>
         <member name="M:BiometricFaceApi.Controllers.StationController.BuscarEstacaoId(System.Int32)">
             <summary>
             Buscar id 
@@ -516,7 +537,7 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
-        <member name="M:BiometricFaceApi.Controllers.StationViewController.BuscarIdEstacaoView(System.Int32)">
+        <member name="M:BiometricFaceApi.Controllers.StationViewController.BuscarIdEstacaoView(System.Guid)">
             <summary>
             Buscar id 
             </summary>
@@ -526,7 +547,7 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
-        <member name="M:BiometricFaceApi.Controllers.StationViewController.BuscarJigId(System.Int32)">
+        <member name="M:BiometricFaceApi.Controllers.StationViewController.BuscarJigId(System.Guid)">
             <summary>
             Buscar id 
             </summary>
@@ -536,7 +557,7 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
-        <member name="M:BiometricFaceApi.Controllers.StationViewController.BuscarEstacaoDeProducaoId(System.Int32)">
+        <member name="M:BiometricFaceApi.Controllers.StationViewController.BuscarEstacaoDeProducaoId(System.Guid)">
             <summary>
             Buscar id 
             </summary>
@@ -558,7 +579,7 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
-        <member name="M:BiometricFaceApi.Controllers.StationViewController.Delete(System.Int32)">
+        <member name="M:BiometricFaceApi.Controllers.StationViewController.Delete(System.Guid)">
             <summary>
             Deletar Estação View
             </summary>

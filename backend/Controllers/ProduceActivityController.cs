@@ -19,14 +19,17 @@ namespace BiometricFaceApi.Controllers
         private readonly UserService _user;
         private readonly JigService _jig;
         private readonly StationService _station;
+        private readonly PositionService _position;
 
-        public ProduceActivityController(IProduceActivityRepository produceActivityRepository, IRecordStatusRepository recordStatusRepository, IUsersRepository usersRepository, IAuthenticationRepository authenticationRepository, IJigRepository jigRepository, IStationRepository stationRepository)
+        public ProduceActivityController(IProduceActivityRepository produceActivityRepository, IRecordStatusRepository recordStatusRepository, IUsersRepository usersRepository, 
+            IAuthenticationRepository authenticationRepository, IJigRepository jigRepository, IStationRepository stationRepository, IPositionRepository positionRepository)
         {
             _record = new RecordStatusService(recordStatusRepository);
             _user = new UserService (usersRepository);
             _jig = new JigService (jigRepository);
-            _station = new StationService (stationRepository);
+            _station = new StationService (stationRepository, positionRepository);
             _service = new ProduceActivityService(produceActivityRepository, recordStatusRepository, authenticationRepository,usersRepository, jigRepository, stationRepository);
+            _position = new PositionService (positionRepository);
             
         }
 

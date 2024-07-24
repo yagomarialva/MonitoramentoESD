@@ -18,15 +18,15 @@ namespace BiometricFaceApi.Repositories
             return await _dbContext.StationViews.ToListAsync();
         }
 
-        public async Task<StationViewModel?> GetByStationViewId(int id)
+        public async Task<StationViewModel?> GetByStationViewId(Guid id)
         {
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
         }
-        public async Task<StationViewModel?> GetByJigId(int id)
+        public async Task<StationViewModel?> GetByJigId(Guid id)
         {
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
         }
-        public async Task<StationViewModel?> GetByStationProductionId(int id)
+        public async Task<StationViewModel?> GetByStationProductionId(Guid id)
         {
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
         }
@@ -47,14 +47,14 @@ namespace BiometricFaceApi.Repositories
             else
             {
                 // update
-                stationModelUp.JigId = stationView.JigId;
-                stationModelUp.StationId = stationView.StationId;
+                stationModelUp.MonitorEsdId = stationView.MonitorEsdId;
+                stationModelUp.LinkStationAndLineId = stationView.LinkStationAndLineId;
                 _dbContext.StationViews.Update(stationModelUp);
                 await _dbContext.SaveChangesAsync();
             }
             return stationView;
         }
-        public async Task<StationViewModel> Delete(int id)
+        public async Task<StationViewModel> Delete(Guid id)
         {
             StationViewModel lineviewDel = await GetByStationViewId(id);
             if (lineviewDel == null)

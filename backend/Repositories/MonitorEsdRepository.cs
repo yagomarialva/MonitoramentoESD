@@ -65,7 +65,6 @@ namespace BiometricFaceApi.Repositories
                 monitorModel.PositionId = monitorModel.PositionId;
                 monitorModel.PositionSequence = monitorModel.PositionSequence;
                 monitorModel.Status = monitorModel.Status;
-                monitorModel.UserId = monitorModel.UserId;
                 monitorModelUp.Description = monitorModel.Description;
                 _dbContext.MonitorEsds.Update(monitorModelUp);
                 await _dbContext.SaveChangesAsync();

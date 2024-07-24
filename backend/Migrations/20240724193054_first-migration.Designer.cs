@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiometricFaceApi.Migrations
 {
     [DbContext(typeof(BiometricFaceDBContex))]
-    [Migration("20240724140859_first-migration")]
+    [Migration("20240724193054_first-migration")]
     partial class firstmigration
     {
         /// <inheritdoc />
@@ -97,10 +97,15 @@ namespace BiometricFaceApi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<int>("PositionID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("PositionID");
 
                     b.ToTable("jig");
                 });
@@ -325,6 +330,12 @@ namespace BiometricFaceApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("SizeX")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SizeY")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.ToTable("station");
@@ -332,28 +343,28 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.StationViewModel", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("JigId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("StationId")
+                    b.Property<int>("LinkStationAndLineId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MonitorEsdId")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("JigId")
-                        .IsUnique();
+                    b.HasIndex("LinkStationAndLineId");
 
-                    b.HasIndex("StationId");
+                    b.HasIndex("MonitorEsdId")
+                        .IsUnique();
 
                     b.ToTable("stationView");
                 });
@@ -390,6 +401,17 @@ namespace BiometricFaceApi.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BiometricFaceApi.Models.JigModel", b =>
+                {
+                    b.HasOne("BiometricFaceApi.Models.PositionModel", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Position");
                 });
 
             modelBuilder.Entity("BiometricFaceApi.Models.LinkStationAndLineModel", b =>
@@ -486,21 +508,21 @@ namespace BiometricFaceApi.Migrations
 
             modelBuilder.Entity("BiometricFaceApi.Models.StationViewModel", b =>
                 {
-                    b.HasOne("BiometricFaceApi.Models.JigModel", "Jig")
+                    b.HasOne("BiometricFaceApi.Models.LinkStationAndLineModel", "linkStationAndLine")
                         .WithMany()
-                        .HasForeignKey("JigId")
+                        .HasForeignKey("LinkStationAndLineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BiometricFaceApi.Models.StationModel", "Station")
+                    b.HasOne("BiometricFaceApi.Models.MonitorEsdModel", "MonitorEsd")
                         .WithMany()
-                        .HasForeignKey("StationId")
+                        .HasForeignKey("MonitorEsdId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Jig");
+                    b.Navigation("MonitorEsd");
 
-                    b.Navigation("Station");
+                    b.Navigation("linkStationAndLine");
                 });
 #pragma warning restore 612, 618
         }
