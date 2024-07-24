@@ -4,8 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-../fct_auto_test_0.0.1-win32-x64
-../backend
+./fct_auto_test_0.0.1-win32-x64
+./backend
 # testing
 /coverage
 
