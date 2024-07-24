@@ -72,6 +72,7 @@
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "electron": "^30.0.9",
+    "electron-packager": "^17.1.2",
     "react-router-dom": "^6.23.1",
     "wait-on": "^7.2.0",
     "webpack-node-externals": "^3.0.0"
