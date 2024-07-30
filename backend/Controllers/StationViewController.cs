@@ -14,7 +14,7 @@ namespace BiometricFaceApi.Controllers
     [ApiController]
     public class StationViewController : Controller
     {
-        private readonly StationViewService _stationRepository;
+        private readonly StationViewService _stationViewRepository;
         private readonly MonitorEsdService _monitorEsdService;
         private readonly LinkStationAndLineService _linkStationAndLineService;
         private readonly StationService _stationService;
@@ -24,7 +24,7 @@ namespace BiometricFaceApi.Controllers
 
         public StationViewController(IStationViewRepository stationViewRepository, IMonitorEsdRepository monitorEsdRepository, ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationRepository, ILineRepository lineRepository, IPositionRepository positionRepository )
         {
-            _stationRepository = new StationViewService(stationViewRepository, monitorEsdRepository, linkStationAndLineRepository);
+            _stationViewRepository = new StationViewService(stationViewRepository, monitorEsdRepository, linkStationAndLineRepository);
             _monitorEsdService = new MonitorEsdService(monitorEsdRepository,positionRepository);
             _linkStationAndLineService = new LinkStationAndLineService(linkStationAndLineRepository, stationRepository, lineRepository);
         }
@@ -37,12 +37,12 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer")]
+        //[Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/todasEstacaoView")]
         public async Task<ActionResult> BuscarTodos()
         {
-            var (result, statusCode) = await _stationRepository.GetAllStationView();
+            var (result, statusCode) = await _stationViewRepository.GetAllStationView();
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
@@ -57,12 +57,12 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer")]
+        //[Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarEstacaView/{id}")]
         public async Task<ActionResult> BuscarIdEstacaoView(Guid id)
         {
-            var (result, statusCode) = await _stationRepository.GetStationViewId(id);
+            var (result, statusCode) = await _stationViewRepository.GetStationViewId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
@@ -76,12 +76,12 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer")]
+        //[Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarEstViewJigs/{id}")]
         public async Task<ActionResult> BuscarJigId(Guid id)
         {
-            var (result, statusCode) = await _stationRepository.GetJigId(id);
+            var (result, statusCode) = await _stationViewRepository.GetJigId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
@@ -95,12 +95,12 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer")]
+        //[Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarEstacaoDeProducao/{id}")]
         public async Task<ActionResult> BuscarEstacaoDeProducaoId(Guid id)
         {
-            var (result, statusCode) = await _stationRepository.GetByStationProductionId(id);
+            var (result, statusCode) = await _stationViewRepository.GetByStationProductionId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
@@ -117,14 +117,14 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer")]
+        //[Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/adicionarEstacaoView")]
         public async Task<ActionResult> Include(StationViewModel model)
         {
-            var result = await _stationRepository.Include(model);
+            var (result,statusCode) = await _stationViewRepository.Include(model);
 
-            return StatusCode(result.Item2, result.Item1);
+            return StatusCode(statusCode, result);
         }
 
 
@@ -136,12 +136,12 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer")]
+        //[Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
         [Route("/deleteLineView/{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            var (result, statusCode) = await _stationRepository.Delete(id);
+            var (result, statusCode) = await _stationViewRepository.Delete(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             if (!string.IsNullOrEmpty(jsonResponse))

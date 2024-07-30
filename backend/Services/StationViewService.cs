@@ -127,7 +127,7 @@ namespace BiometricFaceApi.Services
             try
             {
                 
-                if (stationViewModel.MonitorEsdId == 0 & stationViewModel.LinkStationAndLineId == 0)
+                if (stationViewModel.MonitorEsdId <= 0 & stationViewModel.LinkStationAndLineId <= 0)
                 {
                     throw new Exception("Todos os campos são obrigatórios.");
                 }

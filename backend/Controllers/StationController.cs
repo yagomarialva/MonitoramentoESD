@@ -87,16 +87,16 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer")]
-        [HttpGet]
-        [Route("/BuscarEstacao/{id}")]
-        public async Task<ActionResult> BuscarEstacaoId(int id)
-        {
-            var (result, statusCode) = await _service.GetStationId(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            return StatusCode(statusCode, result);
-        }
+        //[Authorize(Roles = "administrator,operator,developer")]
+        //[HttpGet]
+        //[Route("/BuscarEstacao/{id}")]
+        //public async Task<ActionResult> BuscarEstacaoId(int id)
+        //{
+        //    var (result, statusCode) = await _service.GetStationId(id);
+        //    var options = new JsonSerializerOptions { WriteIndented = true };
+        //    string jsonResponse = JsonSerializer.Serialize(result, options);
+        //    return StatusCode(statusCode, result);
+        //}
         /// <summary>
         /// Cadastra e Atualiza de dados da Estação.
         /// </summary>

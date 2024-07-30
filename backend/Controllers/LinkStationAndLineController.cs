@@ -118,9 +118,9 @@ namespace BiometricFaceApi.Controllers
         [Route("/adicionarLinks")]
         public async Task<ActionResult> ManagerEstacao(LinkStationAndLineModel model)
         {
-            var result = await _service.Include(model);
+            var (result,statusCode) = await _service.Include(model);
 
-            return StatusCode(result.Item2, result.Item1);
+            return StatusCode(statusCode,result);
         }
 
         /// <summary>

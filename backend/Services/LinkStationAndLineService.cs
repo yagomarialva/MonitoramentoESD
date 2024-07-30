@@ -21,12 +21,35 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                List<LinkStationAndLineModel> position = await _repository.GetAllLinks();
-                if (!position.Any())
+                List<LinkStationAndLineModel>? position = await _repository.GetAllLinks();
+
+                if (position==null ||!position.Any())
                 {
                     result = "Nenhuma Link cadastrado.";
                     statusCode = StatusCodes.Status404NotFound;
                 }
+                else
+                {
+                    var stations = position.Select(x => x.StationID).Distinct().ToList();
+                    var lines = position.Select(x=>x.LineID).Distinct().ToList();   
+                    foreach(var station in stations)
+                    {
+                        var stationData = await _stationRepository.GetByStationId(station);
+                        foreach(var item in position.Where(x => x.StationID == station))
+                        {
+                            item.Station = stationData;
+                        }
+                    }
+                    foreach (var line in lines)
+                    {
+                        var lineData = await _lineRepository.GetLineID(line);
+                        foreach (var item in position.Where(x => x.LineID == line))
+                        {
+                            item.Line = lineData;
+                        }
+                    }
+                }
+
                 result = position;
                 statusCode = StatusCodes.Status200OK;
                 return (result, statusCode);
@@ -71,14 +94,24 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                var lineId = await _repository.GetByLineId(id);
-                if (lineId == null)
+                var links = await _repository.GetByLineId(id);
+                if (links == null || !links.Any())
                 {
 
                     result = $"{id} não encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
                 }
-                result = lineId;
+                else
+                {
+                    var lineDetails = await _lineRepository.GetLineID(links.FirstOrDefault().LineID);
+                    foreach(var link in links)
+                    {
+                        link.Line = lineDetails;
+                        link.Station = await _stationRepository.GetByStationId(link.StationID);
+                    }
+
+                }
+                result = links;
                 statusCode = StatusCodes.Status200OK;
                 return (result, statusCode);
             }
@@ -95,14 +128,24 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                var stationId = await _repository.GetByStationId(id);
-                if (stationId == null)
+                var links = await _repository.GetByStationId(id);
+                if (links == null || !links.Any())
                 {
 
                     result = $"{id} não encontrado.";
                     statusCode = StatusCodes.Status404NotFound;
                 }
-                result = stationId;
+                else
+                {
+                    var stationDetails = await _stationRepository.GetByStationId(links.FirstOrDefault().StationID);
+                    foreach (var link in links)
+                    {
+                        link.Station = stationDetails;
+                        link.Line = await _lineRepository.GetLineID(link.LineID);
+                    }
+
+                }
+                result = links;
                 statusCode = StatusCodes.Status200OK;
                 return (result, statusCode);
             }
@@ -125,7 +168,7 @@ namespace BiometricFaceApi.Services
                     throw new Exception("Referência Id de linha ou estação nao é válido.");
                 else
                 {
-                    var existingCobination = _repository.GetByLineIdAndStationId(model.LineID, model.StationID);
+                    var existingCobination = await _repository.GetByLineIdAndStationId(model.LineID, model.StationID);
                     if (existingCobination is not null)
                         throw new Exception("Esta combinação já constata na base.");
                     response = await _repository.Include(model);

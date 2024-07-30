@@ -33,7 +33,7 @@ namespace BiometricFaceApi.Services
                 }
                 else
                 {
-                    
+
                     result = monitor;
                     statusCode = StatusCodes.Status200OK;
                 }
@@ -127,8 +127,7 @@ namespace BiometricFaceApi.Services
                     {
                         id = respositoryMonitor.ID,
                         serialNumber = respositoryMonitor.SerialNumber,
-                        positionId = respositoryMonitor.PositionId,
-                        positionSeguence = respositoryMonitor.PositionSequence,
+                        /* positionId = respositoryMonitor.PositionId,*/
                         status = respositoryMonitor.Status,
                         description = respositoryMonitor.Description
                     };

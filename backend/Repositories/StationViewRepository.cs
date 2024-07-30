@@ -40,6 +40,18 @@ namespace BiometricFaceApi.Repositories
             if (stationModelUp == null)
             {
                 // include
+                var linkDetails = await _dbContext.LinkStationAndLines.FindAsync(stationView.LinkStationAndLineId);
+                if (linkDetails == null)
+                    throw new Exception("Id de link é invalido!");
+                stationView.LinkStationAndLine = linkDetails;
+                stationView.LinkStationAndLine.Station = await _dbContext.Station.FindAsync(stationView.LinkStationAndLine.StationID);
+
+                var links = await _dbContext.StationViews.Where(x => x.LinkStationAndLineId == stationView.LinkStationAndLineId).ToListAsync();
+                var counterLinks = links.Count();
+                var maxQuantity = stationView.LinkStationAndLine.Station?.SizeY * stationView.LinkStationAndLine.Station?.SizeX;
+                if (counterLinks >= maxQuantity)
+                    throw new Exception($"Quantidade de monitores esd excedida, maximo {maxQuantity}!");
+                stationView.PositionSequence = counterLinks;
                 await _dbContext.StationViews.AddAsync(stationView);
                 await _dbContext.SaveChangesAsync();
 
