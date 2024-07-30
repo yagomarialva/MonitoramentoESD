@@ -47,10 +47,6 @@ namespace BiometricFaceApi.Services
             {
                 //get all valid roles
                 var roles = await rolesRepository.GetAllRoles();
-                if (string.IsNullOrEmpty(auth.Username) || (string.IsNullOrEmpty(auth.Badge)))
-                {
-                    throw new Exception("Campo Nome e Matricula são obrigatório.");
-                }
                 if (roles != null && !roles.Where(r => r.RolesName?.ToLower() == auth.RolesName?.ToLower()).Any())
                 {
                     throw new Exception("Perfil selecionado é inválido!");

@@ -45,7 +45,11 @@ namespace BiometricFaceApi.Repositories
                     throw new Exception("Id de link é invalido!");
                 stationView.LinkStationAndLine = linkDetails;
                 stationView.LinkStationAndLine.Station = await _dbContext.Station.FindAsync(stationView.LinkStationAndLine.StationID);
+                var linkWithMonitor = await _dbContext.StationViews.Where(link => (link.MonitorEsdId == stationView.MonitorEsdId && link.LinkStationAndLineId == stationView.LinkStationAndLineId) || link.MonitorEsdId == stationView.MonitorEsdId).ToListAsync();
 
+
+                if (linkWithMonitor.Any())
+                    throw new Exception("A combinação de monitor esd e estação já existe ou monitor esd já está vinculado com outra estação!");
                 var links = await _dbContext.StationViews.Where(x => x.LinkStationAndLineId == stationView.LinkStationAndLineId).ToListAsync();
                 var counterLinks = links.Count();
                 var maxQuantity = stationView.LinkStationAndLine.Station?.SizeY * stationView.LinkStationAndLine.Station?.SizeX;
@@ -58,9 +62,57 @@ namespace BiometricFaceApi.Repositories
             }
             else
             {
-                // update 
-                stationModelUp.MonitorEsdId = stationView.MonitorEsdId;
-                stationModelUp.LinkStationAndLineId = stationView.LinkStationAndLineId;
+                // update
+
+                var linkDetails = await _dbContext.LinkStationAndLines.FindAsync(stationModelUp.LinkStationAndLineId);
+                var currentMonitorEsd = await _dbContext.MonitorEsds.FindAsync(stationModelUp.MonitorEsdId);
+                stationModelUp.MonitorEsd = currentMonitorEsd;
+                stationModelUp.LinkStationAndLine = linkDetails;
+                stationModelUp.LinkStationAndLine.Station = await _dbContext.Station.FindAsync(stationModelUp.LinkStationAndLine.StationID);
+                var maxQuantity = linkDetails?.Station?.SizeY * linkDetails?.Station?.SizeX ?? 0;
+                if (stationView.PositionSequence < 0 || stationView.PositionSequence >= maxQuantity)
+                    throw new Exception("A sequência informada não é valida.");
+
+                //check get details about new monitor e new station
+
+                var newMonitorEsd = await _dbContext.MonitorEsds.FindAsync(stationView.MonitorEsdId);
+                var newLinkStationAndLine = await _dbContext.LinkStationAndLines.FindAsync(stationView.LinkStationAndLineId);
+                if (newMonitorEsd == null)
+                    throw new Exception($"Id {stationView.MonitorEsdId} de Monitor ESD é invalido");
+                if (newLinkStationAndLine == null)
+                    throw new Exception($"Id {stationView.LinkStationAndLineId} de sessão de linha é invalido");
+                newLinkStationAndLine.Line = await _dbContext.lineModels.FindAsync(newLinkStationAndLine.LineID);
+                newLinkStationAndLine.Station = await _dbContext.Station.FindAsync(newLinkStationAndLine.StationID);
+                var lastLinkOfStation = await _dbContext.StationViews.FirstOrDefaultAsync(link => link.LinkStationAndLineId == newLinkStationAndLine.ID);
+                MonitorEsdModel? currentMonitorOfNewLinkStationAndLine = null;
+                var currentLinkStationAndLineOfNewMonitorEsd = await _dbContext.StationViews.FirstOrDefaultAsync(link => link.MonitorEsdId == newMonitorEsd.ID);
+                if (lastLinkOfStation != null)
+                    currentMonitorOfNewLinkStationAndLine = await _dbContext.MonitorEsds.FindAsync(lastLinkOfStation.MonitorEsdId);
+                // check if monitor have link with another station
+
+                MonitorEsdModel? auxMonitorEsd = stationModelUp.MonitorEsd;
+                int auxPositionSequence = stationModelUp.PositionSequence;
+                //monitor esd haven't station
+                if (currentLinkStationAndLineOfNewMonitorEsd == null)
+                {
+
+                    stationModelUp.MonitorEsdId = newMonitorEsd.ID;
+                    stationModelUp.MonitorEsd = newMonitorEsd;
+                    stationModelUp.PositionSequence = stationView.PositionSequence;
+                }
+                else
+                {
+                    stationModelUp.MonitorEsdId = newMonitorEsd.ID;
+                    stationModelUp.MonitorEsd = newMonitorEsd;
+                    stationModelUp.PositionSequence = stationView.PositionSequence;
+
+                    currentLinkStationAndLineOfNewMonitorEsd.MonitorEsd = auxMonitorEsd;
+                    currentLinkStationAndLineOfNewMonitorEsd.MonitorEsdId = auxMonitorEsd.ID;
+                    currentLinkStationAndLineOfNewMonitorEsd.PositionSequence = auxPositionSequence;
+                }
+
+
+
                 _dbContext.StationViews.Update(stationModelUp);
                 await _dbContext.SaveChangesAsync();
             }

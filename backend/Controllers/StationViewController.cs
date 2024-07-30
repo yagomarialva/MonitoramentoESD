@@ -37,7 +37,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/todasEstacaoView")]
         public async Task<ActionResult> BuscarTodos()
@@ -57,7 +57,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarEstacaView/{id}")]
         public async Task<ActionResult> BuscarIdEstacaoView(Guid id)
@@ -76,7 +76,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarEstViewJigs/{id}")]
         public async Task<ActionResult> BuscarJigId(Guid id)
@@ -95,7 +95,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
         [Route("/BuscarEstacaoDeProducao/{id}")]
         public async Task<ActionResult> BuscarEstacaoDeProducaoId(Guid id)
@@ -117,7 +117,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpPost]
         [Route("/adicionarEstacaoView")]
         public async Task<ActionResult> Include(StationViewModel model)
@@ -136,7 +136,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
+        [Authorize(Roles = "administrator,operator,developer")]
         [HttpDelete]
         [Route("/deleteLineView/{id}")]
         public async Task<ActionResult> Delete(Guid id)

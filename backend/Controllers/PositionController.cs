@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace BiometricFaceApi.Controllers
+/*namespace BiometricFaceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -142,3 +142,5 @@ namespace BiometricFaceApi.Controllers
         }
     }
 }
+*/
+

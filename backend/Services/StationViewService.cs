@@ -136,9 +136,9 @@ namespace BiometricFaceApi.Services
                 result = await _stationViewRepository.Include(stationViewModel);
 
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                result = "Não foi possível salvar as alterações. Verifique se todos os itens estão cadastrados.";
+                result = exception.Message?? "Não foi possível salvar as alterações. Verifique se todos os itens estão cadastrados.";
 
                 statusCode = StatusCodes.Status400BadRequest;
             }
