@@ -1,9 +1,11 @@
-import React, { useState } from "react";
 import { Tooltip } from "@mui/material";
 import "./ESDTable.css";
 import ESDHomeModal from "../ESDHomeModal/ESDHomeModal";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ESDDashboardPage = () => {
+  const navigate = useNavigate()
   const [columns] = useState([
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 2, 5, 14, 15, 16, 17, 18,
   ]);
@@ -19,6 +21,21 @@ const ESDDashboardPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    const fetchDataAllUsers = async () => {
+      try {
+        // const result = await getAllOperators();
+        // handleStateChange({ allOperators: result.value });
+      } catch (error) {
+          if(error.message === 'Request failed with status code 401'){
+            localStorage.removeItem('token')
+            navigate('/')
+          }
+      }
+    };
+    fetchDataAllUsers();
+  }, []);
 
   const [status] = useState([
     { indexColumn: 0, indexRow: 0, status: "ok" },

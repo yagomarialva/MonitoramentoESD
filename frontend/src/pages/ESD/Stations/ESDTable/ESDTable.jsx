@@ -28,13 +28,16 @@ import ESDEditForm from "../ESDEditForm/ESDEditForm";
 import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 import "./SnackbarStyles.css";
 // import "./ESDTable.css";
-import Menu from "../../../Menu/Menu";
 import { useNavigate } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const ESDTable = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [state, setState] = useState({
     allJigs: [],
     station: {},
@@ -156,9 +159,9 @@ const ESDTable = () => {
         const result = await getAllJigs();
         handleStateChange({ allJigs: result });
       } catch (error) {
-        if(error.message === 'Request failed with status code 401'){
-          localStorage.removeItem('token')
-          navigate('/')
+        if (error.message === "Request failed with status code 401") {
+          localStorage.removeItem("token");
+          navigate("/");
         }
         showSnackbar(t(error.message), "error");
       }
@@ -171,15 +174,6 @@ const ESDTable = () => {
       await handleDelete(state.stationToDelete.id);
       handleDeleteClose();
     }
-  };
-
-  const filterJigs = () => {
-    return state.allJigs.filter((jig) => {
-      return (
-        jig.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        jig.badge.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
   };
 
   const handleFilterChange = (e) => {
@@ -217,78 +211,98 @@ const ESDTable = () => {
       <Typography paragraph>
         <Container>
           <Box>
-            <div>
-              <TextField
-                name="filterName"
-                label={t("ESD_TEST.TABLE.USER_ID", {
-                  appName: "App for Translations",
-                })}
-                variant="outlined"
-                value={state.filterName}
-                onChange={handleFilterChange}
-                sx={{ mb: 2, mr: 2 }}
-              />
-              <TextField
-                name="filterDescription"
-                label={t("ESD_TEST.TABLE.NAME", {
-                  appName: "App for Translations",
-                })}
-                variant="outlined"
-                value={state.filterDescription}
-                onChange={handleFilterChange}
-                sx={{ mb: 2 }}
-              />
-              <Button
-                id="add-button"
-                variant="outlined"
-                color="success"
-                onClick={handleOpenModal}
-                sx={{ mb: 2, ml: 2 }}
-              >
-                {t("ESD_TEST.ADD_STATION", { appName: "App for Translations" })}
-              </Button>
-              <List>
-                {paginatedJigs.map((station) => (
-                  <ListItem key={station.id}>
-                    <ListItemText
-                      primary={station.name}
-                      secondary={station.description}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        edge="end"
-                        aria-label="edit"
-                        onClick={() => handleEditOpen(station)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        aria-label="info"
-                        onClick={() => handleOpen(station)}
-                      >
-                        <Info />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => handleDeleteOpen(station)}
-                      >
-                        <Delete />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-              <TablePagination
-                component="div"
-                count={filteredJigs.length}
-                page={state.page}
-                onPageChange={handleChangePage}
-                rowsPerPage={state.rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </div>
+            <Row>
+              <Col sm={10}>
+                <TextField
+                  name="filterName"
+                  label={t("ESD_TEST.TABLE.USER_ID", {
+                    appName: "App for Translations",
+                  })}
+                  variant="outlined"
+                  value={state.filterName}
+                  onChange={handleFilterChange}
+                  sx={{ mb: 2, mr: 2 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <TextField
+                  name="filterDescription"
+                  label={t("ESD_TEST.TABLE.NAME", {
+                    appName: "App for Translations",
+                  })}
+                  variant="outlined"
+                  value={state.filterDescription}
+                  onChange={handleFilterChange}
+                  sx={{ mb: 2 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Col>
+              <Col sm={2}>
+                <Button
+                  id="add-button"
+                  variant="outlined"
+                  color="success"
+                  onClick={handleOpenModal}
+                  sx={{ mb: 2, ml: 2 }}
+                >
+                  {t("ESD_TEST.ADD_STATION", {
+                    appName: "App for Translations",
+                  })}
+                </Button>
+              </Col>
+            </Row>
+            <List>
+              {paginatedJigs.map((station) => (
+                <ListItem key={station.id}>
+                  <ListItemText
+                    primary={station.name}
+                    secondary={station.description}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="edit"
+                      onClick={() => handleEditOpen(station)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="info"
+                      onClick={() => handleOpen(station)}
+                    >
+                      <Info />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleDeleteOpen(station)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+            <TablePagination
+              component="div"
+              count={filteredJigs.length}
+              page={state.page}
+              onPageChange={handleChangePage}
+              rowsPerPage={state.rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
             <ESDModal
               open={state.open}
               handleClose={handleClose}

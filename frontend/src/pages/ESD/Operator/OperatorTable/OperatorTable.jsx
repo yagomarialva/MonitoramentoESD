@@ -4,7 +4,6 @@ import {
   getAllOperators,
   createOperators,
   deleteOperators,
-  updateOperators,
 } from "../../../../api/operatorsAPI";
 import {
   IconButton,
@@ -17,7 +16,6 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Container,
-  Typography,
   TablePagination,
   TextField,
   Tooltip,
@@ -27,13 +25,16 @@ import OperatorModal from "../OperatorModal/OperatorModal";
 import OperatorForm from "../OperatorForm/OperatorForm";
 import OperatorEditForm from "../OperatorEditForm/OperatorEditForm";
 import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
-import Menu from "../../../Menu/Menu";
 import "./SnackbarStyles.css";
 import "./ESDTable.css";
 import { useNavigate } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const OperatorTable = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [state, setState] = useState({
     allOperators: [],
@@ -47,7 +48,7 @@ const OperatorTable = () => {
     operatorToDelete: null,
     snackbarOpen: false,
     snackbarMessage: "",
-    snackbarSeverity: "success"
+    snackbarSeverity: "success",
   });
 
   const [page, setPage] = useState(0);
@@ -159,10 +160,10 @@ const OperatorTable = () => {
         const result = await getAllOperators();
         handleStateChange({ allOperators: result.value });
       } catch (error) {
-          if(error.message === 'Request failed with status code 401'){
-            localStorage.removeItem('token')
-            navigate('/')
-          }
+        if (error.message === "Request failed with status code 401") {
+          localStorage.removeItem("token");
+          navigate("/");
+        }
         showSnackbar(t(error.message));
       }
     };
@@ -210,33 +211,53 @@ const OperatorTable = () => {
   return (
     <>
       <Container>
-        <TextField
-          name="filterName"
-          label="Nome"
-          variant="outlined"
-          value={state.filterName}
-          onChange={handleSearchNameChange}
-          sx={{ mb: 2, mr: 2 }}
-        />
-        <TextField
-          name="filterDescription"
-          label="Matricula"
-          variant="outlined"
-          value={state.filterDescription}
-          onChange={handleSearchBadgeChange}
-          sx={{ mb: 2 }}
-        />
-        <Button
-          id="add-button"
-          variant="outlined"
-          color="success"
-          onClick={handleOpenModal}
-          sx={{ mb: 2, ml: 2 }}
-        >
-          {t("ESD_OPERATOR.ADD_OPERATOR", {
-            appName: "App for Translations",
-          })}
-        </Button>
+        <Row>
+          <Col sm={10}>
+            <TextField
+              name="filterName"
+              label="Nome"
+              variant="outlined"
+              value={state.filterName}
+              onChange={handleSearchNameChange}
+              sx={{ mb: 2, mr: 2 }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              name="filterDescription"
+              label="Matricula"
+              variant="outlined"
+              value={state.filterDescription}
+              onChange={handleSearchBadgeChange}
+              sx={{ mb: 2 }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Col>
+          <Col sm={2}>
+            <Button
+              id="add-button"
+              variant="outlined"
+              color="success"
+              onClick={handleOpenModal}
+              sx={{ mb: 2, ml: 2 }}
+            >
+              {t("ESD_OPERATOR.ADD_OPERATOR", {
+                appName: "App for Translations",
+              })}
+            </Button>
+          </Col>
+        </Row>
         <Box>
           <List>
             {displayOperators.map((operator) => (

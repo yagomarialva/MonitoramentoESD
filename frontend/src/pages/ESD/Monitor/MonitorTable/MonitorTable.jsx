@@ -26,12 +26,16 @@ import MonitorModal from "../MonitorModal/MonitorModal";
 import MonitorForm from "../MonitorForm/MonitorForm";
 import MonitorConfirmModal from "../MonitorConfirmModal/MonitorConfirmModal";
 import MonitorEditForm from "../MonitorEditForm/MonitorEditForm";
-import Menu from "../../../Menu/Menu";
 import { useNavigate } from "react-router-dom";
+import "./MonitorTable.css";
+import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const MonitorTable = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [state, setState] = useState({
     allMonitors: [],
     monitor: {},
@@ -79,7 +83,10 @@ const MonitorTable = () => {
   };
 
   const handleCreateMonitor = async (monitor) => {
-    const maxId = state.allMonitors.reduce((max, monitor) => Math.max(max, monitor.id), 0);
+    const maxId = state.allMonitors.reduce(
+      (max, monitor) => Math.max(max, monitor.id),
+      0
+    );
     const newId = maxId + 1;
 
     const newMonitor = { id: newId, ...monitor };
@@ -149,9 +156,9 @@ const MonitorTable = () => {
         const result = await getAllMonitors();
         handleStateChange({ allMonitors: result });
       } catch (error) {
-        if(error.message === 'Request failed with status code 401'){
-          localStorage.removeItem('token')
-          navigate('/')
+        if (error.message === "Request failed with status code 401") {
+          localStorage.removeItem("token");
+          navigate("/");
         }
         showSnackbar(t(error.message));
       }
@@ -184,8 +191,12 @@ const MonitorTable = () => {
 
   const filteredMonitors = state.allMonitors.filter((monitor) => {
     return (
-      monitor.serialNumber.toLowerCase().includes(state.filterSerialNumber.toLowerCase()) &&
-      monitor.description.toLowerCase().includes(state.filterDescription.toLowerCase())
+      monitor.serialNumber
+        .toLowerCase()
+        .includes(state.filterSerialNumber.toLowerCase()) &&
+      monitor.description
+        .toLowerCase()
+        .includes(state.filterDescription.toLowerCase())
     );
   });
 
@@ -197,80 +208,99 @@ const MonitorTable = () => {
   return (
     <>
       <Typography paragraph>
-        <Container >
+        <Container>
           <Box>
-            <div>
-              <TextField
-                name="filterSerialNumber"
-                label={t("ESD_MONITOR.TABLE.USER_ID", {
-                  appName: "App for Translations",
-                })}
-                variant="outlined"
-                value={state.filterSerialNumber}
-                onChange={handleFilterChange}
-                sx={{ mb: 2, mr: 2 }}
-              />
-              <TextField
-                name="filterDescription"
-                label={t("ESD_MONITOR.TABLE.NAME", {
-                  appName: "App for Translations",
-                })}
-                variant="outlined"
-                value={state.filterDescription}
-                onChange={handleFilterChange}
-                sx={{ mb: 2 }}
-              />
-              <Button
-                id="add-button"
-                variant="outlined"
-                color="success"
-                onClick={handleOpenModal}
-                sx={{ mb: 2, ml: 2 }}
-              >
-                {t("ESD_MONITOR.ADD_MONITOR", { appName: "App for Translations" })}
-              </Button>
-              <List>
-                {paginatedMonitors.map((monitor) => (
-                  <ListItem key={monitor.id}>
-                    <ListItemText
-                      primary={monitor.serialNumber}
-                      secondary={monitor.description}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        edge="end"
-                        aria-label="edit"
-                        onClick={() => handleEditOpen(monitor)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        aria-label="info"
-                        onClick={() => handleOpen(monitor)}
-                      >
-                        <Info />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => handleDeleteOpen(monitor)}
-                      >
-                        <Delete />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-              <TablePagination
-                component="div"
-                count={filteredMonitors.length}
-                page={state.page}
-                onPageChange={handleChangePage}
-                rowsPerPage={state.rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </div>
+            <Row>
+              <Col sm={10}>
+                <TextField
+                  name="filterSerialNumber"
+                  label={t("ESD_MONITOR.TABLE.USER_ID", {
+                    appName: "App for Translations",
+                  })}
+                  variant="outlined"
+                  value={state.filterSerialNumber}
+                  onChange={handleFilterChange}
+                  sx={{ mb: 2, mr: 2 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <TextField
+                  name="filterDescription"
+                  label={t("ESD_MONITOR.TABLE.NAME", {
+                    appName: "App for Translations",
+                  })}
+                  variant="outlined"
+                  value={state.filterDescription}
+                  onChange={handleFilterChange}
+                  sx={{ mb: 2, mr: 2 }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Col>
+              <Col sm={2}>
+                <Button
+                  id="add-button"
+                  variant="outlined"
+                  color="success"
+                  onClick={handleOpenModal}
+                >
+                  {t("ESD_MONITOR.ADD_MONITOR", {
+                    appName: "App for Translations",
+                  })}
+                </Button>
+              </Col>
+            </Row>
+            <List>
+              {paginatedMonitors.map((monitor) => (
+                <ListItem key={monitor.id}>
+                  <ListItemText
+                    primary={monitor.serialNumber}
+                    secondary={monitor.description}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="edit"
+                      onClick={() => handleEditOpen(monitor)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="info"
+                      onClick={() => handleOpen(monitor)}
+                    >
+                      <Info />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => handleDeleteOpen(monitor)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+            <TablePagination
+              component="div"
+              count={filteredMonitors.length}
+              page={state.page}
+              onPageChange={handleChangePage}
+              rowsPerPage={state.rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
             <MonitorModal
               open={state.open}
               handleClose={handleClose}
