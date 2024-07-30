@@ -58,7 +58,7 @@ namespace BiometricFaceApi.Repositories
             }
             else
             {
-                // update
+                // update 
                 stationModelUp.MonitorEsdId = stationView.MonitorEsdId;
                 stationModelUp.LinkStationAndLineId = stationView.LinkStationAndLineId;
                 _dbContext.StationViews.Update(stationModelUp);
