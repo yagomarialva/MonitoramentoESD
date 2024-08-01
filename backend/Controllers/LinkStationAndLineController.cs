@@ -15,15 +15,15 @@ namespace BiometricFaceApi.Controllers
         private readonly LinkStationAndLineService _service;
         private readonly StationService _stationService;
         private readonly LineService _lineService;
-        private readonly PositionService _positionService;
+       
 
-        public LinkStationAndLineController(ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationService, ILineRepository lineService, IPositionRepository positionRepository)
+        public LinkStationAndLineController(ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationService, ILineRepository lineService)
         {
 
-            _stationService = new StationService(stationService, positionRepository);
+           
             _lineService = new LineService(lineService);
             _service = new LinkStationAndLineService(linkStationAndLineRepository, stationService, lineService);
-            _positionService = new PositionService(positionRepository);
+           
         }
         /// <summary>
         /// Buscar todos

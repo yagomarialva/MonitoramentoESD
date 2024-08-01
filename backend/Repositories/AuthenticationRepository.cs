@@ -46,6 +46,7 @@ namespace BiometricFaceApi.Repositories
         public async Task<AuthenticationModel?> AuthUpdate(AuthenticationModel login, int id)
         {
             AuthenticationModel authGetById = await AuthGetById(id);
+
             if (authGetById == null)
             {
                 throw new Exception($"O usuário para ID:{id} não foi encontrado no banco de dados.");

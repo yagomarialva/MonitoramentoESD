@@ -25,10 +25,6 @@ namespace BiometricFaceApi.Repositories
             return await _dbContext.Jigs.FirstOrDefaultAsync(x => x.Name == jigName);
         }
 
-        public async Task<JigModel?> GetByPosition(int postionId)
-        {
-            return await _dbContext.Jigs.FirstOrDefaultAsync(x => x.PositionID == postionId);
-        }
         // Task realiza o include e update, include caso nao haja no banco, update caso ja 
         // tenha alguma propriedade cadastrada.
         public async Task<JigModel?> Include(JigModel jigModel)
@@ -47,7 +43,6 @@ namespace BiometricFaceApi.Repositories
             {
                 // update
                 repositoryJig.Name = jigModel.Name;
-                repositoryJig.Position = jigModel.Position;
                 repositoryJig.Description = jigModel.Description;
                 repositoryJig.LastUpdated = DateTime.Now;
                 _dbContext.Jigs.Update(repositoryJig);

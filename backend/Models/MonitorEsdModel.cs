@@ -21,6 +21,9 @@ namespace BiometricFaceApi.Models
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string? Status { get; set; }
+
+        [StringLength(250, ErrorMessage = "O Description deve ter no máximo 250 caracteres")]
+        [RegularExpression("^(?!\\s*$).+", ErrorMessage = "O Description deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
         public string? Description { get; set; }
         public DateTime DateHour { get; set; } 
         public DateTime LastDate { get; set; }

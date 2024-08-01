@@ -6,11 +6,11 @@ namespace BiometricFaceApi.Services
     public class StationService
     {
         private IStationRepository _stationRepository;
-        private IPositionRepository _positionRepository;
-        public StationService(IStationRepository lineProductionRepository, IPositionRepository positionRepository)
+       
+        public StationService(IStationRepository lineProductionRepository)
         {
             _stationRepository = lineProductionRepository;
-            _positionRepository = positionRepository;
+           
         }
         public async Task<(object?, int)> GetAllStation()
         {

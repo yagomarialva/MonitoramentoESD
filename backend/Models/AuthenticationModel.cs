@@ -20,13 +20,14 @@ namespace BiometricFaceApi.Models
 
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [RegularExpression("^(?!\\s*$).+", ErrorMessage = "O Badge não pode ser vazio ou conter apenas espaços em branco")]
+
+        [RegularExpression("^(?!\\s*$).{1,255}$", ErrorMessage = "O Badge não pode ser vazio ou conter apenas espaços em branco")]
         public string? Badge { get; set; }
 
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [RegularExpression("^(?!\\s*$)(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", ErrorMessage = "O Password deve ter pelo menos 8 caracteres, incluindo pelo menos uma letra e um número, " +
-            "e não pode ser vazio ou conter apenas espaços em branco")]
+        [RegularExpression("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,12}$", ErrorMessage = "A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número," +
+            " e não pode ser vazia ou conter apenas espaços em branco")]
         public string? Password { get; set; }
         
 

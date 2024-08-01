@@ -16,12 +16,11 @@ namespace BiometricFaceApi.Controllers
     public class MonitorEsdController : Controller
     {
         private readonly MonitorEsdService _service;
-        private readonly PositionService _positionService;
-        public MonitorEsdController(IMonitorEsdRepository monitorEsdRepository,IPositionRepository positionRepository)
+       
+        public MonitorEsdController(IMonitorEsdRepository monitorEsdRepository)
         {
-            _service = new MonitorEsdService(monitorEsdRepository, positionRepository);
+            _service = new MonitorEsdService(monitorEsdRepository);
            
-            _positionService = new PositionService(positionRepository);
         }
 
         /// <summary>

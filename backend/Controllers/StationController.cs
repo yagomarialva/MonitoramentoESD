@@ -13,11 +13,11 @@ namespace BiometricFaceApi.Controllers
     public class StationController : Controller
     {
         private readonly StationService _service;
-        private readonly PositionService _positionService;
+       
         
-        public StationController(IStationRepository stationRepository, IPositionRepository positionRepository)
+        public StationController(IStationRepository stationRepository)
         {
-            _service = new StationService(stationRepository, positionRepository);
+            _service = new StationService(stationRepository);
         }
 
         /// <summary>

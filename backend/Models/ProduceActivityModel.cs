@@ -41,8 +41,8 @@ namespace BiometricFaceApi.Models
         public bool IsLocked { get; set; }
 
        
-        [StringLength(100, ErrorMessage = "O Description deve ter no máximo 100 caracteres")]
-        [RegularExpression("^(?!\\s*$)[a-zA-Z0-9]+$", ErrorMessage = "O Description deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
+        [StringLength(250, ErrorMessage = "O Description deve ter no máximo 250 caracteres")]
+        [RegularExpression("^(?!\\s*$).+", ErrorMessage = "O Description deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
         public string? Description { get; set; }
         public DateTime? DataTimeMonitorEsdEvent { get; set; }
 
