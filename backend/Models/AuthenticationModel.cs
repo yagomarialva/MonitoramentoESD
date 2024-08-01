@@ -11,8 +11,8 @@ namespace BiometricFaceApi.Models
         public int ID { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [StringLength(10, ErrorMessage = "O Username deve ter no máximo 10 caracteres")]
-        [RegularExpression("^(?!\\s*$)[a-zA-Z0-9]+$", ErrorMessage = "O Username deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
+        [StringLength(16, ErrorMessage = "O Username deve ter no máximo 16 caracteres")]
+        [RegularExpression("^(?!\\s*$)[a-zA-Z0-9_\\-\\s]+$", ErrorMessage = "O Username deve conter apenas letras, números, underscores (_), hífens (-) e espaços, e não pode ser vazio ou conter apenas espaços em branco")]
         public string? Username { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
@@ -20,9 +20,9 @@ namespace BiometricFaceApi.Models
 
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-
-        [RegularExpression("^(?!\\s*$).{1,255}$", ErrorMessage = "O Badge não pode ser vazio ou conter apenas espaços em branco")]
+        [RegularExpression("^[a-zA-Z0-9]{1,255}$", ErrorMessage = "O Badge deve conter apenas letras e números e ter no máximo 255 caracteres")]
         public string? Badge { get; set; }
+
 
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
