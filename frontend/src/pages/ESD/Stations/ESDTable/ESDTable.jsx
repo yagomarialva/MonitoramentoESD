@@ -20,6 +20,7 @@ import {
   Container,
   TablePagination,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
 import ESDModal from "../ESDModal/ESDModal";
@@ -55,6 +56,7 @@ const ESDTable = () => {
     filterDescription: "",
     page: 0,
     rowsPerPage: 10,
+    loading: true, // Adicionei esta linha
   });
 
   const handleStateChange = (changes) => {
@@ -157,13 +159,14 @@ const ESDTable = () => {
     const fetchDataAllUsers = async () => {
       try {
         const result = await getAllJigs();
-        handleStateChange({ allJigs: result });
+        handleStateChange({ allJigs: result, loading: false }); // Adicionei loading: false aqui
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
           navigate("/");
         }
         showSnackbar(t(error.message), "error");
+        handleStateChange({ loading: false }); // Adicionei loading: false aqui
       }
     };
     fetchDataAllUsers();
@@ -262,39 +265,56 @@ const ESDTable = () => {
                 </Button>
               </Col>
             </Row>
-            <List>
-              {paginatedJigs.map((station) => (
-                <ListItem key={station.id}>
-                  <ListItemText
-                    primary={station.name}
-                    secondary={station.description}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="edit"
-                      onClick={() => handleEditOpen(station)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      edge="end"
-                      aria-label="info"
-                      onClick={() => handleOpen(station)}
-                    >
-                      <Info />
-                    </IconButton>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteOpen(station)}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
+            {state.loading ? (
+              <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+                <CircularProgress />
+                <Typography variant="h6" align="center" color="textSecondary" ml={2}>
+                  {t("ESD_TEST.LOADING", {
+                    appName: "App for Translations",
+                  })}
+                </Typography>
+              </Box>
+            ) : paginatedJigs.length === 0 ? (
+              <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+                <Typography variant="h6" align="center" color="textSecondary" ml={2}>
+                Sua lista está vazia
+                </Typography>
+              </Box>
+            ) : (
+              <List>
+                {paginatedJigs.map((station) => (
+                  <ListItem key={station.id}>
+                    <ListItemText
+                      primary={station.name}
+                      secondary={station.description}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => handleEditOpen(station)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="info"
+                        onClick={() => handleOpen(station)}
+                      >
+                        <Info />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDeleteOpen(station)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+              </List>
+            )}
             <TablePagination
               component="div"
               count={filteredJigs.length}

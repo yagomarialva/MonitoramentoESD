@@ -5,9 +5,11 @@ import {
   Modal,
   TextField,
   Button,
+  Tooltip,
   Box,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import "./MonitorModal.css";
 
 const style = {
   position: "absolute",
@@ -21,9 +23,7 @@ const style = {
 };
 
 const MonitorModal = ({ open, handleClose, monitor }) => {
-  const {
-    t,
-  } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Modal
@@ -33,13 +33,16 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
       aria-describedby="modal-modal-description"
     >
       <Paper sx={style}>
+        <Tooltip title={monitor.serialNumber} arrow>
         <Typography
+          className="card-text"
           variant="h6"
           id="contained-modal-title-vcenter"
           gutterBottom
         >
-          Monitor: {monitor.serialNumber}
+            Monitor: {monitor.serialNumber}
         </Typography>
+          </Tooltip>
         <Box component="form" noValidate autoComplete="off">
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <TextField
@@ -51,6 +54,9 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
               })}
               defaultValue={monitor.serialNumber}
               margin="normal"
+              InputProps={{
+                className: "ellipsis",
+              }}
             />
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -63,6 +69,9 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
               })}
               defaultValue={monitor.description}
               margin="normal"
+              InputProps={{
+                className: "ellipsis",
+              }}
             />
           </Typography>
         </Box>

@@ -37,6 +37,9 @@
     "ESD_OPERATOR": {
       "TABLE_HEADER": "Operadores ESD",
       "ADD_OPERATOR": "Adicionar Operador",
+      "EDIT_OPERATOR": "Editar Operador",
+      "INFO_OPERATOR": "Informações do Operador",
+      "DELETE_OPERATOR": "Deletar Operador",
       "TABLE": {
         "USER_ID": "Matrícula",
         "NAME": "Operador",
@@ -50,10 +53,10 @@
         "CONFORTABLE": "Confortável"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM-TEXT": "Deseja excluir o Operador?",
+        "CONFIRM_TEXT": "Deseja excluir o Operador?",
         "CLOSE": "Fechar",
         "SAVE": "Excluir",
-        "DELETE_STATION": "Excluir Operador"
+        "DELETE_OPERATOR": "Excluir Operador"
       },
       "DIALOG": {
         "CLOSE": "Fechar",

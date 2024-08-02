@@ -3,10 +3,7 @@ import {
   Typography,
   Box,
   Paper,
-  Select,
-  MenuItem,
   FormControl,
-  InputLabel,
   Modal,
   TextField,
   Button,
@@ -27,15 +24,10 @@ const style = {
 const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   const {
     t,
-    i18n: { changeLanguage, language },
+    i18n: { language },
   } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
+  const [] = useState(language);
 
-  const handleChangeLanguage = () => {
-    const newLanguage = currentLanguage === "en" ? "pt" : "en";
-    setCurrentLanguage(newLanguage);
-    changeLanguage(newLanguage);
-  };
 
   const [operator, setOperator] = useState({
     name: "",
@@ -87,7 +79,9 @@ const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
               margin="normal"
               id="outlined-name"
               name="name"
-              label="Name"
+              label={t("ESD_OPERATOR.TABLE.NAME", {
+                appName: "App for Translations",
+              })}
               value={operator.name}
               onChange={handleChange}
             />
@@ -97,7 +91,9 @@ const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             margin="normal"
             id="outlined-badge"
             name="badge"
-            label="Badge"
+            label={t("ESD_OPERATOR.TABLE.USER_ID", {
+              appName: "App for Translations",
+            })}
             disabled
             value={operator.badge}
           />

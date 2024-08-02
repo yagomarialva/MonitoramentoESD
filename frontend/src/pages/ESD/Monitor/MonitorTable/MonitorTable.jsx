@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   getAllMonitors,
-  createMonitors,
-  deleteMonitors,
-  updateMonitors,
+  createMonitor,
+  deleteMonitor,
+  updateMonitor,
 } from "../../../../api/monitorApi";
 import {
   IconButton,
@@ -91,7 +91,7 @@ const MonitorTable = () => {
 
     const newMonitor = { id: newId, ...monitor };
     try {
-      const response = await createMonitors(newMonitor);
+      const response = await createMonitor(newMonitor);
       handleStateChange({ allMonitors: [...state.allMonitors, newMonitor] });
       showSnackbar(
         t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
@@ -107,7 +107,7 @@ const MonitorTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteMonitors(id);
+      await deleteMonitor(id);
       handleStateChange({
         allMonitors: state.allMonitors.filter((monitor) => monitor.id !== id),
       });
@@ -130,7 +130,7 @@ const MonitorTable = () => {
         description: params.description,
         serialNumber: params.serialNumber,
       };
-      const updatedItem = await updateMonitors(updatedMonitor);
+      const updatedItem = await updateMonitor(updatedMonitor);
       handleStateChange({
         allMonitors: state.allMonitors.map((item) =>
           item.id === params.id ? updatedItem : item
@@ -154,6 +154,8 @@ const MonitorTable = () => {
     const fetchDataAllUsers = async () => {
       try {
         const result = await getAllMonitors();
+        console.log('result', result)
+
         handleStateChange({ allMonitors: result });
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
@@ -260,39 +262,47 @@ const MonitorTable = () => {
                 </Button>
               </Col>
             </Row>
-            <List>
-              {paginatedMonitors.map((monitor) => (
-                <ListItem key={monitor.id}>
-                  <ListItemText
-                    primary={monitor.serialNumber}
-                    secondary={monitor.description}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="edit"
-                      onClick={() => handleEditOpen(monitor)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      edge="end"
-                      aria-label="info"
-                      onClick={() => handleOpen(monitor)}
-                    >
-                      <Info />
-                    </IconButton>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteOpen(monitor)}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
+            {paginatedMonitors.length === 0 ? (
+              <Typography variant="h6" align="center" color="textSecondary">
+                Sua lista está vazia
+              </Typography>
+            ) : (
+              <List>
+                {paginatedMonitors.map((monitor) => (
+                  <ListItem key={monitor.id}>
+                    <ListItemText
+                      primary={monitor.serialNumber}
+                      secondary={monitor.description}
+                      primaryTypographyProps={{ className: "ellipsis" }}
+                      secondaryTypographyProps={{ className: "ellipsis" }}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => handleEditOpen(monitor)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="info"
+                        onClick={() => handleOpen(monitor)}
+                      >
+                        <Info />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDeleteOpen(monitor)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+              </List>
+            )}
             <TablePagination
               component="div"
               count={filteredMonitors.length}

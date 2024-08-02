@@ -1,15 +1,22 @@
-import { Tooltip } from "@mui/material";
+import { Tooltip, Button, Box } from "@mui/material";
 import "./ESDTable.css";
 import ESDHomeModal from "../ESDHomeModal/ESDHomeModal";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { CardActionArea } from "@mui/material";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const ESDDashboardPage = () => {
-  const navigate = useNavigate()
-  const [columns] = useState([
+  const navigate = useNavigate();
+  const [columns, setColumns] = useState([
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 2, 5, 14, 15, 16, 17, 18,
   ]);
-  const [rows] = useState([
+  const [rows, setRows] = useState([
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
   ]);
   const [open, setOpen] = useState(false);
@@ -28,14 +35,14 @@ const ESDDashboardPage = () => {
         // const result = await getAllOperators();
         // handleStateChange({ allOperators: result.value });
       } catch (error) {
-          if(error.message === 'Request failed with status code 401'){
-            localStorage.removeItem('token')
-            navigate('/')
-          }
+        if (error.message === "Request failed with status code 401") {
+          localStorage.removeItem("token");
+          navigate("/");
+        }
       }
     };
     fetchDataAllUsers();
-  }, []);
+  }, [navigate]);
 
   const [status] = useState([
     { indexColumn: 0, indexRow: 0, status: "ok" },
@@ -66,8 +73,36 @@ const ESDDashboardPage = () => {
     return indexColumn % 3 === 0 ? "mRight" : "";
   };
 
+  const addColumn = () => {
+    setColumns([...columns, columns.length + 1]);
+  };
+
+  const addRow = () => {
+    setRows([...rows, rows.length + 1]);
+  };
+
   return (
     <>
+      {/* <Card className="control-painel">
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              Controle de Monitores
+            </Typography>
+            <Row>
+              <Col sm={1}>
+                <Button variant="outlined" color="success" onClick={addColumn}>
+                  Definir Linha
+                </Button>
+              </Col>
+              <Col sm={1}>
+                <Button variant="outlined" color="success" onClick={addRow}>
+                  Adicionar Jig
+                </Button>
+              </Col>
+            </Row>
+          </CardContent>
+      </Card> */}
+
       <div className="container">
         {columns.map((_, indexColumn) => (
           <div key={`column-${indexColumn}`}>

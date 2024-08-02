@@ -36,6 +36,9 @@ const OperatorModal = ({ open, handleClose, operator }) => {
           id="contained-modal-title-vcenter"
           gutterBottom
         >
+          {t("ESD_OPERATOR.TABLE.NAME", {
+            appName: "App for Translations",
+          })}{" "}
           {operator.name}
         </Typography>
         <Box component="form" noValidate autoComplete="off">

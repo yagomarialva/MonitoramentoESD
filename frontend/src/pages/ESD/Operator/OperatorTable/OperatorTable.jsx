@@ -26,7 +26,7 @@ import OperatorForm from "../OperatorForm/OperatorForm";
 import OperatorEditForm from "../OperatorEditForm/OperatorEditForm";
 import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
 import "./SnackbarStyles.css";
-import "./ESDTable.css";
+import "./OperatorTable.css";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -135,22 +135,7 @@ const OperatorTable = () => {
       );
       return response.data;
     } catch (error) {
-      const result = await getAllOperators();
-      if (result) {
-        handleStateChange({ allOperators: result.value });
-        showSnackbar(
-          t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {
-            appName: "App for Translations",
-          })
-        );
-      } else {
-        showSnackbar(
-          t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
-            appName: "App for Translations",
-          }),
-          "error"
-        );
-      }
+      showSnackbar(error.response.data.errors.Name, "error");
     }
   };
 
@@ -215,7 +200,9 @@ const OperatorTable = () => {
           <Col sm={10}>
             <TextField
               name="filterName"
-              label="Nome"
+              label={t("ESD_OPERATOR.TABLE.NAME", {
+                appName: "App for Translations",
+              })}
               variant="outlined"
               value={state.filterName}
               onChange={handleSearchNameChange}
@@ -230,7 +217,9 @@ const OperatorTable = () => {
             />
             <TextField
               name="filterDescription"
-              label="Matricula"
+              label={t("ESD_OPERATOR.TABLE.USER_ID", {
+                appName: "App for Translations",
+              })}
               variant="outlined"
               value={state.filterDescription}
               onChange={handleSearchBadgeChange}
@@ -266,10 +255,16 @@ const OperatorTable = () => {
                 divider
                 sx={{ display: "flex", alignItems: "center" }}
               >
-                <ListItemText
-                  primary={operator.name}
-                  secondary={operator.badge}
-                />
+                <Tooltip
+                  title={`Nome: ${operator.name}, Matricula: ${operator.badge}`}
+                  arrow
+                >
+                  <ListItemText
+                    primary={operator.name}
+                    secondary={operator.badge}
+                    className="textOverflow" // Apply the new CSS class
+                  />
+                </Tooltip>
                 <ListItemSecondaryAction>
                   <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
                     <IconButton
@@ -333,7 +328,7 @@ const OperatorTable = () => {
           open={state.deleteConfirmOpen}
           handleClose={handleDeleteClose}
           handleConfirm={handleConfirmDelete}
-          title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_STATION", {
+          title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_OPERATOR", {
             appName: "App for Translations",
           })}
           description={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM_TEXT", {

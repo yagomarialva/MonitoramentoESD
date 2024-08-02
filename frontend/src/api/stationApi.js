@@ -1,30 +1,35 @@
 import axios from 'axios';
 import TokenApi from "./TokenApi";
 
-const REACT_APP_API_MOCKED_URL = process.env.REACT_APP_API_URL_FCT;
-// const API_URL_USERS = process.env.REACT_APP_API_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL_FCT;
 
-
-export const getAllJigs = async () => {
-    const response = await TokenApi.get('/todosJigs');
-    return response.data;
+// Função auxiliar para manipulação de respostas
+const handleResponse = async (request) => {
+    try {
+        const response = await request();
+        return response.data;
+    } catch (error) {
+        console.error("API call failed: ", error);
+        throw error;
+    }
 };
 
-export const getStations = async (id) => {
-    const response = await TokenApi.get(`${REACT_APP_API_MOCKED_URL}buscarJig/${id}`);
-    return response.data;
+export const getAllJigs = async () => {
+    return handleResponse(() => TokenApi.get('/todosJigs'));
+};
+
+export const getStation = async (id) => {
+    return handleResponse(() => TokenApi.get(`${API_BASE_URL}buscarJig/${id}`));
 };
 
 export const createJigs = async (station) => {
-    const response = await TokenApi.post('gerenciarJigs', station);
-    return response.data;
+    return handleResponse(() => TokenApi.post('/gerenciarJigs', station));
 };
 
 export const updateJigs = async (station) => {
-    const response = await TokenApi.post('gerenciarJigs', station);
-    return response.data;
+    return handleResponse(() => TokenApi.put('/gerenciarJigs', station));
 };
 
 export const deleteJigs = async (id) => {
-    await TokenApi.delete(`/deleteJigs/${id}`);
+    return handleResponse(() => TokenApi.delete(`/deleteJigs/${id}`));
 };

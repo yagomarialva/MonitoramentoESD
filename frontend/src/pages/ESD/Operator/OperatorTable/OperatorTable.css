@@ -14,3 +14,13 @@
   height: 1100;
   width: 1050;
 }
+
+.textOverflow {
+  max-width: 60%;
+  /* font-size: 20dp; */
+  white-space: nowrap;                  
+  overflow: hidden; /* "overflow" value must be different from "visible" */
+  text-overflow:    ellipsis;
+  /* border: 1px solid #ccc; */
+  margin-right: 20%;
+}

@@ -1,27 +1,56 @@
 import TokenApi from "./TokenApi";
 
-
+// Obtém todos os monitores
 export const getAllMonitors = async () => {
-    const response = await TokenApi.get('/todosMonitores');
-    return response.data;
+    try {
+        const { data } = await TokenApi.get('/todosMonitores');
+        return data;
+    } catch (error) {
+        console.error('Error fetching all monitors:', error);
+        throw error;
+    }
 };
 
-export const getMonitors = async (id) => {
-    const response = await TokenApi.get(`/BuscarMonitores${id}`);
-    console.log(response.data);
-    return response.data;
+// Obtém um monitor específico por ID
+export const getMonitor = async (id) => {
+    try {
+        const { data } = await TokenApi.get(`/BuscarMonitores/${id}`);
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error(`Error fetching monitor with ID ${id}:`, error);
+        throw error;
+    }
 };
 
-export const createMonitors = async (monitors) => {
-    const response = await TokenApi.post('/adicionarMonitor', monitors);
-    return response.data;
+// Cria um novo monitor
+export const createMonitor = async (monitor) => {
+    try {
+        const { data } = await TokenApi.post('/adicionarMonitor', monitor);
+        return data;
+    } catch (error) {
+        console.error('Error creating monitor:', error);
+        throw error;
+    }
 };
 
-export const updateMonitors = async (id, monitors) => {
-    const response = await TokenApi.put(`/adicionarMonitor${id}`, monitors);
-    return response.data;
+// Atualiza um monitor existente por ID
+export const updateMonitor = async (id, monitor) => {
+    try {
+        const { data } = await TokenApi.put(`/adicionarMonitor/${id}`, monitor);
+        return data;
+    } catch (error) {
+        console.error(`Error updating monitor with ID ${id}:`, error);
+        throw error;
+    }
 };
 
-export const deleteMonitors = async (id) => {
-    await TokenApi.delete(`/deleteMonitor?id=${id}`);
+// Deleta um monitor por ID
+export const deleteMonitor = async (id) => {
+    try {
+        await TokenApi.delete(`/deleteMonitor?id=${id}`);
+    } catch (error) {
+        console.error(`Error deleting monitor with ID ${id}:`, error);
+        throw error;
+    }
 };

@@ -3,10 +3,10 @@ import {
   Typography,
   Box,
   Paper,
-  FormControl,
   Modal,
   TextField,
   Button,
+  Alert,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -29,6 +29,8 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
     badge: "",
   });
 
+  const [error, setError] = useState("");
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setStation((prev) => ({
@@ -39,11 +41,22 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const nameRegex = /^(?![\s-]+$)[\w-]{1,50}$/;
+
+    if (!nameRegex.test(station.name)) {
+      setError(
+       "Nome inválido. O nome deve conter apenas letras, números, hífens e underscores, e não pode ser composto apenas por espaços ou caracteres especiais. Além disso, deve ter no máximo 50 caracteres."
+      );
+      return;
+    }
+
+    setError("");
+
     try {
       await onSubmit(station);
       handleClose();
     } catch (error) {
-      console.error("Error creating bracelet:", error);
+      console.error("Error creating operator:", error);
     }
   };
 
@@ -67,8 +80,12 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
             margin="normal"
             id="name"
             name="name"
-            label="Name"
+            label={t("ESD_OPERATOR.TABLE.NAME", {
+              appName: "App for Translations",
+            })}
             onChange={handleChange}
+            error={!!error}
+            helperText={error}
           />
           <TextField
             required
@@ -76,8 +93,12 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
             margin="normal"
             id="badge"
             name="badge"
-           label="Badge"
+            label={t("ESD_OPERATOR.TABLE.USER_ID", {
+              appName: "App for Translations",
+            })}
             onChange={handleChange}
+            error={!!error}
+            helperText={error}
           />
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
             <Button
