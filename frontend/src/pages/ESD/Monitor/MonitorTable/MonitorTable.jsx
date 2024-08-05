@@ -18,6 +18,7 @@ import {
   ListItemSecondaryAction,
   TextField,
   Container,
+  Tooltip,
   Typography,
   TablePagination,
 } from "@mui/material";
@@ -154,8 +155,6 @@ const MonitorTable = () => {
     const fetchDataAllUsers = async () => {
       try {
         const result = await getAllMonitors();
-        console.log('result', result)
-
         handleStateChange({ allMonitors: result });
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
@@ -269,35 +268,49 @@ const MonitorTable = () => {
             ) : (
               <List>
                 {paginatedMonitors.map((monitor) => (
-                  <ListItem key={monitor.id}>
-                    <ListItemText
-                      primary={monitor.serialNumber}
-                      secondary={monitor.description}
-                      primaryTypographyProps={{ className: "ellipsis" }}
-                      secondaryTypographyProps={{ className: "ellipsis" }}
-                    />
+                  <ListItem
+                    key={monitor.id}
+                    divider
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Tooltip
+                      title={`Nome: ${monitor.serialNumber}, Matricula: ${monitor.description}`}
+                      arrow
+                    >
+                      <ListItemText
+                        primary={monitor.serialNumber}
+                        secondary={monitor.description}
+                        className="textOverflow"
+                      />
+                    </Tooltip>
                     <ListItemSecondaryAction>
-                      <IconButton
-                        edge="end"
-                        aria-label="edit"
-                        onClick={() => handleEditOpen(monitor)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        aria-label="info"
-                        onClick={() => handleOpen(monitor)}
-                      >
-                        <Info />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => handleDeleteOpen(monitor)}
-                      >
-                        <Delete />
-                      </IconButton>
+                      <Tooltip title={t("ESD_MONITOR.EDIT_MONITOR")}>
+                        <IconButton
+                          edge="end"
+                          aria-label="edit"
+                          onClick={() => handleEditOpen(monitor)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t("ESD_MONITOR.INFO_MONITOR")}>
+                        <IconButton
+                          edge="end"
+                          aria-label="info"
+                          onClick={() => handleOpen(monitor)}
+                        >
+                          <Info />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t("ESD_MONITOR.DELETE_MONITOR")}>
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => handleDeleteOpen(monitor)}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
                     </ListItemSecondaryAction>
                   </ListItem>
                 ))}

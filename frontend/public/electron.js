@@ -15,7 +15,6 @@ function createWindow() {
   });
   // and load the index.html of the app.
   console.log(__dirname);
-  mainWindow.webContents.openDevTools();
   mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
 }
 

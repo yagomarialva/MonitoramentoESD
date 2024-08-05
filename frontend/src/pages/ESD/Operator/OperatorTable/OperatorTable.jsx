@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback  } from "react";
 import { useTranslation } from "react-i18next";
 import {
   getAllOperators,
@@ -56,17 +56,18 @@ const OperatorTable = () => {
   const [searchName, setSearchName] = useState("");
   const [searchBadge, setSearchBadge] = useState("");
 
+  
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
 
-  const showSnackbar = (message, severity = "success") => {
+  const showSnackbar = useCallback((message, severity = "success") => {
     handleStateChange({
       snackbarMessage: message,
       snackbarSeverity: severity,
       snackbarOpen: true,
     });
-  };
+  }, []);
 
   const handleOpen = (operator) => handleStateChange({ operator, open: true });
   const handleClose = () => handleStateChange({ open: false });
@@ -140,7 +141,7 @@ const OperatorTable = () => {
   };
 
   useEffect(() => {
-    const fetchDataAllUsers = async () => {
+    const fetchDataAllOperators = async () => {
       try {
         const result = await getAllOperators();
         handleStateChange({ allOperators: result.value });
@@ -152,8 +153,8 @@ const OperatorTable = () => {
         showSnackbar(t(error.message));
       }
     };
-    fetchDataAllUsers();
-  }, []);
+    fetchDataAllOperators();
+  }, [navigate, showSnackbar, t]); // Dependencies are now correct
 
   const handleConfirmDelete = async () => {
     if (state.operatorToDelete) {
@@ -236,7 +237,7 @@ const OperatorTable = () => {
           <Col sm={2}>
             <Button
               id="add-button"
-              variant="outlined"
+              variant="contained"
               color="success"
               onClick={handleOpenModal}
               sx={{ mb: 2, ml: 2 }}

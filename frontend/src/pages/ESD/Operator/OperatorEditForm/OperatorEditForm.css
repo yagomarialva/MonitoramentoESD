@@ -1,0 +1,30 @@
+/* OperatorEditForm.css */
+
+.modal-paper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: #ffffff; /* Cor de fundo branca */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 24px; /* Padding mais espaçoso */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo do width */
+  }
+  
+  .form-container {
+    margin-top: 16px; /* Espaço superior do formulário */
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px; /* Espaço superior dos botões */
+  }
+  
+  .modal-submit-button {
+    margin-left: 16px !important; /* Espaçamento entre os botões */
+    align-self: center; /* Centraliza o botão verticalmente */
+  }
+  

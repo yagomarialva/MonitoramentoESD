@@ -3,10 +3,6 @@ import {
   Typography,
   Box,
   Paper,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Modal,
   TextField,
   Button,
@@ -31,7 +27,7 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
 
   const [station, setStation] = useState({
     name: "",
-    description: ""
+    description: "",
   });
 
   const handleChange = (e) => {

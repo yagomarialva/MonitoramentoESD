@@ -8,17 +8,7 @@ import {
   Box,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
+import "./OperatorModal.css"; // Importando o arquivo CSS
 
 const OperatorModal = ({ open, handleClose, operator }) => {
   const { t } = useTranslation();
@@ -30,31 +20,28 @@ const OperatorModal = ({ open, handleClose, operator }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Paper sx={style}>
+      <Paper className="modal-paper">
         <Typography
           variant="h6"
           id="contained-modal-title-vcenter"
-          gutterBottom
+          className="modal-title"
         >
           {t("ESD_OPERATOR.TABLE.NAME", {
             appName: "App for Translations",
-          })}{" "}
-          {operator.name}
+          })} {operator.name}
         </Typography>
         <Box component="form" noValidate autoComplete="off">
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                disabled
-                required
-                label={t("ESD_OPERATOR.TABLE.NAME", {
-                  appName: "App for Translations",
-                })}
-                defaultValue={operator.name}
-                margin="normal"
-              />
-            </Typography>
+          <Typography id="modal-modal-description" className="modal-textfield">
+            <TextField
+              fullWidth
+              disabled
+              required
+              label={t("ESD_OPERATOR.TABLE.NAME", {
+                appName: "App for Translations",
+              })}
+              defaultValue={operator.name}
+              margin="normal"
+            />
             <TextField
               fullWidth
               disabled
@@ -67,8 +54,13 @@ const OperatorModal = ({ open, handleClose, operator }) => {
             />
           </Typography>
         </Box>
-        <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-          <Button variant="contained" color="success" onClick={handleClose}>
+        <Box className="modal-buttons">
+          <Button
+            variant="contained"
+            color="success"
+            className="modal-close-button"
+            onClick={handleClose}
+          >
             {t("ESD_OPERATOR.DIALOG.CLOSE", {
               appName: "App for Translations",
             })}

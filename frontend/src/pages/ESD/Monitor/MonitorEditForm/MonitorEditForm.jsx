@@ -36,6 +36,7 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   const [monitor, setBracelet] = useState({
     description: "",
     serialNumber: "",
+    status:'idle'
   });
 
   useEffect(() => {
@@ -79,6 +80,7 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
           <TextField
             required
             fullWidth
+            disabled
             margin="normal"
             id="outlined-userId"
             name="description"

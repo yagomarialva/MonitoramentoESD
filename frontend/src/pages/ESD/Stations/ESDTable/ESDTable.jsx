@@ -37,7 +37,6 @@ import Col from "react-bootstrap/Col";
 
 const ESDTable = () => {
   const { t } = useTranslation();
-  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const [state, setState] = useState({
     allJigs: [],

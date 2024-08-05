@@ -3,7 +3,7 @@
     "headerTitle": "Meu Titulo do Cabecalho do {{appName}}",
     "ESD_TEST": {
       "TABLE_HEADER": "Estações ESD",
-      "ADD_STATION": "Adicionar Estação",
+      "ADD_STATION": "Adicionar JIG",
       "TABLE": {
         "USER_ID": "Número de Série",
         "NAME": "Descrição",
@@ -74,6 +74,9 @@
     "ESD_MONITOR": {
       "TABLE_HEADER": "Monitores ESD",
       "ADD_MONITOR": "Adicionar Monitor",
+      "EDIT_MONITOR": "Editar Monitor",
+      "INFO_MONITOR": "Informações do Monitor",
+      "DELETE_MONITOR": "Deletar Monitor",
       "TABLE": {
         "USER_ID": "Número de Série",
         "NAME": "Monitor",

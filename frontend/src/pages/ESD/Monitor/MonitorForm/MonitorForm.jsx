@@ -3,10 +3,6 @@ import {
   Typography,
   Box,
   Paper,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Modal,
   TextField,
   Button,
@@ -25,17 +21,19 @@ const style = {
 };
 
 const MonitorForm = ({ open, handleClose, onSubmit }) => {
-  const {
-    t,
-  } = useTranslation();
+  const { t } = useTranslation();
 
-  const [station, setStation] = useState({
+  const [monitor, setMonitor] = useState({
     serialNumber: "",
     description: "",
+    status: "idle",
   });
+  const [error, setError] = useState("");
+  const [errorName, setErrorName] = useState("");
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setStation((prev) => ({
+    setMonitor((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -43,24 +41,46 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const nameRegex = /^(?![\s-]+$)[\w-]{1,50}$/;
+
+    if (!nameRegex.test(monitor.serialNumber)) {
+      setErrorName(
+        "Número inválido. O nome deve conter apenas letras, números, hífens e underscores, e não pode ser composto apenas por espaços ou caracteres especiais. Além disso, deve ter no máximo 50 caracteres."
+      );
+      return;
+    }
+    if (!nameRegex.test(monitor.description)) {
+      setError(
+        "Descrição inválida. A descrição deve conter apenas letras, números, hífens e underscores, e não pode ser composta apenas por espaços ou caracteres especiais. Além disso, deve ter no máximo 50 caracteres."
+      );
+      return;
+    }
+    setError("");
+    setErrorName("");
     try {
-      await onSubmit(station);
+      await onSubmit(monitor);
       handleClose();
     } catch (error) {
-      console.error("Error creating bracelet:", error);
+      console.error("Error creating monitor:", error);
     }
+  };
+
+  const handleCloseModal = () => {
+    setError("");
+    setErrorName("");
+    handleClose();
   };
 
   return (
     <Modal
       open={open}
-      onClose={handleClose}
+      onClose={handleCloseModal}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Paper sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-         Adicionar Monitor
+          Adicionar Monitor
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField
@@ -73,6 +93,8 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
               appName: "App for Translations",
             })}
             onChange={handleChange}
+            error={!!errorName}
+            helperText={errorName}
           />
           <TextField
             required
@@ -84,16 +106,18 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
               appName: "App for Translations",
             })}
             onChange={handleChange}
+            error={!!error}
+            helperText={error}
           />
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
-          >
-            {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
-          </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              sx={{ mt: 2 }}
+            >
+              {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
+            </Button>
           </Box>
         </Box>
       </Paper>

@@ -27,6 +27,7 @@ export const getMonitor = async (id) => {
 export const createMonitor = async (monitor) => {
     try {
         const { data } = await TokenApi.post('/adicionarMonitor', monitor);
+        console.log(data);
         return data;
     } catch (error) {
         console.error('Error creating monitor:', error);
@@ -35,12 +36,13 @@ export const createMonitor = async (monitor) => {
 };
 
 // Atualiza um monitor existente por ID
-export const updateMonitor = async (id, monitor) => {
+export const updateMonitor = async (monitor) => {
     try {
-        const { data } = await TokenApi.put(`/adicionarMonitor/${id}`, monitor);
+        const { data } = await TokenApi.post('/adicionarMonitor', monitor);
+        console.log(data)
         return data;
     } catch (error) {
-        console.error(`Error updating monitor with ID ${id}:`, error);
+        console.error(`Error updating monitor with ID:`, error);
         throw error;
     }
 };

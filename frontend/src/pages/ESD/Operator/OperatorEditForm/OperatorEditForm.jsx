@@ -9,30 +9,17 @@ import {
   Button,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
+import "./OperatorEditForm.css"; // Importando o arquivo CSS
 
 const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
-  const [] = useState(language);
-
+  const { t } = useTranslation();
 
   const [operator, setOperator] = useState({
     name: "",
     badge: "",
   });
+
+  const [errorName, setErrorName] = useState("");
 
   useEffect(() => {
     if (initialData) {
@@ -41,15 +28,30 @@ const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   }, [initialData]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setOperator((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
+    // Clear errors on input change
+    if (name === "name") {
+      setErrorName("");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const nameRegex = /^(?![\s-]+$)[\w-]{1,50}$/;
+
+    if (!nameRegex.test(operator.name)) {
+      setErrorName(
+        "Nome inválido. O nome deve conter apenas letras, números, hífens e underscores, e não pode ser composto apenas por espaços ou caracteres especiais. Além disso, deve ter no máximo 50 caracteres."
+      );
+      return;
+    }
+
+    setErrorName("");
+
     try {
       await onSubmit(operator);
       handleClose();
@@ -65,13 +67,17 @@ const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Paper sx={style}>
+      <Paper className="modal-paper">
         <Typography id="modal-modal-title" variant="h6" component="h2">
           {t("ESD_TEST.DIALOG.EDIT_STATION", {
             appName: "App for Translations",
           })}
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          className="form-container"
+        >
           <FormControl fullWidth margin="normal">
             <TextField
               required
@@ -84,30 +90,32 @@ const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
               })}
               value={operator.name}
               onChange={handleChange}
+              error={!!errorName}
+              helperText={errorName || "Este campo é obrigatório."}
             />
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            id="outlined-badge"
-            name="badge"
-            label={t("ESD_OPERATOR.TABLE.USER_ID", {
-              appName: "App for Translations",
-            })}
-            disabled
-            value={operator.badge}
-          />
+            <TextField
+              required
+              fullWidth
+              margin="normal"
+              id="outlined-badge"
+              name="badge"
+              label={t("ESD_OPERATOR.TABLE.USER_ID", {
+                appName: "App for Translations",
+              })}
+              disabled
+              value={operator.badge}
+            />
           </FormControl>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-            <Button
-              onClick={handleClose}
-              variant="outlined"
-              color="success"
-              sx={{ mr: 2 }}
-            >
+          <Box className="modal-buttons">
+            <Button onClick={handleClose} variant="outlined" color="success">
               {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
             </Button>
-            <Button type="submit" variant="contained" color="success">
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              className="modal-submit-button"
+            >
               {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
             </Button>
           </Box>
