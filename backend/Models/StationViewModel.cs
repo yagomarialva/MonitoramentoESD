@@ -23,6 +23,7 @@ namespace BiometricFaceApi.Models
         [IgnoreDataMember]
         public virtual LinkStationAndLineModel? LinkStationAndLine { get; set; }
 
+        [IgnoreDataMember]
         public int PositionSequence { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? LastUpdated { get; set; }

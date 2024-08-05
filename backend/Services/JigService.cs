@@ -18,15 +18,19 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                List<JigModel> station = await _repository.GetAllJig();
-                if (!station.Any())
+                List<JigModel> jigs = await _repository.GetAllJig();
+                if (!jigs.Any())
                 {
-                    result = ("Nenhuma estação cadastrada.");
+                    result = ("Nenhum Jig cadastrado.");
                     statusCode = StatusCodes.Status404NotFound;
                 }
-                result = station;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
+                else
+                {
+                    result = jigs;
+                    statusCode = StatusCodes.Status200OK;
+                    return (result, statusCode);
+                }
+
             }
             catch (Exception exeption)
             {

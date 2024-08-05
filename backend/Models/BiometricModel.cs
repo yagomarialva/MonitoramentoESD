@@ -18,7 +18,7 @@ namespace BiometricFaceApi.Models
 
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [RegularExpression("^[a-zA-Z0-9]{1,255}$", ErrorMessage = "O Badge deve conter apenas letras e números e ter no máximo 255 caracteres")]
+        [RegularExpression("^[a-zA-Z0-9]{1,255}$", ErrorMessage = "O Badge deve conter apenas letras e números.")]
         public string? Badge { get; set; }
 
         [NotMapped]

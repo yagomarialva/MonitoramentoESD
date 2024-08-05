@@ -2,9 +2,6 @@
 using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace BiometricFaceApi.Repositories
 {
@@ -29,6 +26,11 @@ namespace BiometricFaceApi.Repositories
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
         }
         public async Task<StationViewModel?> GetByStationProductionId(Guid id)
+        {
+            return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
+        }
+
+        public async Task<StationViewModel?> GetByPositionSeguenceId(Guid id)
         {
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
         }
@@ -72,7 +74,6 @@ namespace BiometricFaceApi.Repositories
             {
                 // update
 
-
                 var linkDetails = await _dbContext.LinkStationAndLines.FindAsync(stationModelUp.LinkStationAndLineId);
                 var currentMonitorEsd = await _dbContext.MonitorEsds.FindAsync(stationModelUp.MonitorEsdId);
 
@@ -100,9 +101,10 @@ namespace BiometricFaceApi.Repositories
                 var lastLinkOfStation = await _dbContext.StationViews.FirstOrDefaultAsync(link => link.LinkStationAndLineId == newLinkStationAndLine.ID);
                 MonitorEsdModel? currentMonitorOfNewLinkStationAndLine = null;
                 var currentLinkStationAndLineOfNewMonitorEsd = await _dbContext.StationViews.FirstOrDefaultAsync(link => link.MonitorEsdId == newMonitorEsd.ID);
-               
+
                 if (lastLinkOfStation != null)
                     currentMonitorOfNewLinkStationAndLine = await _dbContext.MonitorEsds.FindAsync(lastLinkOfStation.MonitorEsdId);
+
                 // check if monitor have link with another station
 
                 MonitorEsdModel? auxMonitorEsd = stationModelUp.MonitorEsd;
@@ -111,8 +113,9 @@ namespace BiometricFaceApi.Repositories
                 if (stationView.LinkStationAndLineId != stationModelUp.LinkStationAndLineId)
                     throw new Exception($"Não é possivel alterar id de vinculo de estações. Estação de id {stationView.LinkStationAndLineId} e  Monitor esd de id {stationView.MonitorEsdId}, " +
                         $"está sendo relacionado com a Estação de id {stationModelUp.LinkStationAndLineId} e Monitor esd de id {stationModelUp.MonitorEsdId}");
-               
+
                 //monitor esd haven't station
+
                 if (currentLinkStationAndLineOfNewMonitorEsd == null)
                 {
 
@@ -153,6 +156,6 @@ namespace BiometricFaceApi.Repositories
             return lineviewDel;
         }
 
-
+       
     }
 }

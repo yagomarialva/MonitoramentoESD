@@ -3,10 +3,10 @@
     public class StationView
     {
         public StationModel Station { get; set; }
-        public List<MonitorEsdModel> MonitorsEsd { get; set; }
+        public List<MonitorEsdView> MonitorsEsd { get; set; }
         public StationView()
         {
-            MonitorsEsd = new List<MonitorEsdModel>();
+            MonitorsEsd = new List<MonitorEsdView>();
             Station = new StationModel();
         }
     }

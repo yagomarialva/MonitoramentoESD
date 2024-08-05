@@ -1,8 +1,5 @@
 ﻿using BiometricFaceApi.Models;
-using BiometricFaceApi.Repositories;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Org.BouncyCastle.Bcpg.Sig;
 
 namespace BiometricFaceApi.Services
 {
@@ -161,12 +158,16 @@ namespace BiometricFaceApi.Services
             int statusCode;
             try
             {
-                List<LineView> lineViews = new List<LineView>();    
+                List<LineView> lineViews = new List<LineView>();
+
                 List<StationViewModel> stationView = await _stationViewRepository.GetAllStationView();
                 List<LinkStationAndLineModel> Lines = await _linkRepository.GetAllLinks();
 
                 var lines = Lines.Select(st => st.LineID).Distinct().ToList();
                 var stations = Lines.Select(st => st.StationID).Distinct().ToList();
+                var monitors = stationView.Select(st => st.MonitorEsdId).Distinct().ToList();
+                var sequences = stationView.Select(st => st.PositionSequence).Distinct().ToList();
+
                 foreach (var line in lines)
                 {
                     var lineData = await _lineRepository.GetLineID(line);
@@ -183,10 +184,6 @@ namespace BiometricFaceApi.Services
                         item.Station = stationData;
                     }
                 }
-
-                var monitors = stationView.Select(st => st.MonitorEsdId).Distinct().ToList();
-
-
                 foreach (var monitor in monitors)
                 {
                     var monitorData = await _monitorEsdRepository.GetByMonitorId(monitor);
@@ -196,18 +193,23 @@ namespace BiometricFaceApi.Services
                     }
                 }
 
-                foreach(var line in Lines.DistinctBy(v=>v.LineID).ToList())
+                foreach (var line in Lines.DistinctBy(v => v.LineID).ToList())
                 {
                     lineViews.Add(new LineView
                     {
                         Line = line.Line,
-                        Stations = Lines.Where(ln=>ln.LineID== line.LineID).Select(v=>new StationView
+                        Stations = Lines.Where(ln => ln.LineID == line.LineID).Select(v => new StationView
                         {
                             Station = v.Station,
-                            MonitorsEsd = stationView.Where(ln=>ln.LinkStationAndLine.StationID == v.StationID).Select(v=>v.MonitorEsd).ToList()
-                        }).ToList(),
+                            MonitorsEsd = stationView.Where(ln => ln.LinkStationAndLine.StationID == v.StationID).Select(v => new MonitorEsdView
+                            {
+                                PositionSequence = v.PositionSequence,
+                                MonitorsEsd = v.MonitorEsd
+                            }).OrderBy(p => p.PositionSequence).ToList()
+                        }).OrderBy(p=>p.Station).ToList(),
                     });
                 }
+
                 result = lineViews.ToArray();
                 statusCode = StatusCodes.Status200OK;
                 return (result, statusCode);

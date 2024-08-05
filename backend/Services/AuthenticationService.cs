@@ -2,15 +2,6 @@
 using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Security;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.IdentityModel.Tokens;
-using MySqlX.XDevAPI;
-using Org.BouncyCastle.Asn1.Mozilla;
-using Org.BouncyCastle.Crypto.Operators;
-using Org.BouncyCastle.Security;
-using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace BiometricFaceApi.Services
 {

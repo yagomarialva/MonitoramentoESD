@@ -8,6 +8,7 @@ namespace BiometricFaceApi.Models
     public class LinkStationAndLineModel
     {
         public int ID { get; set; }
+        public int Order {  get; set; }
         [ForeignKey("line")]
         public int LineID { get; set; }
         [IgnoreDataMember]

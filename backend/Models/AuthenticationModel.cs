@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BiometricFaceApi.Models
 {
@@ -20,7 +20,7 @@ namespace BiometricFaceApi.Models
 
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [RegularExpression("^[a-zA-Z0-9]{1,255}$", ErrorMessage = "O Badge deve conter apenas letras e números e ter no máximo 255 caracteres")]
+        [RegularExpression("^[a-zA-Z0-9]{1,255}$", ErrorMessage = "O Badge deve conter apenas letras e números.")]
         public string? Badge { get; set; }
 
 
@@ -29,7 +29,7 @@ namespace BiometricFaceApi.Models
         [RegularExpression("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,12}$", ErrorMessage = "A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número," +
             " e não pode ser vazia ou conter apenas espaços em branco")]
         public string? Password { get; set; }
-        
+
 
     }
 }
