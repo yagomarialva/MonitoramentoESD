@@ -84,23 +84,19 @@ const MonitorTable = () => {
   };
 
   const handleCreateMonitor = async (monitor) => {
-    const maxId = state.allMonitors.reduce(
-      (max, monitor) => Math.max(max, monitor.id),
-      0
-    );
-    const newId = maxId + 1;
-
-    const newMonitor = { id: newId, ...monitor };
     try {
-      const response = await createMonitor(newMonitor);
-      handleStateChange({ allMonitors: [...state.allMonitors, newMonitor] });
+      await createMonitor(monitor);
+      const result = await getAllMonitors();
+      handleStateChange({ allMonitors: result });
       showSnackbar(
-        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_MONITOR.TOAST.CREATE_SUCCESS", {
+          appName: "App for Translations",
+        })
       );
-      return response.data;
+      return result;
     } catch (error) {
       showSnackbar(
-        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -113,33 +109,7 @@ const MonitorTable = () => {
         allMonitors: state.allMonitors.filter((monitor) => monitor.id !== id),
       });
       showSnackbar(
-        t("ESD_TEST.TOAST.DELETE_SUCCESS", { appName: "App for Translations" })
-      );
-    } catch (error) {
-      showSnackbar(
-        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
-        "error"
-      );
-    }
-  };
-
-  const handleEditCellChange = async (params) => {
-    try {
-      const updatedMonitor = {
-        ...state.monitor,
-        id: params.id,
-        description: params.description,
-        serialNumber: params.serialNumber,
-      };
-      const updatedItem = await updateMonitor(updatedMonitor);
-      handleStateChange({
-        allMonitors: state.allMonitors.map((item) =>
-          item.id === params.id ? updatedItem : item
-        ),
-      });
-
-      showSnackbar(
-        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
+        t("ESD_MONITOR.TOAST.DELETE_SUCCESS", {
           appName: "App for Translations",
         })
       );
@@ -150,6 +120,26 @@ const MonitorTable = () => {
       );
     }
   };
+
+  const handleEditCellChange = async (params) => {
+    try {
+      await createMonitor(params);
+      const result = await getAllMonitors();
+      handleStateChange({ allMonitors: result });
+           showSnackbar(
+        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
+          appName: "App for Translations",
+        })
+      );
+      return result;
+    } catch (error) {
+      showSnackbar(
+        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        "error"
+      );
+    }
+  };
+  
 
   useEffect(() => {
     const fetchDataAllUsers = async () => {
@@ -190,20 +180,26 @@ const MonitorTable = () => {
     });
   };
 
-  const filteredMonitors = state.allMonitors.filter((monitor) => {
+  const filteredMonitors = (
+    Array.isArray(state.allMonitors) ? state.allMonitors : []
+  ).filter((monitor) => {
+    const serialNumber = monitor.serialNumber
+      ? monitor.serialNumber.toLowerCase()
+      : "";
+    const description = monitor.description
+      ? monitor.description.toLowerCase()
+      : "";
+    const filterSerialNumber = state.filterSerialNumber.toLowerCase();
+    const filterDescription = state.filterDescription.toLowerCase();
     return (
-      monitor.serialNumber
-        .toLowerCase()
-        .includes(state.filterSerialNumber.toLowerCase()) &&
-      monitor.description
-        .toLowerCase()
-        .includes(state.filterDescription.toLowerCase())
+      serialNumber.includes(filterSerialNumber) &&
+      description.includes(filterDescription)
     );
   });
 
   const paginatedMonitors = filteredMonitors.slice(
-    state.page * state.rowsPerPage,
-    state.page * state.rowsPerPage + state.rowsPerPage
+    Math.max(0, state.page * state.rowsPerPage),
+    Math.max(0, state.page * state.rowsPerPage + state.rowsPerPage)
   );
 
   return (
@@ -251,7 +247,7 @@ const MonitorTable = () => {
               <Col sm={2}>
                 <Button
                   id="add-button"
-                  variant="outlined"
+                  variant="contained"
                   color="success"
                   onClick={handleOpenModal}
                 >
@@ -274,12 +270,19 @@ const MonitorTable = () => {
                     sx={{ display: "flex", alignItems: "center" }}
                   >
                     <Tooltip
-                      title={`Nome: ${monitor.serialNumber}, Matricula: ${monitor.description}`}
+                      title={`Número de série: ${monitor.serialNumber}, Descrição: ${monitor.description}, Status:${monitor.status}`}
                       arrow
                     >
                       <ListItemText
                         primary={monitor.serialNumber}
-                        secondary={monitor.description}
+                        secondary={                    <>
+                          <Typography variant="body2" color="textSecondary">
+                              {monitor.description}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                              {monitor.status}
+                          </Typography>
+                      </>}
                         className="textOverflow"
                       />
                     </Tooltip>

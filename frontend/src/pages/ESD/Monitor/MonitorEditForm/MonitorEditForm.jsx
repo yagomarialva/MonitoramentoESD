@@ -8,6 +8,8 @@ import {
   Button,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+
 
 const style = {
   position: "absolute",
@@ -33,21 +35,22 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     changeLanguage(newLanguage);
   };
 
-  const [monitor, setBracelet] = useState({
+  const [monitor, setMonitor] = useState({
+    id: "",
     description: "",
     serialNumber: "",
-    status:'idle'
+    status: "",
   });
 
   useEffect(() => {
     if (initialData) {
-      setBracelet(initialData);
+      setMonitor(initialData);
     }
   }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setBracelet((prev) => ({
+    setMonitor((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -80,19 +83,6 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
           <TextField
             required
             fullWidth
-            disabled
-            margin="normal"
-            id="outlined-userId"
-            name="description"
-            label={t("ESD_MONITOR.TABLE.USER_ID", {
-              appName: "App for Translations",
-            })}
-            value={monitor.description}
-            onChange={handleChange}
-          />
-          <TextField
-            required
-            fullWidth
             margin="normal"
             id="outlined-title"
             name="serialNumber"
@@ -102,6 +92,34 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             value={monitor.serialNumber}
             onChange={handleChange}
           />
+          <TextField
+            required
+            fullWidth
+            margin="normal"
+            id="outlined-description"
+            name="description"
+            label={t("ESD_MONITOR.TABLE.USER_ID", {
+              appName: "App for Translations",
+            })}
+            value={monitor.description}
+            onChange={handleChange}
+          />
+
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="status">Status</InputLabel>
+            <Select
+              labelId="status"
+              id="status"
+              name="status"
+              value={monitor.status}
+              onChange={handleChange}
+              label="Status"
+            >
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+              <MenuItem value="pending">Pending</MenuItem>
+            </Select>
+          </FormControl>
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button

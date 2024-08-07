@@ -9,9 +9,8 @@ import {
   Box,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import "./MonitorModal.css";
 
-const style = {
+const modalStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -29,55 +28,62 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
     <Modal
       open={open}
       onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
     >
-      <Paper sx={style}>
+      <Paper sx={modalStyle}>
         <Tooltip title={monitor.serialNumber} arrow>
-        <Typography
-          className="card-text"
-          variant="h6"
-          id="contained-modal-title-vcenter"
-          gutterBottom
-        >
-            Monitor: {monitor.serialNumber}
-        </Typography>
-          </Tooltip>
+          <Typography variant="h6" id="modal-title" gutterBottom>
+          Monitor: {monitor.serialNumber}
+          </Typography>
+        </Tooltip>
         <Box component="form" noValidate autoComplete="off">
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              disabled
-              required
-              label={t("ESD_TEST.TABLE.USER_ID", {
-                appName: "App for Translations",
-              })}
-              defaultValue={monitor.serialNumber}
-              margin="normal"
-              InputProps={{
-                className: "ellipsis",
-              }}
-            />
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              disabled
-              required
-              label={t("ESD_TEST.TABLE.NAME", {
-                appName: "App for Translations",
-              })}
-              defaultValue={monitor.description}
-              margin="normal"
-              InputProps={{
-                className: "ellipsis",
-              }}
-            />
-          </Typography>
+          <TextField
+            fullWidth
+            disabled
+            required
+            label={t("ESD_TEST.TABLE.USER_ID")}
+            defaultValue={monitor.serialNumber}
+            margin="normal"
+            InputProps={{
+              sx: {
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              },
+            }}
+          />
+          <TextField
+            fullWidth
+            disabled
+            required
+            label={t("ESD_TEST.TABLE.NAME")}
+            defaultValue={monitor.description}
+            margin="normal"
+            InputProps={{
+              sx: {
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              },
+            }}
+          />
+          <TextField
+            fullWidth
+            disabled
+            required
+            label={t("ESD_MONITOR.STATUS_MONITOR")}
+            defaultValue={monitor.status}
+            margin="normal"
+            InputProps={{
+              sx: {
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              },
+            }}
+          />
         </Box>
         <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
           <Button variant="contained" color="success" onClick={handleClose}>
-            {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
+            {t("ESD_TEST.DIALOG.CLOSE")}
           </Button>
         </Box>
       </Paper>

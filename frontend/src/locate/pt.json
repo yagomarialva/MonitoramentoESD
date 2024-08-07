@@ -28,10 +28,10 @@
         "EDIT_STATION": "Editar Operador"
       },
       "TOAST": {
-        "CREATE_SUCCESS": "Operador criada com sucesso",
+        "CREATE_SUCCESS": "Operador criado com sucesso",
         "TOAST_ERROR": "Operação não pode ser concluída",
-        "DELETE_SUCCESS": "Operador Excluída com sucesso",
-        "UPDATE_SUCCESS": "Operador atualizada com sucesso"
+        "DELETE_SUCCESS": "Operador Excluído com sucesso",
+        "UPDATE_SUCCESS": "Operador atualizado com sucesso"
       }
     },
     "ESD_OPERATOR": {
@@ -77,6 +77,7 @@
       "EDIT_MONITOR": "Editar Monitor",
       "INFO_MONITOR": "Informações do Monitor",
       "DELETE_MONITOR": "Deletar Monitor",
+      "STATUS_MONITOR":"Status",
       "TABLE": {
         "USER_ID": "Número de Série",
         "NAME": "Monitor",

@@ -8,6 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -109,6 +110,21 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
             error={!!error}
             helperText={error}
           />
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="status">Status</InputLabel>
+            <Select
+              labelId="status"
+              id="status"
+              name="status"
+              value={monitor.status}
+              onChange={handleChange}
+              label="Status"
+            >
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+              <MenuItem value="pending">Pending</MenuItem>
+            </Select>
+          </FormControl>
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
             <Button
               type="submit"
