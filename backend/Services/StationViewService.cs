@@ -1,5 +1,6 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
+using Mysqlx.Crud;
 
 namespace BiometricFaceApi.Services
 {
@@ -159,14 +160,13 @@ namespace BiometricFaceApi.Services
             try
             {
                 List<LineView> lineViews = new List<LineView>();
-
                 List<StationViewModel> stationView = await _stationViewRepository.GetAllStationView();
                 List<LinkStationAndLineModel> Lines = await _linkRepository.GetAllLinks();
 
                 var lines = Lines.Select(st => st.LineID).Distinct().ToList();
                 var stations = Lines.Select(st => st.StationID).Distinct().ToList();
                 var monitors = stationView.Select(st => st.MonitorEsdId).Distinct().ToList();
-                var sequences = stationView.Select(st => st.PositionSequence).Distinct().ToList();
+
 
                 foreach (var line in lines)
                 {
@@ -198,7 +198,7 @@ namespace BiometricFaceApi.Services
                     lineViews.Add(new LineView
                     {
                         Line = line.Line,
-                        Stations = Lines.Where(ln => ln.LineID == line.LineID).Select(v => new StationView
+                        Stations = Lines.Where(ln => ln.LineID == line.LineID).OrderBy(p => p.Order).Select(v => new StationView
                         {
                             Station = v.Station,
                             MonitorsEsd = stationView.Where(ln => ln.LinkStationAndLine.StationID == v.StationID).Select(v => new MonitorEsdView
@@ -206,7 +206,7 @@ namespace BiometricFaceApi.Services
                                 PositionSequence = v.PositionSequence,
                                 MonitorsEsd = v.MonitorEsd
                             }).OrderBy(p => p.PositionSequence).ToList()
-                        }).OrderBy(p=>p.Station).ToList(),
+                        }).ToList(),
                     });
                 }
 

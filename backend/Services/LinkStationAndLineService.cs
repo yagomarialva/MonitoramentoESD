@@ -170,7 +170,20 @@ namespace BiometricFaceApi.Services
                 {
                     var existingCobination = await _repository.GetByLineIdAndStationId(model.LineID, model.StationID);
                     if (existingCobination is not null)
-                        throw new Exception("Esta combinação já constata na base.");
+                        throw new Exception("Esta combinação já consta na base.");
+
+                    var (linksObj,_) = await this.GetLineId(model.LineID); 
+                    var links = linksObj as List<LinkStationAndLineModel>;
+                    //check if exist order
+
+                    var oldOrder = links.Find(x => x.Order == model.Order);
+                    var oldReferenceThisModel = links.Find(x => x.ID == model.ID);
+                    if(oldOrder is not null && oldReferenceThisModel is not null && oldOrder.ID!= oldReferenceThisModel.ID)
+                    {
+                        oldOrder.Order = oldReferenceThisModel.Order;
+                        await _repository.Include(oldOrder);
+                    }
+
                     response = await _repository.Include(model);
                     statusCode = StatusCodes.Status201Created;
                 }

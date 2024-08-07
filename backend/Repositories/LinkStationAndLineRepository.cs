@@ -23,9 +23,9 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.LinkStationAndLines.Where(x => x.LineID == lineId).ToListAsync();
         }
-        public async Task<LinkStationAndLineModel?> GetByLineIdAndStationId(int lineId,int stationId)
+        public async Task<LinkStationAndLineModel?> GetByLineIdAndStationId(int lineId, int stationId)
         {
-            return await _dbContext.LinkStationAndLines.FirstOrDefaultAsync(x => x.LineID==lineId && x.StationID == stationId);
+            return await _dbContext.LinkStationAndLines.FirstOrDefaultAsync(x => x.LineID == lineId && x.StationID == stationId);
         }
         public async Task<LinkStationAndLineModel?> GetByLinkStationAndLineId(int id)
         {
@@ -40,6 +40,7 @@ namespace BiometricFaceApi.Repositories
         public async Task<LinkStationAndLineModel?> Include(LinkStationAndLineModel model)
         {
             LinkStationAndLineModel? linkModel = await GetByLinkStationAndLineId(model.ID);
+
             if (linkModel == null)
             {
                 //include
@@ -53,9 +54,12 @@ namespace BiometricFaceApi.Repositories
             {
                 //update
                 model.LastUpdated = DateTime.Now;
+
                 linkModel.ID = model.ID;
                 linkModel.LineID = model.LineID;
                 linkModel.StationID = model.StationID;
+                linkModel.Order = model.Order;
+
                 _dbContext.LinkStationAndLines.Update(linkModel);
                 await _dbContext.SaveChangesAsync();
             }

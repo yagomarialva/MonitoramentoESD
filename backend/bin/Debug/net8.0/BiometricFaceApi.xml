@@ -537,16 +537,16 @@
             <response code="401">Acesso negado devido a credenciais inválidas</response>
             <response  code="500">Erro do servidor interno!</response>
         </member>
-        <member name="T:BiometricFaceApi.Migrations.firstmigration">
+        <member name="T:BiometricFaceApi.Migrations.first_migration">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.firstmigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.first_migration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.firstmigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.first_migration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:BiometricFaceApi.Migrations.firstmigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:BiometricFaceApi.Migrations.first_migration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

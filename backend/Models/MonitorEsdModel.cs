@@ -23,7 +23,8 @@ namespace BiometricFaceApi.Models
         public string? Status { get; set; }
 
         [StringLength(250, ErrorMessage = "O Description deve ter no máximo 250 caracteres")]
-        [RegularExpression("^(?!\\s*$)[a-zA-Z0-9_\\-\\s]+$", ErrorMessage = "O Description deve conter apenas letras, números, underscores (_), hífens (-) e espaços, e não pode ser vazio ou conter apenas espaços em branco")]
+        [RegularExpression("^(?!\\s*$)[a-zA-Z0-9_\\-\\sáéíóúãõâêîôûçÁÉÍÓÚÃÕÂÊÎÔÛÇ]+$", ErrorMessage = "O Name deve conter apenas letras, números, underscores (_)" +
+            ", hífens (-), espaços e caracteres especiais do português (acentos e cedilha), e não pode ser vazio ou conter apenas espaços em branco")]
         public string? Description { get; set; }
         public DateTime DateHour { get; set; } 
         public DateTime LastDate { get; set; }

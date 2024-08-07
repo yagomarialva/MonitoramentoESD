@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace BiometricFaceApi.Migrations
 {
     /// <inheritdoc />
-    public partial class firstmigration : Migration
+    public partial class first_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,14 +23,31 @@ namespace BiometricFaceApi.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Username = table.Column<string>(type: "longtext", nullable: false),
-                    RolesName = table.Column<string>(type: "longtext", nullable: true),
+                    Username = table.Column<string>(type: "varchar(16)", maxLength: 16, nullable: false),
+                    RolesName = table.Column<string>(type: "longtext", nullable: false),
                     Badge = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Password = table.Column<string>(type: "longtext", nullable: true)
+                    Password = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_authentication", x => x.ID);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "jig",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastUpdated = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_jig", x => x.ID);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -40,7 +57,7 @@ namespace BiometricFaceApi.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(255)", nullable: false)
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,30 +71,15 @@ namespace BiometricFaceApi.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    SerialNumber = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Status = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
+                    SerialNumber = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Status = table.Column<string>(type: "longtext", nullable: false),
+                    Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true),
                     DateHour = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     LastDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_monitorEsd", x => x.ID);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "position",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    SizeX = table.Column<int>(type: "int", nullable: false),
-                    SizeY = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_position", x => x.ID);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -101,7 +103,7 @@ namespace BiometricFaceApi.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     SizeX = table.Column<int>(type: "int", nullable: false),
                     SizeY = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -119,8 +121,8 @@ namespace BiometricFaceApi.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Badge = table.Column<string>(type: "varchar(255)", nullable: true),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Badge = table.Column<string>(type: "varchar(255)", nullable: false),
                     Born = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
@@ -130,35 +132,12 @@ namespace BiometricFaceApi.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "jig",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
-                    PositionID = table.Column<int>(type: "int", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastUpdated = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_jig", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_jig_position_PositionID",
-                        column: x => x.PositionID,
-                        principalTable: "position",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "linkStationAndLine",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Order = table.Column<int>(type: "int", nullable: false),
                     LineID = table.Column<int>(type: "int", nullable: false),
                     StationID = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -214,7 +193,7 @@ namespace BiometricFaceApi.Migrations
                     MonitorEsdId = table.Column<int>(type: "int", nullable: false),
                     StationId = table.Column<int>(type: "int", nullable: false),
                     IsLocked = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Description = table.Column<string>(type: "longtext", nullable: true),
+                    Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true),
                     DataTimeMonitorEsdEvent = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
@@ -284,7 +263,7 @@ namespace BiometricFaceApi.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     ProduceActivityId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "longtext", nullable: false),
+                    Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false),
                     Status = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     DateEvent = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -337,11 +316,6 @@ namespace BiometricFaceApi.Migrations
                 table: "jig",
                 column: "Name",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_jig_PositionID",
-                table: "jig",
-                column: "PositionID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_line_Name",
@@ -457,9 +431,6 @@ namespace BiometricFaceApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "station");
-
-            migrationBuilder.DropTable(
-                name: "position");
         }
     }
 }
