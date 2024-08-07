@@ -59,13 +59,11 @@ namespace BiometricFaceApi.Repositories
             }
             else
             {
-                // update
-                //monitorModel.LastDate = DateTime.Now;
-                //monitorModelUp.SerialNumber = monitorModel.SerialNumber;
-                //monitorModel.PositionId = monitorModel.PositionId;
-                //monitorModel.PositionSequence = monitorModel.PositionSequence;
-                //monitorModel.Status = monitorModel.Status;
-                //monitorModelUp.Description = monitorModel.Description;
+                //update
+                monitorModel.LastDate = DateTime.Now;
+                monitorModelUp.SerialNumber = monitorModel.SerialNumber;
+                monitorModel.Status = monitorModel.Status;
+                monitorModelUp.Description = monitorModel.Description;
                 _dbContext.MonitorEsds.Update(monitorModelUp);
                 await _dbContext.SaveChangesAsync();
             }
