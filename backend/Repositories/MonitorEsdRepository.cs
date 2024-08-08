@@ -35,19 +35,26 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.SerialNumber == serial);
         }
-        
         public async Task<MonitorEsdModel?> GetStatus(string status)
         {
             return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.Status == status);
         }
+        public async Task<MonitorEsdModel?> GetStatusOperator(string statusOperador)
+        {
+            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.StatusOperador == statusOperador);
+        }
+        public async Task<MonitorEsdModel?> GetStatusJig(string statusJig)
+        {
+            return await _dbContext.MonitorEsds.FirstOrDefaultAsync(e => e.StatusJig == statusJig);
+        }
         // Task realiza o include e update
         // include de novos dados
-        // update e feito atraves do MonitorModelyID, senso assim possibilitando a alteração de dados.
+        // update e feito atraves do MonitorModelID, senso assim possibilitando a alteração de dados.
         public async Task<MonitorEsdModel?> Include(MonitorEsdModel monitorModel)
         {
 
             MonitorEsdModel? monitorModelUp = await GetByMonitorId(monitorModel.ID);
-           
+
             if (monitorModelUp == null)
             {
                 // include
@@ -62,7 +69,9 @@ namespace BiometricFaceApi.Repositories
                 //update
                 monitorModel.LastDate = DateTime.Now;
                 monitorModelUp.SerialNumber = monitorModel.SerialNumber;
-                monitorModel.Status = monitorModel.Status;
+                monitorModelUp.Status = monitorModel.Status;
+                monitorModelUp.StatusOperador = monitorModel.StatusOperador;
+                monitorModelUp.StatusJig = monitorModel.StatusJig;
                 monitorModelUp.Description = monitorModel.Description;
                 _dbContext.MonitorEsds.Update(monitorModelUp);
                 await _dbContext.SaveChangesAsync();
@@ -78,6 +87,5 @@ namespace BiometricFaceApi.Repositories
             return monitorModelDel;
         }
 
-       
     }
 }

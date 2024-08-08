@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiometricFaceApi.Migrations
 {
     [DbContext(typeof(BiometricFaceDBContex))]
-    [Migration("20240806121553_first_migration")]
-    partial class first_migration
+    [Migration("20240808125610_first migration")]
+    partial class firstmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,8 +182,16 @@ namespace BiometricFaceApi.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("StatusJig")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("StatusOperador")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("ID");
 

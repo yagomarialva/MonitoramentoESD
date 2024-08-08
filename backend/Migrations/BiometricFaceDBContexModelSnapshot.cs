@@ -179,8 +179,16 @@ namespace BiometricFaceApi.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("StatusJig")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("StatusOperador")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("ID");
 

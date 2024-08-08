@@ -12,7 +12,7 @@ namespace BiometricFaceApi.Services
     public class MonitorEsdService
     {
         private IMonitorEsdRepository _repository;
-       
+
         public MonitorEsdService(IMonitorEsdRepository repository)
         {
             _repository = repository;
@@ -126,8 +126,9 @@ namespace BiometricFaceApi.Services
                     {
                         id = respositoryMonitor.ID,
                         serialNumber = respositoryMonitor.SerialNumber,
-                        /* positionId = respositoryMonitor.PositionId,*/
                         status = respositoryMonitor.Status,
+                        statusOperador = respositoryMonitor.StatusOperador,
+                        statusJig = respositoryMonitor.StatusJig,
                         description = respositoryMonitor.Description
                     };
                     await _repository.Delete(respositoryMonitor.ID);

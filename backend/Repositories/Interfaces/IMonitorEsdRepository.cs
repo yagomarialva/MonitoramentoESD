@@ -9,6 +9,8 @@ namespace BiometricFaceApi.Repositories.Interfaces
         Task<MonitorEsdModel?> GetUserId(int id);
         Task<MonitorEsdModel?> GetPositionId(int id);
         Task<MonitorEsdModel?> GetByMonitorSerial(string serial);
+        Task<MonitorEsdModel?> GetStatusOperator(string statusOperador);
+        Task<MonitorEsdModel?> GetStatusJig(string statusJig);
         Task<MonitorEsdModel?> GetStatus(string status);
         Task<MonitorEsdModel?> Include(MonitorEsdModel monitorModel);
         Task<MonitorEsdModel> Delete(int id);

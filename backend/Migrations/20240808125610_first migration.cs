@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace BiometricFaceApi.Migrations
 {
     /// <inheritdoc />
-    public partial class first_migration : Migration
+    public partial class firstmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -72,7 +72,9 @@ namespace BiometricFaceApi.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     SerialNumber = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    Status = table.Column<string>(type: "longtext", nullable: false),
+                    Status = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true),
+                    StatusOperador = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true),
+                    StatusJig = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true),
                     Description = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true),
                     DateHour = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     LastDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
