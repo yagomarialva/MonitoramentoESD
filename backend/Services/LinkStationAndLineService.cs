@@ -22,7 +22,8 @@ namespace BiometricFaceApi.Services
             try
             {
                 List<LinkStationAndLineModel>? position = await _repository.GetAllLinks();
-
+                List<LineModel> linesAll = await _lineRepository.GetAllLine();
+                List<StationModel> stationAll = await _stationRepository.GetAllStation();
                 if (position==null ||!position.Any())
                 {
                     result = "Nenhuma Link cadastrado.";
@@ -34,7 +35,7 @@ namespace BiometricFaceApi.Services
                     var lines = position.Select(x=>x.LineID).Distinct().ToList();   
                     foreach(var station in stations)
                     {
-                        var stationData = await _stationRepository.GetByStationId(station);
+                        var stationData =stationAll.Where( x=>x.ID == station).FirstOrDefault();
                         foreach(var item in position.Where(x => x.StationID == station))
                         {
                             item.Station = stationData;
@@ -42,7 +43,7 @@ namespace BiometricFaceApi.Services
                     }
                     foreach (var line in lines)
                     {
-                        var lineData = await _lineRepository.GetLineID(line);
+                        var lineData = linesAll.Where(x=>x.ID == line).FirstOrDefault();
                         foreach (var item in position.Where(x => x.LineID == line))
                         {
                             item.Line = lineData;

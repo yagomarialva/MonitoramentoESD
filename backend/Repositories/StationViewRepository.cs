@@ -21,10 +21,6 @@ namespace BiometricFaceApi.Repositories
         {
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
         }
-        public async Task<StationViewModel?> GetByJigId(Guid id)
-        {
-            return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);
-        }
         public async Task<StationViewModel?> GetByStationProductionId(Guid id)
         {
             return await _dbContext.StationViews.FirstOrDefaultAsync(x => x.ID == id);

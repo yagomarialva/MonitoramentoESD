@@ -19,12 +19,13 @@ namespace BiometricFaceApi.Controllers
         private readonly LinkStationAndLineService _linkStationAndLineService;
         private readonly StationService _stationService;
         private readonly LineService _lineService;
-        
-        
 
-        public StationViewController(IStationViewRepository stationViewRepository, IMonitorEsdRepository monitorEsdRepository, ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationRepository, ILineRepository lineRepository)
+
+
+        public StationViewController(IStationViewRepository stationViewRepository, IMonitorEsdRepository monitorEsdRepository,
+            ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationRepository, ILineRepository lineRepository)
         {
-            _stationViewRepository = new StationViewService(stationViewRepository, monitorEsdRepository, linkStationAndLineRepository,lineRepository,stationRepository);
+            _stationViewRepository = new StationViewService(stationViewRepository, monitorEsdRepository, linkStationAndLineRepository, lineRepository, stationRepository);
             _linkStationAndLineService = new LinkStationAndLineService(linkStationAndLineRepository, stationRepository, lineRepository);
         }
 
@@ -58,48 +59,10 @@ namespace BiometricFaceApi.Controllers
         /// <response  code="500">Erro do servidor interno!</response>
         //[Authorize(Roles = "administrator,operator,developer")]
         [HttpGet]
-        [Route("/BuscarEstacaView/{id}")]
+        [Route("/BuscarEstacaoView/{id}")]
         public async Task<ActionResult> BuscarIdEstacaoView(Guid id)
         {
             var (result, statusCode) = await _stationViewRepository.GetStationViewId(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            return StatusCode(statusCode, result);
-        }
-
-        /// <summary>
-        /// Buscar id 
-        /// </summary>
-        /// <param name="id"> Buscar Jig por Id</param>
-        /// <response code="200">Retorna Jig</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
-        [HttpGet]
-        [Route("/BuscarEstViewJigs/{id}")]
-        public async Task<ActionResult> BuscarJigId(Guid id)
-        {
-            var (result, statusCode) = await _stationViewRepository.GetJigId(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            return StatusCode(statusCode, result);
-        }
-
-        /// <summary>
-        /// Buscar id 
-        /// </summary>
-        /// <param name="id"> Buscar View Estação de produção por Id</param>
-        /// <response code="200">Retorna View  Estação de produção </response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        //[Authorize(Roles = "administrator,operator,developer")]
-        [HttpGet]
-        [Route("/BuscarEstacaoDeProducao/{id}")]
-        public async Task<ActionResult> BuscarEstacaoDeProducaoId(Guid id)
-        {
-            var (result, statusCode) = await _stationViewRepository.GetByStationProductionId(id);
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             return StatusCode(statusCode, result);
@@ -121,11 +84,26 @@ namespace BiometricFaceApi.Controllers
         [Route("/adicionarEstacaoView")]
         public async Task<ActionResult> Include(StationViewModel model)
         {
-            var (result,statusCode) = await _stationViewRepository.Include(model);
+            var (result, statusCode) = await _stationViewRepository.Include(model);
 
             return StatusCode(statusCode, result);
         }
-
+        [HttpGet]
+        [Route("factoryMap")]
+        public async Task<ActionResult> ShowMap()
+        {
+            var (result, statusCode) = await _stationViewRepository.FactoryView();
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResponse = JsonSerializer.Serialize(result, options);
+            if (!string.IsNullOrEmpty(jsonResponse))
+            {
+                return StatusCode(statusCode, result);
+            }
+            else
+            {
+                return StatusCode(statusCode);
+            }
+        }
 
         /// <summary>
         /// Deletar Estação View
@@ -141,22 +119,6 @@ namespace BiometricFaceApi.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             var (result, statusCode) = await _stationViewRepository.Delete(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            if (!string.IsNullOrEmpty(jsonResponse))
-            {
-                return StatusCode(statusCode, result);
-            }
-            else
-            {
-                return StatusCode(statusCode);
-            }
-        }
-        [HttpGet]
-        [Route("factoryMap")]
-        public async Task<ActionResult> ShowMap()
-        {
-            var (result, statusCode) = await _stationViewRepository.FactoryView();
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonResponse = JsonSerializer.Serialize(result, options);
             if (!string.IsNullOrEmpty(jsonResponse))

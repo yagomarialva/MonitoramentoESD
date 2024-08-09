@@ -16,7 +16,8 @@ namespace BiometricFaceApi.Models
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(100, ErrorMessage = "O SerialNumber deve ter no máximo 100 caracteres")]
-        [RegularExpression("^(?!\\s*$)[a-zA-Z0-9_\\-\\s]+$", ErrorMessage = "O SerialNumber deve conter apenas letras, números, underscores (_), hífens (-) e espaços, e não pode ser vazio ou conter apenas espaços em branco")]
+        [RegularExpression("^(?!\\s*$)[a-zA-Z0-9_\\-\\s]+$", ErrorMessage = "O SerialNumber deve conter apenas letras, números, underscores (_)" +
+            ", hífens (-) e espaços, e não pode ser vazio ou conter apenas espaços em branco")]
         public string? SerialNumber { get; set; }
 
         [StringLength(20, ErrorMessage = "O Status deve ter no máximo 20 caracteres")]

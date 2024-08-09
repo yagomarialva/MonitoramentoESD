@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\repositories\\monitoresdrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\monitoresdrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\stationviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\stationviewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\repositories\\interfaces\\imonitoresdrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\interfaces\\imonitoresdrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\stationviewcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\stationviewcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\monitoresdservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\monitoresdservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\controllers\\linkstationandlinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\linkstationandlinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\models\\monitoresdmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:models\\monitoresdmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\services\\linkstationandlineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\linkstationandlineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,79 +26,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "MonitorEsdService.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\MonitorEsdService.cs",
-              "RelativeDocumentMoniker": "Services\\MonitorEsdService.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\MonitorEsdService.cs",
-              "RelativeToolTip": "Services\\MonitorEsdService.cs",
-              "ViewState": "AQIAAG8AAAAAAAAAAAAAAIQAAAAWAAAA",
+              "DocumentIndex": 3,
+              "Title": "LinkStationAndLineService.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\LinkStationAndLineService.cs",
+              "RelativeDocumentMoniker": "Services\\LinkStationAndLineService.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\LinkStationAndLineService.cs",
+              "RelativeToolTip": "Services\\LinkStationAndLineService.cs",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAgwBsAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-08T12:26:27.362Z",
+              "WhenOpened": "2024-08-09T19:06:07.297Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MonitorEsdRepository.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\MonitorEsdRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\MonitorEsdRepository.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\MonitorEsdRepository.cs",
-              "RelativeToolTip": "Repositories\\MonitorEsdRepository.cs",
-              "ViewState": "AQIAACEAAAAAAAAAAAA4wDMAAAAxAAAA",
+              "DocumentIndex": 2,
+              "Title": "LinkStationAndLineController.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\LinkStationAndLineController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LinkStationAndLineController.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\LinkStationAndLineController.cs",
+              "RelativeToolTip": "Controllers\\LinkStationAndLineController.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAACgAAABOAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-08T12:24:48.864Z",
+              "WhenOpened": "2024-08-09T19:00:04.832Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "IMonitorEsdRepository.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\Interfaces\\IMonitorEsdRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IMonitorEsdRepository.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Repositories\\Interfaces\\IMonitorEsdRepository.cs",
-              "RelativeToolTip": "Repositories\\Interfaces\\IMonitorEsdRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA2AAAA",
+              "Title": "StationViewController.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\StationViewController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StationViewController.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Controllers\\StationViewController.cs",
+              "RelativeToolTip": "Controllers\\StationViewController.cs",
+              "ViewState": "AQIAAAEAAAAAAAAAAAAqwA4AAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-08T12:24:15.154Z",
+              "WhenOpened": "2024-08-09T18:44:04.327Z",
               "EditorCaption": ""
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Orientation": 0,
-      "VerticalTabListWidth": 256,
-      "FloatingWindowState": {
-        "Id": "03a17792-7188-4dee-8710-634382a1cf9e",
-        "Display": 0,
-        "X": 15,
-        "Y": 216,
-        "Width": 1578,
-        "Height": 869,
-        "WindowState": 2
-      },
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
+            },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MonitorEsdModel.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\MonitorEsdModel.cs",
-              "RelativeDocumentMoniker": "Models\\MonitorEsdModel.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Models\\MonitorEsdModel.cs",
-              "RelativeToolTip": "Models\\MonitorEsdModel.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAoAAAAeAAAA",
+              "DocumentIndex": 0,
+              "Title": "StationViewService.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\StationViewService.cs",
+              "RelativeDocumentMoniker": "Services\\StationViewService.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_test\\backend\\Services\\StationViewService.cs",
+              "RelativeToolTip": "Services\\StationViewService.cs",
+              "ViewState": "AQIAABwAAAAAAAAAAAAywHQAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T13:14:36.464Z",
+              "WhenOpened": "2024-08-09T18:43:51.388Z",
               "EditorCaption": ""
             }
           ]

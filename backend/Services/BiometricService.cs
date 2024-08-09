@@ -136,6 +136,20 @@ namespace BiometricFaceApi.Services
             }
             return (content, statusCode);
         }
+        
+        // buscar todos operadores
+        public async Task<List<UserModel>> GetAllUsers()
+        {
+            var user = await _userService.GetAllUsers();
+            return user;
+        }
+
+        //buscar opeadores pela matricula
+        public async Task<UserModel> GetUserByBadger(string badge)
+        {
+            var user = await _userService.GetUserByBadge(badge);
+            return user;
+        }
 
         // Delete operador por ID
         public async Task<(object?, int)> DelByUser(int userId)
@@ -178,11 +192,7 @@ namespace BiometricFaceApi.Services
 
             return (content, statusCode);
         }
-        public async Task<ActionResult<List<UserModel>>> GetAllUsers()
-        {
-            List<UserModel> user = await _userService.GetAllUsers();
-            return (user);
-        }
+        
 
     }
 }

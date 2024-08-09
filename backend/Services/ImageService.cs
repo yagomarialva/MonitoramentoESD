@@ -7,36 +7,36 @@ namespace BiometricFaceApi.Services
 {
     public class ImageService
     {
-        private IImageRepository images;
+        private IImageRepository _images;
 
         public ImageService(IImageRepository images)
         {
-            this.images = images;
+            _images = images;
         }
 
         public async Task<List<ImageModel>> GetAllImages()
         {
-            return await images.AllImage();
+            return await _images.AllImage();
         }
         public async Task<ImageModel> GetImageById(int idImage)
         {
-            return await images.ImageForId(idImage);
+            return await _images.ImageForId(idImage);
         }
         public async Task<ImageModel> GetImageByUserId(int userId)
         {
-            return await images.ImageForUserId(userId);
+            return await _images.ImageForUserId(userId);
         }
         public async Task<(bool, string)> AddImage(ImageModel PictureStream)
         {
-            return await images.AddImage(PictureStream);
+            return await _images.AddImage(PictureStream);
         }
         public async Task<ImageModel?> Update(ImageModel imageEntity)
         {
-            return await images.Update(imageEntity);
+            return await _images.Update(imageEntity);
         }
         public async Task<bool> Delete(int id)
         {
-            return await images.Delete(id);
+            return await _images.Delete(id);
         }
     }
 }

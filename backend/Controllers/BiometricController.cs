@@ -1,18 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
 using BiometricFaceApi.Services;
-using Microsoft.AspNetCore.Identity;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.Net;
-using MySqlX.XDevAPI.Common;
-using System.Text.Json;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel;
-using Org.BouncyCastle.Asn1.Crmf;
 
 
 
@@ -48,7 +39,23 @@ namespace BiometricFaceApi.Controllers
         [Route("/todosUsers")]
         public async Task<ActionResult> GetAllUsers()
         {
-            return Ok(await _biometricService.GetAllUsers());
+            var response = await _biometricService.GetAllUsers();
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Buscar operadores pelo badge
+        /// </summary>
+        /// <response code="200">Retorna dados de operadores.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response  code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrator,operator,developer")]
+        [HttpGet]
+        [Route("/Badge")]
+        public async Task<ActionResult> GetByBadge(string badge)
+        {
+            var response = await _biometricService.GetUserByBadger(badge);
+            return Ok(response);
         }
 
 
