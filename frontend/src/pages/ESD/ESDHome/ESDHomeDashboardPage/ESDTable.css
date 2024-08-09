@@ -16,10 +16,12 @@
 }
 
 .box {
+  font-family: 'Material Icons';
+  content: "face";
   background-color: gray;
   margin-left: 10px;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
 }
 
 .ok {
@@ -41,4 +43,147 @@
 
 .control-painel {
   margin-bottom: 2%;
+}
+
+/* Define the container to align icons */
+.status-icon-container {
+  position: relative;
+  width: 60px; /* Width of the container */
+  height: 80px; /* Height of the container to accommodate the main icon and the appendices */
+  display: flex;
+  justify-content: center; /* Center the main icon horizontally */
+  align-items: flex-start; /* Align the icons to the top */
+}
+
+/* Basic styles for icons */
+.status-icon {
+  position: absolute;
+  margin-bottom: 10px;
+  margin-right: 20%;
+  width: 52px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: white;
+  background-color: transparent; /* Start with transparent background */
+  transition: background-color 0.3s;
+}
+
+/* Main icon styles */
+.status-icon.main {
+  z-index: 3; /* This icon will be on top */
+  top: 0;
+}
+
+/* Apêndice icons styles */
+.status-icon.append1,
+.status-icon.append2 {
+  z-index: 2;
+  top: 30px; /* Position apêndices below the main icon */
+}
+
+/* Positioning for the appendices */
+.status-icon.append1 {
+  left: -20px; /* Adjust positioning for append1 */
+}
+
+.status-icon.append2 {
+  left: 20px; /* Adjust positioning for append2 */
+}
+
+/* Change icon color based on status */
+.status-icon.active {
+  background-color: green;
+  margin-top: 20px;
+  /* margin-left: 15px; */
+}
+
+.status-icon.inactive {
+  background-color: red;
+  margin-left: 20px;
+  margin-top: 20px;
+  /* margin-top: 31px;
+  margin-left: 33px; */
+}
+
+.status-icon.warning {
+  background-color: orange;
+  /* margin-top: 31px; */
+}
+
+/* Optional: hover effect for better visualization */
+.status-icon:hover {
+  opacity: 0.8;
+}
+
+.icons-group {
+  /* margin-top: 20px; */
+}
+/* Basic styles for the table */
+.truth-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.truth-table th, .truth-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.truth-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* Icon styles */
+.icon {
+  font-size: 24px;
+  color: #333;
+}
+
+/* Optional: Hover effect for better visualization */
+.truth-table tr:hover {
+  background-color: #e2e2e2;
+}
+
+.icon-one-one {
+  width: 52px;
+  height: 60px;
+  background-image: url('icons/one-one.png');
+  background-size: cover; /* Garante que a imagem cobre toda a área da div */
+  background-position: center; /* Centraliza a imagem dentro da div */
+  background-repeat: no-repeat; /* Impede que a imagem se repita */
+}
+
+.icon-one-zero {
+  width: 52px;
+  height: 60px;
+  background-image: url('icons/one-zero.png');
+  background-size: cover; /* Garante que a imagem cobre toda a área da div */
+  background-position: center; /* Centraliza a imagem dentro da div */
+  background-repeat: no-repeat; /* Impede que a imagem se repita */
+}
+
+.icon-zero-one {
+  width: 52px;
+  height: 60px;
+  background-image: url('icons/zero-one.png');
+  background-size: cover; /* Garante que a imagem cobre toda a área da div */
+  background-position: center; /* Centraliza a imagem dentro da div */
+  background-repeat: no-repeat; /* Impede que a imagem se repita */
+}
+
+
+.icon-zero-zero {
+  width: 52px;
+  height: 60px;
+  background-image: url('icons/zero-zero.png');
+  background-size: cover; /* Garante que a imagem cobre toda a área da div */
+  background-position: center; /* Centraliza a imagem dentro da div */
+  background-repeat: no-repeat; /* Impede que a imagem se repita */
 }

@@ -3,13 +3,6 @@ import "./ESDTable.css";
 import ESDHomeModal from "../ESDHomeModal/ESDHomeModal";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 
 const ESDDashboardPage = () => {
   const navigate = useNavigate();
@@ -122,7 +115,7 @@ const ESDDashboardPage = () => {
                   )} ${setMargin(indexColumn)}`}
                   id={`col${indexColumn}-row${indexRow}`}
                 >
-                  {""}
+                  <div className="icon-one-one"></div>
                 </p>
               </Tooltip>
             ))}
