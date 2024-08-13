@@ -75,7 +75,7 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     >
       <Paper sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          {t("ESD_MONITOR.ADD_MONITOR", {
+          {t("ESD_MONITOR.DIALOG.EDIT_MONITOR", {
             appName: "App for Translations",
           })}
         </Typography>

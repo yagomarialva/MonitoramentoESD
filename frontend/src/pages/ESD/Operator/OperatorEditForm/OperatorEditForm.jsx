@@ -69,7 +69,7 @@ const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     >
       <Paper className="modal-paper">
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          {t("ESD_TEST.DIALOG.EDIT_STATION", {
+          {t("ESD_OPERATOR.DIALOG.EDIT_OPERATOR", {
             appName: "App for Translations",
           })}
         </Typography>

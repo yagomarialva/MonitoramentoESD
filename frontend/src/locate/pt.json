@@ -4,6 +4,7 @@
     "ESD_TEST": {
       "TABLE_HEADER": "Estações ESD",
       "ADD_STATION": "Adicionar JIG",
+      "LOADING":"Carregando Lista de Jigs",
       "TABLE": {
         "USER_ID": "Número de Série",
         "NAME": "Descrição",
@@ -42,7 +43,7 @@
       "DELETE_OPERATOR": "Deletar Operador",
       "TABLE": {
         "USER_ID": "Matrícula",
-        "NAME": "Operador",
+        "NAME": "Operador(a)",
         "ACTIONS": "Ações",
         "COLUMNS": "Filtrar Colunas",
         "DENSITY": "Ajustar Exibição",
@@ -53,22 +54,22 @@
         "CONFORTABLE": "Confortável"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM_TEXT": "Deseja excluir o Operador?",
+        "CONFIRM_TEXT": "Deseja excluir o Operador(a) ",
         "CLOSE": "Fechar",
         "SAVE": "Excluir",
-        "DELETE_OPERATOR": "Excluir Operador"
+        "DELETE_OPERATOR": "Excluir Operador(a)"
       },
       "DIALOG": {
         "CLOSE": "Fechar",
         "SAVE": "Salvar",
-        "CREATE_STATION": "Adicionar Operador",
-        "EDIT_STATION": "Editar Operador"
+        "CREATE_OPERATOR": "Adicionar Operador(a)",
+        "EDIT_OPERATOR": "Editar Operador(a)"
       },
       "TOAST": {
-        "CREATE_SUCCESS": "Operador criado com sucesso",
+        "CREATE_SUCCESS": "Operador(a) criado(a) com sucesso",
         "TOAST_ERROR": "Operação não pode ser concluída",
-        "DELETE_SUCCESS": "Operador Excluído com sucesso",
-        "UPDATE_SUCCESS": "Operador atualizado com sucesso"
+        "DELETE_SUCCESS": "Operador(a) Excluído(a) com sucesso",
+        "UPDATE_SUCCESS": "Operador(a) atualizado(a) com sucesso"
       }
     },
     "ESD_MONITOR": {
@@ -91,16 +92,16 @@
         "CONFORTABLE": "Confortável"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM-TEXT": "Deseja excluir o Monitor?",
+        "CONFIRM-TEXT": "Deseja excluir o Monitor",
         "CLOSE": "Fechar",
         "SAVE": "Excluir",
-        "DELETE_STATION": "Excluir Monitor"
+        "DELETE_MONITOR": "Excluir Monitor"
       },
       "DIALOG": {
         "CLOSE": "Fechar",
         "SAVE": "Salvar",
-        "CREATE_STATION": "Adicionar Monitor",
-        "EDIT_STATION": "Editar Monitor"
+        "CREATE_MONITOR": "Adicionar Monitor",
+        "EDIT_MONITOR": "Editar Monitor"
       },
       "TOAST": {
         "CREATE_SUCCESS": "Monitor criado com sucesso",

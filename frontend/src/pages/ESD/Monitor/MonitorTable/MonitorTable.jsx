@@ -75,7 +75,7 @@ const MonitorTable = () => {
   const handleOpenModal = () => handleStateChange({ openModal: true });
   const handleCloseModal = () => handleStateChange({ openModal: false });
   const handleDeleteOpen = (monitor) =>
-    handleStateChange({ monitorToDelete: monitor, deleteConfirmOpen: true });
+    handleStateChange({ monitor, monitorToDelete: monitor, deleteConfirmOpen: true });
   const handleDeleteClose = () =>
     handleStateChange({ deleteConfirmOpen: false, monitorToDelete: null });
 
@@ -158,8 +158,8 @@ const MonitorTable = () => {
   }, []);
 
   const handleConfirmDelete = async () => {
+    await handleDelete(state.monitorToDelete.id);
     if (state.monitorToDelete) {
-      await handleDelete(state.monitorToDelete.id);
       handleDeleteClose();
     }
   };
@@ -348,12 +348,12 @@ const MonitorTable = () => {
               open={state.deleteConfirmOpen}
               handleClose={handleDeleteClose}
               handleConfirm={handleConfirmDelete}
-              title={t("ESD_MONITOR.CONFIRM_DIALOG.DELETE_STATION", {
+              title={t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
                 appName: "App for Translations",
               })}
               description={t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
                 appName: "App for Translations",
-              })}
+              }) + " " + state.monitor.serialNumber + "?"}
             />
             <Snackbar
               open={state.snackbarOpen}

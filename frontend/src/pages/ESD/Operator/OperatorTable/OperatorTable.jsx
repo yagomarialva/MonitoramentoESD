@@ -76,7 +76,7 @@ const OperatorTable = () => {
   const handleOpenModal = () => handleStateChange({ openModal: true });
   const handleCloseModal = () => handleStateChange({ openModal: false });
   const handleDeleteOpen = (operator) =>
-    handleStateChange({ operatorToDelete: operator, deleteConfirmOpen: true });
+    handleStateChange({ operator, operatorToDelete: operator, deleteConfirmOpen: true });
   const handleDeleteClose = () =>
     handleStateChange({ deleteConfirmOpen: false, operatorToDelete: null });
 
@@ -90,12 +90,12 @@ const OperatorTable = () => {
       const result = await getAllOperators();
       handleStateChange({ allOperators: result.value });
       showSnackbar(
-        t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
       );
       return response.data;
     } catch (error) {
       showSnackbar(
-        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("ESD_OPERATOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -334,7 +334,7 @@ const OperatorTable = () => {
           })}
           description={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM_TEXT", {
             appName: "App for Translations",
-          })}
+          }) + " " + state.operator.name + "?"}
         />
         <Snackbar
           open={state.snackbarOpen}

@@ -143,7 +143,7 @@ const ESDTable = () => {
           localStorage.removeItem("token");
           navigate("/");
         }
-        showSnackbar(t(error.message), "error");
+        showSnackbar(t( error.response.data), "error");
         handleStateChange({ loading: false });
       }
     };
