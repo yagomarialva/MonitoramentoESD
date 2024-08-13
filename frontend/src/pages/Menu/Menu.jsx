@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,12 +10,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
 import HomeIcon from "@mui/icons-material/Home";
-import { Link } from "react-router-dom";
 import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SensorsOutlinedIcon from "@mui/icons-material/SensorsOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./Menu.css";
 import Card from "@mui/material/Card";
@@ -32,6 +35,12 @@ const getMenuItems = (userRole) => {
       icon: <HomeIcon />,
       path: "/dashboard",
       roles: ["administrator", "operator"],
+      subItems: [
+        {
+          text: "Linhas",
+          path: "/liners",
+        },
+      ],
     },
     {
       text: "Operadores",
@@ -62,24 +71,62 @@ const getMenuItems = (userRole) => {
   return allItems.filter((item) => item.roles.includes(userRole));
 };
 
-const MenuList = ({ menuItems }) => (
-  <List>
-    {menuItems.map((item) => (
-      <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
-        <ListItemButton
-          component={Link}
-          to={item.path}
-          className="list-items-buttons"
-        >
-          <ListItemIcon className="list-items-buttons-icons">
-            {item.icon}
-          </ListItemIcon>
-          <ListItemText primary={item.text} />
-        </ListItemButton>
-      </ListItem>
-    ))}
-  </List>
-);
+const MenuList = ({ menuItems }) => {
+  const [open, setOpen] = useState({});
+
+  const handleClick = (text) => {
+    setOpen((prevOpen) => ({
+      ...prevOpen,
+      [text]: !prevOpen[text],
+    }));
+  };
+
+  return (
+    <List>
+      {menuItems.map((item) => (
+        <React.Fragment key={item.text}>
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              component={Link}
+              to={item.path}
+              onClick={() => item.subItems && handleClick(item.text)}
+              className="list-items-buttons"
+            >
+              <ListItemIcon className="list-items-buttons-icons">
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.text} />
+              {item.subItems ? (
+                open[item.text] ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )
+              ) : null}
+            </ListItemButton>
+          </ListItem>
+          {item.subItems && (
+            <Collapse in={open[item.text]} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {item.subItems.map((subItem) => (
+                  <ListItem key={subItem.text} disablePadding sx={{ pl: 4 }}>
+                    <ListItemButton
+                      component={Link}
+                      to={subItem.path}
+                      className="list-items-buttons"
+                    >
+                      <ListItemText primary={subItem.text} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
+          )}
+        </React.Fragment>
+      ))}
+    </List>
+  );
+};
 
 export default function Menu({ componentToShow }) {
   const token = localStorage.getItem("role");
@@ -113,7 +160,10 @@ export default function Menu({ componentToShow }) {
         </div>
       </Drawer>
       <Box component="main" className="main-content">
-        <Card sx={{overflowY: 'auto', overflowX: 'auto'}} className="drawer-card">
+        <Card
+          sx={{ overflowY: "auto", overflowX: "auto" }}
+          className="drawer-card"
+        >
           <CardContent>{componentToShow}</CardContent>
         </Card>
       </Box>

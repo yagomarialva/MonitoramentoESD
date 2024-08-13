@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
   getAllJigs,
@@ -28,7 +28,6 @@ import ESDForm from "../ESDForm/ESDForm";
 import ESDEditForm from "../ESDEditForm/ESDEditForm";
 import ESDConfirmModal from "../ESDConfirmModal/ESDConfirmModal";
 import "./SnackbarStyles.css";
-// import "./ESDTable.css";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -44,31 +43,30 @@ const ESDTable = () => {
     open: false,
     openModal: false,
     openEditModal: false,
-    editCell: null,
     editData: null,
     deleteConfirmOpen: false,
     stationToDelete: null,
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
-    filterName: "",
-    filterDescription: "",
-    page: 0,
-    rowsPerPage: 10,
-    loading: true, // Adicionei esta linha
+    loading: true,
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchName, setSearchName] = useState("");
+  const [searchDescription, setSearchDescription] = useState("");
 
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
 
-  const showSnackbar = (message, severity) => {
+  const showSnackbar = useCallback((message, severity = "success") => {
     handleStateChange({
       snackbarMessage: message,
       snackbarSeverity: severity,
       snackbarOpen: true,
     });
-  };
+  }, []);
 
   const handleOpen = (station) => handleStateChange({ station, open: true });
   const handleClose = () => handleStateChange({ open: false });
@@ -86,20 +84,13 @@ const ESDTable = () => {
   };
 
   const handleCreateMonitor = async (station) => {
-    const maxId = state.allJigs.reduce(
-      (max, station) => Math.max(max, station.id),
-      0
-    );
-    const newId = maxId + 1;
-    const newJig = { id: newId, ...station };
-
     try {
-      const response = await createJigs(newJig);
-      handleStateChange({ allJigs: [...state.allJigs, newJig] });
+      await createJigs(station);
+      const result = await getAllJigs();
+      handleStateChange({ allJigs: result, loading: false });
       showSnackbar(
         t("ESD_TEST.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
       );
-      return response.data;
     } catch (error) {
       showSnackbar(
         t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
@@ -128,23 +119,11 @@ const ESDTable = () => {
 
   const handleEditCellChange = async (params) => {
     try {
-      const updatedBracelet = {
-        ...state.station,
-        id: params.id,
-        name: params.name,
-        description: params.description,
-      };
-      const updatedItem = await updateJigs(updatedBracelet);
-
-      handleStateChange({
-        allJigs: state.allJigs.map((item) =>
-          item.id === params.id ? updatedItem : item
-        ),
-      });
-
+      await createJigs(params);
+      const result = await getAllJigs();
+      handleStateChange({ allJigs: result, loading: false });
       showSnackbar(
-        t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" }),
-        "success"
+        t("ESD_TEST.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" })
       );
     } catch (error) {
       showSnackbar(
@@ -158,18 +137,18 @@ const ESDTable = () => {
     const fetchDataAllUsers = async () => {
       try {
         const result = await getAllJigs();
-        handleStateChange({ allJigs: result, loading: false }); // Adicionei loading: false aqui
+        handleStateChange({ allJigs: result, loading: false });
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
           navigate("/");
         }
         showSnackbar(t(error.message), "error");
-        handleStateChange({ loading: false }); // Adicionei loading: false aqui
+        handleStateChange({ loading: false });
       }
     };
     fetchDataAllUsers();
-  }, []);
+  }, [navigate, t]);
 
   const handleConfirmDelete = async () => {
     if (state.stationToDelete) {
@@ -178,34 +157,35 @@ const ESDTable = () => {
     }
   };
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    handleStateChange({ [name]: value });
+  const handleSearchNameChange = (event) => {
+    setSearchName(event.target.value);
+  };
+
+  const handleSearchDescription = (event) => {
+    setSearchDescription(event.target.value);
   };
 
   const handleChangePage = (event, newPage) => {
-    handleStateChange({ page: newPage });
+    setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    handleStateChange({
-      rowsPerPage: parseInt(event.target.value, 10),
-      page: 0,
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const filterJigs = () => {
+    return state.allJigs.filter((jig) => {
+      return (
+        jig.name.toLowerCase().includes(searchName.toLowerCase()) &&
+        jig.description.toLowerCase().includes(searchDescription.toLowerCase())
+      );
     });
   };
 
-  const filteredJigs = state.allJigs.filter((station) => {
-    return (
-      station.name.toLowerCase().includes(state.filterName.toLowerCase()) &&
-      station.description
-        .toLowerCase()
-        .includes(state.filterDescription.toLowerCase())
-    );
-  });
-
-  const paginatedJigs = filteredJigs.slice(
-    state.page * state.rowsPerPage,
-    state.page * state.rowsPerPage + state.rowsPerPage
+  const paginatedJigs = filterJigs().slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
   );
 
   return (
@@ -221,8 +201,8 @@ const ESDTable = () => {
                     appName: "App for Translations",
                   })}
                   variant="outlined"
-                  value={state.filterName}
-                  onChange={handleFilterChange}
+                  value={searchName}
+                  onChange={handleSearchNameChange}
                   sx={{ mb: 2, mr: 2 }}
                   InputProps={{
                     endAdornment: (
@@ -238,8 +218,8 @@ const ESDTable = () => {
                     appName: "App for Translations",
                   })}
                   variant="outlined"
-                  value={state.filterDescription}
-                  onChange={handleFilterChange}
+                  value={searchDescription}
+                  onChange={handleSearchDescription}
                   sx={{ mb: 2 }}
                   InputProps={{
                     endAdornment: (
@@ -253,7 +233,7 @@ const ESDTable = () => {
               <Col sm={2}>
                 <Button
                   id="add-button"
-                  variant="outlined"
+                  variant="contained"
                   color="success"
                   onClick={handleOpenModal}
                   sx={{ mb: 2, ml: 2 }}
@@ -265,18 +245,38 @@ const ESDTable = () => {
               </Col>
             </Row>
             {state.loading ? (
-              <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mt={2}
+              >
                 <CircularProgress />
-                <Typography variant="h6" align="center" color="textSecondary" ml={2}>
+                <Typography
+                  variant="h6"
+                  align="center"
+                  color="textSecondary"
+                  ml={2}
+                >
                   {t("ESD_TEST.LOADING", {
                     appName: "App for Translations",
                   })}
                 </Typography>
               </Box>
             ) : paginatedJigs.length === 0 ? (
-              <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-                <Typography variant="h6" align="center" color="textSecondary" ml={2}>
-                Sua lista está vazia
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mt={2}
+              >
+                <Typography
+                  variant="h6"
+                  align="center"
+                  color="textSecondary"
+                  ml={2}
+                >
+                  Sua lista está vazia
                 </Typography>
               </Box>
             ) : (
@@ -316,10 +316,10 @@ const ESDTable = () => {
             )}
             <TablePagination
               component="div"
-              count={filteredJigs.length}
-              page={state.page}
+              count={filterJigs().length}
+              page={page}
               onPageChange={handleChangePage}
-              rowsPerPage={state.rowsPerPage}
+              rowsPerPage={rowsPerPage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
             <ESDModal

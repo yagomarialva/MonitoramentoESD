@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback  } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
   getAllOperators,
@@ -49,6 +49,7 @@ const OperatorTable = () => {
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
+    loading: true, // Adicionei esta linha
   });
 
   const [page, setPage] = useState(0);
@@ -56,7 +57,6 @@ const OperatorTable = () => {
   const [searchName, setSearchName] = useState("");
   const [searchBadge, setSearchBadge] = useState("");
 
-  
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };

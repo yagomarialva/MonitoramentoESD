@@ -38,7 +38,7 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const nameRegex = /^(?![\s-]+$)[\w-]{1,50}$/;
+    const nameRegex = /^(?![\s-]+$)[\w\s-]{1,50}$/;
 
     let valid = true;
 

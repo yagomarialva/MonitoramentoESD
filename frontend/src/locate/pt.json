@@ -16,22 +16,22 @@
         "CONFORTABLE": "Confortável"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM-TEXT": "Deseja excluir a estação ESD?",
+        "CONFIRM-TEXT": "Deseja excluir o Jig?",
         "CLOSE": "Fechar",
         "SAVE": "Salvar",
-        "DELETE_STATION": "Excluir Operador"
+        "DELETE_STATION": "Excluir Jig"
       },
       "DIALOG": {
         "CLOSE": "Fechar",
         "SAVE": "Salvar",
-        "CREATE_STATION": "Adicionar Operador",
-        "EDIT_STATION": "Editar Operador"
+        "CREATE_STATION": "Adicionar Jig",
+        "EDIT_STATION": "Editar Jig"
       },
       "TOAST": {
-        "CREATE_SUCCESS": "Operador criado com sucesso",
+        "CREATE_SUCCESS": "Jig criado com sucesso",
         "TOAST_ERROR": "Operação não pode ser concluída",
-        "DELETE_SUCCESS": "Operador Excluído com sucesso",
-        "UPDATE_SUCCESS": "Operador atualizado com sucesso"
+        "DELETE_SUCCESS": "Jig Excluído com sucesso",
+        "UPDATE_SUCCESS": "Jig atualizado com sucesso"
       }
     },
     "ESD_OPERATOR": {

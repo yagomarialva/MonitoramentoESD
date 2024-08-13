@@ -11,8 +11,9 @@
 }
 
 .grid-table {
-  height: 1100;
-  width: 1050;
+  height: 570px;
+  width: 100%;
+  /* border: solid green 10px;  */
 }
 
 .box {
@@ -187,3 +188,4 @@
   background-position: center; /* Centraliza a imagem dentro da div */
   background-repeat: no-repeat; /* Impede que a imagem se repita */
 }
+
