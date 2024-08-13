@@ -22,7 +22,7 @@ namespace BiometricFaceApi.Models
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [RegularExpression("^[a-zA-Z0-9]{1,255}$", ErrorMessage = "O Badge deve conter apenas letras e números.")]
         public string? Badge { get; set; }
-        public DateTime Born { get; set; }
+        public DateTime Created { get; set; }
 
 
     }

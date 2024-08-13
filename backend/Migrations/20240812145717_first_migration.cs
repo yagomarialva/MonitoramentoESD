@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace BiometricFaceApi.Migrations
 {
     /// <inheritdoc />
-    public partial class firstmigration : Migration
+    public partial class first_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -125,7 +125,7 @@ namespace BiometricFaceApi.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Badge = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Born = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
