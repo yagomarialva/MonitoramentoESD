@@ -113,6 +113,47 @@
         "UPDATE_SUCCESS": "Monitor atualizado com sucesso"
       }
     },
+    "LINE": {
+      "TABLE_HEADER": "Linha ESD",
+      "ADD_LINE": "Adicionar Linha",
+      "EDIT_LINE": "Editar Linha",
+      "INFO_LINE": "Informações do Linha",
+      "DELETE_LINE": "Deletar Linha",
+      "STATUS_LINE":"Status",
+      "TABLE": {
+        "USER_ID": "Número de Série",
+        "NAME": "Linha",
+        "ACTIONS": "Ações",
+        "STATUS": "Status",
+        "STATUS_JIG": "Status da Linha",
+        "STATUS_OPERATOR": "Status da Linha",
+        "COLUMNS": "Filtrar Colunas",
+        "DENSITY": "Ajustar Exibição",
+        "SEARCH": "Pesquisar",
+        "STATION": "Estação",
+        "COMPACT": "Compacto",
+        "STANDARD": "Padrão",
+        "CONFORTABLE": "Confortável"
+      },
+      "CONFIRM_DIALOG": {
+        "CONFIRM-TEXT": "Deseja excluir a Linha?",
+        "CLOSE": "Fechar",
+        "SAVE": "Excluir",
+        "DELETE_LINE": "Excluir Linha"
+      },
+      "DIALOG": {
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "CREATE_LINE": "Adicionar Linha",
+        "EDIT_LINE": "Editar Linha"
+      },
+      "TOAST": {
+        "CREATE_SUCCESS": "Linha criada com sucesso",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Linha Excluída com sucesso",
+        "UPDATE_SUCCESS": "Linha atualizada com sucesso"
+      }
+    },
     "FCT_Home_Page": {
       "Header": "Página Inicial",
       "Label": "FCT para automação dos testes"

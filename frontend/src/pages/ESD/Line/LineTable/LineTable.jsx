@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  getAllMonitors,
-  createMonitor,
-  deleteMonitor,
-  updateMonitor,
-} from "../../../../api/monitorApi";
 
-import { getAllLines } from "../../../../api/linerApi";
+import { getAllLines, createLine, deleteLine } from "../../../../api/linerApi";
 import {
   IconButton,
   Box,
@@ -25,12 +19,12 @@ import {
   TablePagination,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
-// import MonitorModal from "../MonitorModal/MonitorModal";
-// import MonitorForm from "../MonitorForm/MonitorForm";
-// import MonitorConfirmModal from "../MonitorConfirmModal/MonitorConfirmModal";
-// import MonitorEditForm from "../MonitorEditForm/MonitorEditForm";
+import LineModal from "../LineModal/LineModal";
+import LineForm from "../LineForm/LineForm";
+import LineConfirmModal from "../LineConfirmModal/LineConfirmModal";
+import LineEditForm from "../LineEditForm/LineEditForm";
 import { useNavigate } from "react-router-dom";
-// import "./MonitorTable.css";
+// import "./LineTable.css";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Row from "react-bootstrap/Row";
@@ -40,15 +34,15 @@ const LineTable = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [state, setState] = useState({
-    allMonitors: [],
-    monitor: {},
+    allLines: [],
+    line: {},
     open: false,
     openModal: false,
     openEditModal: false,
     editCell: null,
     editData: null,
     deleteConfirmOpen: false,
-    monitorToDelete: null,
+    lineToDelete: null,
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
@@ -70,35 +64,35 @@ const LineTable = () => {
     });
   };
 
-  const handleOpen = (monitor) => handleStateChange({ monitor, open: true });
+  const handleOpen = (line) => handleStateChange({ line, open: true });
   const handleClose = () => handleStateChange({ open: false });
   const handleEditClose = () =>
     handleStateChange({ openEditModal: false, editData: null });
   const handleOpenModal = () => handleStateChange({ openModal: true });
   const handleCloseModal = () => handleStateChange({ openModal: false });
-  const handleDeleteOpen = (monitor) =>
-    handleStateChange({ monitorToDelete: monitor, deleteConfirmOpen: true });
+  const handleDeleteOpen = (line) =>
+    handleStateChange({ lineToDelete: line, deleteConfirmOpen: true });
   const handleDeleteClose = () =>
-    handleStateChange({ deleteConfirmOpen: false, monitorToDelete: null });
+    handleStateChange({ deleteConfirmOpen: false, lineToDelete: null });
 
-  const handleEditOpen = (monitor) => {
-    handleStateChange({ editData: monitor, openEditModal: true });
+  const handleEditOpen = (line) => {
+    handleStateChange({ editData: line, openEditModal: true });
   };
 
-  const handleCreateMonitor = async (monitor) => {
+  const handleCreateLine = async (line) => {
     try {
-      await createMonitor(monitor);
-      const result = await getAllMonitors();
-      handleStateChange({ allMonitors: result });
+      await createLine(line);
+      const result = await getAllLines();
+      handleStateChange({ allLines: result });
       showSnackbar(
-        t("ESD_MONITOR.TOAST.CREATE_SUCCESS", {
+        t("LINE.TOAST.CREATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
       return result;
     } catch (error) {
       showSnackbar(
-        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -106,18 +100,18 @@ const LineTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteMonitor(id);
+      await deleteLine(id);
       handleStateChange({
-        allMonitors: state.allMonitors.filter((monitor) => monitor.id !== id),
+        allLines: state.allLines.filter((line) => line.id !== id),
       });
       showSnackbar(
-        t("ESD_MONITOR.TOAST.DELETE_SUCCESS", {
+        t("LINE.TOAST.DELETE_SUCCESS", {
           appName: "App for Translations",
         })
       );
     } catch (error) {
       showSnackbar(
-        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -125,18 +119,18 @@ const LineTable = () => {
 
   const handleEditCellChange = async (params) => {
     try {
-      await createMonitor(params);
-      const result = await getAllMonitors();
-      handleStateChange({ allMonitors: result });
+      await createLine(params);
+      const result = await getAllLines();
+      handleStateChange({ allLines: result });
       showSnackbar(
-        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
+        t("LINE.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
       return result;
     } catch (error) {
       showSnackbar(
-        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -145,10 +139,10 @@ const LineTable = () => {
   useEffect(() => {
     const fetchDataAllUsers = async () => {
       try {
-        const result = await getAllMonitors();
+        const result = await getAllLines();
         const resultLine = await getAllLines();
         console.log("resultLine", resultLine);
-        handleStateChange({ allMonitors: resultLine });
+        handleStateChange({ allLines: resultLine });
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -161,8 +155,8 @@ const LineTable = () => {
   }, []);
 
   const handleConfirmDelete = async () => {
-    if (state.monitorToDelete) {
-      await handleDelete(state.monitorToDelete.id);
+    if (state.lineToDelete) {
+      await handleDelete(state.lineToDelete.id);
       handleDeleteClose();
     }
   };
@@ -183,24 +177,20 @@ const LineTable = () => {
     });
   };
 
-  const filteredMonitors = (
-    Array.isArray(state.allMonitors) ? state.allMonitors : []
-  ).filter((monitor) => {
-    const serialNumber = monitor.serialNumber
-      ? monitor.serialNumber.toLowerCase()
+  const filteredLines = (
+    Array.isArray(state.allLines) ? state.allLines : []
+  ).filter((line) => {
+    const name = line.name
+      ? line.name.toLowerCase()
       : "";
-    const description = monitor.description
-      ? monitor.description.toLowerCase()
-      : "";
+   
     const filterSerialNumber = state.filterSerialNumber.toLowerCase();
-    const filterDescription = state.filterDescription.toLowerCase();
     return (
-      serialNumber.includes(filterSerialNumber) &&
-      description.includes(filterDescription)
+      name.includes(filterSerialNumber) 
     );
   });
 
-  const paginatedMonitors = filteredMonitors.slice(
+  const paginatedLines = filteredLines.slice(
     Math.max(0, state.page * state.rowsPerPage),
     Math.max(0, state.page * state.rowsPerPage + state.rowsPerPage)
   );
@@ -214,7 +204,7 @@ const LineTable = () => {
               <Col sm={10}>
                 <TextField
                   name="filterSerialNumber"
-                  label={t("ESD_MONITOR.TABLE.USER_ID", {
+                  label={t("LINE.TABLE.USER_ID", {
                     appName: "App for Translations",
                   })}
                   variant="outlined"
@@ -231,7 +221,7 @@ const LineTable = () => {
                 />
                 <TextField
                   name="filterDescription"
-                  label={t("ESD_MONITOR.TABLE.NAME", {
+                  label={t("LINE.TABLE.NAME", {
                     appName: "App for Translations",
                   })}
                   variant="outlined"
@@ -254,34 +244,34 @@ const LineTable = () => {
                   color="success"
                   onClick={handleOpenModal}
                 >
-                  {t("ESD_MONITOR.ADD_MONITOR", {
+                  {t("LINE.ADD_LINE", {
                     appName: "App for Translations",
                   })}
                 </Button>
               </Col>
             </Row>
-            {paginatedMonitors.length === 0 ? (
+            {paginatedLines.length === 0 ? (
               <Typography variant="h6" align="center" color="textSecondary">
                 Sua lista está vazia
               </Typography>
             ) : (
               <List>
-                {paginatedMonitors.map((monitor) => (
+                {paginatedLines.map((line) => (
                   <ListItem
-                    key={monitor.id}
+                    key={line.id}
                     divider
                     sx={{ display: "flex", alignItems: "center" }}
                   >
                     <Tooltip
-                      title={`Id: ${monitor.id}, Linha: ${monitor.name}`}
+                      title={`Id: ${line.id}, Linha: ${line.name}`}
                       arrow
                     >
                       <ListItemText
-                        primary={`Id: ${monitor.id}`}
+                        primary={`Id: ${line.id}`}
                         secondary={
                           <>
                             <Typography variant="body2" color="textSecondary">
-                            {`Linha: ${monitor.name}`}
+                            {`Linha: ${line.name}`}
                             </Typography>
                           </>
                         }
@@ -289,29 +279,29 @@ const LineTable = () => {
                       />
                     </Tooltip>
                     <ListItemSecondaryAction>
-                      <Tooltip title={t("ESD_MONITOR.EDIT_MONITOR")}>
+                      <Tooltip title={t("LINE.EDIT_LINE")}>
                         <IconButton
                           edge="end"
                           aria-label="edit"
-                          onClick={() => handleEditOpen(monitor)}
+                          onClick={() => handleEditOpen(line)}
                         >
                           <EditIcon />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title={t("ESD_MONITOR.INFO_MONITOR")}>
+                      <Tooltip title={t("LINE.INFO_LINE")}>
                         <IconButton
                           edge="end"
                           aria-label="info"
-                          onClick={() => handleOpen(monitor)}
+                          onClick={() => handleOpen(line)}
                         >
                           <Info />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title={t("ESD_MONITOR.DELETE_MONITOR")}>
+                      <Tooltip title={t("LINE.DELETE_LINE")}>
                         <IconButton
                           edge="end"
                           aria-label="delete"
-                          onClick={() => handleDeleteOpen(monitor)}
+                          onClick={() => handleDeleteOpen(line)}
                         >
                           <Delete />
                         </IconButton>
@@ -323,40 +313,40 @@ const LineTable = () => {
             )}
             <TablePagination
               component="div"
-              count={filteredMonitors.length}
+              count={filteredLines.length}
               page={state.page}
               onPageChange={handleChangePage}
               rowsPerPage={state.rowsPerPage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
-            {/* <MonitorModal
+            <LineModal
               open={state.open}
               handleClose={handleClose}
-              monitorName={state.monitor.serialNumber}
-              monitor={state.monitor}
-            /> */}
-            {/* <MonitorForm
+              lineName={state.line.name}
+              line={state.line}
+            />
+            <LineForm
               open={state.openModal}
               handleClose={handleCloseModal}
-              onSubmit={handleCreateMonitor}
-            /> */}
-            {/* <MonitorEditForm
+              onSubmit={handleCreateLine}
+            />
+            <LineEditForm
               open={state.openEditModal}
               handleClose={handleEditClose}
               onSubmit={handleEditCellChange}
               initialData={state.editData}
-            /> */}
-            {/* <MonitorConfirmModal
+            />
+            <LineConfirmModal
               open={state.deleteConfirmOpen}
               handleClose={handleDeleteClose}
               handleConfirm={handleConfirmDelete}
-              title={t("ESD_MONITOR.CONFIRM_DIALOG.DELETE_STATION", {
+              title={t("LINE.CONFIRM_DIALOG.DELETE_LINE", {
                 appName: "App for Translations",
               })}
-              description={t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
+              description={t("LINE.CONFIRM_DIALOG.CONFIRM-TEXT", {
                 appName: "App for Translations",
               })}
-            /> */}
+            />
             <Snackbar
               open={state.snackbarOpen}
               autoHideDuration={6000}

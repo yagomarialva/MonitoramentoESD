@@ -13,6 +13,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid"; // Importar o DataGrid e GridToolbar
 import { getMonitor } from "../../../../api/monitorApi";
+import { getAllStationMapper, getStationMapper } from "../../../../api/mapingAPI";
 
 import "./ESDTable.css";
 
@@ -124,18 +125,20 @@ const ESDDashboardPage = () => {
       try {
         // Simulação de obtenção de dados
         const data = generateFakeData(288); // Gerar 288 itens
+        const result = await getAllStationMapper();
+        console.log('result', result)
         // setRowsTable(data); // Atualize o estado com os dados gerados
         // Atualize os dados com o nome do monitor
         const updatedData = await Promise.all(
           data.map(async (item) => {
-            const monitorData = await getMonitor(item.monitorEsdId);
+            const monitorData = await getStationMapper(item.monitorEsdId);
             return {
               ...item,
               serialNumber: monitorData.serialNumber, // Assuma que getMonitor retorna o serialNumber diretamente
             };
           })
         );
-        console.log('updatedData', updatedData)
+        // console.log('updatedData', updatedData)
         setRowsTable(updatedData);
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
