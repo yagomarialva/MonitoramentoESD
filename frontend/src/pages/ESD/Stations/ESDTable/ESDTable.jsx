@@ -282,7 +282,7 @@ const ESDTable = () => {
             ) : (
               <List>
                 {paginatedJigs.map((station) => (
-                  <ListItem key={station.id}>
+                  <ListItem key={station.id} divider>
                     <ListItemText
                       primary={station.name}
                       secondary={station.description}

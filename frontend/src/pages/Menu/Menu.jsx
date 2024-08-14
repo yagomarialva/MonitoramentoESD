@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -18,12 +18,15 @@ import SensorsOutlinedIcon from "@mui/icons-material/SensorsOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./Menu.css";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import CloseIcon from '@mui/icons-material/Close'; // Ícone de fechar
+import IconButton from '@mui/material/IconButton';
 
+// Funções de utilitário
 const getUserRoleFromToken = (token) => {
   return token === "administrator" ? "administrator" : "operator";
 };
@@ -40,6 +43,7 @@ const getMenuItems = (userRole) => {
           text: "Linhas",
           path: "/liners",
         },
+        
       ],
     },
     {
@@ -71,56 +75,69 @@ const getMenuItems = (userRole) => {
   return allItems.filter((item) => item.roles.includes(userRole));
 };
 
+// Componente do MenuList
 const MenuList = ({ menuItems }) => {
-  const [open, setOpen] = useState({});
-
-  const handleClick = (text) => {
-    setOpen((prevOpen) => ({
-      ...prevOpen,
-      [text]: !prevOpen[text],
-    }));
+  const [expandedItem, setExpandedItem] = useState(null); // Gerenciar o item expandido
+  const location = useLocation(); // Obter a localização atual
+  
+  const currentPath = location.pathname; // Caminho atual
+  
+  // Função para lidar com o clique em um item de menu
+  const handleItemClick = (item) => {
+    setExpandedItem(expandedItem === item ? null : item); // Alternar entre expandido e colapsado
   };
+
+  // Detectar mudança de rota e fechar o dropdown se o item não for o expandido
+  useEffect(() => {
+    const currentItem = menuItems.find(item => item.subItems?.some(subItem => subItem.path === currentPath));
+    if (currentItem && expandedItem !== currentItem.text) {
+      setExpandedItem(currentItem.text);
+    }
+  }, [location, menuItems, expandedItem, currentPath]);
+
+  // Função para verificar se o item é o selecionado
+  const isSelected = (path) => currentPath === path;
 
   return (
     <List>
-      {menuItems.map((item) => (
-        <React.Fragment key={item.text}>
+      {menuItems.map((item, index) => (
+        <React.Fragment key={index}>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               component={Link}
               to={item.path}
-              onClick={() => item.subItems && handleClick(item.text)}
-              className="list-items-buttons"
+              onClick={() => {
+                if (item.subItems) {
+                  handleItemClick(item.text);
+                }
+              }}
+              className={`list-items-buttons ${isSelected(item.path) ? 'selected' : ''}`}
             >
               <ListItemIcon className="list-items-buttons-icons">
                 {item.icon}
               </ListItemIcon>
               <ListItemText primary={item.text} />
-              {item.subItems ? (
-                open[item.text] ? (
-                  <ExpandLess />
-                ) : (
-                  <ExpandMore />
-                )
-              ) : null}
+              {item.subItems && (
+                <IconButton edge="end">
+                  {expandedItem === item.text ? <ExpandLess /> : <ExpandMore />}
+                </IconButton>
+              )}
             </ListItemButton>
           </ListItem>
-          {item.subItems && (
-            <Collapse in={open[item.text]} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {item.subItems.map((subItem) => (
-                  <ListItem key={subItem.text} disablePadding sx={{ pl: 4 }}>
-                    <ListItemButton
-                      component={Link}
-                      to={subItem.path}
-                      className="list-items-buttons"
-                    >
-                      <ListItemText primary={subItem.text} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Collapse>
+          {expandedItem === item.text && item.subItems && (
+            <List component="div" disablePadding className="drawer-sublist">
+              {item.subItems.map((subItem, subIndex) => (
+                <ListItem key={subIndex} disablePadding>
+                  <ListItemButton
+                    component={Link}
+                    to={subItem.path}
+                    className={isSelected(subItem.path) ? 'selected' : ''}
+                  >
+                    <ListItemText primary={subItem.text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
           )}
         </React.Fragment>
       ))}
@@ -128,6 +145,7 @@ const MenuList = ({ menuItems }) => {
   );
 };
 
+// Componente principal Menu
 export default function Menu({ componentToShow }) {
   const token = localStorage.getItem("role");
   const name = localStorage.getItem("name");

@@ -1,3 +1,17 @@
+/* Menu.css */
+
+.list-items-buttons.selected {
+  background-color: #aec0af; /* Cor de fundo para o item selecionado */
+  color: #333; /* Cor do texto para o item selecionado */
+}
+
+/* Opcional: cor para o subitem selecionado */
+.drawer-sublist .selected {
+  background-color: #aec0af; /* Cor de fundo para o subitem selecionado */
+  color: #333; /* Cor do texto para o subitem selecionado */
+}
+
+
 .list-items-buttons {
   min-height: 48%;
   justify-content: center;
@@ -25,6 +39,7 @@
   margin-top: 4%;
   padding: 5px;
 }
+
 
 /*  flex-grow: 1;
     margin-left: 11%;
