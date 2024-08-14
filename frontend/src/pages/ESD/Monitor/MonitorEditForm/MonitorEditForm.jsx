@@ -115,8 +115,8 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
               onChange={handleChange}
               label="Status"
             >
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="inactive">Inactive</MenuItem>
+              <MenuItem value="PASS">Pass</MenuItem>
+              <MenuItem value="FAIL">Fail</MenuItem>
               <MenuItem value="pending">Pending</MenuItem>
             </Select>
           </FormControl>

@@ -76,7 +76,11 @@ const OperatorTable = () => {
   const handleOpenModal = () => handleStateChange({ openModal: true });
   const handleCloseModal = () => handleStateChange({ openModal: false });
   const handleDeleteOpen = (operator) =>
-    handleStateChange({ operator, operatorToDelete: operator, deleteConfirmOpen: true });
+    handleStateChange({
+      operator,
+      operatorToDelete: operator,
+      deleteConfirmOpen: true,
+    });
   const handleDeleteClose = () =>
     handleStateChange({ deleteConfirmOpen: false, operatorToDelete: null });
 
@@ -90,12 +94,16 @@ const OperatorTable = () => {
       const result = await getAllOperators();
       handleStateChange({ allOperators: result.value });
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", {
+          appName: "App for Translations",
+        })
       );
       return response.data;
     } catch (error) {
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
+          appName: "App for Translations",
+        }),
         "error"
       );
     }
@@ -144,7 +152,8 @@ const OperatorTable = () => {
     const fetchDataAllOperators = async () => {
       try {
         const result = await getAllOperators();
-        handleStateChange({ allOperators: result.value });
+        handleStateChange({ allOperators: result });
+
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -173,6 +182,7 @@ const OperatorTable = () => {
   };
 
   const handleSearchNameChange = (event) => {
+    console.log('event', event)
     setSearchName(event.target.value);
   };
 
@@ -181,13 +191,34 @@ const OperatorTable = () => {
   };
 
   const filterOperators = () => {
-    return state.allOperators.filter((operator) => {
+    const operators = state.allOperators ?? []; // Use nullish coalescing
+
+    return operators.filter((operator) => {
+
       return (
-        operator.name.toLowerCase().includes(searchName.toLowerCase()) &&
-        operator.badge.toLowerCase().includes(searchBadge.toLowerCase())
+        operator.name?.toLowerCase().includes(searchName.toLowerCase()) &&
+        operator.badge?.toLowerCase().includes(searchBadge.toLowerCase())
       );
     });
   };
+
+  // const filteredMonitors = (
+  //   Array.isArray(state.allMonitors) ? state.allMonitors : []
+  // ).filter((monitor) => {
+  //   const serialNumber = monitor.serialNumber
+  //     ? monitor.serialNumber.toLowerCase()
+  //     : "";
+  //   const description = monitor.description
+  //     ? monitor.description.toLowerCase()
+  //     : "";
+  //   const filterSerialNumber = state.filterSerialNumber.toLowerCase();
+  //   const filterDescription = state.filterDescription.toLowerCase();
+  //   return (
+  //     serialNumber.includes(filterSerialNumber) &&
+  //     description.includes(filterDescription)
+  //   );
+  // });
+
 
   const displayOperators = filterOperators().slice(
     page * rowsPerPage,
@@ -332,9 +363,14 @@ const OperatorTable = () => {
           title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_OPERATOR", {
             appName: "App for Translations",
           })}
-          description={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM_TEXT", {
-            appName: "App for Translations",
-          }) + " " + state.operator.name + "?"}
+          description={
+            t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM_TEXT", {
+              appName: "App for Translations",
+            }) +
+            " " +
+            state.operator.name +
+            "?"
+          }
         />
         <Snackbar
           open={state.snackbarOpen}
