@@ -219,23 +219,6 @@ const LineTable = () => {
                     ),
                   }}
                 />
-                <TextField
-                  name="filterDescription"
-                  label={t("LINE.TABLE.NAME", {
-                    appName: "App for Translations",
-                  })}
-                  variant="outlined"
-                  value={state.filterDescription}
-                  onChange={handleFilterChange}
-                  sx={{ mb: 2, mr: 2 }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
               </Col>
               <Col sm={2}>
                 <Button
