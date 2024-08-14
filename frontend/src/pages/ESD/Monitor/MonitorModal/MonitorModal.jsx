@@ -33,8 +33,14 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
     >
       <Paper sx={modalStyle}>
         <Tooltip title={monitor.serialNumber} arrow>
-          <Typography variant="h6" id="modal-title" gutterBottom>
-          Monitor: {monitor.serialNumber}
+          <Typography
+            variant="h6"
+            id="modal-title"
+            gutterBottom
+            className="ellipsis-text" // Adiciona a classe CSS
+            sx={{ width: "100%", overflow: "hidden" }} // Adiciona um estilo adicional se necessário
+          >
+            Monitor: {monitor.serialNumber}
           </Typography>
         </Tooltip>
         <Box component="form" noValidate autoComplete="off">

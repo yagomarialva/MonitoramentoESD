@@ -182,7 +182,6 @@ const OperatorTable = () => {
   };
 
   const handleSearchNameChange = (event) => {
-    console.log('event', event)
     setSearchName(event.target.value);
   };
 
@@ -201,24 +200,6 @@ const OperatorTable = () => {
       );
     });
   };
-
-  // const filteredMonitors = (
-  //   Array.isArray(state.allMonitors) ? state.allMonitors : []
-  // ).filter((monitor) => {
-  //   const serialNumber = monitor.serialNumber
-  //     ? monitor.serialNumber.toLowerCase()
-  //     : "";
-  //   const description = monitor.description
-  //     ? monitor.description.toLowerCase()
-  //     : "";
-  //   const filterSerialNumber = state.filterSerialNumber.toLowerCase();
-  //   const filterDescription = state.filterDescription.toLowerCase();
-  //   return (
-  //     serialNumber.includes(filterSerialNumber) &&
-  //     description.includes(filterDescription)
-  //   );
-  // });
-
 
   const displayOperators = filterOperators().slice(
     page * rowsPerPage,

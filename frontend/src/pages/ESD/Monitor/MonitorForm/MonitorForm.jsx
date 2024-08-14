@@ -27,7 +27,9 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
   const [monitor, setMonitor] = useState({
     serialNumber: "",
     description: "",
-    status: "idle",
+    status: "azpbaTVCciWNqvHbsynA",
+    statusOperador: "Jh",
+    statusJig: "EKyYSGJzvjZDpoeBDAhy",
   });
   const [error, setError] = useState("");
   const [errorName, setErrorName] = useState("");
@@ -120,9 +122,36 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
               onChange={handleChange}
               label="Status"
             >
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="inactive">Inactive</MenuItem>
-              <MenuItem value="pending">Pending</MenuItem>
+              <MenuItem value="PASS">Pass</MenuItem>
+              <MenuItem value="FAIL">Fail</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="statusOperador">Status Operador</InputLabel>
+            <Select
+              labelId="statusOperador"
+              id="statusOperador"
+              name="statusOperador"
+              value={monitor.statusOperador}
+              onChange={handleChange}
+              label="statusOperador"
+            >
+              <MenuItem value="PASS">Pass</MenuItem>
+              <MenuItem value="FAIL">Fail</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="statusOperador">Status JIG</InputLabel>
+            <Select
+              labelId="statusJig"
+              id="statusJig"
+              name="statusJig"
+              value={monitor.statusJig}
+              onChange={handleChange}
+              label="statusJig"
+            >
+              <MenuItem value="PASS">Pass</MenuItem>
+              <MenuItem value="FAIL">Fail</MenuItem>
             </Select>
           </FormControl>
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>

@@ -1,3 +1,68 @@
+/* MonitorTable.css */
+/* MonitorTable.css */
+
+
+/* Estilo para os filtros e botão */
+.filters-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filters-container .MuiTextField-root {
+  margin-right: 16px;
+}
+
+.filters-container #add-button {
+  margin-left: auto;
+}
+
+/* MonitorTable.css */
+
+/* Estilos para os textos baseados no status */
+.status-pass {
+  color: green;
+  font-weight: bold;
+}
+
+.status-fail {
+  color: red;
+  font-weight: bold;
+}
+
+.status-pending {
+  color: orange;
+  font-weight: bold;
+}
+
+/* Adapte para outros status conforme necessário */
+
+
+/* Estilo para o cabeçalho das ações */
+.actions-header {
+  text-align: center;
+}
+
+/* Estilo para o conteúdo das ações */
+.actions-content {
+  text-align: center;
+}
+
+
+/* Estilo para os campos de status */
+
+/* Estilo para o cabeçalho das ações */
+.actions-header {
+  text-align: center;
+}
+
+/* Estilo para o conteúdo das ações */
+.actions-content {
+  text-align: center;
+}
+
+
+
 .snackbar-success .MuiAlert-root {
   background-color: #4caf50 !important; /* Cor para mensagens de sucesso */
   color: white !important;

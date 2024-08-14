@@ -12,18 +12,14 @@ import {
   Snackbar,
   Alert,
   Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
   TextField,
   Container,
   Tooltip,
   Typography,
-  TablePagination,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
 import MonitorModal from "../MonitorModal/MonitorModal";
+import { DataGrid } from "@mui/x-data-grid";
 import MonitorForm from "../MonitorForm/MonitorForm";
 import MonitorConfirmModal from "../MonitorConfirmModal/MonitorConfirmModal";
 import MonitorEditForm from "../MonitorEditForm/MonitorEditForm";
@@ -31,8 +27,6 @@ import { useNavigate } from "react-router-dom";
 import "./MonitorTable.css";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 
 const MonitorTable = () => {
   const { t } = useTranslation();
@@ -43,7 +37,6 @@ const MonitorTable = () => {
     open: false,
     openModal: false,
     openEditModal: false,
-    editCell: null,
     editData: null,
     deleteConfirmOpen: false,
     monitorToDelete: null,
@@ -75,7 +68,11 @@ const MonitorTable = () => {
   const handleOpenModal = () => handleStateChange({ openModal: true });
   const handleCloseModal = () => handleStateChange({ openModal: false });
   const handleDeleteOpen = (monitor) =>
-    handleStateChange({ monitor, monitorToDelete: monitor, deleteConfirmOpen: true });
+    handleStateChange({
+      monitor,
+      monitorToDelete: monitor,
+      deleteConfirmOpen: true,
+    });
   const handleDeleteClose = () =>
     handleStateChange({ deleteConfirmOpen: false, monitorToDelete: null });
 
@@ -122,11 +119,12 @@ const MonitorTable = () => {
   };
 
   const handleEditCellChange = async (params) => {
+    console.log("params", params);
     try {
       await createMonitor(params);
       const result = await getAllMonitors();
       handleStateChange({ allMonitors: result });
-           showSnackbar(
+      showSnackbar(
         t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",
         })
@@ -139,7 +137,6 @@ const MonitorTable = () => {
       );
     }
   };
-  
 
   useEffect(() => {
     const fetchDataAllUsers = async () => {
@@ -155,7 +152,7 @@ const MonitorTable = () => {
       }
     };
     fetchDataAllUsers();
-  }, []);
+  }, [navigate, t]);
 
   const handleConfirmDelete = async () => {
     await handleDelete(state.monitorToDelete.id);
@@ -180,204 +177,231 @@ const MonitorTable = () => {
     });
   };
 
-  const filteredMonitors = (
-    Array.isArray(state.allMonitors) ? state.allMonitors : []
-  ).filter((monitor) => {
-    const serialNumber = monitor.serialNumber
-      ? monitor.serialNumber.toLowerCase()
-      : "";
-    const description = monitor.description
-      ? monitor.description.toLowerCase()
-      : "";
-    const filterSerialNumber = state.filterSerialNumber.toLowerCase();
-    const filterDescription = state.filterDescription.toLowerCase();
-    return (
-      serialNumber.includes(filterSerialNumber) &&
-      description.includes(filterDescription)
-    );
+  const filteredMonitors = state.allMonitors.filter((monitor) => {
+    const serialNumberMatch = monitor.serialNumber
+      ? monitor.serialNumber
+          .toLowerCase()
+          .includes(state.filterSerialNumber.toLowerCase())
+      : false;
+    const descriptionMatch = monitor.description
+      ? monitor.description
+          .toLowerCase()
+          .includes(state.filterDescription.toLowerCase())
+      : false;
+
+    return serialNumberMatch && descriptionMatch;
   });
 
-  const paginatedMonitors = filteredMonitors.slice(
-    Math.max(0, state.page * state.rowsPerPage),
-    Math.max(0, state.page * state.rowsPerPage + state.rowsPerPage)
-  );
+  const columns = [
+    {
+      field: "id",
+      headerName: "id",
+      width: 50,
+    },
+    {
+      field: "serialNumber",
+      headerName: t("ESD_MONITOR.TABLE.USER_ID"),
+      width: 150,
+      renderCell: (params) => (
+        <Tooltip title={params.value || ""}>
+          <Typography className="ellipsis-text">
+            {params.value || ""}
+          </Typography>
+        </Tooltip>
+      ),
+    },
+    {
+      field: "description",
+      headerName: t("ESD_MONITOR.TABLE.NAME"),
+      width: 250,
+      renderCell: (params) => (
+        <Tooltip title={params.value || ""}>
+          <Typography className="ellipsis-text">
+            {params.value || ""}
+          </Typography>
+        </Tooltip>
+      ),
+    },
+    {
+      field: "status",
+      headerName: t("ESD_MONITOR.TABLE.STATUS"),
+      width: 150,
+      renderCell: (params) => (
+        <div className={`status-${(params.value || "").toLowerCase()}`}>
+          {params.value || ""}
+        </div>
+      ),
+    },
+    {
+      field: "statusJig",
+      headerName: t("ESD_MONITOR.TABLE.STATUS_JIG"),
+      width: 150,
+      renderCell: (params) => (
+        <div className={`status-${(params.value || "").toLowerCase()}`}>
+          {params.value || ""}
+        </div>
+      ),
+    },
+    {
+      field: "statusOperador",
+      headerName: t("ESD_MONITOR.TABLE.STATUS_OPERATOR"),
+      width: 150,
+      renderCell: (params) => (
+        <div className={`status-${(params.value || "").toLowerCase()}`}>
+          {params.value || ""}
+        </div>
+      ),
+    },
+    {
+      field: "actions",
+      headerName: t("ESD_MONITOR.TABLE.ACTIONS"),
+      width: 250,
+      headerAlign: "center",
+      sortable: false,
+      renderCell: (params) => (
+        <div className="actions-content">
+          <Button
+            onClick={() => handleEditOpen(params.row)}
+            startIcon={
+              <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
+                <IconButton edge="end" aria-label="edit">
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            }
+          ></Button>
+          <Button
+            onClick={() => handleOpen(params.row)}
+            startIcon={
+              <Tooltip title={t("ESD_OPERATOR.INFO_OPERATOR")}>
+                <IconButton edge="end" aria-label="info">
+                  <Info />
+                </IconButton>
+              </Tooltip>
+            }
+            sx={{ mx: 1 }}
+          ></Button>
+          <Button
+            onClick={() => handleDeleteOpen(params.row)}
+            startIcon={
+              <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
+                <IconButton edge="end" aria-label="delete">
+                  <Delete />
+                </IconButton>
+              </Tooltip>
+            }
+          ></Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <>
       <Typography paragraph>
         <Container>
-          <Box>
-            <Row>
-              <Col sm={10}>
-                <TextField
-                  name="filterSerialNumber"
-                  label={t("ESD_MONITOR.TABLE.USER_ID", {
-                    appName: "App for Translations",
-                  })}
-                  variant="outlined"
-                  value={state.filterSerialNumber}
-                  onChange={handleFilterChange}
-                  sx={{ mb: 2, mr: 2 }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  name="filterDescription"
-                  label={t("ESD_MONITOR.TABLE.NAME", {
-                    appName: "App for Translations",
-                  })}
-                  variant="outlined"
-                  value={state.filterDescription}
-                  onChange={handleFilterChange}
-                  sx={{ mb: 2, mr: 2 }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Col>
-              <Col sm={2}>
-                <Button
-                  id="add-button"
-                  variant="contained"
-                  color="success"
-                  onClick={handleOpenModal}
-                >
-                  {t("ESD_MONITOR.ADD_MONITOR", {
-                    appName: "App for Translations",
-                  })}
-                </Button>
-              </Col>
-            </Row>
-            {paginatedMonitors.length === 0 ? (
-              <Typography variant="h6" align="center" color="textSecondary">
-                Sua lista está vazia
-              </Typography>
-            ) : (
-              <List>
-                {paginatedMonitors.map((monitor) => (
-                  <ListItem
-                    key={monitor.id}
-                    divider
-                    sx={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Tooltip
-                      title={`Número de série: ${monitor.serialNumber}, Descrição: ${monitor.description}, Status:${monitor.status}`}
-                      arrow
-                    >
-                      <ListItemText
-                        primary={monitor.serialNumber}
-                        secondary={                    <>
-                          <Typography variant="body2" color="textSecondary">
-                              {monitor.description}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                              {monitor.status}
-                          </Typography>
-                      </>}
-                        className="textOverflow"
-                      />
-                    </Tooltip>
-                    <ListItemSecondaryAction>
-                      <Tooltip title={t("ESD_MONITOR.EDIT_MONITOR")}>
-                        <IconButton
-                          edge="end"
-                          aria-label="edit"
-                          onClick={() => handleEditOpen(monitor)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t("ESD_MONITOR.INFO_MONITOR")}>
-                        <IconButton
-                          edge="end"
-                          aria-label="info"
-                          onClick={() => handleOpen(monitor)}
-                        >
-                          <Info />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t("ESD_MONITOR.DELETE_MONITOR")}>
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => handleDeleteOpen(monitor)}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </Tooltip>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-            )}
-            <TablePagination
-              component="div"
-              count={filteredMonitors.length}
-              page={state.page}
-              onPageChange={handleChangePage}
-              rowsPerPage={state.rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+          <Box className="filters-container">
+            <TextField
+              name="filterSerialNumber"
+              label={t("ESD_MONITOR.TABLE.USER_ID")}
+              variant="outlined"
+              value={state.filterSerialNumber}
+              onChange={handleFilterChange}
+              sx={{ mr: 2 }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
-            <MonitorModal
-              open={state.open}
-              handleClose={handleClose}
-              monitorName={state.monitor.serialNumber}
-              monitor={state.monitor}
+            <TextField
+              name="filterDescription"
+              label={t("ESD_MONITOR.TABLE.NAME")}
+              variant="outlined"
+              value={state.filterDescription}
+              onChange={handleFilterChange}
+              sx={{ mr: 2 }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
-            <MonitorForm
-              open={state.openModal}
-              handleClose={handleCloseModal}
-              onSubmit={handleCreateMonitor}
-            />
-            <MonitorEditForm
-              open={state.openEditModal}
-              handleClose={handleEditClose}
-              onSubmit={handleEditCellChange}
-              initialData={state.editData}
-            />
-            <MonitorConfirmModal
-              open={state.deleteConfirmOpen}
-              handleClose={handleDeleteClose}
-              handleConfirm={handleConfirmDelete}
-              title={t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
-                appName: "App for Translations",
-              })}
-              description={t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT", {
-                appName: "App for Translations",
-              }) + " " + state.monitor.serialNumber + "?"}
-            />
-            <Snackbar
-              open={state.snackbarOpen}
-              autoHideDuration={6000}
-              onClose={() => handleStateChange({ snackbarOpen: false })}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+            <Button
+              id="add-button"
+              variant="contained"
+              color="success"
+              onClick={handleOpenModal}
+              sx={{ marginLeft: "auto" }}
             >
-              <Alert
-                onClose={() => handleStateChange({ snackbarOpen: false })}
-                severity={state.snackbarSeverity}
-                sx={{
-                  backgroundColor: "inherit",
-                  color: "inherit",
-                  fontWeight: "inherit",
-                  boxShadow: "inherit",
-                  borderRadius: "inherit",
-                  padding: "inherit",
-                }}
-              >
-                {state.snackbarMessage}
-              </Alert>
-            </Snackbar>
+              {t("ESD_MONITOR.ADD_MONITOR")}
+            </Button>
           </Box>
+          <div style={{ height: 600, width: "100%", marginTop: "20px" }}>
+            <DataGrid
+              rows={filteredMonitors}
+              columns={columns}
+              pageSize={state.rowsPerPage}
+              rowsPerPageOptions={[10, 25, 50]}
+              onPageSizeChange={(newSize) =>
+                handleStateChange({ rowsPerPage: newSize })
+              }
+              onPageChange={handleChangePage}
+              pagination
+            />
+          </div>
+          <MonitorModal
+            open={state.open}
+            handleClose={handleClose}
+            monitorName={state.monitor.serialNumber}
+            monitor={state.monitor}
+          />
+          <MonitorForm
+            open={state.openModal}
+            handleClose={handleCloseModal}
+            onSubmit={handleCreateMonitor}
+          />
+          <MonitorEditForm
+            open={state.openEditModal}
+            handleClose={handleEditClose}
+            onSubmit={handleEditCellChange}
+            initialData={state.editData}
+          />
+          <MonitorConfirmModal
+            open={state.deleteConfirmOpen}
+            handleClose={handleDeleteClose}
+            handleConfirm={handleConfirmDelete}
+            title={t("ESD_MONITOR.CONFIRM_DIALOG.DELETE_MONITOR")}
+            description={`${t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT")} ${
+              state.monitor.serialNumber
+            }?`}
+          />
+          <Snackbar
+            open={state.snackbarOpen}
+            autoHideDuration={6000}
+            onClose={() => handleStateChange({ snackbarOpen: false })}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+          >
+            <Alert
+              onClose={() => handleStateChange({ snackbarOpen: false })}
+              severity={state.snackbarSeverity}
+              sx={{
+                backgroundColor: "inherit",
+                color: "inherit",
+                fontWeight: "inherit",
+                boxShadow: "inherit",
+                borderRadius: "inherit",
+                padding: "inherit",
+              }}
+            >
+              {state.snackbarMessage}
+            </Alert>
+          </Snackbar>
         </Container>
       </Typography>
     </>

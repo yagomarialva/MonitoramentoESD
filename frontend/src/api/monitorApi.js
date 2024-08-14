@@ -24,6 +24,7 @@ export const getMonitor = async (id) => {
 
 // Cria um novo monitor
 export const createMonitor = async (monitor) => {
+  console.log("monitor", monitor);
   try {
     const { data } = await TokenApi.post("/adicionarMonitor", monitor);
     return data;

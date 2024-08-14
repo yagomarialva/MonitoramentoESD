@@ -10,7 +10,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -40,6 +39,8 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     description: "",
     serialNumber: "",
     status: "",
+    statusOperador: "",
+    statusJig: "",
   });
 
   useEffect(() => {
@@ -117,7 +118,36 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             >
               <MenuItem value="PASS">Pass</MenuItem>
               <MenuItem value="FAIL">Fail</MenuItem>
-              <MenuItem value="pending">Pending</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="statusOperador">Status do Operador</InputLabel>
+            <Select
+              labelId="statusOperador"
+              id="statusOperador"
+              name="statusOperador"
+              value={monitor.statusOperador}
+              onChange={handleChange}
+              label="Status do Operador"
+            >
+              <MenuItem value="PASS">Pass</MenuItem>
+              <MenuItem value="FAIL">Fail</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="statusJig">Status do Jig</InputLabel>
+            <Select
+              labelId="statusJig"
+              id="statusJig"
+              name="statusJig"
+              value={monitor.statusJig}
+              onChange={handleChange}
+              label="Status do Jig"
+            >
+              <MenuItem value="PASS">Pass</MenuItem>
+              <MenuItem value="FAIL">Fail</MenuItem>
             </Select>
           </FormControl>
 
