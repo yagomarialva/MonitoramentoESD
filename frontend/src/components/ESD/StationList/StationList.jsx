@@ -1,4 +1,4 @@
-import ESDTable from "../../../pages/ESD/Stations/ESDTable/ESDTable";
+import ESDTable from "../../../pages/ESD/Jig/ESDTable/ESDTable";
 import Menu from "../../../pages/Menu/Menu";
 
 function StationList() {

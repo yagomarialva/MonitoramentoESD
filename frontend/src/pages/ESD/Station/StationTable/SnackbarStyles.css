@@ -1,0 +1,20 @@
+.snackbar-success .MuiAlert-root {
+  background-color: #4caf50 !important; /* Cor para mensagens de sucesso */
+  color: white !important;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px;
+  font-weight: 400;
+  border: 1px solid #ccc;
+}
+
+.snackbar-error .MuiAlert-root {
+  background-color: #f44336 !important; /* Cor para mensagens de erro */
+  color: white !important;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px;
+  font-weight: 400;
+}
