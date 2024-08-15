@@ -43,7 +43,10 @@ const getMenuItems = (userRole) => {
           text: "Linhas",
           path: "/liners",
         },
-        
+        {
+          text: "Estações",
+          path: "/stations",
+        },
       ],
     },
     {
@@ -55,7 +58,7 @@ const getMenuItems = (userRole) => {
     {
       text: "Jigs",
       icon: <PrecisionManufacturingOutlinedIcon />,
-      path: "/stations",
+      path: "/jigs",
       roles: ["operator", "administrator"],
     },
     {

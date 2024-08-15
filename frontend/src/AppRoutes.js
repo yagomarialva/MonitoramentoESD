@@ -12,6 +12,7 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage.jsx";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardESD from "./components/ESD/DashboardESD/DashboardESD.jsx";
 import Line from "./components/ESD/Line/Line.jsx";
+import NotFoundPage from "./components/NotFoundPage/NotFoundPage.jsx";
 const AppRoutes = () => {
   useEffect(() => {
     document.title = "FCT Auto Test";
@@ -54,7 +55,7 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/stations"
+          path="/jigs"
           element={
             <ProtectedRoute>
               <StationList />
@@ -85,6 +86,7 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+      <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
