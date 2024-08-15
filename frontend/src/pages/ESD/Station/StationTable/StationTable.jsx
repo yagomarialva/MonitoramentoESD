@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getAllLines, createLine, deleteLine } from "../../../../api/linerApi";
+import { getAllStations, createStation, deleteStation } from "../../../../api/stationApi";
 import {
   IconButton,
   Box,
@@ -19,30 +19,30 @@ import {
   TablePagination,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
-import LineModal from "../LineModal/LineModal";
-import LineForm from "../LineForm/LineForm";
-import LineConfirmModal from "../LineConfirmModal/LineConfirmModal";
-import LineEditForm from "../LineEditForm/LineEditForm";
+import StationModal from "../StationModal/StationModal";
+import StationForm from "../StationForm/StationForm";
+import StationConfirmModal from "../StationConfirmModal/StationConfirmModal";
+import StationEditForm from "../StationEditForm/StationEditForm";
 import { useNavigate } from "react-router-dom";
-// import "./LineTable.css";
+// import "./StationTable.css";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-const LineTable = () => {
+const StationTable = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [state, setState] = useState({
-    allLines: [],
-    line: {},
+    allStations: [],
+    station: {},
     open: false,
     openModal: false,
     openEditModal: false,
     editCell: null,
     editData: null,
     deleteConfirmOpen: false,
-    lineToDelete: null,
+    stationToDelete: null,
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
@@ -64,35 +64,35 @@ const LineTable = () => {
     });
   };
 
-  const handleOpen = (line) => handleStateChange({ line, open: true });
+  const handleOpen = (station) => handleStateChange({ station, open: true });
   const handleClose = () => handleStateChange({ open: false });
   const handleEditClose = () =>
     handleStateChange({ openEditModal: false, editData: null });
   const handleOpenModal = () => handleStateChange({ openModal: true });
   const handleCloseModal = () => handleStateChange({ openModal: false });
-  const handleDeleteOpen = (line) =>
-    handleStateChange({ lineToDelete: line, deleteConfirmOpen: true });
+  const handleDeleteOpen = (station) =>
+    handleStateChange({ stationToDelete: station, deleteConfirmOpen: true });
   const handleDeleteClose = () =>
-    handleStateChange({ deleteConfirmOpen: false, lineToDelete: null });
+    handleStateChange({ deleteConfirmOpen: false, stationToDelete: null });
 
-  const handleEditOpen = (line) => {
-    handleStateChange({ editData: line, openEditModal: true });
+  const handleEditOpen = (station) => {
+    handleStateChange({ editData: station, openEditModal: true });
   };
 
-  const handleCreateLine = async (line) => {
+  const handleCreateStation = async (station) => {
     try {
-      await createLine(line);
-      const result = await getAllLines();
-      handleStateChange({ allLines: result });
+      await createStation(station);
+      const result = await getAllStations();
+      handleStateChange({ allStations: result });
       showSnackbar(
-        t("LINE.TOAST.CREATE_SUCCESS", {
+        t("STATION.TOAST.CREATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
       return result;
     } catch (error) {
       showSnackbar(
-        t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("STATION.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -100,18 +100,18 @@ const LineTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteLine(id);
+      await deleteStation(id);
       handleStateChange({
-        allLines: state.allLines.filter((line) => line.id !== id),
+        allStations: state.allStations.filter((station) => station.id !== id),
       });
       showSnackbar(
-        t("LINE.TOAST.DELETE_SUCCESS", {
+        t("STATION.TOAST.DELETE_SUCCESS", {
           appName: "App for Translations",
         })
       );
     } catch (error) {
       showSnackbar(
-        t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("STATION.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -119,18 +119,18 @@ const LineTable = () => {
 
   const handleEditCellChange = async (params) => {
     try {
-      await createLine(params);
-      const result = await getAllLines();
-      handleStateChange({ allLines: result });
+      await createStation(params);
+      const result = await getAllStations();
+      handleStateChange({ allStations: result });
       showSnackbar(
-        t("LINE.TOAST.UPDATE_SUCCESS", {
+        t("STATION.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
       return result;
     } catch (error) {
       showSnackbar(
-        t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("STATION.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
     }
@@ -139,9 +139,8 @@ const LineTable = () => {
   useEffect(() => {
     const fetchDataAllUsers = async () => {
       try {
-        const result = await getAllLines();
-        const resultLine = await getAllLines();
-        handleStateChange({ allLines: resultLine });
+        const result = await getAllStations();
+        handleStateChange({ allStations: result });
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -154,8 +153,8 @@ const LineTable = () => {
   }, []);
 
   const handleConfirmDelete = async () => {
-    if (state.lineToDelete) {
-      await handleDelete(state.lineToDelete.id);
+    if (state.stationToDelete) {
+      await handleDelete(state.stationToDelete.id);
       handleDeleteClose();
     }
   };
@@ -176,11 +175,11 @@ const LineTable = () => {
     });
   };
 
-  const filteredLines = (
-    Array.isArray(state.allLines) ? state.allLines : []
-  ).filter((line) => {
-    const name = line.name
-      ? line.name.toLowerCase()
+  const filteredStations = (
+    Array.isArray(state.allStations) ? state.allStations : []
+  ).filter((station) => {
+    const name = station.name
+      ? station.name.toLowerCase()
       : "";
    
     const filterSerialNumber = state.filterSerialNumber.toLowerCase();
@@ -189,7 +188,7 @@ const LineTable = () => {
     );
   });
 
-  const paginatedLines = filteredLines.slice(
+  const paginatedStations = filteredStations.slice(
     Math.max(0, state.page * state.rowsPerPage),
     Math.max(0, state.page * state.rowsPerPage + state.rowsPerPage)
   );
@@ -203,7 +202,7 @@ const LineTable = () => {
               <Col sm={10}>
                 <TextField
                   name="filterSerialNumber"
-                  label={t("LINE.TABLE.USER_ID", {
+                  label={t("STATION.TABLE.USER_ID", {
                     appName: "App for Translations",
                   })}
                   variant="outlined"
@@ -226,64 +225,68 @@ const LineTable = () => {
                   color="success"
                   onClick={handleOpenModal}
                 >
-                  {t("LINE.ADD_LINE", {
+                  {t("STATION.ADD_STATION", {
                     appName: "App for Translations",
                   })}
                 </Button>
               </Col>
             </Row>
-            {paginatedLines.length === 0 ? (
+            {paginatedStations.length === 0 ? (
               <Typography variant="h6" align="center" color="textSecondary">
                 Sua lista está vazia
               </Typography>
             ) : (
               <List>
-                {paginatedLines.map((line) => (
+                {paginatedStations.map((station) => (
                   <ListItem
-                    key={line.id}
+                    key={station.id}
                     divider
                     sx={{ display: "flex", alignItems: "center" }}
                   >
                     <Tooltip
-                      title={`Id: ${line.id}, Linha: ${line.name}`}
+                      title={`Id: ${station.id}`}
                       arrow
                     >
                       <ListItemText
-                        primary={`Id: ${line.id}`}
+                        primary={` ${station.name}`}
                         secondary={
                           <>
                             <Typography variant="body2" color="textSecondary">
-                            {`Linha: ${line.name}`}
+                            {`Tamanho X: ${station.sizeX}`}
                             </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                            {`Tamanho Y: ${station.sizeY}`}
+                          </Typography>
+
                           </>
                         }
                         className="textOverflow"
                       />
                     </Tooltip>
                     <ListItemSecondaryAction>
-                      <Tooltip title={t("LINE.EDIT_LINE")}>
+                      <Tooltip title={t("STATION.EDIT_STATION")}>
                         <IconButton
                           edge="end"
                           aria-label="edit"
-                          onClick={() => handleEditOpen(line)}
+                          onClick={() => handleEditOpen(station)}
                         >
                           <EditIcon />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title={t("LINE.INFO_LINE")}>
+                      <Tooltip title={t("STATION.INFO_STATION")}>
                         <IconButton
                           edge="end"
                           aria-label="info"
-                          onClick={() => handleOpen(line)}
+                          onClick={() => handleOpen(station)}
                         >
                           <Info />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title={t("LINE.DELETE_LINE")}>
+                      <Tooltip title={t("STATION.DELETE_STATION")}>
                         <IconButton
                           edge="end"
                           aria-label="delete"
-                          onClick={() => handleDeleteOpen(line)}
+                          onClick={() => handleDeleteOpen(station)}
                         >
                           <Delete />
                         </IconButton>
@@ -295,37 +298,37 @@ const LineTable = () => {
             )}
             <TablePagination
               component="div"
-              count={filteredLines.length}
+              count={filteredStations.length}
               page={state.page}
               onPageChange={handleChangePage}
               rowsPerPage={state.rowsPerPage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
-            <LineModal
+            <StationModal
               open={state.open}
               handleClose={handleClose}
-              lineName={state.line.name}
-              line={state.line}
+              stationName={state.station.name}
+              station={state.station}
             />
-            <LineForm
+            <StationForm
               open={state.openModal}
               handleClose={handleCloseModal}
-              onSubmit={handleCreateLine}
+              onSubmit={handleCreateStation}
             />
-            <LineEditForm
+            <StationEditForm
               open={state.openEditModal}
               handleClose={handleEditClose}
               onSubmit={handleEditCellChange}
               initialData={state.editData}
             />
-            <LineConfirmModal
+            <StationConfirmModal
               open={state.deleteConfirmOpen}
               handleClose={handleDeleteClose}
               handleConfirm={handleConfirmDelete}
-              title={t("LINE.CONFIRM_DIALOG.DELETE_LINE", {
+              title={t("STATION.CONFIRM_DIALOG.DELETE_STATION", {
                 appName: "App for Translations",
               })}
-              description={t("LINE.CONFIRM_DIALOG.CONFIRM-TEXT", {
+              description={t("STATION.CONFIRM_DIALOG.CONFIRM-TEXT", {
                 appName: "App for Translations",
               })}
             />
@@ -358,4 +361,4 @@ const LineTable = () => {
   );
 };
 
-export default LineTable;
+export default StationTable;

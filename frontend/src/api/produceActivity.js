@@ -8,7 +8,6 @@ export const getAllProduce = async () => {
 
 export const getProduce = async (id) => {
     const response = await TokenApi.get(`/BuscarProducaoId?id=${id}`);
-    console.log(response.data);
     return response.data;
 };
 

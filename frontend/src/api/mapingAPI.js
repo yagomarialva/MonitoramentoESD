@@ -24,7 +24,6 @@ export const getStationMapper = async (id) => {
 
 // Cria um novo monitor
 export const createStationMapper = async (jig) => {
-  console.log("monitor", jig);
   try {
     const { data } = await TokenApi.post("/adicionarEstacaoView", jig);
     return data;
@@ -36,7 +35,6 @@ export const createStationMapper = async (jig) => {
 
 // Atualiza um monitor existente por ID
 export const updateStationMapper = async (monitor) => {
-  console.log("monitor", monitor);
   try {
     const { data } = await TokenApi.post("/adicionarMonitor", monitor);
     return data;

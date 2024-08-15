@@ -154,6 +154,47 @@
         "UPDATE_SUCCESS": "Linha atualizada com sucesso"
       }
     },
+    "STATION": {
+      "TABLE_HEADER": "Estação",
+      "ADD_STATION": "Adicionar Estação",
+      "EDIT_STATION": "Editar Estação",
+      "INFO_STATION": "Informações do Estação",
+      "DELETE_STATION": "Deletar Estação",
+      "STATUS_STATION":"Status",
+      "TABLE": {
+        "USER_ID": "Número de Série",
+        "NAME": "Estação",
+        "ACTIONS": "Ações",
+        "STATUS": "Status",
+        "STATUS_JIG": "Status da Estação",
+        "STATUS_OPERATOR": "Status da Estação",
+        "COLUMNS": "Filtrar Colunas",
+        "DENSITY": "Ajustar Exibição",
+        "SEARCH": "Pesquisar",
+        "STATION": "Estação",
+        "COMPACT": "Compacto",
+        "STANDARD": "Padrão",
+        "CONFORTABLE": "Confortável"
+      },
+      "CONFIRM_DIALOG": {
+        "CONFIRM-TEXT": "Deseja excluir a Estação?",
+        "CLOSE": "Fechar",
+        "SAVE": "Excluir",
+        "DELETE_STATION": "Excluir Estação"
+      },
+      "DIALOG": {
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "CREATE_STATION": "Adicionar Estação",
+        "EDIT_STATION": "Editar Estação"
+      },
+      "TOAST": {
+        "CREATE_SUCCESS": "Estação criada com sucesso",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Estação Excluída com sucesso",
+        "UPDATE_SUCCESS": "Estação atualizada com sucesso"
+      }
+    },
     "FCT_Home_Page": {
       "Header": "Página Inicial",
       "Label": "FCT para automação dos testes"

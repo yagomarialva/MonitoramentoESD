@@ -126,7 +126,6 @@ const ESDDashboardPage = () => {
         // Simulação de obtenção de dados
         const data = generateFakeData(288); // Gerar 288 itens
         const result = await getAllStationMapper();
-        console.log('result', result)
         // setRowsTable(data); // Atualize o estado com os dados gerados
         // Atualize os dados com o nome do monitor
         const updatedData = await Promise.all(
@@ -138,7 +137,6 @@ const ESDDashboardPage = () => {
             };
           })
         );
-        // console.log('updatedData', updatedData)
         setRowsTable(updatedData);
       } catch (error) {
         if (error.message === "Request failed with status code 401") {

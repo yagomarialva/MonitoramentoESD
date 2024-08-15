@@ -12,7 +12,6 @@ export const getUsers = async () => {
 
 export const getAllUsers = async () => {
     const response = await TokenApi.get('/todosUsers');
-    console.log('response', response)
     return response.data.value;
 };
 

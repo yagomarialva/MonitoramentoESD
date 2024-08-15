@@ -8,7 +8,6 @@ export const getAllRoles = async () => {
 
 export const getRoles = async (id) => {
     const response = await TokenApi.get(`/BuscarRolees${id}`);
-    console.log(response.data);
     return response.data;
 };
 

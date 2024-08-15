@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useAuth } from "./context/AuthContext.js";
 import HomePage from "./pages/HomePage/HomePage.jsx";
 import Operators from "./components/ESD/Operators/Operators.jsx";
-import StationList from "./components/ESD/StationList/StationList.jsx";
+import Jig from "./components/ESD/Jigs/Jig.jsx";
 import Monitors from "./components/ESD/Monitors/Monitors.jsx";
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
@@ -13,6 +13,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import DashboardESD from "./components/ESD/DashboardESD/DashboardESD.jsx";
 import Line from "./components/ESD/Line/Line.jsx";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage.jsx";
+import Station from "./components/ESD/Station/Station.jsx";
 const AppRoutes = () => {
   useEffect(() => {
     document.title = "FCT Auto Test";
@@ -58,7 +59,7 @@ const AppRoutes = () => {
           path="/jigs"
           element={
             <ProtectedRoute>
-              <StationList />
+              <Jig />
             </ProtectedRoute>
           }
         />
@@ -86,7 +87,16 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-      <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="/stations"
+          element={
+            <ProtectedRoute>
+              <Station />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
