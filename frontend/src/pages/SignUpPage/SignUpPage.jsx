@@ -68,6 +68,7 @@ const SignUpPage = () => {
       setBadge("");
       handleSnackbarOpen("Usuário criado com sucesso!", "success");
     } catch (error) {
+      console.log(error)
       handleSnackbarOpen(error.message, "error");
     } finally {
       setLoading(false);

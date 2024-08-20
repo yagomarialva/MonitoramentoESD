@@ -47,6 +47,10 @@ const getMenuItems = (userRole) => {
           text: "Estações",
           path: "/stations",
         },
+        {
+          text: "Ligar Estação e Linha",
+          path: "/linkstationline",
+        },
       ],
     },
     {

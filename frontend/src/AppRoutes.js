@@ -14,6 +14,7 @@ import DashboardESD from "./components/ESD/DashboardESD/DashboardESD.jsx";
 import Line from "./components/ESD/Line/Line.jsx";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage.jsx";
 import Station from "./components/ESD/Station/Station.jsx";
+import LinkStationLine from "./components/ESD/LinkStationLine/LinkStationLine.jsx";
 const AppRoutes = () => {
   useEffect(() => {
     document.title = "FCT Auto Test";
@@ -92,6 +93,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Station />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/linkstationline"
+          element={
+            <ProtectedRoute>
+              <LinkStationLine />
             </ProtectedRoute>
           }
         />

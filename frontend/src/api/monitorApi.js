@@ -15,6 +15,7 @@ export const getAllMonitors = async () => {
 export const getMonitor = async (id) => {
   try {
     const { data } = await TokenApi.get(`/BuscarMonitores/${id}`);
+    console.log('data', data)
     return data;
   } catch (error) {
     console.error(`Error fetching monitor with ID ${id}:`, error);

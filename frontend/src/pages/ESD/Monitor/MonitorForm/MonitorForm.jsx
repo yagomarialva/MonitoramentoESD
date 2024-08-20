@@ -27,9 +27,9 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
   const [monitor, setMonitor] = useState({
     serialNumber: "",
     description: "",
-    status: "azpbaTVCciWNqvHbsynA",
-    statusOperador: "Jh",
-    statusJig: "EKyYSGJzvjZDpoeBDAhy",
+    status: "",
+    statusOperador: "",
+    statusJig: "",
   });
   const [error, setError] = useState("");
   const [errorName, setErrorName] = useState("");
