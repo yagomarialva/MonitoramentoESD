@@ -40,7 +40,7 @@ export const createLink = async (link) => {
 export const updateLink = async (link) => {
   console.log('updated link', link)
   try {
-    const { data } = await TokenApi.post("/adicionarLink", link);
+    const { data } = await TokenApi.post("/adicionarLinks", link);
     return data;
   } catch (error) {
     console.error(`Error updating monitor with ID:`, error);

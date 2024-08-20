@@ -19,7 +19,7 @@ export const getAllStations = async () => {
 };
 
 export const getStation = async (id) => {
-    return handleResponse(() => TokenApi.get(`${API_BASE_URL}buscarStation/${id}`));
+    return handleResponse(() => TokenApi.get(`/Buscarestacao/${id}`));
 };
 
 export const createStation = async (station) => {

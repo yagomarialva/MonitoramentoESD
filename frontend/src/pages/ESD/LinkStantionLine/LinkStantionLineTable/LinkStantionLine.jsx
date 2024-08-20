@@ -34,15 +34,15 @@ import LinkStantionLineEditForm from "../LinkStantionLineEditForm/LinkStantionLi
 function dataTableFormater(result) {
   return result.map((item) => ({
     id: item.id,
-    serialNumber: item.line?.name || "N/A",
-    description: item.station?.name || "N/A",
-    created: item.created ? new Date(item.created).toLocaleDateString() : "N/A",
-    lastUpdated: item.lastUpdated
-      ? new Date(item.lastUpdated).toLocaleDateString()
-      : "N/A",
+    lineID: item.line?.name || "N/A",
+    stationID: item.station?.name || "N/A",
     order: item.order || "N/A",
-    sizeX: item.station?.sizeX || "N/A",
-    sizeY: item.station?.sizeY || "N/A",
+    // created: item.created ? new Date(item.created).toLocaleDateString() : "N/A",
+    // lastUpdated: item.lastUpdated
+    //   ? new Date(item.lastUpdated).toLocaleDateString()
+    //   : "N/A",
+    // sizeX: item.station?.sizeX || "N/A",
+    // sizeY: item.station?.sizeY || "N/A",
   }));
 }
 
@@ -107,6 +107,7 @@ const LinkStantionLine = () => {
     handleStateChange({ deleteConfirmOpen: false, linkToDelete: null });
 
   const handleEditOpen = async (link) => {
+    console.log('link on line', link)
     const result = await getAllLinks();
     const formattedLinks = dataTableFormater(result);
     handleStateChange({
@@ -156,7 +157,8 @@ const LinkStantionLine = () => {
 
   const handleEditCellChange = async (params) => {
     try {
-      await createLink(params);
+      console.log('params', params)
+      await updateLink(params);
       const result = await getAllLinks();
       const formattedLinks = dataTableFormater(result);
       handleStateChange({ allLinks: formattedLinks });
@@ -165,15 +167,16 @@ const LinkStantionLine = () => {
           appName: "App for Translations",
         })
       );
-      return result;
     } catch (error) {
-      showSnackbar(error.response.data, "error");
+      const errorMessage = error.response?.data?.title || "An unexpected error occurred";
+      showSnackbar(errorMessage, "error");
     }
   };
 
   useEffect(() => {
     const fetchDataAllLinks = async () => {
       try {
+        console.log('editData',state.editData)
         const result = await getAllLinks();
         console.log("Fetched links:", result);
         const formattedLinks = dataTableFormater(result);
@@ -215,41 +218,41 @@ const LinkStantionLine = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 50, cellClassName: "grid-cell" },
     {
-      field: "serialNumber",
+      field: "lineID",
       headerName: "Linha",
       width: 150,
       cellClassName: "grid-cell",
     },
     {
-      field: "description",
+      field: "stationID",
       headerName: "Estação",
       width: 250,
       cellClassName: "grid-cell",
     },
-    {
-      field: "sizeX",
-      headerName: "Tamanho X",
-      width: 100,
-      cellClassName: "grid-cell",
-    }, // Nova coluna
-    {
-      field: "sizeY",
-      headerName: "Tamanho Y",
-      width: 100,
-      cellClassName: "grid-cell",
-    }, // Nova coluna
-    {
-      field: "created",
-      headerName: "Criado em",
-      width: 150,
-      cellClassName: "grid-cell",
-    },
-    {
-      field: "lastUpdated",
-      headerName: "Atualizado em",
-      width: 150,
-      cellClassName: "grid-cell",
-    },
+    // {
+    //   field: "sizeX",
+    //   headerName: "Tamanho X",
+    //   width: 100,
+    //   cellClassName: "grid-cell",
+    // }, // Nova coluna
+    // {
+    //   field: "sizeY",
+    //   headerName: "Tamanho Y",
+    //   width: 100,
+    //   cellClassName: "grid-cell",
+    // }, // Nova coluna
+    // {
+    //   field: "created",
+    //   headerName: "Criado em",
+    //   width: 150,
+    //   cellClassName: "grid-cell",
+    // },
+    // {
+    //   field: "lastUpdated",
+    //   headerName: "Atualizado em",
+    //   width: 150,
+    //   cellClassName: "grid-cell",
+    // },
     {
       field: "order",
       headerName: "Ordem",
