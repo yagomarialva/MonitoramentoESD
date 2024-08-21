@@ -20,7 +20,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 600, // Adjusted for two columns
+  width: 450, // Adjusted for two columns
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
@@ -115,7 +115,7 @@ const LinkStantionLineEditForm = ({
     >
       <Paper sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          {t("ESD_TEST.DIALOG.ADD_MONITOR")}
+          {t("LINK_STATION_LINE.DIALOG.EDIT_LINK_STATION_LINE")}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField
@@ -132,7 +132,7 @@ const LinkStantionLineEditForm = ({
             helperText={errorName}
           />
           <FormControl fullWidth margin="normal" required>
-            <InputLabel id="lineID">Line</InputLabel>
+            <InputLabel id="lineID"> {t("LINK_STATION_LINE.TABLE.LINE")}</InputLabel>
             <Select
               labelId="lineID"
               id="lineID"
@@ -151,12 +151,12 @@ const LinkStantionLineEditForm = ({
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem disabled>No lines available</MenuItem>
+                <MenuItem disabled> {t("LINK_STATION_LINE.CONFIRM_DIALOG.EMPTY")}</MenuItem>
               )}
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal" required>
-            <InputLabel id="stationID">Station</InputLabel>
+            <InputLabel id="stationID"> {t("LINK_STATION_LINE.TABLE.STATION")}</InputLabel>
             <Select
               labelId="stationID"
               id="stationID"

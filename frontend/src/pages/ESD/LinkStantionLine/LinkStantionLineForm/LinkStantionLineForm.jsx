@@ -41,7 +41,7 @@ const LinkStantionLineForm = ({ open, handleClose, onSubmit }) => {
     const { name, value } = e.target;
     setLink((prev) => ({
       ...prev,
-      [name]: name === 'order' ? Number(value) : value,
+      [name]: name === "order" ? Number(value) : value,
     }));
   };
 
@@ -73,7 +73,6 @@ const LinkStantionLineForm = ({ open, handleClose, onSubmit }) => {
     try {
       const selectedLine = await getLine(id);
       // Atualize o estado se necessário com informações de `selectedLine`
-      console.log("Line selecionado:", selectedLine);
     } catch (error) {
       console.error("Error fetching line details:", error);
     }
@@ -83,7 +82,6 @@ const LinkStantionLineForm = ({ open, handleClose, onSubmit }) => {
     try {
       const selectedStation = await getStation(id);
       // Atualize o estado se necessário com informações de `selectedStation`
-      console.log("Station selecionado:", selectedStation);
     } catch (error) {
       console.error("Error fetching station details:", error);
     }
@@ -98,7 +96,9 @@ const LinkStantionLineForm = ({ open, handleClose, onSubmit }) => {
     >
       <Paper sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Adicionar Monitor
+          {t("LINK_STATION_LINE.ADD_LINK_STATION_LINE", {
+            appName: "App for Translations",
+          })}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField
@@ -107,14 +107,16 @@ const LinkStantionLineForm = ({ open, handleClose, onSubmit }) => {
             margin="normal"
             id="order"
             name="order"
-            type="number"  // Define o tipo como "number"
+            type="number" // Define o tipo como "number"
             label="Order"
             onChange={handleChange}
             error={!!errorName}
             helperText={errorName}
           />
           <FormControl fullWidth margin="normal" required>
-            <InputLabel id="lineID">Line</InputLabel>
+            <InputLabel id="lineID"> {t("LINK_STATION_LINE.TABLE.LINE", {
+                appName: "App for Translations",
+              })}</InputLabel>
             <Select
               labelId="lineID"
               id="lineID"
@@ -134,7 +136,12 @@ const LinkStantionLineForm = ({ open, handleClose, onSubmit }) => {
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal" required>
-            <InputLabel id="stationID">Station</InputLabel>
+            <InputLabel id="stationID">
+              {" "}
+              {t("LINK_STATION_LINE.TABLE.STATION", {
+                appName: "App for Translations",
+              })}
+            </InputLabel>
             <Select
               labelId="stationID"
               id="stationID"
@@ -160,7 +167,9 @@ const LinkStantionLineForm = ({ open, handleClose, onSubmit }) => {
               color="success"
               sx={{ mt: 2 }}
             >
-              {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
+              {t("LINK_STATION_LINE.DIALOG.SAVE", {
+                appName: "App for Translations",
+              })}
             </Button>
           </Box>
         </Box>

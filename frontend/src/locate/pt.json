@@ -4,7 +4,7 @@
     "ESD_TEST": {
       "TABLE_HEADER": "Estações ESD",
       "ADD_STATION": "Adicionar JIG",
-      "LOADING":"Carregando Lista de Jigs",
+      "LOADING": "Carregando Lista de Jigs",
       "TABLE": {
         "USER_ID": "Número de Série",
         "NAME": "Descrição",
@@ -78,7 +78,7 @@
       "EDIT_MONITOR": "Editar Monitor",
       "INFO_MONITOR": "Informações do Monitor",
       "DELETE_MONITOR": "Deletar Monitor",
-      "STATUS_MONITOR":"Status",
+      "STATUS_MONITOR": "Status",
       "TABLE": {
         "USER_ID": "Número de Série",
         "NAME": "Monitor",
@@ -119,7 +119,7 @@
       "EDIT_LINE": "Editar Linha",
       "INFO_LINE": "Informações do Linha",
       "DELETE_LINE": "Deletar Linha",
-      "STATUS_LINE":"Status",
+      "STATUS_LINE": "Status",
       "TABLE": {
         "USER_ID": "Número de Série",
         "NAME": "Linha",
@@ -160,7 +160,7 @@
       "EDIT_STATION": "Editar Estação",
       "INFO_STATION": "Informações do Estação",
       "DELETE_STATION": "Deletar Estação",
-      "STATUS_STATION":"Status",
+      "STATUS_STATION": "Status",
       "TABLE": {
         "USER_ID": "Número de Série",
         "NAME": "Estação",
@@ -193,6 +193,51 @@
         "TOAST_ERROR": "Operação não pode ser concluída",
         "DELETE_SUCCESS": "Estação Excluída com sucesso",
         "UPDATE_SUCCESS": "Estação atualizada com sucesso"
+      }
+    },
+    "LINK_STATION_LINE": {
+      "TABLE_HEADER": "Ligação",
+      "ADD_LINK_STATION_LINE": "Adicionar Ligação",
+      "EDIT_LINK_STATION_LINE": "Editar Ligação",
+      "INFO_LINK_STATION_LINE": "Informações do Ligação",
+      "DELETE_LINK_STATION_LINE": "Deletar Ligação",
+      "STATUS_LINK_STATION_LINE": "Status",
+      "TABLE": {
+        "USER_ID": "Número de Série",
+        "NAME": "Ligação",
+        "ACTIONS": "Ações",
+        "STATUS": "Status",
+        "STATUS_JIG": "Status da Ligação",
+        "STATUS_OPERATOR": "Status da Ligação",
+        "COLUMNS": "Filtrar Colunas",
+        "DENSITY": "Ajustar Exibição",
+        "SEARCH": "Pesquisar",
+        "LINK_STATION_LINE": "Ligação",
+        "LINE":"Linha",
+        "ORDER":"Ordem",
+        "STATION":"Estação",
+        "COMPACT": "Compacto",
+        "STANDARD": "Padrão",
+        "CONFORTABLE": "Confortável"
+      },
+      "CONFIRM_DIALOG": {
+        "CONFIRM-TEXT": "Deseja excluir a Ligação?",
+        "CLOSE": "Fechar",
+        "SAVE": "Excluir",
+        "DELETE_LINK_STATION_LINE": "Excluir Ligação",
+        "EMPTY":"Não há itens a serem listados"
+      },
+      "DIALOG": {
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "CREATE_LINK_STATION_LINE": "Adicionar Ligação",
+        "EDIT_LINK_STATION_LINE": "Editar Ligação"
+      },
+      "TOAST": {
+        "CREATE_SUCCESS": "Ligação criada com sucesso",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Ligação Excluída com sucesso",
+        "UPDATE_SUCCESS": "Ligação atualizada com sucesso"
       }
     },
     "FCT_Home_Page": {

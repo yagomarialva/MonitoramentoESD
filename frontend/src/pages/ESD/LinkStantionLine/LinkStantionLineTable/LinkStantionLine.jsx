@@ -12,46 +12,32 @@ import {
   Snackbar,
   Alert,
   Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
   TextField,
   Container,
   Tooltip,
   Typography,
+  TablePagination,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
-import { DataGrid } from "@mui/x-data-grid";
-// import LinkModal from "../LinkModal/LinkModal";
-import LinkForm from "../LinkStantionLineForm/LinkStantionLineForm";
-// import LinkConfirmModal from "../LinkConfirmModal/LinkConfirmModal";
-// import LinkEditForm from "../LinkEditForm/LinkEditForm";
-import { useNavigate } from "react-router-dom";
-import "./LinkTable.css";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import LinkStantionLineConfirmModal from "../LinkStantionLineConfirmModal/LinkStantionLineConfirmModal";
 import LinkStantionLineModal from "../LinkStantionLineModal/LinkStantionLineModal";
 import LinkStantionLineEditForm from "../LinkStantionLineEditForm/LinkStantionLineEditForm";
-
-function dataTableFormater(result) {
-  return result.map((item) => ({
-    id: item.id,
-    lineID: item.line?.name || "N/A",
-    stationID: item.station?.name || "N/A",
-    order: item.order || "N/A",
-    // created: item.created ? new Date(item.created).toLocaleDateString() : "N/A",
-    // lastUpdated: item.lastUpdated
-    //   ? new Date(item.lastUpdated).toLocaleDateString()
-    //   : "N/A",
-    // sizeX: item.station?.sizeX || "N/A",
-    // sizeY: item.station?.sizeY || "N/A",
-  }));
-}
+import LinkForm from "../LinkStantionLineForm/LinkStantionLineForm";
+import { useNavigate } from "react-router-dom";
+import "./LinkTable.css";
 
 const LinkStantionLine = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [state, setState] = useState({
     allLinks: [],
-    link: null, // Iniciar com null
+    link: null,
     open: false,
     openModal: false,
     openEditModal: false,
@@ -61,11 +47,13 @@ const LinkStantionLine = () => {
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
-    filterSerialNumber: "",
-    filterDescription: "",
-    page: 0,
-    rowsPerPage: 10,
+    loading: true, // Adicionei esta linha
   });
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchLine, setSearchLine] = useState("");
+  const [searchStation, setSearchStation] = useState("");
 
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -107,14 +95,9 @@ const LinkStantionLine = () => {
     handleStateChange({ deleteConfirmOpen: false, linkToDelete: null });
 
   const handleEditOpen = async (link) => {
-    console.log('link on line', link)
+    console.log("link on line", link);
     const result = await getAllLinks();
-    const formattedLinks = dataTableFormater(result);
-    handleStateChange({
-      editData: link,
-      openEditModal: true,
-      allLinks: formattedLinks,
-    });
+    handleStateChange({ editData: link, openEditModal: true });
   };
 
   const handleCreateLink = async (link) => {
@@ -122,12 +105,11 @@ const LinkStantionLine = () => {
       await createLink(link);
 
       const result = await getAllLinks();
-      const formattedLinks = dataTableFormater(result);
 
-      handleStateChange({ allLinks: formattedLinks });
+      handleStateChange({ allLinks: result });
 
       showSnackbar(
-        t("ESD_MONITOR.TOAST.CREATE_SUCCESS", {
+        t("LINK_STATION_LINE.TOAST.CREATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
@@ -143,13 +125,15 @@ const LinkStantionLine = () => {
         allLinks: state.allLinks.filter((link) => link.id !== id),
       });
       showSnackbar(
-        t("ESD_MONITOR.TOAST.DELETE_SUCCESS", {
+        t("LINK_STATION_LINE.TOAST.DELETE_SUCCESS", {
           appName: "App for Translations",
         })
       );
     } catch (error) {
       showSnackbar(
-        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("LINK_STATION_LINE.TOAST.TOAST_ERROR", {
+          appName: "App for Translations",
+        }),
         "error"
       );
     }
@@ -157,18 +141,19 @@ const LinkStantionLine = () => {
 
   const handleEditCellChange = async (params) => {
     try {
-      console.log('params', params)
+      console.log("params", params);
       await updateLink(params);
       const result = await getAllLinks();
-      const formattedLinks = dataTableFormater(result);
-      handleStateChange({ allLinks: formattedLinks });
+      // const formattedLinks = dataTableFormater(result);
+      handleStateChange({ allLinks: result });
       showSnackbar(
-        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
+        t("LINK_STATION_LINE.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
     } catch (error) {
-      const errorMessage = error.response?.data?.title || "An unexpected error occurred";
+      const errorMessage =
+        error.response?.data?.title || "An unexpected error occurred";
       showSnackbar(errorMessage, "error");
     }
   };
@@ -176,11 +161,9 @@ const LinkStantionLine = () => {
   useEffect(() => {
     const fetchDataAllLinks = async () => {
       try {
-        console.log('editData',state.editData)
         const result = await getAllLinks();
-        console.log("Fetched links:", result);
-        const formattedLinks = dataTableFormater(result);
-        setState((prevState) => ({ ...prevState, allLinks: formattedLinks }));
+        handleStateChange({ allLinks: result });
+        // setState((prevState) => ({ ...prevState, allLinks: result }));
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -200,105 +183,44 @@ const LinkStantionLine = () => {
     }
   };
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    handleStateChange({ [name]: value });
-  };
-
   const handleChangePage = (event, newPage) => {
-    handleStateChange({ page: newPage });
+    setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    handleStateChange({
-      rowsPerPage: parseInt(event.target.value, 10),
-      page: 0,
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleSearchLineChange = (event) => {
+    setSearchLine(event.target.value);
+  };
+
+  const handleSearchStationChange = (event) => {
+    setSearchStation(event.target.value);
+  };
+
+  const filteredLinks = () => {
+    const links = state.allLinks ?? []; // Verifique se `allLinks` não é nulo ou indefinido
+    console.log('links',links.length)
+    return links.filter((link) => {
+      // Certifique-se de que `lineID` e `stationID` são strings antes de usar `toLowerCase`
+      const lineID =
+        typeof link.line.name === "string" ? link.line.name.toLowerCase() : "";
+      const stationID =
+        typeof link.station.name === "string" ? link.station.name.toLowerCase() : "";
+
+      return (
+        lineID.includes(searchLine.toLowerCase()) &&
+        stationID.includes(searchStation.toLowerCase())
+      );
     });
   };
-  const columns = [
-    { field: "id", headerName: "ID", width: 50, cellClassName: "grid-cell" },
-    {
-      field: "lineID",
-      headerName: "Linha",
-      width: 150,
-      cellClassName: "grid-cell",
-    },
-    {
-      field: "stationID",
-      headerName: "Estação",
-      width: 250,
-      cellClassName: "grid-cell",
-    },
-    // {
-    //   field: "sizeX",
-    //   headerName: "Tamanho X",
-    //   width: 100,
-    //   cellClassName: "grid-cell",
-    // }, // Nova coluna
-    // {
-    //   field: "sizeY",
-    //   headerName: "Tamanho Y",
-    //   width: 100,
-    //   cellClassName: "grid-cell",
-    // }, // Nova coluna
-    // {
-    //   field: "created",
-    //   headerName: "Criado em",
-    //   width: 150,
-    //   cellClassName: "grid-cell",
-    // },
-    // {
-    //   field: "lastUpdated",
-    //   headerName: "Atualizado em",
-    //   width: 150,
-    //   cellClassName: "grid-cell",
-    // },
-    {
-      field: "order",
-      headerName: "Ordem",
-      width: 100,
-      cellClassName: "grid-cell",
-    },
-    {
-      field: "actions",
-      headerName: "Ações",
-      width: 250,
-      headerAlign: "center",
-      sortable: false,
-      cellClassName: "grid-cell",
-      renderCell: (params) => (
-        <div className="actions-content">
-          <Tooltip title="Editar">
-            <IconButton
-              onClick={() => handleEditOpen(params.row)}
-              edge="end"
-              aria-label="edit"
-            >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Informações">
-            <IconButton
-              onClick={() => handleOpen(params.row)}
-              edge="end"
-              aria-label="info"
-            >
-              <Info />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Excluir">
-            <IconButton
-              onClick={() => handleDeleteOpen(params.row)}
-              edge="end"
-              aria-label="delete"
-            >
-              <Delete />
-            </IconButton>
-          </Tooltip>
-        </div>
-      ),
-    },
-  ];
+
+  const displayLink = filteredLinks().slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <>
@@ -306,11 +228,11 @@ const LinkStantionLine = () => {
         <Container>
           <Box className="filters-container">
             <TextField
-              name="filterSerialNumber"
-              label={t("ESD_MONITOR.TABLE.USER_ID")}
+              name="filterLine"
+              label={t("LINK_STATION_LINE.TABLE.LINE")}
               variant="outlined"
-              value={state.filterSerialNumber}
-              onChange={handleFilterChange}
+              value={state.filterLine}
+              onChange={handleSearchLineChange}
               sx={{ mr: 2 }}
               InputProps={{
                 endAdornment: (
@@ -322,10 +244,10 @@ const LinkStantionLine = () => {
             />
             <TextField
               name="filterDescription"
-              label={t("ESD_MONITOR.TABLE.NAME")}
+              label={t("LINK_STATION_LINE.TABLE.STATION")}
               variant="outlined"
-              value={state.filterDescription}
-              onChange={handleFilterChange}
+              value={state.filterStation}
+              onChange={handleSearchStationChange}
               sx={{ mr: 2 }}
               InputProps={{
                 endAdornment: (
@@ -342,29 +264,122 @@ const LinkStantionLine = () => {
               onClick={handleOpenModal}
               sx={{ marginLeft: "auto" }}
             >
-              {t("ESD_MONITOR.ADD_MONITOR")}
+              {t("LINK_STATION_LINE.ADD_LINK_STATION_LINE")}
             </Button>
           </Box>
-          <div style={{ height: 600, width: "100%", marginTop: "20px" }}>
-            <DataGrid
-              rows={state.allLinks}
-              columns={columns}
-              pageSize={state.rowsPerPage}
-              rowsPerPageOptions={[10, 25, 50]}
-              onPageSizeChange={(newSize) =>
-                handleStateChange({ rowsPerPage: newSize })
-              }
-              onPageChange={handleChangePage}
-              pagination
-            />
-          </div>
-          {/* <LinkStantionLineModal
-            open={state.openEditModal}
-            handleClose={handleClose}
-            link={state.editData}
-            isEdit
 
-          /> */}
+          {displayLink.length === 0 ? (
+            <Typography variant="h6" align="center" color="textSecondary">
+              Sua lista está vazia
+            </Typography>
+          ) : (
+            <List>
+              {displayLink.map((link) => (
+                <ListItem
+                  key={link.id}
+                  divider
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  <Tooltip title={`Id: ${link.line.name}`} arrow>
+                    <ListItemText
+                      primary={`Linha: ${link.line.name}`}
+                      secondary={
+                        <>
+                          <Typography variant="body2" color="textSecondary">
+                            {`Estação: ${link.station.name}`}
+                          </Typography>
+                        </>
+                      }
+                      className="textOverflow"
+                    />
+                  </Tooltip>
+                  <ListItemSecondaryAction>
+                    <Tooltip title={t("STATION.EDIT_STATION")}>
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => handleEditOpen(link)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={t("STATION.INFO_STATION")}>
+                      <IconButton
+                        edge="end"
+                        aria-label="info"
+                        onClick={() => handleOpen(link)}
+                      >
+                        <Info />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={t("STATION.DELETE_STATION")}>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDeleteOpen(link)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </Tooltip>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          )}
+          <TablePagination
+            component="div"
+            count={filteredLinks().length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[10, 25, 50, 75, 100]}
+          />
+
+          {/* <List>
+            {state.allLinks.map((link) => (
+              <ListItem key={link.id} divider>
+                <ListItemText
+                  primary={`${t("LINK_STATION_LINE.TABLE.LINE")}: ${
+                    link.lineID
+                  }`}
+                  secondary={`${t("LINK_STATION_LINE.TABLE.STATION")}: ${
+                    link.stationID
+                  } - ${t("LINK_STATION_LINE.TABLE.ORDER")}: ${link.order}`}
+                />
+                <ListItemSecondaryAction>
+                  <Tooltip title="Editar">
+                    <IconButton
+                      onClick={() => handleEditOpen(link)}
+                      edge="end"
+                      aria-label="edit"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Informações">
+                    <IconButton
+                      onClick={() => handleOpen(link)}
+                      edge="end"
+                      aria-label="info"
+                    >
+                      <Info />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Excluir">
+                    <IconButton
+                      onClick={() => handleDeleteOpen(link)}
+                      edge="end"
+                      aria-label="delete"
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Tooltip>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List> */}
+
           <LinkForm
             open={state.openModal}
             handleClose={handleCloseModal}
@@ -379,14 +394,21 @@ const LinkStantionLine = () => {
           <LinkStantionLineModal
             open={state.open}
             handleClose={handleClose}
-            link={state.link} // Passar link para o modal
+            link={state.link}
           />
           <LinkStantionLineConfirmModal
             open={state.deleteConfirmOpen}
             handleClose={handleDeleteClose}
             handleConfirm={handleConfirmDelete}
-            title={t("ESD_MONITOR.CONFIRM_DIALOG.DELETE_MONITOR")}
-            description={'test'}
+            title={t(
+              "LINK_STATION_LINE.CONFIRM_DIALOG.DELETE_LINK_STATION_LINE",
+              {
+                appName: "App for Translations",
+              }
+            )}
+            content={t("LINK_STATION_LINE.CONFIRM_DIALOG.CONFIRM-TEXT", {
+              appName: "App for Translations",
+            })}
           />
           <Snackbar
             open={state.snackbarOpen}

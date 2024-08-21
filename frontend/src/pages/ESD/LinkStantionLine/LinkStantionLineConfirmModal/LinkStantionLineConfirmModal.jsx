@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, Box, Typography } from "@mui/material";
 import ButtonBootstrap from "react-bootstrap/Button";
 
-const LinkStantionLineConfirmModal = ({ open, handleClose, handleConfirm, title, description }) => {
+const LinkStantionLineConfirmModal = ({ open, handleClose, handleConfirm, title, content }) => {
     const modalStyle = {
       position: 'absolute',
       top: '50%',
@@ -21,7 +21,7 @@ const LinkStantionLineConfirmModal = ({ open, handleClose, handleConfirm, title,
           {title}
         </Typography>
         <Typography sx={{ mt: 2 }}>
-          {description}
+          {content}
         </Typography>
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <ButtonBootstrap style={{ marginTop: "10px", marginLeft: "4px" }}
