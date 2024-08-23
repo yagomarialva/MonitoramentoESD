@@ -11,37 +11,69 @@ import ESDHomeModal from "../ESDHomeModal/ESDHomeModal";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { getAllStationMapper } from "../../../../api/mapingAPI";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid"; // Importar o DataGrid e GridToolbar
+import { getMonitor } from "../../../../api/monitorApi";
+import { getAllStationMapper, getStationMapper } from "../../../../api/mapingAPI";
+
 import "./ESDTable.css";
+import ESDMapView from "./ESDMapView";
+
+// Função para gerar dados fictícios
+const generateFakeData = (numItems) => {
+  const statuses = ["ok", "error", "warning"]; // Status fictícios
+  const data = [];
+
+  for (let i = 1; i <= numItems; i++) {
+    data.push({
+      id: `id-${i}`,
+      monitorEsdId: i,
+      linkStationAndLineId: i,
+      positionSequence: i,
+      created: new Date().toISOString(),
+      lastUpdated: new Date().toISOString(),
+      status: statuses[i % statuses.length], // Status fictício baseado no índice
+    });
+  }
+
+  return data;
+};
 
 // Função para obter a cor com base no status
 const getStatusColor = (status) => {
   switch (status) {
-    case "OK":
+    case "ok":
       return "green";
-    case "FAIL":
+    case "error":
       return "red";
-    case "WARNING":
+    case "warning":
       return "orange";
     default:
       return "gray";
   }
 };
 
-// Componente principal
+// Função para determinar a classe CSS com base no status
+const getStatusClass = (status) => {
+  return status === "ok" ? "ok" : status === "error" ? "ng" : "warning";
+};
+
 const ESDDashboardPage = () => {
   const navigate = useNavigate();
-  const [columns, setColumns] = useState([]);
-  const [rows, setRows] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [viewMode, setViewMode] = useState("map");
-  const [searchText, setSearchText] = useState("");
-  const [rowsTable, setRowsTable] = useState([]);
-  const [columnsTable] = useState([
+  const [columns, setColumns] = useState([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 2, 5, 14, 15, 16, 17, 18,
+  ]);
+  const [rows, setRows] = useState([]); // Inicialmente vazio
+
+  // Table states
+  const [openTable, setOpenTable] = useState(false);
+  const [columnsTable, setColumnsTable] = useState([
     { field: "id", headerName: "ID", width: 180 },
     { field: "serialNumber", headerName: "Monitor", width: 180 },
-    { field: "linkStationAndLineId", headerName: "Link Station and Line ID", width: 180 },
+    {
+      field: "linkStationAndLineId",
+      headerName: "Link Station and Line ID",
+      width: 180,
+    },
     { field: "positionSequence", headerName: "Position Sequence", width: 180 },
     { field: "created", headerName: "Created", width: 180 },
     { field: "lastUpdated", headerName: "Last Updated", width: 180 },
@@ -67,6 +99,10 @@ const ESDDashboardPage = () => {
       ),
     },
   ]);
+  const [rowsTable, setRowsTable] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [viewMode, setViewMode] = useState("map"); // Estado para alternar entre visualizações
+  const [searchText, setSearchText] = useState(""); // Estado para o texto de busca
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -75,40 +111,45 @@ const ESDDashboardPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataAllUsers = async () => {
       try {
-        const stationData = await getAllStationMapper();
-        const allStations = stationData.flatMap(({ line, stations }) => 
-          stations.flatMap(({ station, monitorsEsd }) => 
-            monitorsEsd.map((monitor) => ({
-              id: monitor.monitorsEsd.id,
-              serialNumber: monitor.monitorsEsd.serialNumber,
-              linkStationAndLineId: `${line.id}-${station.id}`,
-              positionSequence: monitor.positionSequence,
-              created: station.created,
-              lastUpdated: station.lastUpdated,
-              status: monitor.monitorsEsd.status,
-            }))
-          )
-        );
-        setRowsTable(allStations);
+        // Simulação de obtenção de dados
+        const data = generateFakeData(288); // Gerar 288 itens
+        const result = await getAllStationMapper();
         
-        const gridColumns = Array.from(
-          new Set(stationData.flatMap(({ stations }) => 
-            stations.flatMap(({ station }) => station.sizeX)
-          ))
-        );
+        // Função para agrupar linhas por ID
+        const groupLinesById = (data) => {
+          const lineGroups = {};
+
+          data.forEach(item => {
+            const lineId = item.line.id;
+            if (!lineGroups[lineId]) {
+              lineGroups[lineId] = [];
+            }
+            lineGroups[lineId].push(item);
+          });
+
+          return lineGroups;
+        };
+
+        // Agrupa as linhas
+        const groupedLines = groupLinesById(result);
+        // Atualiza o estado rows com a quantidade de itens em cada grupo
+        setRows(Object.values(groupedLines).map(group => group.length));
         
-        const gridRows = Array.from(
-          new Set(stationData.flatMap(({ stations }) => 
-            stations.flatMap(({ station }) => station.sizeY)
-          ))
+        // Atualiza os dados com o nome do monitor
+        const updatedData = await Promise.all(
+          data.map(async (item) => {
+            const monitorData = await getStationMapper(item.monitorEsdId);
+            return {
+              ...item,
+              serialNumber: monitorData.serialNumber, // Assuma que getMonitor retorna o serialNumber diretamente
+            };
+          })
         );
-        
-        setColumns(gridColumns);
-        setRows(gridRows);
+        setRowsTable(updatedData);
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -116,27 +157,44 @@ const ESDDashboardPage = () => {
         }
       }
     };
-    fetchData();
+    fetchDataAllUsers();
   }, [navigate]);
 
+  const [status] = useState([
+    { indexColumn: 0, indexRow: 0, status: "ok" },
+    { indexColumn: 1, indexRow: 0, status: "error" },
+    { indexColumn: 2, indexRow: 2, status: "ok" },
+    { indexColumn: 3, indexRow: 1, status: "ok" },
+    { indexColumn: 3, indexRow: 6, status: "ok" },
+    { indexColumn: 4, indexRow: 0, status: "ok" },
+  ]);
+
   const getStatusTooltip = (indexColumn, indexRow) => {
-    const station = rowsTable.find(
-      (s) => s.positionSequence === indexRow && s.linkStationAndLineId === `${indexColumn}-${indexRow}`
+    const item = status.find(
+      (s) => s.indexColumn === indexColumn && s.indexRow === indexRow
     );
-    return station
-      ? `Estação: ${indexColumn}, Sequência: ${indexRow}, Status: ${station.status}`
-      : `Estação: ${indexColumn}, Sequência: ${indexRow}, Status: 'Desconectado'`;
+    return item
+      ? `Coluna: ${indexColumn}, Linha:  ${indexRow}  Status: ${item.status}`
+      : `Coluna: ${indexColumn}, Linha:  ${indexRow}  Status: 'Desconectado'`;
   };
 
   const getStatusClass = (indexColumn, indexRow) => {
-    const station = rowsTable.find(
-      (s) => s.positionSequence === indexRow && s.linkStationAndLineId === `${indexColumn}-${indexRow}`
+    const item = status.find(
+      (s) => s.indexColumn === indexColumn && s.indexRow === indexRow
     );
-    return station ? (station.status === "OK" ? "ok" : "ng") : "";
+    return item ? (item.status === "ok" ? "ok" : "ng") : "";
   };
 
   const setMargin = (indexColumn) => {
     return indexColumn % 3 === 0 ? "mRight" : "";
+  };
+
+  const addColumn = () => {
+    setColumns([...columns, columns.length + 1]);
+  };
+
+  const addRow = () => {
+    setRows([...rows, rows.length + 1]);
   };
 
   // Filtrar os dados com base no texto de busca
@@ -178,22 +236,23 @@ const ESDDashboardPage = () => {
 
       {viewMode === "map" ? (
         <div className="container">
-          {columns.map((columnIndex) => (
-            <div key={`column-${columnIndex}`}>
-              {rows.map((rowIndex) => (
+          {columns.map((_, indexColumn) => (
+            <div key={`column-${indexColumn}`}>
+              {rows.map((_, indexRow) => (
                 <Tooltip
-                  key={`tooltip-col${columnIndex}-row${rowIndex}`}
-                  title={getStatusTooltip(columnIndex, rowIndex)}
+                  key={`tooltip-col${indexColumn}-row${indexRow} --item${status.status}`}
+                  title={getStatusTooltip(indexColumn, indexRow)}
                   placement="top"
                   arrow
                 >
                   <p
                     onClick={handleClickOpen}
+                    key={`col${indexColumn}-row${indexRow}-${indexColumn}`}
                     className={`box ${getStatusClass(
-                      columnIndex,
-                      rowIndex
-                    )} ${setMargin(columnIndex)}`}
-                    id={`col${columnIndex}-row${rowIndex}`}
+                      indexColumn,
+                      indexRow
+                    )} ${setMargin(indexColumn)}`}
+                    id={`col${indexColumn}-row${indexRow}`}
                   >
                     <div className="icon-one-one"></div>
                   </p>
@@ -204,12 +263,13 @@ const ESDDashboardPage = () => {
         </div>
       ) : (
         <Box className="grid-table">
+          <ESDMapView></ESDMapView>
           <DataGrid
             rows={filteredRows}
             columns={columnsTable}
             pageSize={10}
             rowsPerPageOptions={[10]}
-            components={{ Toolbar: GridToolbar }}
+            components={{ Toolbar: GridToolbar }} // Adiciona a barra de ferramentas com filtros
           />
         </Box>
       )}

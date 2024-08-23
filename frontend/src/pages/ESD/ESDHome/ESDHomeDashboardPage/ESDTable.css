@@ -189,3 +189,44 @@
   background-repeat: no-repeat; /* Impede que a imagem se repita */
 }
 
+/* Container principal para as linhas */
+.line-container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+/* Cada estação será representada como uma mini matriz */
+.station-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 20px); /* 20px é o tamanho de cada quadrado */
+  grid-auto-rows: 20px;
+  gap: 5px; /* Espaço entre os quadrados */
+  margin-right: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+/* Estilo básico para cada monitor */
+.monitor {
+  width: 20px;
+  height: 20px;
+  background-color: gray; /* Cinza para monitores vazios */
+}
+
+/* Monitores com status 'PASS' em verde */
+.monitor.pass {
+  background-color: green;
+}
+
+/* Monitores com status 'FAIL' em vermelho */
+.monitor.fail {
+  background-color: red;
+}
+
+/* Título para a linha */
+.line-title {
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: center;
+}

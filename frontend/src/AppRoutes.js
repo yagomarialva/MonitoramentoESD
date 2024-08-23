@@ -15,6 +15,7 @@ import Line from "./components/ESD/Line/Line.jsx";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage.jsx";
 import Station from "./components/ESD/Station/Station.jsx";
 import LinkStationLine from "./components/ESD/LinkStationLine/LinkStationLine.jsx";
+import ESDMapView from "./pages/ESD/ESDHome/ESDHomeDashboardPage/ESDMapView.jsx";
 const AppRoutes = () => {
   useEffect(() => {
     document.title = "FCT Auto Test";
@@ -101,6 +102,15 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <LinkStationLine />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mocked"
+          element={
+            <ProtectedRoute>
+              <ESDMapView />
             </ProtectedRoute>
           }
         />
