@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Box,
@@ -14,6 +14,16 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { getAllLines, getLine } from "../../../../api/linerApi";
+import { getAllStations, getStation } from "../../../../api/stationApi";
+import {
+  getAllMonitors,
+  createMonitor,
+  getMonitor,
+  deleteMonitor,
+  updateMonitor,
+} from "../../../../api/monitorApi";
+import { getAllLinks, getLink } from "../../../../api/linkStationLine";
 
 const style = {
   position: "absolute",
@@ -26,74 +36,85 @@ const style = {
   p: 4,
 };
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
-
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 const ESDHomeForm = ({ open, handleClose, onSubmit }) => {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
-
-  const [station, setStation] = useState({
-    name: "",
-    badge: "",
-  });
+  const [allMonitors, setAllMonitors] = useState([]);
+  const [allLinks, setAllLinks] = useState([]);
+  const [mappedItem, setMappedItem] = useState({
+    monitorEsdId: 0,
+    linkStationAndLineId: 0
+  })
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setStation((prev) => ({
+    setMappedItem((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleChangeUserId = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await onSubmit(station);
+      await onSubmit(mappedItem);
       handleClose();
     } catch (error) {
       console.error("Error creating bracelet:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const lines = await getAllLines();
+        const stations = await getAllStations();
+        const result = await getAllMonitors();
+        const links = await getAllLinks();
+        console.log("monitors", links);
+        setAllLinks(links);
+        setAllMonitors(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleLineSelect = async (id) => {
+    try {
+      const selectedLine = await getLine(id);
+      // Atualize o estado se necessário com informações de `selectedLine`
+    } catch (error) {
+      console.error("Error fetching line details:", error);
+    }
+  };
+
+  const handleMonitorSelect = async (id) => {
+    try {
+      const selectedLine = await getMonitor(id);
+      // Atualize o estado se necessário com informações de `selectedLine`
+    } catch (error) {
+      console.error("Error fetching line details:", error);
+    }
+  };
+
+  const handleLinkSelect = async (id) => {
+    try {
+      const selectedLine = await getLink(id);
+      // const selectedMonitor = await getStation(id.stationID);
+      // console.log("selectedMonitor", selectedMonitor);
+      // Atualize o estado se necessário com informações de `selectedLine`
+    } catch (error) {
+      console.error("Error fetching line details:", error);
+    }
+  };
+
+  const handleStationSelect = async (id) => {
+    try {
+      const selectedStation = await getStation(id);
+      // Atualize o estado se necessário com informações de `selectedStation`
+    } catch (error) {
+      console.error("Error fetching station details:", error);
     }
   };
 
@@ -106,60 +127,68 @@ const ESDHomeForm = ({ open, handleClose, onSubmit }) => {
     >
       <Paper sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          {t("ESD_OPERATOR.ADD_OPERATOR", {
+          {t("LINK_STATION_LINE.ADD_LINK_STATION_LINE", {
             appName: "App for Translations",
           })}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            id="name"
-            name="name"
-            label="Name"
-            onChange={handleChange}
-          />
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            id="badge"
-            name="badge"
-            label="Badge"
-            onChange={handleChange}
-          />
-
-          <FormControl sx={{  width: 330 }}>
-            <InputLabel id="demo-multiple-name-label">Name</InputLabel>
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="monitorEsdId">
+              Monitor ESD
+            </InputLabel>
             <Select
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              value={personName}
-              onChange={handleChangeUserId}
-              input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
+              labelId="monitorEsdId"
+              id="monitorEsdId"
+              name="monitorEsdId"
+              value={mappedItem.monitorEsdId}
+              onChange={(e) => {
+                handleChange(e);
+                handleMonitorSelect(e.target.value);
+              }}
+              label="Monitor ESD"
             >
-              {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, personName, theme)}
-                >
-                  {name}
+              {allMonitors.map((monitor) => (
+                <MenuItem key={monitor.id} value={monitor.id}>
+                  {monitor.serialNumber}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
-
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="linkStationAndLineId">
+              {" "}
+              {t("LINK_STATION_LINE.TABLE.LINE", {
+                appName: "App for Translations",
+              })}
+            </InputLabel>
+            <Select
+              labelId="linkStationAndLineId"
+              id="linkStationAndLineId"
+              name="linkStationAndLineId"
+              value={mappedItem.linkStationAndLineId}
+              onChange={(e) => {
+                handleChange(e);
+                handleLinkSelect(e.target.value);
+              }}
+              label="Ligação"
+            >
+              {allLinks.map((monitor) => (
+                <MenuItem key={monitor.id} value={monitor.id}>
+                  {monitor.id}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
             <Button
               type="submit"
               variant="contained"
               color="success"
-              sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
+              sx={{ mt: 2 }}
             >
-              {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
+              {t("LINK_STATION_LINE.DIALOG.SAVE", {
+                appName: "App for Translations",
+              })}
             </Button>
           </Box>
         </Box>

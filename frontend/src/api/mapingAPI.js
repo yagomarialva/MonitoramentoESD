@@ -24,9 +24,10 @@ export const getStationMapper = async (id) => {
 };
 
 // Cria um novo monitor
-export const createStationMapper = async (jig) => {
+export const createStationMapper = async (monitor) => {
   try {
-    const { data } = await TokenApi.post("/adicionarEstacaoView", jig);
+    const { data } = await TokenApi.post("/adicionarEstacaoView", monitor);
+    console.log('data', data)
     return data;
   } catch (error) {
     console.error("Error mapping:", error);

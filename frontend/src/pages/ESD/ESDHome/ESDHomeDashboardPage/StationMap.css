@@ -79,11 +79,8 @@
     font-size: 12px;
     background-color: #e0e0e0; /* Cor de fundo dos monitores */
     width: 52px;
-    height: 60px;
-    background-image: url('icons/one-one.png');
-    background-size: contain; /* Garante que a imagem caiba dentro da célula */
-    background-position: center;
-    background-repeat: no-repeat;
+    height: 120px;
+
 }
 
 /* background-image: url('icons/zero-one.png');
@@ -93,13 +90,22 @@ background-size: contain; /* Garante que a imagem caiba dentro da célula */
 
   .station-cell.empty {
     background-color: #f4f4f4; /* Cor de fundo para células vazias */
-    color: #888; /* Cor do texto para células vazias */
+    color: red; /* Cor do texto para células vazias */
     font-size: 14px;
-    
+    border: 1px solid red;
+    background-image: url('icons/zero-zero.png');
+    background-size: contain; /* Garante que a imagem caiba dentro da célula */
+    background-position: center;
+    background-repeat: no-repeat;
   }
   
   .station-cell.monitor {
     background-color: #4caf50; /* Cor de fundo para monitores */
     color: white; /* Cor do texto para monitores */
+    border: 4px solid purple;
+    background-image: url('icons/one-one.png');
+    background-size: contain; /* Garante que a imagem caiba dentro da célula */
+    background-position: center;
+    background-repeat: no-repeat;
   }
   
