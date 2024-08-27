@@ -1,0 +1,105 @@
+.station-map {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .line-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .line-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px; /* Espaço entre o título da linha e a grade das estações */
+  }
+  
+  .line-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .station {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ddd;
+    background-color: #f4f4f4;
+    width: 32%;
+    height: 15%;
+  }
+  
+  .station.dragging {
+    opacity: 0.5; /* Adiciona um efeito visual quando arrastando */
+  }
+  
+  .line-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: relative;
+  }
+  
+  .line-container .station {
+    margin: 0;
+  }
+  
+  .station-content {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px; /* Espaço entre o nome da estação e a área dos monitores */
+  }
+  
+  .station-grid {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100% - 30px); /* Ajuste para garantir que a área dos monitores ocupe o espaço restante */
+  }
+  
+  .station-row {
+    display: flex;
+    flex: 1;
+  }
+  
+  .station-cell {
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 20px; /* Ajuste o tamanho das células conforme necessário */
+    min-height: 20px; /* Ajuste o tamanho das células conforme necessário */
+    font-size: 12px;
+    background-color: #e0e0e0; /* Cor de fundo dos monitores */
+    width: 52px;
+    height: 60px;
+    background-image: url('icons/one-one.png');
+    background-size: contain; /* Garante que a imagem caiba dentro da célula */
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* background-image: url('icons/zero-one.png');
+background-size: contain; /* Garante que a imagem caiba dentro da célula */
+/* background-position: center; */
+/* background-repeat: no-repeat; */
+
+  .station-cell.empty {
+    background-color: #f4f4f4; /* Cor de fundo para células vazias */
+    color: #888; /* Cor do texto para células vazias */
+    font-size: 14px;
+    
+  }
+  
+  .station-cell.monitor {
+    background-color: #4caf50; /* Cor de fundo para monitores */
+    color: white; /* Cor do texto para monitores */
+  }
+  

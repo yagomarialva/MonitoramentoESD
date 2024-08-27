@@ -10,32 +10,98 @@ import {
 import ESDHomeModal from "../ESDHomeModal/ESDHomeModal";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import InputAdornment from "@mui/material/InputAdornment";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid"; // Importar o DataGrid e GridToolbar
-import { getMonitor } from "../../../../api/monitorApi";
-import { getAllStationMapper, getStationMapper } from "../../../../api/mapingAPI";
+import { experimentalStyled as styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+
+import {
+  getAllStationMapper,
+  getStationMapper,
+} from "../../../../api/mapingAPI";
+import Grid from "@mui/material/Unstable_Grid2";
 
 import "./ESDTable.css";
-import ESDMapView from "./ESDMapView";
+import ESDTableView from "./ESDTableView";
+import StationMap from "./StationMap";
+async function monitorPicker(data) {
+  return await Promise.all(
+    data.map(async (item) => {
+      const monitorData = await getStationMapper(item.monitorEsdId);
+      return {
+        ...item,
+        serialNumber: monitorData.serialNumber,
+      };
+    })
+  );
+}
 
-// Função para gerar dados fictícios
-const generateFakeData = (numItems) => {
-  const statuses = ["ok", "error", "warning"]; // Status fictícios
-  const data = [];
+function groupLines() {
+  return (data) => {
+    const lineGroups = {};
 
-  for (let i = 1; i <= numItems; i++) {
-    data.push({
-      id: `id-${i}`,
-      monitorEsdId: i,
-      linkStationAndLineId: i,
-      positionSequence: i,
-      created: new Date().toISOString(),
-      lastUpdated: new Date().toISOString(),
-      status: statuses[i % statuses.length], // Status fictício baseado no índice
+    data.forEach((item) => {
+      const lineId = item.line.id;
+      if (!lineGroups[lineId]) {
+        lineGroups[lineId] = [];
+      }
+      lineGroups[lineId].push(item);
     });
-  }
 
-  return data;
+    return lineGroups;
+  };
+}
+
+const groupStationsByLine = (data) => {
+  // Cria um objeto para armazenar as linhas e suas estações
+  const grouped = data.reduce((acc, entry) => {
+    const lineId = entry.line.id;
+
+    // Se a linha ainda não estiver no acumulador, cria uma nova entrada
+    if (!acc[lineId]) {
+      acc[lineId] = { line: entry.line, stations: [] };
+    }
+
+    // Processa as estações para cada linha
+    entry.stations.forEach((stationItem) => {
+      const existingStationIndex = acc[lineId].stations.findIndex(
+        (s) => s.station.id === stationItem.station.id
+      );
+
+      // Se a estação não estiver no acumulador, adiciona-a
+      if (existingStationIndex === -1) {
+        acc[lineId].stations.push({
+          ...stationItem,
+          monitorsESD: stationItem.monitorsESD || [],
+        });
+      } else {
+        // Se a estação já estiver no acumulador, combina os monitores
+        const existingStation = acc[lineId].stations[existingStationIndex];
+
+        // Utiliza um mapa para evitar duplicação de monitores com base no ID
+        const existingMonitorsMap = new Map(
+          existingStation.monitorsESD.map((m) => [m.id, m])
+        );
+
+        // Adiciona novos monitores ao mapa
+        (stationItem.monitorsESD || []).forEach((monitor) => {
+          existingMonitorsMap.set(monitor.id, monitor);
+        });
+
+        // Atualiza a estação com os monitores combinados
+        acc[lineId].stations[existingStationIndex] = {
+          ...existingStation,
+          monitorsESD: Array.from(existingMonitorsMap.values()),
+        };
+      }
+    });
+
+    return acc;
+  }, {});
+
+  // Converte o objeto para um array de valores
+  return Object.values(grouped);
 };
 
 // Função para obter a cor com base no status
@@ -58,10 +124,14 @@ const getStatusClass = (status) => {
 };
 
 const ESDDashboardPage = () => {
+  const [groupedStations, setGroupedStations] = useState([]);
   const navigate = useNavigate();
-  const [columns, setColumns] = useState([
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 2, 5, 14, 15, 16, 17, 18,
-  ]);
+  const handleStationsUpdate = (updatedStations) => {
+    setGroupedStations(updatedStations);
+  };
+
+  const [group, setGroup] = useState([]);
+  const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]); // Inicialmente vazio
 
   // Table states
@@ -111,45 +181,42 @@ const ESDDashboardPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   useEffect(() => {
     const fetchDataAllUsers = async () => {
       try {
-        // Simulação de obtenção de dados
-        const data = generateFakeData(288); // Gerar 288 itens
+        setRows([]);
+        setColumns([]);
         const result = await getAllStationMapper();
-        
-        // Função para agrupar linhas por ID
-        const groupLinesById = (data) => {
-          const lineGroups = {};
-
-          data.forEach(item => {
-            const lineId = item.line.id;
-            if (!lineGroups[lineId]) {
-              lineGroups[lineId] = [];
+        const toMount = await getAllStationMapper();
+        const mounted = groupStationsByLine(toMount);
+        setGroupedStations(mounted)
+        mounted.map((item) => {
+          item.stations.forEach((station) => {
+            for (let index = 1; index < station.station.sizeX; index++) {
+              console.log('indexX', index)
+              setRows([...rows, rows.length + 1]);
             }
-            lineGroups[lineId].push(item);
+            for (let index = 1; index < station.station.sizeY; index++) {
+              console.log('indexY', index)
+              setColumns([...columns, columns.length + 1]);
+              
+            }
+            console.log("=================================");
+            console.log("sizeX", station.station.sizeX);
+            console.log("sizeY", station.station.sizeY);
+            console.log("rows", rows);
+            console.log("columuns", columns);
           });
-
-          return lineGroups;
-        };
-
+        });
+        // Função para agrupar linhas por ID
+        const groupLinesById = groupLines();
+        const groupedItens = groupStationsByLine(result);
         // Agrupa as linhas
         const groupedLines = groupLinesById(result);
         // Atualiza o estado rows com a quantidade de itens em cada grupo
-        setRows(Object.values(groupedLines).map(group => group.length));
-        
-        // Atualiza os dados com o nome do monitor
-        const updatedData = await Promise.all(
-          data.map(async (item) => {
-            const monitorData = await getStationMapper(item.monitorEsdId);
-            return {
-              ...item,
-              serialNumber: monitorData.serialNumber, // Assuma que getMonitor retorna o serialNumber diretamente
-            };
-          })
-        );
-        setRowsTable(updatedData);
+        // setRows(Object.values(groupedLines).map((group) => group.length));
+        setGroup(groupedItens);
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -204,8 +271,19 @@ const ESDDashboardPage = () => {
     )
   );
 
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    ...theme.typography.body2,
+    padding: theme.spacing(5),
+    width: 500,
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+  }));
+
   return (
     <>
+      <Button onClick={addRow}>Test</Button>
+      <Button onClick={addColumn}>Test</Button>
       <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 2 }}>
         <FormControlLabel
           control={
@@ -235,42 +313,98 @@ const ESDDashboardPage = () => {
       </Box>
 
       {viewMode === "map" ? (
-        <div className="container">
-          {columns.map((_, indexColumn) => (
-            <div key={`column-${indexColumn}`}>
-              {rows.map((_, indexRow) => (
-                <Tooltip
-                  key={`tooltip-col${indexColumn}-row${indexRow} --item${status.status}`}
-                  title={getStatusTooltip(indexColumn, indexRow)}
-                  placement="top"
-                  arrow
-                >
-                  <p
-                    onClick={handleClickOpen}
-                    key={`col${indexColumn}-row${indexRow}-${indexColumn}`}
-                    className={`box ${getStatusClass(
-                      indexColumn,
-                      indexRow
-                    )} ${setMargin(indexColumn)}`}
-                    id={`col${indexColumn}-row${indexRow}`}
-                  >
-                    <div className="icon-one-one"></div>
-                  </p>
-                </Tooltip>
+        <>
+          {/* <Box sx={{ flexGrow: 1 }}>
+            <Grid
+              container
+              spacing={{ xs: 2, md: 6 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+              {Array.from(Array(group.length)).map((_, index) => (
+                <Grid xs={2} sm={4} md={4} key={index}>
+                  <Item className="line-group">
+                    <div className="station-map">
+                      <div className="group">
+                        <div className="container">
+                          {columns.map((_, indexColumn) => (
+                            <div key={`column-${indexColumn}`}>
+                              {rows.map((_, indexRow) => (
+                                <Tooltip
+                                  key={`tooltip-col${indexColumn}-row${indexRow} --item${status.status}`}
+                                  title={getStatusTooltip(
+                                    indexColumn,
+                                    indexRow
+                                  )}
+                                  placement="top"
+                                  arrow
+                                >
+                                  <p
+                                    onClick={handleClickOpen}
+                                    key={`col${indexColumn}-row${indexRow}-${indexColumn}`}
+                                    className={`box ${getStatusClass(
+                                      indexColumn,
+                                      indexRow
+                                    )} ${setMargin(indexColumn)}`}
+                                    id={`col${indexColumn}-row${indexRow}`}
+                                  >
+                                    <div className="icon-one-one"></div>
+                                  </p>
+                                </Tooltip>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </Item>
+                </Grid>
               ))}
+            </Grid>
+          </Box> */}
+          <StationMap groupedStations={group} ></StationMap>
+          
+          {/* {group.map((lineGroup, lineIndex) => (
+            <div className="group-container" key={lineIndex}>
+              <Row>
+                <Col sm={lineIndex}>
+                  <div className="station-map">
+                    <div className="group">
+                      <div className="container">
+                        {columns.map((_, indexColumn) => (
+                          <div key={`column-${indexColumn}`}>
+                            {rows.map((_, indexRow) => (
+                              <Tooltip
+                                key={`tooltip-col${indexColumn}-row${indexRow} --item${status.status}`}
+                                title={getStatusTooltip(indexColumn, indexRow)}
+                                placement="top"
+                                arrow
+                              >
+                                <p
+                                  onClick={handleClickOpen}
+                                  key={`col${indexColumn}-row${indexRow}-${indexColumn}`}
+                                  className={`box ${getStatusClass(
+                                    indexColumn,
+                                    indexRow
+                                  )} ${setMargin(indexColumn)}`}
+                                  id={`col${indexColumn}-row${indexRow}`}
+                                >
+                                  <div className="icon-one-one"></div>
+                                </p>
+                              </Tooltip>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
             </div>
-          ))}
-        </div>
+          ))} */}
+        </>
       ) : (
         <Box className="grid-table">
-          <ESDMapView></ESDMapView>
-          <DataGrid
-            rows={filteredRows}
-            columns={columnsTable}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            components={{ Toolbar: GridToolbar }} // Adiciona a barra de ferramentas com filtros
-          />
+          <ESDTableView></ESDTableView>
         </Box>
       )}
 

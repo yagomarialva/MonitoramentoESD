@@ -1,21 +1,25 @@
+/* Estilo para a barra de ferramentas da grid */
 .gridToolbar {
   color: #41a24d !important;
 }
 
+/* Estilo para botões na grid */
 .css-1knaqv7-MuiButtonBase-root-MuiButton-root {
   color: #41a24d !important;
 }
 
+/* Estilo para a barra de paginação da grid */
 .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar p {
   margin-bottom: 0rem !important;
 }
 
+/* Estilo básico para a tabela da grid */
 .grid-table {
   height: 570px;
   width: 100%;
-  /* border: solid green 10px;  */
 }
 
+/* Estilo básico para os ícones */
 .box {
   font-family: 'Material Icons';
   content: "face";
@@ -25,6 +29,7 @@
   height: 60px;
 }
 
+/* Estilos para estados de OK e NG */
 .ok {
   background-color: green;
 }
@@ -33,30 +38,42 @@
   background-color: red;
 }
 
+/* Estilo para o container principal */
 .container {
   display: flex;
   margin-right: 1px !important;
+  width: 25%;
 }
 
+/* Estilo para grupos de itens */
+.group {
+  display: flex;
+  flex-wrap: wrap !important;
+  border: 1px solid red;
+  width: 324px;
+}
+
+/* Margem à direita */
 .mRight {
-  margin-right: 30px;
+  /* margin-right: 30px; */
 }
 
+/* Estilo para o painel de controle */
 .control-painel {
   margin-bottom: 2%;
 }
 
-/* Define the container to align icons */
+/* Container para alinhar ícones de status */
 .status-icon-container {
   position: relative;
-  width: 60px; /* Width of the container */
-  height: 80px; /* Height of the container to accommodate the main icon and the appendices */
+  width: 60px;
+  height: 80px;
   display: flex;
-  justify-content: center; /* Center the main icon horizontally */
-  align-items: flex-start; /* Align the icons to the top */
+  justify-content: center;
+  align-items: flex-start;
 }
 
-/* Basic styles for icons */
+/* Estilos básicos para ícones de status */
 .status-icon {
   position: absolute;
   margin-bottom: 10px;
@@ -69,67 +86,82 @@
   align-items: center;
   font-size: 16px;
   color: white;
-  background-color: transparent; /* Start with transparent background */
+  background-color: transparent;
   transition: background-color 0.3s;
 }
 
-/* Main icon styles */
+.station-map {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+.css-6dsfua-MuiGrid2-root {
+  --Grid-columnSpacing: 25% !important;
+}
+
+.line-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Ícone principal */
 .status-icon.main {
-  z-index: 3; /* This icon will be on top */
+  z-index: 3;
   top: 0;
 }
 
-/* Apêndice icons styles */
+/* Estilos para apêndices de ícones */
 .status-icon.append1,
 .status-icon.append2 {
   z-index: 2;
-  top: 30px; /* Position apêndices below the main icon */
+  top: 30px;
 }
 
-/* Positioning for the appendices */
+/* Posicionamento dos apêndices */
 .status-icon.append1 {
-  left: -20px; /* Adjust positioning for append1 */
+  left: -20px;
 }
 
 .status-icon.append2 {
-  left: 20px; /* Adjust positioning for append2 */
+  left: 20px;
 }
 
-/* Change icon color based on status */
+/* Mudança de cor do ícone com base no status */
 .status-icon.active {
   background-color: green;
   margin-top: 20px;
-  /* margin-left: 15px; */
 }
 
 .status-icon.inactive {
   background-color: red;
   margin-left: 20px;
   margin-top: 20px;
-  /* margin-top: 31px;
-  margin-left: 33px; */
 }
 
 .status-icon.warning {
   background-color: orange;
-  /* margin-top: 31px; */
 }
 
-/* Optional: hover effect for better visualization */
+/* Efeito hover opcional para melhor visualização */
 .status-icon:hover {
   opacity: 0.8;
 }
 
+/* Grupo de ícones */
 .icons-group {
-  /* margin-top: 20px; */
+  /* margem superior removida */
 }
-/* Basic styles for the table */
+
+/* Estilos básicos para a tabela */
 .truth-table {
   width: 100%;
   border-collapse: collapse;
   font-family: Arial, sans-serif;
 }
 
+/* Estilos para células e cabeçalhos */
 .truth-table th, .truth-table td {
   border: 1px solid #ddd;
   padding: 8px;
@@ -141,67 +173,67 @@
   font-weight: bold;
 }
 
-/* Icon styles */
+/* Estilo para ícones na tabela */
 .icon {
   font-size: 24px;
   color: #333;
 }
 
-/* Optional: Hover effect for better visualization */
+/* Efeito hover para a tabela */
 .truth-table tr:hover {
   background-color: #e2e2e2;
 }
 
+/* Estilos para ícones específicos */
 .icon-one-one {
   width: 52px;
   height: 60px;
   background-image: url('icons/one-one.png');
-  background-size: cover; /* Garante que a imagem cobre toda a área da div */
-  background-position: center; /* Centraliza a imagem dentro da div */
-  background-repeat: no-repeat; /* Impede que a imagem se repita */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .icon-one-zero {
   width: 52px;
   height: 60px;
   background-image: url('icons/one-zero.png');
-  background-size: cover; /* Garante que a imagem cobre toda a área da div */
-  background-position: center; /* Centraliza a imagem dentro da div */
-  background-repeat: no-repeat; /* Impede que a imagem se repita */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .icon-zero-one {
   width: 52px;
   height: 60px;
   background-image: url('icons/zero-one.png');
-  background-size: cover; /* Garante que a imagem cobre toda a área da div */
-  background-position: center; /* Centraliza a imagem dentro da div */
-  background-repeat: no-repeat; /* Impede que a imagem se repita */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-
 
 .icon-zero-zero {
   width: 52px;
   height: 60px;
   background-image: url('icons/zero-zero.png');
-  background-size: cover; /* Garante que a imagem cobre toda a área da div */
-  background-position: center; /* Centraliza a imagem dentro da div */
-  background-repeat: no-repeat; /* Impede que a imagem se repita */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* Container principal para as linhas */
+/* Container para as linhas */
 .line-container {
   display: flex;
   flex-direction: row;
   margin-bottom: 20px;
 }
 
-/* Cada estação será representada como uma mini matriz */
+/* Estilo para a matriz de cada estação */
 .station-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 20px); /* 20px é o tamanho de cada quadrado */
+  grid-template-columns: repeat(auto-fill, 20px);
   grid-auto-rows: 20px;
-  gap: 5px; /* Espaço entre os quadrados */
+  gap: 5px;
   margin-right: 20px;
   border: 1px solid #ccc;
   padding: 10px;
@@ -211,20 +243,20 @@
 .monitor {
   width: 20px;
   height: 20px;
-  background-color: gray; /* Cinza para monitores vazios */
+  background-color: gray;
 }
 
-/* Monitores com status 'PASS' em verde */
+/* Monitores com status 'PASS' */
 .monitor.pass {
   background-color: green;
 }
 
-/* Monitores com status 'FAIL' em vermelho */
+/* Monitores com status 'FAIL' */
 .monitor.fail {
   background-color: red;
 }
 
-/* Título para a linha */
+/* Título para as linhas */
 .line-title {
   margin-bottom: 10px;
   font-weight: bold;

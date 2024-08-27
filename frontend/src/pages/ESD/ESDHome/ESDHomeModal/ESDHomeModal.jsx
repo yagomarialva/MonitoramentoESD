@@ -22,6 +22,7 @@ const style = {
 
 const ESDHomeModal = ({ open, handleClose, produce }) => {
   const { t } = useTranslation();
+  console.log(`produce`, produce);
 
   return (
     <Modal
@@ -33,46 +34,54 @@ const ESDHomeModal = ({ open, handleClose, produce }) => {
       <Paper sx={style}>
         <Box component="form" noValidate autoComplete="off">
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                disabled
-                required
-                label="Data"
-                defaultValue={"17/04/2024"}
-                margin="normal"
-              />
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                disabled
-                required
-                label="Hora"
-                defaultValue={"17:45"}
-                margin="normal"
-              />
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                disabled
-                required
-                label="Operador"
-                defaultValue={"John Doe"}
-                margin="normal"
-              />
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                disabled
-                required
-                label="Logs"
-                defaultValue={"Lorem ipsum dolor sit amet, consectetur"}
-                margin="normal"
-              />
-            </Typography>
+            <TextField
+              fullWidth
+              disabled
+              required
+              label="Data"
+              defaultValue={produce?.monitorsEsd.stationName ?? "N/A"}
+              margin="normal"
+            />
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              disabled
+              required
+              label="Hora"
+              defaultValue={produce?.lineName ?? "N/A"}
+              margin="normal"
+            />
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              disabled
+              required
+              label="Operador"
+              defaultValue={produce?.status ?? "N/A"}
+              margin="normal"
+            />
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              disabled
+              required
+              label="Logs"
+              defaultValue={produce?.statusJig ?? "N/A"}
+              margin="normal"
+            />
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              disabled
+              required
+              label="Logs"
+              defaultValue={produce?.statusOperador ?? "N/A"}
+              margin="normal"
+            />
           </Typography>
         </Box>
         <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>

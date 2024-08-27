@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import ESDHomeModal from "../ESDHomeModal/ESDHomeModal";
 import {
   getAllStationMapper,
   createStationMapper,
@@ -22,7 +23,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
-import { v4 as uuidv4 } from 'uuid'; // Import the uuidv4 function
+import { v4 as uuidv4 } from "uuid"; // Import the uuidv4 function
 import "./ESDTable.css";
 
 // Function to format data with unique IDs
@@ -49,30 +50,33 @@ function dataFormater(result) {
         dateHour: monitorEsdItem.monitorsEsd.dateHour,
         lastDate: monitorEsdItem.monitorsEsd.lastDate,
       }));
-      
-      return monitors.length > 0 ? monitors : [{
-        id: uuidv4(), // ID único para a linha "N/A"
-        lineId,
-        stationId,
-        lineName: item.line.name ?? "N/A",
-        stationName: stationItem.station.name ?? "N/A",
-        sizeX: stationItem.station.sizeX,
-        sizeY: stationItem.station.sizeY,
-        serialNumber: 'N/A',
-        status: 'N/A',
-        statusOperador: 'N/A',
-        statusJig: 'N/A',
-        description: 'N/A',
-        unm: 'N/A',
-        dateHour: 'N/A',
-        lastDate: 'N/A',
-      }];
+
+      return monitors.length > 0
+        ? monitors
+        : [
+            {
+              id: uuidv4(), // ID único para a linha "N/A"
+              lineId,
+              stationId,
+              lineName: item.line.name ?? "N/A",
+              stationName: stationItem.station.name ?? "N/A",
+              sizeX: stationItem.station.sizeX,
+              sizeY: stationItem.station.sizeY,
+              serialNumber: "N/A",
+              status: "N/A",
+              statusOperador: "N/A",
+              statusJig: "N/A",
+              description: "N/A",
+              unm: "N/A",
+              dateHour: "N/A",
+              lastDate: "N/A",
+            },
+          ];
     });
   });
 }
 
-
-const ESDMapView = () => {
+const ESDTableView = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -96,7 +100,7 @@ const ESDMapView = () => {
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
-
+  const handleClose = () => handleStateChange({ open: false });
   const showSnackbar = (message, severity = "success") => {
     handleStateChange({
       snackbarMessage: message,
@@ -105,6 +109,10 @@ const ESDMapView = () => {
     });
   };
 
+  const handleOpen = (monitor) => handleStateChange({ monitor, open: true });
+  const handleEditOpen = (monitor) => {
+    handleStateChange({ editData: monitor, openEditModal: true });
+  };
   // Função para abrir o modal
   const handleOpenModal = () => {
     handleStateChange({ openModal: true });
@@ -142,7 +150,6 @@ const ESDMapView = () => {
       );
     }
   };
-  
 
   const handleCreateMappedItem = async (monitor) => {
     try {
@@ -227,47 +234,108 @@ const ESDMapView = () => {
     { field: "stationName", headerName: "Station Name", width: 150 },
     { field: "sizeX", headerName: "Size X", width: 100 },
     { field: "sizeY", headerName: "Size Y", width: 100 },
-    { 
-      field: "status", 
-      headerName: "Status", 
+    {
+      field: "status",
+      headerName: "Status",
       width: 150,
       renderCell: (params) => (
         <Typography
           sx={{
-            fontWeight: 'bold',
-            color: params.value === 'PASS' ? 'green' : params.value === 'FAIL' ? 'red' : 'inherit'
+            fontWeight: "bold",
+            color:
+              params.value === "PASS"
+                ? "green"
+                : params.value === "FAIL"
+                ? "red"
+                : "inherit",
           }}
         >
           {params.value}
         </Typography>
-      )
+      ),
     },
-    { field: "statusOperador", headerName: "Status Operador", width: 150 },
-    { field: "statusJig", headerName: "Status Jig", width: 150 },
-    { field: "description", headerName: "Description", width: 250 },
-    { field: "unm", headerName: "UNM", width: 150 },
-    { 
-      field: "details", 
-      headerName: "Details", 
-      width: 300,
+    {
+      field: "statusOperador",
+      headerName: "Status Operador",
+      width: 150,
       renderCell: (params) => (
-        <Tooltip 
-          title={
-            <>
-              <Typography><strong>Serial Number:</strong> {params.row.serialNumber}</Typography>
-              <Typography><strong>Status:</strong> {params.row.status}</Typography>
-              <Typography><strong>Status Operador:</strong> {params.row.statusOperador}</Typography>
-              <Typography><strong>Status Jig:</strong> {params.row.statusJig}</Typography>
-              <Typography><strong>Description:</strong> {params.row.description}</Typography>
-              <Typography><strong>UNM:</strong> {params.row.unm}</Typography>
-              <Typography><strong>Date Hour:</strong> {params.row.dateHour}</Typography>
-              <Typography><strong>Last Date:</strong> {params.row.lastDate}</Typography>
-            </>
-          }
+        <Typography
+          sx={{
+            fontWeight: "bold",
+            color:
+              params.value === "PASS"
+                ? "green"
+                : params.value === "FAIL"
+                ? "red"
+                : "inherit",
+          }}
         >
-          <Info />
-        </Tooltip>
-      )
+          {params.value}
+        </Typography>
+      ),
+    },
+    {
+      field: "statusJig",
+      headerName: "Status Jig",
+      width: 150,
+      renderCell: (params) => (
+        <Typography
+          sx={{
+            fontWeight: "bold",
+            color:
+              params.value === "PASS"
+                ? "green"
+                : params.value === "FAIL"
+                ? "red"
+                : "inherit",
+          }}
+        >
+          {params.value}
+        </Typography>
+      ),
+    },
+    { field: "description", headerName: "Description", width: 250 },
+    {
+      field: "actions",
+      headerName: t("ESD_MONITOR.TABLE.ACTIONS"),
+      width: 250,
+      headerAlign: "center",
+      sortable: false,
+      renderCell: (params) => (
+        <div className="actions-content">
+          <Button
+            onClick={() => handleEditOpen(params.row)}
+            startIcon={
+              <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
+                <IconButton edge="end" aria-label="edit">
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            }
+          ></Button>
+          <Button
+            onClick={() => handleOpen(params.row)}
+            startIcon={
+              <Tooltip title={t("ESD_OPERATOR.INFO_OPERATOR")}>
+                <IconButton edge="end" aria-label="info">
+                  <Info />
+                </IconButton>
+              </Tooltip>
+            }
+            sx={{ mx: 1 }}
+          ></Button>
+          <Button
+            onClick={() => handleDeleteOpen(params.row)}
+            startIcon={
+              <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
+                <IconButton edge="end" aria-label="delete">
+                  <Delete />
+                </IconButton>
+              </Tooltip>
+            }
+          ></Button>
+        </div>
+      ),
     },
   ];
 
@@ -329,11 +397,18 @@ const ESDMapView = () => {
               pagination
             />
           </Box>
+          <ESDHomeModal
+              open={state.open}
+              handleClose={handleClose}
+              monitorName={state.monitor.serialNumber}
+              produce={state.monitor}
+            />
           <Snackbar
             open={state.snackbarOpen}
             autoHideDuration={6000}
             onClose={() => handleStateChange({ snackbarOpen: false })}
           >
+
             <Alert
               onClose={() => handleStateChange({ snackbarOpen: false })}
               severity={state.snackbarSeverity}
@@ -348,5 +423,4 @@ const ESDMapView = () => {
   );
 };
 
-export default ESDMapView;
-
+export default ESDTableView;
