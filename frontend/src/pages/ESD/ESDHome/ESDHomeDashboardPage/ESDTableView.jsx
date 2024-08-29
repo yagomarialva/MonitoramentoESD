@@ -341,7 +341,7 @@ const ESDTableView = () => {
 
   return (
     <>
-      <Typography paragraph>
+      {/* <Typography paragraph>
         <Container>
           <Box className="filters-container">
             <TextField
@@ -418,7 +418,7 @@ const ESDTableView = () => {
             </Alert>
           </Snackbar>
         </Container>
-      </Typography>
+      </Typography> */}
     </>
   );
 };

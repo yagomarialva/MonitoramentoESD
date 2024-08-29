@@ -80,18 +80,10 @@
     font-size: 12px;
     background-color: #e0e0e0; /* Cor de fundo dos monitores */
     width: 52px;
-    height: 120px;
+    height: 68px;
 
 }
 
-/* background-image: url('icons/zero-one.png');
-background-size: contain; /* Garante que a imagem caiba dentro da célula */
-/* background-position: center; */
-/* background-repeat: no-repeat; */
-
-
-  
-  
   /* Classes para o status principal */
 .station-cell.monitor-pass {
   background-color: #4caf50; /* Cor de fundo para monitores */

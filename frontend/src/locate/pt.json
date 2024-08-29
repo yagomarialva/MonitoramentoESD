@@ -240,6 +240,51 @@
         "UPDATE_SUCCESS": "Ligação atualizada com sucesso"
       }
     },
+    "MAP_FACTORY": {
+      "TABLE_HEADER": "Ligação",
+      "ADD_LINK_STATION_LINE": "Adicionar Ligação",
+      "EDIT_LINK_STATION_LINE": "Editar Ligação",
+      "INFO_LINK_STATION_LINE": "Informações do Ligação",
+      "DELETE_LINK_STATION_LINE": "Deletar Ligação",
+      "STATUS_LINK_STATION_LINE": "Status",
+      "TABLE": {
+        "USER_ID": "Número de Série",
+        "NAME": "Ligação",
+        "ACTIONS": "Ações",
+        "STATUS": "Status",
+        "STATUS_JIG": "Status da Ligação",
+        "STATUS_OPERATOR": "Status da Ligação",
+        "COLUMNS": "Filtrar Colunas",
+        "DENSITY": "Ajustar Exibição",
+        "SEARCH": "Pesquisar",
+        "LINK_STATION_LINE": "Ligação",
+        "LINE":"Linha",
+        "ORDER":"Ordem",
+        "STATION":"Estação",
+        "COMPACT": "Compacto",
+        "STANDARD": "Padrão",
+        "CONFORTABLE": "Confortável"
+      },
+      "CONFIRM_DIALOG": {
+        "CONFIRM-TEXT": "Deseja excluir a Ligação?",
+        "CLOSE": "Fechar",
+        "SAVE": "Excluir",
+        "DELETE_LINK_STATION_LINE": "Excluir Ligação",
+        "EMPTY":"Não há itens a serem listados"
+      },
+      "DIALOG": {
+        "CLOSE": "Fechar",
+        "SAVE": "Salvar",
+        "CREATE_LINK_STATION_LINE": "Adicionar Ligação",
+        "EDIT_LINK_STATION_LINE": "Editar Ligação"
+      },
+      "TOAST": {
+        "CREATE_SUCCESS": "Monitor associado com sucesso!",
+        "TOAST_ERROR": "Operação não pode ser concluída",
+        "DELETE_SUCCESS": "Monitor associado Excluído com sucesso",
+        "UPDATE_SUCCESS": "Monitor associado atualizado com sucesso"
+      }
+    },
     "FCT_Home_Page": {
       "Header": "Página Inicial",
       "Label": "FCT para automação dos testes"

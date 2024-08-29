@@ -50,11 +50,7 @@ const getMenuItems = (userRole) => {
         {
           text: "Ligar Estação e Linha",
           path: "/linkstationline",
-        },
-        {
-          text: "Mockado",
-          path: "/mocked",
-        },
+        }
       ],
     },
     {

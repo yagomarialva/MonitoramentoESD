@@ -92,7 +92,7 @@ const OperatorTable = () => {
     try {
       const response = await createOperators(operator);
       const result = await getAllOperators();
-      handleStateChange({ allOperators: result.value });
+      handleStateChange({ allOperators: result.value || result }); // Ajuste conforme necessário
       showSnackbar(
         t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", {
           appName: "App for Translations",
@@ -108,6 +108,7 @@ const OperatorTable = () => {
       );
     }
   };
+  
 
   const handleDelete = async (id) => {
     try {
@@ -152,8 +153,8 @@ const OperatorTable = () => {
     const fetchDataAllOperators = async () => {
       try {
         const result = await getAllOperators();
-        handleStateChange({ allOperators: result });
-
+        console.log('Operadores recebidos:', result);
+        handleStateChange({ allOperators: result.value || result }); // Ajuste conforme o retorno correto
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -162,6 +163,7 @@ const OperatorTable = () => {
         showSnackbar(t(error.message));
       }
     };
+    
     fetchDataAllOperators();
   }, [navigate, showSnackbar, t]); // Dependencies are now correct
 

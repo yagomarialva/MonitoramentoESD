@@ -7,7 +7,17 @@ import { useTranslation } from "react-i18next";
 import { createMonitor, getAllMonitors } from "../../../../api/monitorApi";
 import { getAllStationMapper } from "../../../../api/mapingAPI";
 import ESDHomeEditForm from "../ESDHomeEditForm/ESDHomeEditForm";
-
+import {
+  IconButton,
+  Box,
+  Snackbar,
+  Alert,
+  Button,
+  TextField,
+  Container,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 const StationMap = ({ groupedStations, refreshGroupedStations }) => {
   const { t } = useTranslation();
   const [selectedMonitor, setSelectedMonitor] = useState(null);
@@ -114,12 +124,16 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
     groupedStations.forEach((lineGroup) => {
       lineGroup.stations.forEach((station) => {
         (station.monitorsEsd || []).forEach((monitor) => {
-          if (monitor.monitorsEsd.statusJig === "FAIL" || monitor.monitorsEsd.statusOperador === "FAIL") {
+          if (
+            monitor.monitorsEsd.statusJig === "FAIL" ||
+            monitor.monitorsEsd.statusOperador === "FAIL"
+          ) {
+            console.log("monitor.id", monitor.monitorsEsd.serialNumber);
             console.warn(
               "Alerta: Um monitor ou operador está com status FAIL!"
             );
             showSnackbar(
-              "Alerta: Um monitor ou operador está com status FAIL!",
+              `Alerta: O monitor ${monitor.monitorsEsd.serialNumber} apresenta falhas no ESD`,
               "error"
             );
           }
@@ -136,7 +150,7 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
     <div className="station-map">
       {groupedStations.map((lineGroup, lineIndex) => (
         <div key={`line-${lineIndex}`} className="line-group">
-          <div>Linha: {lineIndex + 1}</div>
+          <div>Estação: {lineIndex + 1}</div>
           <div className="line-container">
             {lineGroup.stations.map((station, stationIndex) => {
               const { sizeX, sizeY, name } = station.station;
@@ -158,17 +172,32 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
                     {monitorMatrix.map((row, rowIndex) => (
                       <div key={`row-${rowIndex}`} className="station-row">
                         {row.map((cell, cellIndex) => (
-                          <div
-                            key={`cell-${cellIndex}`}
-                            className={`station-cell ${getCellClassName(cell)}`}
-                            onClick={
-                              cell !== "empty"
-                                ? () => handleEditOpen(cell)
-                                : null
-                            }
-                          >
-                            {cell === "empty" ? " " : cell.id}
-                          </div>
+                          <>
+                            <Tooltip
+                              key={`tooltip-${cellIndex}`}
+                              title={
+                                cell !== "empty" &&
+                                cell.monitorsEsd?.serialNumber
+                                  ? cell.monitorsEsd.serialNumber
+                                  : ""
+                              } // Exibe o serialNumber se existir
+                              arrow
+                            >
+                              <div
+                                key={`cell-${cellIndex}`}
+                                className={`station-cell ${getCellClassName(
+                                  cell
+                                )}`}
+                                onClick={
+                                  cell !== "empty"
+                                    ? () => handleEditOpen(cell)
+                                    : null
+                                }
+                              >
+                                {cell === "empty" ? " " : cell.id}
+                              </div>
+                            </Tooltip>
+                          </>
                         ))}
                       </div>
                     ))}
@@ -209,6 +238,28 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
           onClose={handleCloseNoMonitorModal}
         />
       )}
+      <Snackbar
+        open={state.snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => handleStateChange({ snackbarOpen: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+      >
+        <Alert
+          onClose={() => handleStateChange({ snackbarOpen: false })}
+          severity={state.snackbarSeverity}
+          sx={{
+            backgroundColor: "inherit",
+            color: "inherit",
+            fontWeight: "inherit",
+            boxShadow: "inherit",
+            borderRadius: "inherit",
+            padding: "inherit",
+          }}
+        >
+          {state.snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

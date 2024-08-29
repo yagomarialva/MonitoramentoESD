@@ -46,7 +46,12 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     statusJig: "",
   });
 
+  const [isDescriptionEditable, setIsDescriptionEditable] = useState(false);
+  const [isDescriptionModified, setIsDescriptionModified] = useState(false); // Novo estado para rastrear a modificação da descrição
+
   useEffect(() => {
+    setIsDescriptionEditable(false);
+    setIsDescriptionModified(false);
     if (initialData) {
       setMonitor(initialData);
     }
@@ -58,6 +63,16 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+
+    // Verifica se um dos selects foi alterado
+    if (name === "statusOperador" || name === "statusJig") {
+      setIsDescriptionEditable(true); // Habilita o campo de descrição
+    }
+
+    // Verifica se a descrição foi modificada em relação ao valor inicial
+    if (name === "description") {
+      setIsDescriptionModified(value !== initialData.description);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -97,20 +112,6 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             value={monitor.serialNumber}
             onChange={handleChange}
           />
-          {/* <FormControl fullWidth margin="normal" required>
-            <InputLabel id="status">Status</InputLabel>
-            <Select
-              labelId="status"
-              id="status"
-              name="status"
-              value={monitor.status}
-              onChange={handleChange}
-              label="Status"
-            >
-              <MenuItem value="PASS">Pass</MenuItem>
-              <MenuItem value="FAIL">Fail</MenuItem>
-            </Select>
-          </FormControl> */}
 
           <FormControl fullWidth margin="normal" required>
             <InputLabel id="statusOperador">Status do Operador</InputLabel>
@@ -141,13 +142,21 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
               <MenuItem value="FAIL">Fail</MenuItem>
             </Select>
           </FormControl>
+
+          {/* Campo de descrição, desabilitado inicialmente e obrigatório após mudança */}
           <TextField
-            required
+            required={isDescriptionEditable} // Torna obrigatório após alteração
+            disabled={!isDescriptionEditable} // Desabilitado até uma mudança
             fullWidth
             margin="normal"
             id="outlined-description"
             name="description"
-            label='Descrição'
+            label="Descrição"
+            helperText={
+              isDescriptionEditable
+                ? "Para alterar o status é necessário justificar o motivo."
+                : ""
+            } //
             value={monitor.description}
             onChange={handleChange}
           />
@@ -163,7 +172,12 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
                 appName: "App for Translations",
               })}
             </Button>
-            <Button type="submit" variant="contained" color="success">
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              disabled={!isDescriptionModified} // Botão desabilitado até que a descrição seja modificada
+            >
               {t("ESD_MONITOR.DIALOG.SAVE", {
                 appName: "App for Translations",
               })}

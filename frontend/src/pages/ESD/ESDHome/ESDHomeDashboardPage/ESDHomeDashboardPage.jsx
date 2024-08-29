@@ -1,56 +1,22 @@
 import React, { useEffect, useState } from "react";
 import {
-  Tooltip,
   Button,
-  Box,
   Snackbar,
   Alert,
-  Switch,
-  FormControlLabel,
-  TextField,
 } from "@mui/material";
 import ESDHomeModal from "../ESDHomeModal/ESDHomeModal";
 import { useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import InputAdornment from "@mui/material/InputAdornment";
-import { experimentalStyled as styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import { useTranslation } from "react-i18next";
 import {
   createStationMapper,
   getAllStationMapper,
-  getStationMapper,
 } from "../../../../api/mapingAPI";
-import Grid from "@mui/material/Unstable_Grid2";
 
 import "./ESDTable.css";
-import ESDTableView from "./ESDTableView";
+
 import StationMap from "./StationMap";
 import ESDHomeForm from "../ESDHomeForm/ESDHomeForm";
-import {
-  getAllLinks,
-  createLink,
-  deleteLink,
-  updateLink,
-} from "../../../../api/linkStationLine";
 
-function groupLines() {
-  return (data) => {
-    const lineGroups = {};
-
-    data.forEach((item) => {
-      const lineId = item.line.id;
-      if (!lineGroups[lineId]) {
-        lineGroups[lineId] = [];
-      }
-      lineGroups[lineId].push(item);
-    });
-
-    return lineGroups;
-  };
-}
 
 const groupStationsByLine = (data) => {
   // Cria um objeto para armazenar as linhas e suas estações
@@ -103,27 +69,12 @@ const groupStationsByLine = (data) => {
   return Object.values(grouped);
 };
 
-// Função para obter a cor com base no status
-const getStatusColor = (status) => {
-  switch (status) {
-    case "ok":
-      return "green";
-    case "error":
-      return "red";
-    case "warning":
-      return "orange";
-    default:
-      return "gray";
-  }
-};
 
 const ESDDashboardPage = () => {
   const { t } = useTranslation();
   const [groupedStations, setGroupedStations] = useState([]);
   const navigate = useNavigate();
-  const handleStationsUpdate = (updatedStations) => {
-    setGroupedStations(updatedStations);
-  };
+
 
   const [group, setGroup] = useState([]);
 
@@ -169,6 +120,11 @@ const ESDDashboardPage = () => {
       const updatedData = await getAllStationMapper(); // Obtém todos os itens atualizados
       const groupedData = groupStationsByLine(updatedData); // Agrupa os dados
       setGroup(groupedData); // Atualiza o estado com os dados agrupados
+      showSnackbar(
+        t("MAP_FACTORY.TOAST.CREATE_SUCCESS", {
+          appName: "App for Translations",
+        })
+      );
     } catch (error) {
       showSnackbar(error.response.data, "error");
     }
