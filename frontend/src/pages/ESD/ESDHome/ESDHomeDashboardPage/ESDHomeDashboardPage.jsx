@@ -126,8 +126,6 @@ const ESDDashboardPage = () => {
   };
 
   const [group, setGroup] = useState([]);
-  const [columns, setColumns] = useState([]);
-  const [rows, setRows] = useState([]); // Inicialmente vazio
 
   const showSnackbar = (message, severity = "success") => {
     handleStateChange({
@@ -137,9 +135,7 @@ const ESDDashboardPage = () => {
     });
   };
 
-  const [rowsTable, setRowsTable] = useState([]);
   const [open, setOpen] = useState(false);
-  const [searchText, setSearchText] = useState(""); // Estado para o texto de busca
   const [state, setState] = useState({
     allLinks: [],
     link: null,
@@ -165,42 +161,37 @@ const ESDDashboardPage = () => {
 
   const handleOpenModal = () => handleStateChange({ openModal: true });
 
-  
   const handleCloseModal = () => handleStateChange({ openModal: false });
 
   const handleCreateMappedItem = async (link) => {
     try {
-
-      const result = await createStationMapper(link);
-
-      handleStateChange({ group: result });
-
-      showSnackbar(
-        t("LINK_STATION_LINE.TOAST.CREATE_SUCCESS", {
-          appName: "App for Translations",
-        })
-      );
+      await createStationMapper(link); // Primeiro cria o item
+      const updatedData = await getAllStationMapper(); // Obtém todos os itens atualizados
+      const groupedData = groupStationsByLine(updatedData); // Agrupa os dados
+      setGroup(groupedData); // Atualiza o estado com os dados agrupados
     } catch (error) {
       showSnackbar(error.response.data, "error");
     }
   };
 
+  const fetchAndSetGroupedStations = async () => {
+    try {
+      const updatedStations = await getAllStationMapper();
+      // Supondo que você tenha uma função de agrupamento de estações:
+      const groupedData = groupStationsByLine(updatedStations);
+      setGroup(groupedData);
+    } catch (error) {
+      console.error("Failed to fetch stations", error);
+    }
+  };
+
   useEffect(() => {
     const fetchDataAllUsers = async () => {
+      fetchAndSetGroupedStations();
       try {
-        setRows([]);
-        setColumns([]);
         const toMount = await getAllStationMapper();
         const mounted = groupStationsByLine(toMount);
-        
-        setGroupedStations(mounted);
-
-        const groupLinesById = groupLines();
-        const groupedItens = groupStationsByLine(mounted);
-        // Agrupa as linhas
-        const groupedLines = groupLinesById(mounted);
-
-        setGroup(groupedItens);
+        setGroup(mounted);
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -210,8 +201,6 @@ const ESDDashboardPage = () => {
     };
     fetchDataAllUsers();
   }, [navigate]);
-
-  
 
   return (
     <>
@@ -224,7 +213,10 @@ const ESDDashboardPage = () => {
       >
         {t("LINK_STATION_LINE.ADD_LINK_STATION_LINE")}
       </Button>
-      <StationMap groupedStations={group}></StationMap>
+      <StationMap
+        groupedStations={group}
+        refreshGroupedStations={fetchAndSetGroupedStations}
+      ></StationMap>
       <ESDHomeForm
         open={state.openModal}
         handleClose={handleCloseModal}
@@ -232,27 +224,27 @@ const ESDDashboardPage = () => {
       ></ESDHomeForm>
       <ESDHomeModal open={open} handleClose={handleClose} />
       <Snackbar
-            open={state.snackbarOpen}
-            autoHideDuration={6000}
-            onClose={() => handleStateChange({ snackbarOpen: false })}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            className={`snackbar-content snackbar-${state.snackbarSeverity}`}
-          >
-            <Alert
-              onClose={() => handleStateChange({ snackbarOpen: false })}
-              severity={state.snackbarSeverity}
-              sx={{
-                backgroundColor: "inherit",
-                color: "inherit",
-                fontWeight: "inherit",
-                boxShadow: "inherit",
-                borderRadius: "inherit",
-                padding: "inherit",
-              }}
-            >
-              {state.snackbarMessage}
-            </Alert>
-          </Snackbar>
+        open={state.snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => handleStateChange({ snackbarOpen: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+      >
+        <Alert
+          onClose={() => handleStateChange({ snackbarOpen: false })}
+          severity={state.snackbarSeverity}
+          sx={{
+            backgroundColor: "inherit",
+            color: "inherit",
+            fontWeight: "inherit",
+            boxShadow: "inherit",
+            borderRadius: "inherit",
+            padding: "inherit",
+          }}
+        >
+          {state.snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

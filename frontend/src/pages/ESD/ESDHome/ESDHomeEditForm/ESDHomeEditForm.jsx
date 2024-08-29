@@ -37,20 +37,24 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     changeLanguage(newLanguage);
   };
 
-  const [operator, setOperator] = useState({
-    name: "",
-    badge: "",
+  const [monitor, setMonitor] = useState({
+    id: "",
+    description: "",
+    serialNumber: "",
+    status: "",
+    statusOperador: "",
+    statusJig: "",
   });
 
   useEffect(() => {
     if (initialData) {
-      setOperator(initialData);
+      setMonitor(initialData);
     }
   }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setOperator((prev) => ({
+    setMonitor((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -59,10 +63,10 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await onSubmit(operator);
+      await onSubmit(monitor);
       handleClose();
     } catch (error) {
-      console.error("Error creating or updating operator:", error);
+      console.error("Error creating or updating monitor:", error);
     }
   };
 
@@ -75,33 +79,79 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     >
       <Paper sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          {t("ESD_TEST.DIALOG.EDIT_STATION", {
+          {t("ESD_MONITOR.DIALOG.EDIT_MONITOR", {
             appName: "App for Translations",
           })}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-          <FormControl fullWidth margin="normal">
-            <TextField
-              required
-              fullWidth
-              margin="normal"
-              id="outlined-name"
-              name="name"
-              label="Name"
-              value={operator.name}
+          <TextField
+            required
+            disabled
+            fullWidth
+            margin="normal"
+            id="outlined-title"
+            name="serialNumber"
+            label={t("ESD_MONITOR.TABLE.NAME", {
+              appName: "App for Translations",
+            })}
+            value={monitor.serialNumber}
+            onChange={handleChange}
+          />
+          {/* <FormControl fullWidth margin="normal" required>
+            <InputLabel id="status">Status</InputLabel>
+            <Select
+              labelId="status"
+              id="status"
+              name="status"
+              value={monitor.status}
               onChange={handleChange}
-            />
+              label="Status"
+            >
+              <MenuItem value="PASS">Pass</MenuItem>
+              <MenuItem value="FAIL">Fail</MenuItem>
+            </Select>
+          </FormControl> */}
+
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="statusOperador">Status do Operador</InputLabel>
+            <Select
+              labelId="statusOperador"
+              id="statusOperador"
+              name="statusOperador"
+              value={monitor.statusOperador}
+              onChange={handleChange}
+              label="Status do Operador"
+            >
+              <MenuItem value="PASS">Pass</MenuItem>
+              <MenuItem value="FAIL">Fail</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="statusJig">Status do Jig</InputLabel>
+            <Select
+              labelId="statusJig"
+              id="statusJig"
+              name="statusJig"
+              value={monitor.statusJig}
+              onChange={handleChange}
+              label="Status do Jig"
+            >
+              <MenuItem value="PASS">Pass</MenuItem>
+              <MenuItem value="FAIL">Fail</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             required
             fullWidth
             margin="normal"
-            id="outlined-badge"
-            name="badge"
-            label="Badge"
-            disabled
-            value={operator.badge}
+            id="outlined-description"
+            name="description"
+            label='Descrição'
+            value={monitor.description}
+            onChange={handleChange}
           />
-          </FormControl>
+
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button
               onClick={handleClose}
@@ -109,10 +159,14 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
               color="success"
               sx={{ mr: 2 }}
             >
-              {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
+              {t("ESD_MONITOR.DIALOG.CLOSE", {
+                appName: "App for Translations",
+              })}
             </Button>
             <Button type="submit" variant="contained" color="success">
-              {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
+              {t("ESD_MONITOR.DIALOG.SAVE", {
+                appName: "App for Translations",
+              })}
             </Button>
           </Box>
         </Box>

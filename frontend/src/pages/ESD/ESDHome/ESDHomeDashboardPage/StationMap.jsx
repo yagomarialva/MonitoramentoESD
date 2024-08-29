@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./StationMap.css"; // Importar o CSS necessário
 import MonitorModal from "./MonitorModal"; // Importe o componente do modal para informações do monitor
 import NoMonitorModal from "./NoMonitorModal"; // Importe o componente do modal para células vazias
+import MonitorEditForm from "../../Monitor/MonitorEditForm/MonitorEditForm";
+import { useTranslation } from "react-i18next";
+import { createMonitor, getAllMonitors } from "../../../../api/monitorApi";
+import { getAllStationMapper } from "../../../../api/mapingAPI";
+import ESDHomeEditForm from "../ESDHomeEditForm/ESDHomeEditForm";
 
-const StationMap = ({ groupedStations }) => {
+const StationMap = ({ groupedStations, refreshGroupedStations }) => {
+  const { t } = useTranslation();
   const [selectedMonitor, setSelectedMonitor] = useState(null);
   const [noMonitorCell, setNoMonitorCell] = useState(null);
   const [state, setState] = useState({
-    allMappedItems: [],
+    allMonitors: [],
     monitor: {},
     open: false,
     openModal: false,
@@ -24,6 +30,22 @@ const StationMap = ({ groupedStations }) => {
     rowsPerPage: 10,
   });
 
+  const handleStateChange = (changes) => {
+    setState((prevState) => ({ ...prevState, ...changes }));
+  };
+
+  const showSnackbar = (message, severity = "success") => {
+    handleStateChange({
+      snackbarMessage: message,
+      snackbarSeverity: severity,
+      snackbarOpen: true,
+    });
+  };
+
+  const handleEditOpen = (monitor) => {
+    handleStateChange({ editData: monitor.monitorsEsd, openEditModal: true });
+  };
+
   const handleCellClick = (cell) => {
     if (cell === "empty") {
       setNoMonitorCell("No monitor in this cell.");
@@ -32,6 +54,9 @@ const StationMap = ({ groupedStations }) => {
     }
   };
 
+  const handleEditClose = () =>
+    handleStateChange({ openEditModal: false, editData: null });
+
   const handleCloseMonitorModal = () => {
     setSelectedMonitor(null);
   };
@@ -39,6 +64,73 @@ const StationMap = ({ groupedStations }) => {
   const handleCloseNoMonitorModal = () => {
     setNoMonitorCell(null);
   };
+
+  const handleEditCellChange = async (params) => {
+    try {
+      await createMonitor(params);
+      await refreshGroupedStations(); // Chama a função passada pelo pai para atualizar o estado
+      showSnackbar(
+        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
+          appName: "App for Translations",
+        })
+      );
+    } catch (error) {
+      showSnackbar(
+        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        "error"
+      );
+    }
+  };
+
+  const getCellClassName = (cell) => {
+    if (cell === "empty") return "empty";
+
+    const { status, statusJig, statusOperador } = cell.monitorsEsd || {};
+
+    // Define a classe base com base no status principal
+    let className = "";
+    // Usando switch para combinação de status e statusOperador
+    switch (`${statusJig}-${statusOperador}`) {
+      case "PASS-PASS":
+        className = "one-one";
+        break;
+      case "FAIL-FAIL":
+        className = "zero-zero";
+        break;
+      case "PASS-FAIL":
+        className = "zero-one";
+        break;
+      case "FAIL-PASS":
+        className = "monitor-fail operator-pass";
+        break;
+      default:
+        className = "monitor-unknown operator-unknown";
+        break;
+    }
+
+    return className.trim(); // Remove espaços extras no final
+  };
+  const checkForFails = () => {
+    groupedStations.forEach((lineGroup) => {
+      lineGroup.stations.forEach((station) => {
+        (station.monitorsEsd || []).forEach((monitor) => {
+          if (monitor.monitorsEsd.statusJig === "FAIL" || monitor.monitorsEsd.statusOperador === "FAIL") {
+            console.warn(
+              "Alerta: Um monitor ou operador está com status FAIL!"
+            );
+            showSnackbar(
+              "Alerta: Um monitor ou operador está com status FAIL!",
+              "error"
+            );
+          }
+        });
+      });
+    });
+  };
+  // Listener para avisar quando o status é "FAIL"
+  useEffect(() => {
+    checkForFails();
+  }, [groupedStations]); // Dependência em groupedStations para reavaliar quando houver mudanças
 
   return (
     <div className="station-map">
@@ -66,13 +158,14 @@ const StationMap = ({ groupedStations }) => {
                     {monitorMatrix.map((row, rowIndex) => (
                       <div key={`row-${rowIndex}`} className="station-row">
                         {row.map((cell, cellIndex) => (
-                          console.log('cell',cell.monitorsEsd),
                           <div
                             key={`cell-${cellIndex}`}
-                            className={`station-cell ${
-                              cell === "empty" ? "empty" : "monitor"
-                            }`}
-                            onClick={() => handleCellClick(cell)}
+                            className={`station-cell ${getCellClassName(cell)}`}
+                            onClick={
+                              cell !== "empty"
+                                ? () => handleEditOpen(cell)
+                                : null
+                            }
                           >
                             {cell === "empty" ? " " : cell.id}
                           </div>
@@ -86,16 +179,28 @@ const StationMap = ({ groupedStations }) => {
           </div>
         </div>
       ))}
-      {/* <LinkStantionLineEditForm
+      {/* <MonitorEditForm
         open={state.openEditModal}
         handleClose={handleEditClose}
         onSubmit={handleEditCellChange}
         initialData={state.editData}
       /> */}
+      <ESDHomeEditForm
+        open={state.openEditModal}
+        handleClose={handleEditClose}
+        onSubmit={handleEditCellChange}
+        initialData={state.editData}
+      />
       {selectedMonitor && (
-        <MonitorModal
-          monitor={selectedMonitor}
-          onClose={handleCloseMonitorModal}
+        // <MonitorModal
+        //   monitor={selectedMonitor}
+        //   onClose={handleCloseMonitorModal}
+        // />
+        <MonitorEditForm
+          open={state.openEditModal}
+          handleClose={handleEditClose}
+          onSubmit={handleEditCellChange}
+          initialData={state.editData}
         />
       )}
       {noMonitorCell && (

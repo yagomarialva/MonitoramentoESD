@@ -4,7 +4,6 @@ import TokenApi from "./TokenApi";
 export const getAllStationMapper = async () => {
   try {
     const { data } = await TokenApi.get("/api/StationView/factoryMap");
-    console.log('data unformated', data)
     return data;
   } catch (error) {
     console.error("Error fetching mapper:", error);
@@ -27,7 +26,6 @@ export const getStationMapper = async (id) => {
 export const createStationMapper = async (monitor) => {
   try {
     const { data } = await TokenApi.post("/adicionarEstacaoView", monitor);
-    console.log('data', data)
     return data;
   } catch (error) {
     console.error("Error mapping:", error);

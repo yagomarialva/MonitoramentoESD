@@ -71,6 +71,7 @@
   .station-cell {
     border: 1px solid #ddd;
     display: flex;
+    cursor: pointer;
     align-items: center;
     justify-content: center;
     flex: 1;
@@ -88,24 +89,80 @@ background-size: contain; /* Garante que a imagem caiba dentro da célula */
 /* background-position: center; */
 /* background-repeat: no-repeat; */
 
-  .station-cell.empty {
-    background-color: #f4f4f4; /* Cor de fundo para células vazias */
-    color: red; /* Cor do texto para células vazias */
-    font-size: 14px;
-    border: 1px solid red;
-    background-image: url('icons/zero-zero.png');
-    background-size: contain; /* Garante que a imagem caiba dentro da célula */
-    background-position: center;
-    background-repeat: no-repeat;
-  }
+
   
-  .station-cell.monitor {
-    background-color: #4caf50; /* Cor de fundo para monitores */
-    color: white; /* Cor do texto para monitores */
-    border: 4px solid purple;
-    background-image: url('icons/one-one.png');
-    background-size: contain; /* Garante que a imagem caiba dentro da célula */
-    background-position: center;
-    background-repeat: no-repeat;
-  }
   
+  /* Classes para o status principal */
+.station-cell.monitor-pass {
+  background-color: #4caf50; /* Cor de fundo para monitores */
+  color: white; /* Cor do texto para monitores */
+  border: 4px solid purple;
+  background-image: url('icons/one-one.png');
+  background-size: contain; /* Garante que a imagem caiba dentro da célula */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.station-cell.monitor-fail {
+  background-color:  rgb(252, 3, 3) !important;/* Cor de fundo para monitores */
+  color: white; /* Cor do texto para monitores */
+  background-image: url('icons/one-zero.png') !important;
+  background-size: contain; /* Garante que a imagem caiba dentro da célula */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.station-cell.monitor-unknown {
+  background-color: #fff3cd; /* Amarelo claro para estado desconhecido */
+  border: 2px solid #ffc107; /* Borda amarela */
+}
+
+/* Classes para o statusJig */
+.station-cell.one-one {
+  background-color: #4caf50 !important;/* Cor de fundo para monitores */
+  color: white; /* Cor do texto para monitores */
+  background-image: url('icons/one-one.png');
+  background-size: contain; /* Garante que a imagem caiba dentro da célula */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.station-cell.zero-zero {
+  background-color: red; /* Cor de fundo para monitores */
+  color: white; /* Cor do texto para monitores */
+  background-image: url('icons/zero-zero.png') !important;
+  background-size: contain; /* Garante que a imagem caiba dentro da célula */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.station-cell.jig-unknown {
+  background-color: #f3e5f5; /* Roxo claro para estado desconhecido em statusJig */
+  border-left: 4px solid #7b1fa2; /* Borda roxa */
+}
+
+/* Classes para o statusOperator */
+.station-cell.operator-pass {
+  background-color: #4caf50; /* Cor de fundo para monitores */
+  color: white; /* Cor do texto para monitores */
+  background-image: url('icons/one-one.png');
+  background-size: contain; /* Garante que a imagem caiba dentro da célula */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.station-cell.zero-one {
+  background-color: #4caf50; /* Cor de fundo para monitores */
+  color: white; /* Cor do texto para monitores */
+  background-color:  rgb(252, 3, 3) !important;
+
+  background-image: url('icons/zero-one.png');
+  background-size: contain; /* Garante que a imagem caiba dentro da célula */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.station-cell.operator-unknown {
+  background-color: #d7ccc8; /* Cinza claro para estado desconhecido em statusOperator */
+  border-right: 4px solid #5d4037; /* Borda marrom */
+}

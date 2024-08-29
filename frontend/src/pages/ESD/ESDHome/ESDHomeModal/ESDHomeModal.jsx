@@ -22,7 +22,6 @@ const style = {
 
 const ESDHomeModal = ({ open, handleClose, produce }) => {
   const { t } = useTranslation();
-  console.log(`produce`, produce);
 
   return (
     <Modal
