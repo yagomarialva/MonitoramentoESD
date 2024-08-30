@@ -21,6 +21,7 @@ import {
   TablePagination,
   Typography,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
 import ESDModal from "../ESDModal/ESDModal";
@@ -143,7 +144,7 @@ const ESDTable = () => {
           localStorage.removeItem("token");
           navigate("/");
         }
-        showSnackbar(t( error.response.data), "error");
+        showSnackbar(t(error.response.data), "error");
         handleStateChange({ loading: false });
       }
     };
@@ -283,10 +284,16 @@ const ESDTable = () => {
               <List>
                 {paginatedJigs.map((station) => (
                   <ListItem key={station.id} divider>
-                    <ListItemText
-                      primary={station.name}
-                      secondary={station.description}
-                    />
+                    <Tooltip
+                      title={`Número de Série: ${station.name}, Descrição: ${station.description}`}
+                      arrow
+                    >
+                      <ListItemText
+                        primary={station.name}
+                        secondary={station.description}
+                        className="textOverflow"
+                      />
+                    </Tooltip>
                     <ListItemSecondaryAction>
                       <IconButton
                         edge="end"

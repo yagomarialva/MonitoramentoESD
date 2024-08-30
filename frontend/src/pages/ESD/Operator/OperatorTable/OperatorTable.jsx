@@ -137,7 +137,7 @@ const OperatorTable = () => {
     try {
       const response = await createOperators(params);
       const result = await getAllOperators();
-      handleStateChange({ allOperators: result.value });
+      handleStateChange({ allOperators: result.value || result });
       showSnackbar(
         t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",

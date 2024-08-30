@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
   Box,
+  Tooltip,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./OperatorModal.css"; // Importando o arquivo CSS
@@ -28,10 +29,15 @@ const OperatorModal = ({ open, handleClose, operator }) => {
         >
           {t("ESD_OPERATOR.TABLE.NAME", {
             appName: "App for Translations",
-          })} {operator.name}
+          })}{" "}
+          {operator.name}
         </Typography>
         <Box component="form" noValidate autoComplete="off">
           <Typography id="modal-modal-description" className="modal-textfield">
+            <Tooltip
+              title={operator.name}
+              arrow
+            >
             <TextField
               fullWidth
               disabled
@@ -42,6 +48,11 @@ const OperatorModal = ({ open, handleClose, operator }) => {
               defaultValue={operator.name}
               margin="normal"
             />
+            </Tooltip>
+            <Tooltip
+              title={operator.badge}
+              arrow
+            >
             <TextField
               fullWidth
               disabled
@@ -52,6 +63,7 @@ const OperatorModal = ({ open, handleClose, operator }) => {
               defaultValue={operator.badge}
               margin="normal"
             />
+            </Tooltip>
           </Typography>
         </Box>
         <Box className="modal-buttons">

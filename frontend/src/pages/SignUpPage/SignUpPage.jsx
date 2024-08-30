@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import TokenApi from "../../api/TokenApi";
 import Logo from "./logo.png";
 
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$/;
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -48,6 +49,13 @@ const SignUpPage = () => {
   };
 
   const handleSubmit = async () => {
+
+    if (!passwordRegex.test(password)) {
+      handleSnackbarOpen("A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número.", "error");
+      return;
+    }
+  
+
     if (password !== confirmPassword) {
       handleSnackbarOpen("As senhas não coincidem.", "error");
       return;
@@ -68,8 +76,7 @@ const SignUpPage = () => {
       setBadge("");
       handleSnackbarOpen("Usuário criado com sucesso!", "success");
     } catch (error) {
-      console.log(error)
-      handleSnackbarOpen(error.message, "error");
+      handleSnackbarOpen(error.response.data.errors.Password, "error");
     } finally {
       setLoading(false);
     }
@@ -141,6 +148,12 @@ const SignUpPage = () => {
           fullWidth
           margin="normal"
           value={password}
+          error={password && !passwordRegex.test(password)}
+          helperText={
+            password && !passwordRegex.test(password)
+              ? "A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número."
+              : ""
+          }
           onChange={(e) => setPassword(e.target.value)}
         />
         <TextField
@@ -150,6 +163,12 @@ const SignUpPage = () => {
           fullWidth
           margin="normal"
           value={confirmPassword}
+          error={password && !passwordRegex.test(password)}
+          helperText={
+            password && !passwordRegex.test(password)
+              ? "A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número."
+              : ""
+          }
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
         <FormControl fullWidth variant="outlined" margin="normal">

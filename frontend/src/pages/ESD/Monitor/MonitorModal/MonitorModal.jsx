@@ -44,6 +44,7 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
           </Typography>
         </Tooltip>
         <Box component="form" noValidate autoComplete="off">
+        <Tooltip title={monitor.serialNumber} arrow>
           <TextField
             fullWidth
             disabled
@@ -58,6 +59,8 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
               },
             }}
           />
+        </Tooltip>
+        <Tooltip title={monitor.description} arrow>
           <TextField
             fullWidth
             disabled
@@ -72,6 +75,8 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
               },
             }}
           />
+        </Tooltip>
+        <Tooltip title={monitor.status} arrow>
           <TextField
             fullWidth
             disabled
@@ -86,6 +91,39 @@ const MonitorModal = ({ open, handleClose, monitor }) => {
               },
             }}
           />
+        </Tooltip>
+        <Tooltip title={monitor.statusJig} arrow>
+          <TextField
+            fullWidth
+            disabled
+            required
+            label={'Status do Jig'}
+            defaultValue={monitor.statusJig}
+            margin="normal"
+            InputProps={{
+              sx: {
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              },
+            }}
+          />
+        </Tooltip>
+        <Tooltip title={monitor.statusOperador} arrow>
+          <TextField
+            fullWidth
+            disabled
+            required
+            label={'Status do Operador'}
+            defaultValue={monitor.statusOperador}
+            margin="normal"
+            InputProps={{
+              sx: {
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              },
+            }}
+          />
+        </Tooltip>
         </Box>
         <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
           <Button variant="contained" color="success" onClick={handleClose}>

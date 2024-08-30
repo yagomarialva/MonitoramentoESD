@@ -16,6 +16,11 @@
   .modal-title {
     font-size: 1.5rem; /* Tamanho da fonte para o título */
     margin-bottom: 16px; /* Espaçamento abaixo do título */
+    white-space: nowrap;                  
+    overflow: hidden; /* "overflow" value must be different from "visible" */
+    text-overflow:    ellipsis;
+    /* border: 1px solid #ccc; */
+    margin-right: 20%;
   }
   
   .modal-textfield {
@@ -31,4 +36,15 @@
   .modal-close-button {
     align-self: center; /* Centraliza o botão verticalmente */
   }
+
+  .textOverflow {
+    max-width: 60%;
+    /* font-size: 20dp; */
+    white-space: nowrap;                  
+    overflow: hidden; /* "overflow" value must be different from "visible" */
+    text-overflow:    ellipsis;
+    /* border: 1px solid #ccc; */
+    margin-right: 20%;
+  }
+  
   
