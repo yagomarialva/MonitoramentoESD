@@ -107,7 +107,7 @@ const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             />
           </FormControl>
           <Box className="modal-buttons">
-            <Button onClick={handleClose} variant="outlined" color="success">
+            <Button onClick={handleClose} variant="contained" color="error">
               {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
             </Button>
             <Button

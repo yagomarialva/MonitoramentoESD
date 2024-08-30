@@ -155,11 +155,19 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
             </Select>
           </FormControl>
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+          <Button
+              onClick={handleClose}
+              variant="contained"
+              color="error"
+              sx={{ mt: 2 }}
+            >
+                 {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
+            </Button>
             <Button
               type="submit"
               variant="contained"
               color="success"
-              sx={{ mt: 2 }}
+              sx={{ mt: 2, ml:2 }}
             >
               {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
             </Button>

@@ -21,25 +21,41 @@ const style = {
 };
 
 const ESDForm = ({ open, handleClose, onSubmit }) => {
-  const {
-    t,
-  } = useTranslation();
+  const { t } = useTranslation();
 
   const [station, setStation] = useState({
     name: "",
     description: "",
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    description: "",
+  });
+
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setStation((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
+    }));
+
+    // Regex para verificar se o campo começa com espaços em branco
+    const startsWithWhitespace = /^\s+/.test(value);
+    setErrors((prev) => ({
+      ...prev,
+      [name]: startsWithWhitespace
+        ? "É necessário que o campo não comece com espaço em branco."
+        : "",
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const hasErrors = Object.values(errors).some((error) => error);
+
+    if (hasErrors) return;
+
     try {
       await onSubmit(station);
       handleClose();
@@ -72,6 +88,8 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
               appName: "App for Translations",
             })}
             onChange={handleChange}
+            error={Boolean(errors.name)}
+            helperText={errors.name}
           />
           <TextField
             required
@@ -83,16 +101,26 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
               appName: "App for Translations",
             })}
             onChange={handleChange}
+            error={Boolean(errors.description)}
+            helperText={errors.description}
           />
           <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
-          >
-            {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
-          </Button>
+            <Button
+              onClick={handleClose}
+              variant="contained"
+              color="error"
+              sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
+            >
+               {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              sx={{ mt: 2, ml: 2, display: "flex", justifyContent: "flex-end" }}
+            >
+              {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
+            </Button>
           </Box>
         </Box>
       </Paper>

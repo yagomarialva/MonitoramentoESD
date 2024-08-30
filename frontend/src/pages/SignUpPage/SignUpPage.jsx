@@ -18,6 +18,8 @@ import TokenApi from "../../api/TokenApi";
 import Logo from "./logo.png";
 
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$/;
+const nonEmptyRegex = /^\S.*$/;
+
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -49,12 +51,19 @@ const SignUpPage = () => {
   };
 
   const handleSubmit = async () => {
+    if (
+      !nonEmptyRegex.test(username) ||
+      !nonEmptyRegex.test(badge) ||
+      !nonEmptyRegex.test(rolesName)
+    ) {
+      handleSnackbarOpen("Todos os campos devem ser preenchidos corretamente.", "error");
+      return;
+    }
 
     if (!passwordRegex.test(password)) {
       handleSnackbarOpen("A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número.", "error");
       return;
     }
-  
 
     if (password !== confirmPassword) {
       handleSnackbarOpen("As senhas não coincidem.", "error");
@@ -131,6 +140,8 @@ const SignUpPage = () => {
           fullWidth
           margin="normal"
           value={username}
+          error={username && !nonEmptyRegex.test(username)}
+          helperText={username && !nonEmptyRegex.test(username) ? "Nome não pode estar vazio." : ""}
           onChange={(e) => setUsername(e.target.value)}
         />
         <TextField
@@ -139,6 +150,8 @@ const SignUpPage = () => {
           fullWidth
           margin="normal"
           value={badge}
+          error={badge && !nonEmptyRegex.test(badge)}
+          helperText={badge && !nonEmptyRegex.test(badge) ? "Matricula não pode estar vazia." : ""}
           onChange={(e) => setBadge(e.target.value)}
         />
         <TextField
@@ -163,15 +176,11 @@ const SignUpPage = () => {
           fullWidth
           margin="normal"
           value={confirmPassword}
-          error={password && !passwordRegex.test(password)}
-          helperText={
-            password && !passwordRegex.test(password)
-              ? "A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número."
-              : ""
-          }
+          error={confirmPassword && password !== confirmPassword}
+          helperText={confirmPassword && password !== confirmPassword ? "As senhas não coincidem." : ""}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-        <FormControl fullWidth variant="outlined" margin="normal">
+        <FormControl fullWidth variant="outlined" margin="normal" error={!nonEmptyRegex.test(rolesName)}>
           <InputLabel id="role-select-label">Função</InputLabel>
           <Select
             labelId="role-select-label"

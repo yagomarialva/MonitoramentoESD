@@ -154,8 +154,8 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button
               onClick={handleClose}
-              variant="outlined"
-              color="success"
+              variant="contained"
+              color="error"
               sx={{ mr: 2 }}
             >
               {t("ESD_MONITOR.DIALOG.CLOSE", {

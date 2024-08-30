@@ -106,6 +106,14 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
             helperText={errorBadge || "Este campo é obrigatório."}
           />
           <Box className="modal-buttons">
+          <Button
+              variant="contained"
+              color="error"
+              onClick={handleClose}
+              className="modal-submit-button"
+            >
+               {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
+            </Button>
             <Button
               type="submit"
               variant="contained"

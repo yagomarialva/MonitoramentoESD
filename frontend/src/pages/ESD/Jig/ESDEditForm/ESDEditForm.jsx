@@ -3,10 +3,6 @@ import {
   Typography,
   Box,
   Paper,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Modal,
   TextField,
   Button,
@@ -30,14 +26,11 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     i18n: { changeLanguage, language },
   } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
-
-  const handleChangeLanguage = () => {
-    const newLanguage = currentLanguage === "en" ? "pt" : "en";
-    setCurrentLanguage(newLanguage);
-    changeLanguage(newLanguage);
-  };
-
   const [station, setStation] = useState({
+    name: "",
+    description: "",
+  });
+  const [errors, setErrors] = useState({
     name: "",
     description: "",
   });
@@ -49,15 +42,26 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
   }, [initialData]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setStation((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
+    }));
+
+    // Regex para verificar se o campo é vazio ou contém apenas espaços
+    const isEmptyOrWhitespace = /^\s*$/.test(value);
+    setErrors((prev) => ({
+      ...prev,
+      [name]: isEmptyOrWhitespace ? "É necessário que o campo seja preenchido com letras e números." : "",
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const hasErrors = Object.values(errors).some((error) => error);
+
+    if (hasErrors) return;
+
     try {
       await onSubmit(station);
       handleClose();
@@ -91,6 +95,8 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             })}
             value={station.name}
             onChange={handleChange}
+            error={Boolean(errors.name)}
+            helperText={errors.name}
           />
           <TextField
             required
@@ -103,12 +109,14 @@ const ESDEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             })}
             value={station.description}
             onChange={handleChange}
+            error={Boolean(errors.description)}
+            helperText={errors.description}
           />
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button
               onClick={handleClose}
-              variant="outlined"
-              color="success"
+              variant="contained"
+              color="error"
               sx={{ mr: 2 }}
             >
               {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
