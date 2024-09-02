@@ -4,6 +4,7 @@ import {
   getAllOperators,
   createOperators,
   deleteOperators,
+  updateOperators,
 } from "../../../../api/operatorsAPI";
 import {
   IconButton,
@@ -125,17 +126,16 @@ const OperatorTable = () => {
       );
     } catch (error) {
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
-          appName: "App for Translations",
-        }),
+       error.response.data,
         "error"
       );
     }
   };
 
   const handleEditCellChange = async (params) => {
+    console.log('params', params)
     try {
-      const response = await createOperators(params);
+      const response = await updateOperators(params);
       const result = await getAllOperators();
       handleStateChange({ allOperators: result.value || result });
       showSnackbar(
@@ -153,7 +153,6 @@ const OperatorTable = () => {
     const fetchDataAllOperators = async () => {
       try {
         const result = await getAllOperators();
-        console.log('Operadores recebidos:', result);
         handleStateChange({ allOperators: result.value || result }); // Ajuste conforme o retorno correto
       } catch (error) {
         if (error.message === "Request failed with status code 401") {

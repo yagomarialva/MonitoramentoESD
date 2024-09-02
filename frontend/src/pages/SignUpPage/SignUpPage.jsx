@@ -192,7 +192,7 @@ const SignUpPage = () => {
               <em>Selecione uma Função</em>
             </MenuItem>
             <MenuItem value="administrator">Administrador</MenuItem>
-            <MenuItem value="operator">Operador</MenuItem>
+            <MenuItem value="operator">Colaborador</MenuItem>
             <MenuItem value="developer">Desenvolvedor</MenuItem>
           </Select>
         </FormControl>
