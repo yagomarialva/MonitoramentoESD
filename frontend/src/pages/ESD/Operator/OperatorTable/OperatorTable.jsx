@@ -19,6 +19,7 @@ import {
   Container,
   TablePagination,
   TextField,
+  CircularProgress,
   Tooltip,
 } from "@mui/material";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
@@ -57,6 +58,7 @@ const OperatorTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchName, setSearchName] = useState("");
   const [searchBadge, setSearchBadge] = useState("");
+  const [loading, setLoading] = useState(true); // Estado de carregamento
 
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -150,10 +152,16 @@ const OperatorTable = () => {
   };
 
   useEffect(() => {
+    
     const fetchDataAllOperators = async () => {
       try {
         const result = await getAllOperators();
         handleStateChange({ allOperators: result.value || result }); // Ajuste conforme o retorno correto
+        const timer = setTimeout(() => {
+          setLoading(false);
+        }, 1000); // 1 segundo de atraso
+    
+        return () => clearTimeout(timer);
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -262,6 +270,18 @@ const OperatorTable = () => {
           </Col>
         </Row>
         <Box>
+        {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "500px",
+          }}
+        >
+          <CircularProgress /> {/* Indicador de progresso */}
+        </Box>
+      ) : (
           <List>
             {displayOperators.map((operator) => (
               <ListItem
@@ -311,6 +331,7 @@ const OperatorTable = () => {
               </ListItem>
             ))}
           </List>
+      )}
           <TablePagination
             component="div"
             count={filterOperators().length}

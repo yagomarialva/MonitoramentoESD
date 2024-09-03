@@ -92,14 +92,14 @@ const StationEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             onChange={handleChange}
           />
           <FormControl fullWidth margin="normal" required>
-            <InputLabel id="sizeX">Status</InputLabel>
+            <InputLabel id="sizeX">Tamanho X</InputLabel>
             <Select
               labelId="sizeX"
               id="sizeX"
               name="sizeX"
               value={monitor.sizeX}
               onChange={handleChange}
-              label="sizeX"
+              label="Tamanho X"
             >
               <MenuItem value={1}>1</MenuItem>
               <MenuItem value={2}>2</MenuItem>
@@ -110,14 +110,14 @@ const StationEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal" required>
-            <InputLabel id="sizeY">Status</InputLabel>
+            <InputLabel id="sizeY">Tamanho Y</InputLabel>
             <Select
               labelId="sizeY"
               id="sizeY"
               name="sizeY"
               value={monitor.sizeY}
               onChange={handleChange}
-              label="sizeY"
+              label="Tamanho Y"
             >
               <MenuItem value={1}>1</MenuItem>
               <MenuItem value={2}>2</MenuItem>

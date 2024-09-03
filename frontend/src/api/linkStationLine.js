@@ -1,9 +1,10 @@
 import TokenApi from "./TokenApi";
 
+const url = "api/LinkStationAndLine";
 // Obtém todos os monitores
 export const getAllLinks = async () => {
   try {
-    const { data } = await TokenApi.get("/todosLinks");
+    const { data } = await TokenApi.get(`${url}/todosLinks`);
     return data;
   } catch (error) {
     console.error("Error fetching all monitors:", error);
@@ -15,7 +16,6 @@ export const getAllLinks = async () => {
 export const getLink = async (id) => {
   try {
     const { data } = await TokenApi.get(`/BuscarLink/${id}`);
-    console.log('data getLink',data)
     return data;
   } catch (error) {
     console.error(`Error fetching monitor with ID ${id}:`, error);
@@ -25,22 +25,20 @@ export const getLink = async (id) => {
 
 // Cria um novo monitor
 export const createLink = async (link) => {
-  console.log('link', link); // Verifica se o objeto link está correto
   try {
-      const { data } = await TokenApi.post("/adicionarLinks", link);
-      return data;
+    const { data } = await TokenApi.post(`${url}/adicionarLinks`, link);
+    return data;
   } catch (error) {
-      console.error("Error creating link:", error);
-      throw error;
+    console.error("Error creating link:", error);
+    throw error;
   }
 };
 
-
 // Atualiza um monitor existente por ID
 export const updateLink = async (link) => {
-  console.log('updated link', link)
+  console.log("updated link", link);
   try {
-    const { data } = await TokenApi.post("/adicionarLinks", link);
+    const { data } = await TokenApi.post(`${url}/adicionarLinks`, link);
     return data;
   } catch (error) {
     console.error(`Error updating monitor with ID:`, error);
@@ -51,7 +49,7 @@ export const updateLink = async (link) => {
 // Deleta um monitor por ID
 export const deleteLink = async (id) => {
   try {
-    await TokenApi.delete(`/deleteLink?id=${id}`);
+    await TokenApi.delete(`${url}/deleteLink?id=${id}`);
   } catch (error) {
     console.error(`Error deleting monitor with ID ${id}:`, error);
     throw error;
