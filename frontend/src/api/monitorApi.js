@@ -1,9 +1,9 @@
 import TokenApi from "./TokenApi";
-
+const url = 'api/MonitorEsd'
 // Obtém todos os monitores
 export const getAllMonitors = async () => {
   try {
-    const { data } = await TokenApi.get("/todosMonitores");
+    const { data } = await TokenApi.get(`${url}/todosMonitores`);
     return data;
   } catch (error) {
     console.error("Error fetching all monitors:", error);
@@ -26,7 +26,7 @@ export const getMonitor = async (id) => {
 // Cria um novo monitor
 export const createMonitor = async (monitor) => {
   try {
-    const { data } = await TokenApi.post("/adicionarMonitor", monitor);
+    const { data } = await TokenApi.post(`${url}/adicionarMonitor`, monitor);
     return data;
   } catch (error) {
     console.error("Error creating monitor:", error);

@@ -119,8 +119,9 @@ const ESDTable = () => {
   };
 
   const handleEditCellChange = async (params) => {
+    console.log('params', params)
     try {
-      await createJigs(params);
+      await updateJigs(params);
       const result = await getAllJigs();
       handleStateChange({ allJigs: result, loading: false });
       showSnackbar(

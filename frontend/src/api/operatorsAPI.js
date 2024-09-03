@@ -24,7 +24,6 @@ export const getOperators = async (id) => {
 
 // Create a new operator
 export const createOperators = async (operator) => {
-    console.log('operator', operator);
 
     const form = new FormData();
     form.append("name", operator.name);
@@ -35,7 +34,6 @@ export const createOperators = async (operator) => {
 
     try {
         const response = await TokenApi.post(`${url}/adicionar`, form);
-        console.log('response', response);
         return response.data;
     } catch (error) {
         console.error("Failed to create operator", error);
@@ -56,7 +54,6 @@ export const updateOperators = async (operator) => {
 
     try {
         const response = await TokenApi.post(`${url}/adicionar`, form);
-        console.log('response', response);
         return response.data;
     } catch (error) {
         console.error("Failed to create operator", error);

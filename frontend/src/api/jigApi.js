@@ -2,6 +2,7 @@ import axios from 'axios';
 import TokenApi from "./TokenApi";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL_FCT;
+const url = 'api/Jig'
 
 // Função auxiliar para manipulação de respostas
 const handleResponse = async (request) => {
@@ -15,7 +16,7 @@ const handleResponse = async (request) => {
 };
 
 export const getAllJigs = async () => {
-    return handleResponse(() => TokenApi.get('/todosJigs'));
+    return handleResponse(() => TokenApi.get(`${url}/todosJigs`));
 };
 
 export const getStation = async (id) => {
@@ -23,13 +24,13 @@ export const getStation = async (id) => {
 };
 
 export const createJigs = async (station) => {
-    return handleResponse(() => TokenApi.post('/gerenciarJigs', station));
+    return handleResponse(() => TokenApi.post(`${url}/gerenciarJigs`, station));
 };
 
 export const updateJigs = async (station) => {
-    return handleResponse(() => TokenApi.put('/gerenciarJigs', station));
+    return handleResponse(() => TokenApi.post(`${url}/gerenciarJigs`, station));
 };
 
 export const deleteJigs = async (id) => {
-    return handleResponse(() => TokenApi.delete(`/deleteJigs/${id}`));
+    return handleResponse(() => TokenApi.delete(`${url}/deleteJigs/${id}`));
 };

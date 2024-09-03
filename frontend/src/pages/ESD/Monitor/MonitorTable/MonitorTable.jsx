@@ -92,7 +92,10 @@ const MonitorTable = () => {
       );
       return result;
     } catch (error) {
-      showSnackbar(error.response.data, "error");
+      showSnackbar(
+        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        "error"
+      );
     }
   };
 
@@ -259,7 +262,7 @@ const MonitorTable = () => {
           <Button
             onClick={() => handleEditOpen(params.row)}
             startIcon={
-              <Tooltip title={t("ESD_MONITOR.EDIT_MONITOR")}>
+              <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
                 <IconButton edge="end" aria-label="edit">
                   <EditIcon />
                 </IconButton>
@@ -269,7 +272,7 @@ const MonitorTable = () => {
           <Button
             onClick={() => handleOpen(params.row)}
             startIcon={
-              <Tooltip title={t("ESD_MONITOR.INFO_MONITOR")}>
+              <Tooltip title={t("ESD_OPERATOR.INFO_OPERATOR")}>
                 <IconButton edge="end" aria-label="info">
                   <Info />
                 </IconButton>
@@ -280,7 +283,7 @@ const MonitorTable = () => {
           <Button
             onClick={() => handleDeleteOpen(params.row)}
             startIcon={
-              <Tooltip title={t("ESD_MONITOR.DELETE_MONITOR")}>
+              <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
                 <IconButton edge="end" aria-label="delete">
                   <Delete />
                 </IconButton>
@@ -368,10 +371,13 @@ const MonitorTable = () => {
             initialData={state.editData}
           />
           <MonitorConfirmModal
-            open={state.openEditModal}
-            handleClose={handleEditClose}
-            onSubmit={handleEditCellChange}
-            initialData={state.editData}
+            open={state.deleteConfirmOpen}
+            handleClose={handleDeleteClose}
+            handleConfirm={handleConfirmDelete}
+            title={t("ESD_MONITOR.CONFIRM_DIALOG.DELETE_MONITOR")}
+            description={`${t("ESD_MONITOR.CONFIRM_DIALOG.CONFIRM-TEXT")} ${
+              state.monitor.serialNumber
+            }?`}
           />
           <Snackbar
             open={state.snackbarOpen}

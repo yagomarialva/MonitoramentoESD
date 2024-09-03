@@ -41,7 +41,8 @@ const OperatorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const nameRegex = /^(?![\s-]+$)[\w-]{1,50}$/;
+    const nameRegex = /^(?!\s)[\w\s-]{1,50}$/;
+
 
     if (!nameRegex.test(operator.name)) {
       setErrorName(
