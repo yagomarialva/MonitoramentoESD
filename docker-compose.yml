@@ -1,23 +1,39 @@
 version: '3.8'
 
 services:
+  oracle:
+    image: nguoianphu/docker-oracle-xe-11g
+    container_name: oracle-xe-11g-docker
+    ports:
+      - "49160:22"
+      - "49161:1521"
+    volumes:
+      - oracle-data:/u01/app/oracle
+
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "7080:7080"
-  
+      - "7080:8080"
+    networks:
+      - mynetwork
+
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - backend
+    networks:
+      - mynetwork
 
-  # electron:
-  #   build: ./electron
-  #   depends_on:
-  #     - frontend
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #   environment:
-  #     - DISPLAY=${DISPLAY}
+
+networks:
+  mynetwork:
+    driver: local
+volumes:
+  oracle-data:
+    driver: local

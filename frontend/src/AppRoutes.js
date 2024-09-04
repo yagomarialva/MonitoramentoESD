@@ -33,14 +33,15 @@ const AppRoutes = () => {
           }
         />
         <Route path="/login" element={<LoginPage />} />
-        <Route
+        <Route path="/register" element={<SignUpPage />} />
+        {/* <Route
           path="/register"
           element={
             <ProtectedRoute>
               <SignUpPage />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path="/dashboard"
           element={
