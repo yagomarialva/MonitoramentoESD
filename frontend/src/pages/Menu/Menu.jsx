@@ -152,8 +152,12 @@ const MenuList = ({ menuItems }) => {
             </ListItemButton>
             {item.subItems && (
               <IconButton
+              className={`list-items-buttons ${
+                isSelected(item.path) ? "selected" : ""
+              }`}
                 onClick={() => item.subItems && handleItemClick(item.text)}
                 edge="end"
+                sx={{ borderRadius: 0 }} // Define a área clicável como quadrada
               >
                 {expandedItem === item.text ? <ExpandLess /> : <ExpandMore />}
               </IconButton>
