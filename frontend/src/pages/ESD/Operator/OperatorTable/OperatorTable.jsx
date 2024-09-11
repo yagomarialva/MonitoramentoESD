@@ -93,14 +93,28 @@ const OperatorTable = () => {
 
   const handleCreateOperator = async (operator) => {
     try {
+      // Verificar se o operador já existe
+      const alreadyExists = checkIfExists(state.allOperators, operator);
+
+      if (alreadyExists) {
+        // Exibir mensagem de erro
+        showSnackbar(
+         'Operador já existe no sistema.',
+          "error"
+        );
+        return; // Retorna para não continuar o processo de criação
+      }
+
       const response = await createOperators(operator);
       const result = await getAllOperators();
-      handleStateChange({ allOperators: result.value || result }); // Ajuste conforme necessário
+      // Se não existir, continua o processo de criação
+      handleStateChange({ allOperators: result.value || result });
       showSnackbar(
         t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
+
       return response.data;
     } catch (error) {
       showSnackbar(
@@ -111,7 +125,12 @@ const OperatorTable = () => {
       );
     }
   };
-  
+
+  // Função para verificar se o operador já existe
+  function checkIfExists(result, response) {
+    // Verifica se algum operador na lista possui o mesmo badge
+    return result.some((operator) => operator.badge === response.badge);
+  }
 
   const handleDelete = async (id) => {
     try {
@@ -127,15 +146,12 @@ const OperatorTable = () => {
         })
       );
     } catch (error) {
-      showSnackbar(
-       error.response.data,
-        "error"
-      );
+      showSnackbar(error.response.data, "error");
     }
   };
 
   const handleEditCellChange = async (params) => {
-    console.log('params', params)
+    console.log("params", params);
     try {
       const response = await updateOperators(params);
       const result = await getAllOperators();
@@ -152,7 +168,6 @@ const OperatorTable = () => {
   };
 
   useEffect(() => {
-    
     const fetchDataAllOperators = async () => {
       try {
         const result = await getAllOperators();
@@ -160,7 +175,7 @@ const OperatorTable = () => {
         const timer = setTimeout(() => {
           setLoading(false);
         }, 1000); // 1 segundo de atraso
-    
+
         return () => clearTimeout(timer);
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
@@ -170,7 +185,7 @@ const OperatorTable = () => {
         showSnackbar(t(error.message));
       }
     };
-    
+
     fetchDataAllOperators();
   }, [navigate, showSnackbar, t]); // Dependencies are now correct
 
@@ -202,7 +217,6 @@ const OperatorTable = () => {
     const operators = state.allOperators ?? []; // Use nullish coalescing
 
     return operators.filter((operator) => {
-
       return (
         operator.name?.toLowerCase().includes(searchName.toLowerCase()) &&
         operator.badge?.toLowerCase().includes(searchBadge.toLowerCase())
@@ -270,68 +284,68 @@ const OperatorTable = () => {
           </Col>
         </Row>
         <Box>
-        {loading ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "500px",
-          }}
-        >
-          <CircularProgress /> {/* Indicador de progresso */}
-        </Box>
-      ) : (
-          <List>
-            {displayOperators.map((operator) => (
-              <ListItem
-                key={operator.id}
-                divider
-                sx={{ display: "flex", alignItems: "center" }}
-              >
-                <Tooltip
-                  title={`Nome: ${operator.name}, Matricula: ${operator.badge}`}
-                  arrow
+          {loading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "500px",
+              }}
+            >
+              <CircularProgress /> {/* Indicador de progresso */}
+            </Box>
+          ) : (
+            <List>
+              {displayOperators.map((operator) => (
+                <ListItem
+                  key={operator.id}
+                  divider
+                  sx={{ display: "flex", alignItems: "center" }}
                 >
-                  <ListItemText
-                    primary={operator.name}
-                    secondary={operator.badge}
-                    className="textOverflow" // Apply the new CSS class
-                  />
-                </Tooltip>
-                <ListItemSecondaryAction>
-                  <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
-                    <IconButton
-                      edge="end"
-                      aria-label="edit"
-                      onClick={() => handleEditOpen(operator)}
-                    >
-                      <EditIcon />
-                    </IconButton>
+                  <Tooltip
+                    title={`Nome: ${operator.name}, Matricula: ${operator.badge}`}
+                    arrow
+                  >
+                    <ListItemText
+                      primary={operator.name}
+                      secondary={operator.badge}
+                      className="textOverflow" // Apply the new CSS class
+                    />
                   </Tooltip>
-                  <Tooltip title={t("ESD_OPERATOR.INFO_OPERATOR")}>
-                    <IconButton
-                      edge="end"
-                      aria-label="info"
-                      onClick={() => handleOpen(operator)}
-                    >
-                      <Info />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteOpen(operator)}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </Tooltip>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-      )}
+                  <ListItemSecondaryAction>
+                    <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => handleEditOpen(operator)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={t("ESD_OPERATOR.INFO_OPERATOR")}>
+                      <IconButton
+                        edge="end"
+                        aria-label="info"
+                        onClick={() => handleOpen(operator)}
+                      >
+                        <Info />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDeleteOpen(operator)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </Tooltip>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          )}
           <TablePagination
             component="div"
             count={filterOperators().length}
