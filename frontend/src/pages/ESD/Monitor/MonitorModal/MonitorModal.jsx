@@ -23,7 +23,6 @@ const modalStyle = {
 
 const MonitorModal = ({ open, handleClose, monitor }) => {
   const { t } = useTranslation();
-  console.log('test', monitor)
   return (
     <Modal
       open={open}

@@ -84,10 +84,11 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
           <TextField
             required
             fullWidth
+            disabled
             margin="normal"
             id="outlined-title"
             name="serialNumber"
-            label={t("ESD_MONITOR.TABLE.NAME", {
+            label={t("ESD_MONITOR.TABLE.SERIAL_NUMBER", {
               appName: "App for Translations",
             })}
             value={monitor.serialNumber}
@@ -99,7 +100,7 @@ const MonitorEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             margin="normal"
             id="outlined-description"
             name="description"
-            label={t("ESD_MONITOR.TABLE.USER_ID", {
+            label={t("ESD_MONITOR.TABLE.DESCRIPTION", {
               appName: "App for Translations",
             })}
             value={monitor.description}

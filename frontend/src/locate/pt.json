@@ -80,7 +80,8 @@
       "DELETE_MONITOR": "Deletar Monitor",
       "STATUS_MONITOR": "Status",
       "TABLE": {
-        "USER_ID": "Número de Série",
+        "SERIAL_NUMBER": "Número de Série",
+        "DESCRIPTION":"Descrição",
         "NAME": "Monitor",
         "ACTIONS": "Ações",
         "STATUS": "Status",

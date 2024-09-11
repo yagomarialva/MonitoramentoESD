@@ -94,7 +94,7 @@ const ESDTable = () => {
       );
     } catch (error) {
       showSnackbar(
-        t("ESD_TEST.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        error.response.data,
         "error"
       );
     }
@@ -119,7 +119,6 @@ const ESDTable = () => {
   };
 
   const handleEditCellChange = async (params) => {
-    console.log('params', params)
     try {
       await updateJigs(params);
       const result = await getAllJigs();

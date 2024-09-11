@@ -8,7 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import './OperatorForm.css'; // Importe o arquivo CSS
+import "./OperatorForm.css"; // Importe o arquivo CSS
 
 const OperatorForm = ({ open, handleClose, onSubmit }) => {
   const { t } = useTranslation();
@@ -39,6 +39,7 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const nameRegex = /^(?![\s-]+$)[\w\s-]{1,50}$/;
+    const badgeRegex = /^[\w\s-]{1,50}$/;
 
     let valid = true;
 
@@ -56,6 +57,11 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
 
     if (!station.badge) {
       setErrorBadge("Este campo é obrigatório.");
+      valid = false;
+    } else if (!badgeRegex.test(station.badge)) {
+      setErrorBadge(
+        "Matricula inválida, deve ter no máximo 50 caracteres."
+      );
       valid = false;
     } else {
       setErrorBadge("");
@@ -89,7 +95,9 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
             margin="normal"
             id="name"
             name="name"
-            label={t("ESD_OPERATOR.TABLE.NAME", { appName: "App for Translations" })}
+            label={t("ESD_OPERATOR.TABLE.NAME", {
+              appName: "App for Translations",
+            })}
             onChange={handleChange}
             error={!!errorName}
             helperText={errorName || "Este campo é obrigatório."}
@@ -100,19 +108,21 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
             margin="normal"
             id="badge"
             name="badge"
-            label={t("ESD_OPERATOR.TABLE.USER_ID", { appName: "App for Translations" })}
+            label={t("ESD_OPERATOR.TABLE.USER_ID", {
+              appName: "App for Translations",
+            })}
             onChange={handleChange}
             error={!!errorBadge}
             helperText={errorBadge || "Este campo é obrigatório."}
           />
           <Box className="modal-buttons">
-          <Button
+            <Button
               variant="contained"
               color="error"
               onClick={handleClose}
               className="modal-submit-button"
             >
-               {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
+              {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
             </Button>
             <Button
               type="submit"

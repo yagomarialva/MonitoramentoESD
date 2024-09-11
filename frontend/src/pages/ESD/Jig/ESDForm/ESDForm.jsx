@@ -60,7 +60,7 @@ const ESDForm = ({ open, handleClose, onSubmit }) => {
       await onSubmit(station);
       handleClose();
     } catch (error) {
-      console.error("Error creating bracelet:", error);
+      console.error("Error creating:", error);
     }
   };
 

@@ -93,7 +93,7 @@ const MonitorTable = () => {
       return result;
     } catch (error) {
       showSnackbar(
-        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        error.response.data,
         "error"
       );
     }
@@ -199,7 +199,7 @@ const MonitorTable = () => {
     },
     {
       field: "serialNumber",
-      headerName: t("ESD_MONITOR.TABLE.USER_ID"),
+      headerName: t("ESD_MONITOR.TABLE.SERIAL_NUMBER"),
       width: 150,
       renderCell: (params) => (
         <Tooltip title={params.value || ""}>
@@ -211,7 +211,7 @@ const MonitorTable = () => {
     },
     {
       field: "description",
-      headerName: t("ESD_MONITOR.TABLE.NAME"),
+      headerName: t("ESD_MONITOR.TABLE.DESCRIPTION"),
       width: 250,
       renderCell: (params) => (
         <Tooltip title={params.value || ""}>
@@ -302,7 +302,7 @@ const MonitorTable = () => {
           <Box className="filters-container">
             <TextField
               name="filterSerialNumber"
-              label={t("ESD_MONITOR.TABLE.USER_ID")}
+              label={t("ESD_MONITOR.TABLE.SERIAL_NUMBER")}
               variant="outlined"
               value={state.filterSerialNumber}
               onChange={handleFilterChange}
