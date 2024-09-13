@@ -10,7 +10,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Collapse from "@mui/material/Collapse";
 import HomeIcon from "@mui/icons-material/Home";
 import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
@@ -23,7 +22,6 @@ import { useAuth } from "../../context/AuthContext";
 import "./Menu.css";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress"; // Importa o indicador de progresso circular
 
@@ -99,37 +97,6 @@ const MenuList = ({ menuItems }) => {
     <List>
       {menuItems.map((item, index) => (
         <React.Fragment key={index}>
-          {/* <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              component={Link}
-              to={item.path}
-              
-              className={`list-items-buttons ${isSelected(item.path) ? 'selected' : ''}`}
-            >
-              <ListItemIcon className="list-items-buttons-icons">{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-              {item.subItems && (
-                <IconButton    onClick={() => item.subItems && handleItemClick(item.text)} edge="end">
-                  {expandedItem === item.text ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              )}
-          </ListItem>
-          {expandedItem === item.text && item.subItems && (
-            <List component="div" disablePadding className="drawer-sublist">
-              {item.subItems.map((subItem, subIndex) => (
-                <ListItem key={subIndex} disablePadding>
-                  <ListItemButton
-                    component={Link}
-                    to={subItem.path}
-                    className={isSelected(subItem.path) ? 'selected' : ''}
-                  >
-                    <ListItemText primary={subItem.text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          )} */}
           <ListItem
             disablePadding
             sx={{

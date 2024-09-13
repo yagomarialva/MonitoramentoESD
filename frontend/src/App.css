@@ -7,6 +7,21 @@
   pointer-events: none;
 }
 
+@font-face {
+  font-family: 'Selawik';
+  src: url('./fonts/selawk.ttf') format('truetype');
+  font-weight: 400; /* Ajuste conforme necessário */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Selawik-bold';
+  src: url('./fonts/selawkb.ttf') format('truetype');
+  font-weight: 600; /* Ajuste conforme necessário */
+  font-style: normal;
+}
+
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

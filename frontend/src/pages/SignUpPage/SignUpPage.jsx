@@ -72,7 +72,7 @@ const SignUpPage = () => {
 
     setLoading(true);
     try {
-      await TokenApi.post("/criacao", {
+      await TokenApi.post("/api/Authentication/criacao", {
         username,
         password,
         rolesName,

@@ -1,0 +1,41 @@
+.custom-modal .ant-modal-content {
+    width: 330px;
+    height: 263px;
+    padding: 24px 38px;
+    border-radius: 2px 0px 0px 0px;
+    opacity: 0.9;
+  }
+  
+  .axis-icon {
+    margin-right: 8px;
+    width: 35.5px !important;
+    color: #389e0d;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .modal-form {
+    margin-bottom: 16px;
+  }
+  
+  .modal-form .ant-input-suffix {
+    color: rgba(0, 0, 0, 0.45); /* Cor do ícone do cadeado */
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: center; /* Centraliza os botões */
+    gap: 24px; /* Espaçamento entre os botões */
+  }
+  
+  .modal-edit-button,
+  .modal-close-button {
+    width: 105px; /* Ajuste conforme necessário */
+    height: 22px; /* Altura conforme especificado */
+  }
+  

@@ -1,35 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import { getAllLines, createLine, deleteLine } from "../../../../api/linerApi";
 import {
-  IconButton,
-  Box,
-  Snackbar,
-  Alert,
-  Button,
   List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  TextField,
-  Container,
-  Tooltip,
+  Button,
   Typography,
-  TablePagination,
-} from "@mui/material";
-import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
+  Input,
+  Modal,
+  Tooltip,
+  Pagination,
+  Alert,
+  Space,
+} from "antd";
+import {
+  DeleteOutlined,
+  InfoCircleOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import LineModal from "../LineModal/LineModal";
 import LineForm from "../LineForm/LineForm";
 import LineConfirmModal from "../LineConfirmModal/LineConfirmModal";
 import LineEditForm from "../LineEditForm/LineEditForm";
 import { useNavigate } from "react-router-dom";
-// import "./LineTable.css";
-import SearchIcon from "@mui/icons-material/Search";
-import InputAdornment from "@mui/material/InputAdornment";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
+import LineAxisIcon from "@mui/icons-material/LineAxis";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import "./Line.css";
 const LineTable = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -47,8 +44,7 @@ const LineTable = () => {
     snackbarMessage: "",
     snackbarSeverity: "success",
     filterSerialNumber: "",
-    filterDescription: "",
-    page: 0,
+    page: 1,
     rowsPerPage: 10,
   });
 
@@ -85,11 +81,8 @@ const LineTable = () => {
       const result = await getAllLines();
       handleStateChange({ allLines: result });
       showSnackbar(
-        t("LINE.TOAST.CREATE_SUCCESS", {
-          appName: "App for Translations",
-        })
+        t("LINE.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
       );
-      return result;
     } catch (error) {
       showSnackbar(
         t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
@@ -105,29 +98,8 @@ const LineTable = () => {
         allLines: state.allLines.filter((line) => line.id !== id),
       });
       showSnackbar(
-        t("LINE.TOAST.DELETE_SUCCESS", {
-          appName: "App for Translations",
-        })
+        t("LINE.TOAST.DELETE_SUCCESS", { appName: "App for Translations" })
       );
-    } catch (error) {
-      showSnackbar(
-        t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
-        "error"
-      );
-    }
-  };
-
-  const handleEditCellChange = async (params) => {
-    try {
-      await createLine(params);
-      const result = await getAllLines();
-      handleStateChange({ allLines: result });
-      showSnackbar(
-        t("LINE.TOAST.UPDATE_SUCCESS", {
-          appName: "App for Translations",
-        })
-      );
-      return result;
     } catch (error) {
       showSnackbar(
         t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
@@ -140,8 +112,7 @@ const LineTable = () => {
     const fetchDataAllUsers = async () => {
       try {
         const result = await getAllLines();
-        const resultLine = await getAllLines();
-        handleStateChange({ allLines: resultLine });
+        handleStateChange({ allLines: result });
       } catch (error) {
         if (error.message === "Request failed with status code 401") {
           localStorage.removeItem("token");
@@ -161,199 +132,144 @@ const LineTable = () => {
   };
 
   const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    handleStateChange({ [name]: value });
+    handleStateChange({ filterSerialNumber: e.target.value });
   };
 
-  const handleChangePage = (event, newPage) => {
-    handleStateChange({ page: newPage });
+  const handlePageChange = (page) => {
+    handleStateChange({ page });
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    handleStateChange({
-      rowsPerPage: parseInt(event.target.value, 10),
-      page: 0,
-    });
-  };
-
-  const filteredLines = (
-    Array.isArray(state.allLines) ? state.allLines : []
-  ).filter((line) => {
-    const name = line.name
-      ? line.name.toLowerCase()
-      : "";
-   
+  const filteredLines = state.allLines.filter((line) => {
+    const name = line.name ? line.name.toLowerCase() : "";
     const filterSerialNumber = state.filterSerialNumber.toLowerCase();
-    return (
-      name.includes(filterSerialNumber) 
-    );
+    return name.includes(filterSerialNumber);
   });
 
   const paginatedLines = filteredLines.slice(
-    Math.max(0, state.page * state.rowsPerPage),
-    Math.max(0, state.page * state.rowsPerPage + state.rowsPerPage)
+    (state.page - 1) * state.rowsPerPage,
+    state.page * state.rowsPerPage
   );
 
   return (
     <>
-      <Typography paragraph>
-        <Container>
-          <Box>
-            <Row>
-              <Col sm={10}>
-                <TextField
-                  name="filterSerialNumber"
-                  label={t("LINE.TABLE.USER_ID", {
-                    appName: "App for Translations",
-                  })}
-                  variant="outlined"
-                  value={state.filterSerialNumber}
-                  onChange={handleFilterChange}
-                  sx={{ mb: 2, mr: 2 }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Col>
-              <Col sm={2}>
+      <div className="line-header-container">
+        <div className="line-header-title-container">
+          <LineAxisIcon  className="axis-icon" />
+          <Typography.Title className="line-header-title" level={4}>
+            {t("LINE.TABLE_HEADER")}
+          </Typography.Title>
+        </div>
+        <Button
+          type="default"
+          onClick={handleOpenModal}
+          className="line-header-button"
+        >
+          + {t("LINE.ADD_LINE", { appName: "App for Translations" })}
+        </Button>
+      </div>
+      <Input
+        className="search-button"
+        placeholder={t("LINE.SEARCH_INPUT", {
+          appName: "App for Translations",
+        })}
+        prefix={<SearchOutlined />} // Use prefix para posicionar o ícone à esquerda
+        value={state.filterSerialNumber}
+        onChange={handleFilterChange}
+      />
+      <List
+        dataSource={paginatedLines}
+        renderItem={(line, index) => (
+          <List.Item
+            className={`list-item ${index % 2 === 0 ? "even" : "odd"}`} // Alterna as classes para linhas pares e ímpares
+            actions={[
+              <Tooltip title={t("LINE.INFO_LINE")}>
                 <Button
-                  id="add-button"
-                  variant="contained"
-                  color="success"
-                  onClick={handleOpenModal}
-                >
-                  {t("LINE.ADD_LINE", {
-                    appName: "App for Translations",
-                  })}
-                </Button>
-              </Col>
-            </Row>
-            {paginatedLines.length === 0 ? (
-              <Typography variant="h6" align="center" color="textSecondary">
-                Sua lista está vazia
-              </Typography>
-            ) : (
-              <List>
-                {paginatedLines.map((line) => (
-                  <ListItem
-                    key={line.id}
-                    divider
-                    sx={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Tooltip
-                      title={`Id: ${line.id}, Linha: ${line.name}`}
-                      arrow
-                    >
-                      <ListItemText
-                        primary={`Id: ${line.id}`}
-                        secondary={
-                          <>
-                            <Typography variant="body2" color="textSecondary">
-                            {`Linha: ${line.name}`}
-                            </Typography>
-                          </>
-                        }
-                        className="textOverflow"
-                      />
-                    </Tooltip>
-                    <ListItemSecondaryAction>
-                      <Tooltip title={t("LINE.EDIT_LINE")}>
-                        <IconButton
-                          edge="end"
-                          aria-label="edit"
-                          onClick={() => handleEditOpen(line)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t("LINE.INFO_LINE")}>
-                        <IconButton
-                          edge="end"
-                          aria-label="info"
-                          onClick={() => handleOpen(line)}
-                        >
-                          <Info />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t("LINE.DELETE_LINE")}>
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => handleDeleteOpen(line)}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </Tooltip>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-            )}
-            <TablePagination
-              component="div"
-              count={filteredLines.length}
-              page={state.page}
-              onPageChange={handleChangePage}
-              rowsPerPage={state.rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-            <LineModal
-              open={state.open}
-              handleClose={handleClose}
-              lineName={state.line.name}
-              line={state.line}
-            />
-            <LineForm
-              open={state.openModal}
-              handleClose={handleCloseModal}
-              onSubmit={handleCreateLine}
-            />
-            <LineEditForm
-              open={state.openEditModal}
-              handleClose={handleEditClose}
-              onSubmit={handleEditCellChange}
-              initialData={state.editData}
-            />
-            <LineConfirmModal
-              open={state.deleteConfirmOpen}
-              handleClose={handleDeleteClose}
-              handleConfirm={handleConfirmDelete}
-              title={t("LINE.CONFIRM_DIALOG.DELETE_LINE", {
-                appName: "App for Translations",
-              })}
-              description={t("LINE.CONFIRM_DIALOG.CONFIRM-TEXT", {
-                appName: "App for Translations",
-              })}
-            />
-            <Snackbar
-              open={state.snackbarOpen}
-              autoHideDuration={6000}
-              onClose={() => handleStateChange({ snackbarOpen: false })}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              className={`snackbar-content snackbar-${state.snackbarSeverity}`}
-            >
-              <Alert
-                onClose={() => handleStateChange({ snackbarOpen: false })}
-                severity={state.snackbarSeverity}
-                sx={{
-                  backgroundColor: "inherit",
-                  color: "inherit",
-                  fontWeight: "inherit",
-                  boxShadow: "inherit",
-                  borderRadius: "inherit",
-                  padding: "inherit",
-                }}
-              >
-                {state.snackbarMessage}
-              </Alert>
-            </Snackbar>
-          </Box>
-        </Container>
-      </Typography>
+                  className="no-border-button-informations"
+                  icon={<VisibilityOutlinedIcon />}
+                  onClick={() => handleOpen(line)}
+                />
+              </Tooltip>,
+              <Tooltip title={t("LINE.DELETE_LINE")}>
+                <Button
+                  className="no-border-button-delete"
+                  icon={<DeleteOutlineOutlinedIcon />}
+                  danger
+                  onClick={() => handleDeleteOpen(line)}
+                />
+              </Tooltip>,
+            ]}
+          >
+            <List.Item.Meta title={`${line.name}`} />
+          </List.Item>
+        )}
+        className="custom-list" // Adiciona uma classe CSS ao List
+      />
+
+      <Space
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 16,
+        }}
+      >
+        {/* Legenda */}
+        <span>
+          {`${(state.page - 1) * state.rowsPerPage + 1}-${Math.min(
+            state.page * state.rowsPerPage,
+            filteredLines.length
+          )} de ${filteredLines.length}`}
+        </span>
+
+        {/* Paginação */}
+        <Pagination
+          current={state.page}
+          pageSize={state.rowsPerPage}
+          total={filteredLines.length}
+          onChange={handlePageChange}
+          showSizeChanger={false}
+        />
+      </Space>
+
+      {/* Modals */}
+      <LineModal
+        open={state.open}
+        handleClose={handleClose}
+        lineName={state.line.name}
+        line={state.line}
+      />
+      <LineForm
+        open={state.openModal}
+        handleClose={handleCloseModal}
+        onSubmit={handleCreateLine}
+      />
+      {/* <LineEditForm
+        open={state.openEditModal}
+        handleClose={handleEditClose}
+        onSubmit={handleEditCellChange}
+        initialData={state.editData}
+      /> */}
+      <LineConfirmModal
+        open={state.deleteConfirmOpen}
+        handleClose={handleDeleteClose}
+        handleConfirm={handleConfirmDelete}
+        title={t("LINE.CONFIRM_DIALOG.DELETE_LINE", {
+          appName: "App for Translations",
+        })}
+        description={t("LINE.CONFIRM_DIALOG.CONFIRM-TEXT", {
+          appName: "App for Translations",
+        })}
+      />
+      {state.snackbarOpen && (
+        <Alert
+          message={state.snackbarMessage}
+          type={state.snackbarSeverity}
+          showIcon
+          closable
+          afterClose={() => handleStateChange({ snackbarOpen: false })}
+          style={{ position: "fixed", top: 16, right: 16, zIndex: 1000 }}
+        />
+      )}
     </>
   );
 };
