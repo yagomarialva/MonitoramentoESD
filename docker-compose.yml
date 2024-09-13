@@ -10,12 +10,24 @@ services:
     volumes:
       - oracle-data:/u01/app/oracle
 
+  db-init:
+    build:
+      context: .
+      dockerfile: Dockerfile.db-init
+    container_name: oracle-db-init
+    depends_on:
+      - oracle
+    networks:
+      - mynetwork
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
       - "7080:8080"
+    depends_on:
+      - db-init
     networks:
       - mynetwork
 
@@ -30,10 +42,50 @@ services:
     networks:
       - mynetwork
 
-
 networks:
   mynetwork:
-    driver: local
+    driver: bridge
+
 volumes:
   oracle-data:
     driver: local
+
+# version: '3.8'
+
+# services:
+#   oracle:
+#     image: nguoianphu/docker-oracle-xe-11g
+#     container_name: oracle-xe-11g-docker
+#     ports:
+#       - "49160:22"
+#       - "49161:1521"
+#     volumes:
+#       - oracle-data:/u01/app/oracle
+
+#   backend:
+#     build:
+#       context: ./backend
+#       dockerfile: Dockerfile
+#     ports:
+#       - "7080:8080"
+#     networks:
+#       - mynetwork
+
+#   frontend:
+#     build:
+#       context: ./frontend
+#       dockerfile: Dockerfile
+#     ports:
+#       - "3000:80"
+#     depends_on:
+#       - backend
+#     networks:
+#       - mynetwork
+
+# networks:
+#   mynetwork:
+#     driver: bridge
+
+# volumes:
+#   oracle-data:
+#     driver: local

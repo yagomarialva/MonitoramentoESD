@@ -1,0 +1,13 @@
+FROM oraclelinux:8-slim
+
+# Instalar dependências usando microdnf
+RUN microdnf install -y oracle-release-el8 && \
+    microdnf install -y oracle-instantclient-release-el8 && \
+    microdnf install -y oracle-instantclient-basic oracle-instantclient-sqlplus && \
+    microdnf clean all
+
+# Copiar o script de inicialização
+COPY ./init.sql /docker-entrypoint-initdb.d/init.sql
+
+# Configurar o comando de inicialização com um loop para verificar se o banco está pronto
+CMD ["bash", "-c", "until echo exit | sqlplus system/oracle@//oracle:1521/XE; do echo \"Waiting for Oracle to be ready...\"; sleep 10; done && sqlplus system/oracle@//oracle:1521/XE @/docker-entrypoint-initdb.d/init.sql"]

@@ -1,0 +1,315 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\authenticationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\authenticationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\stationviewcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\stationviewcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\stationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\stationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\rolescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\rolescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\recordstatuscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\recordstatuscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\produceactivitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\produceactivitycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\monitoresdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\monitoresdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\linkstationandlinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\linkstationandlinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\linecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\linecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\jigcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\jigcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\biometriccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\biometriccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\repositories\\interfaces\\idbinitializerrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\interfaces\\idbinitializerrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\models\\authenticationmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:models\\authenticationmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\orascripts\\sqlscripts.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:orascripts\\sqlscripts.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\repositories\\interfaces\\ioracledataaccessrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\interfaces\\ioracledataaccessrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\repositories\\dbinitializerrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\dbinitializerrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\repositories\\authenticationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\authenticationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StationViewController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\StationViewController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StationViewController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\StationViewController.cs",
+              "RelativeToolTip": "Controllers\\StationViewController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAHUAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:33:03.937Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RolesController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\RolesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\RolesController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\RolesController.cs",
+              "RelativeToolTip": "Controllers\\RolesController.cs",
+              "ViewState": "AQIAAD4AAAAAAAAAAAAwwFEAAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:32:40.266Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RecordStatusController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\RecordStatusController.cs",
+              "RelativeDocumentMoniker": "Controllers\\RecordStatusController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\RecordStatusController.cs",
+              "RelativeToolTip": "Controllers\\RecordStatusController.cs",
+              "ViewState": "AQIAAEQAAAAAAAAAAAAIwFIAAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:32:28.994Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ProduceActivityController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\ProduceActivityController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProduceActivityController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\ProduceActivityController.cs",
+              "RelativeToolTip": "Controllers\\ProduceActivityController.cs",
+              "ViewState": "AQIAAHAAAAAAAAAAAAAcwIEAAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:32:11.434Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MonitorEsdController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\MonitorEsdController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MonitorEsdController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\MonitorEsdController.cs",
+              "RelativeToolTip": "Controllers\\MonitorEsdController.cs",
+              "ViewState": "AQIAAEoAAAAAAAAAAAAwwFwAAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:31:49.061Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LinkStationAndLineController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\LinkStationAndLineController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LinkStationAndLineController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\LinkStationAndLineController.cs",
+              "RelativeToolTip": "Controllers\\LinkStationAndLineController.cs",
+              "ViewState": "AQIAAFwAAAAAAAAAAAAIwHEAAAA/AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:28:13.771Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthenticationController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\AuthenticationController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthenticationController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\AuthenticationController.cs",
+              "RelativeToolTip": "Controllers\\AuthenticationController.cs",
+              "ViewState": "AQIAADYAAAAAAAAAAAAswEoAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T13:05:35.626Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "StationController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\StationController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StationController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\StationController.cs",
+              "RelativeToolTip": "Controllers\\StationController.cs",
+              "ViewState": "AQIAAFYAAAAAAAAAAAAIwGsAAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:32:50.507Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LineController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\LineController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LineController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\LineController.cs",
+              "RelativeToolTip": "Controllers\\LineController.cs",
+              "ViewState": "AQIAAFQAAAAAAAAAAAAAABkAAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:27:57.093Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "JigController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\JigController.cs",
+              "RelativeDocumentMoniker": "Controllers\\JigController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\JigController.cs",
+              "RelativeToolTip": "Controllers\\JigController.cs",
+              "ViewState": "AQIAAFYAAAAAAAAAAAAIwB0AAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:27:45.871Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "BiometricController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\BiometricController.cs",
+              "RelativeDocumentMoniker": "Controllers\\BiometricController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\BiometricController.cs",
+              "RelativeToolTip": "Controllers\\BiometricController.cs",
+              "ViewState": "AQIAAD4AAAAAAAAAAAAwwG4AAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T20:27:29.174Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IDbInitializerRepository.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Repositories\\Interfaces\\IDbInitializerRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IDbInitializerRepository.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Repositories\\Interfaces\\IDbInitializerRepository.cs",
+              "RelativeToolTip": "Repositories\\Interfaces\\IDbInitializerRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAQAAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T15:33:03.712Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAIYAAAAAAAAAAAAcwKwAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T15:31:02.491Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "DbInitializerRepository.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Repositories\\DbInitializerRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\DbInitializerRepository.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Repositories\\DbInitializerRepository.cs",
+              "RelativeToolTip": "Repositories\\DbInitializerRepository.cs",
+              "ViewState": "AQIAABUAAAAAAAAAAAAowCQAAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T14:39:49.625Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AuthenticationRepository.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Repositories\\AuthenticationRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\AuthenticationRepository.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Repositories\\AuthenticationRepository.cs",
+              "RelativeToolTip": "Repositories\\AuthenticationRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T15:45:57.74Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "IOracleDataAccessRepository.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Repositories\\Interfaces\\IOracleDataAccessRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IOracleDataAccessRepository.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Repositories\\Interfaces\\IOracleDataAccessRepository.cs",
+              "RelativeToolTip": "Repositories\\Interfaces\\IOracleDataAccessRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T15:15:59.751Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "SQLScripts.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\OraScripts\\SQLScripts.cs",
+              "RelativeDocumentMoniker": "OraScripts\\SQLScripts.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\OraScripts\\SQLScripts.cs",
+              "RelativeToolTip": "OraScripts\\SQLScripts.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADcAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T13:47:50.824Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AuthenticationModel.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Models\\AuthenticationModel.cs",
+              "RelativeDocumentMoniker": "Models\\AuthenticationModel.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Models\\AuthenticationModel.cs",
+              "RelativeToolTip": "Models\\AuthenticationModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T13:47:29.419Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
