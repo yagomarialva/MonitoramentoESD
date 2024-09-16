@@ -64,7 +64,7 @@ const LineConfirmModal = ({
             {t("LINE.CONFIRM_DIALOG.CLOSE", { appName: "App for Translations" })}
           </Button>
           <Button
-            className="custom-button custom-font"
+            className="custom-button custom-font-delete"
             variant="contained"
             color="success"
             onClick={handleConfirm}
