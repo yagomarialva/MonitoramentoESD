@@ -139,7 +139,7 @@
       },
       "CONFIRM_DIALOG": {
         "CONFIRM-TEXT": "Deseja excluir a Linha?",
-        "CLOSE": "Fechar",
+        "CLOSE": "Voltar",
         "SAVE": "Excluir",
         "DELETE_LINE": "Excluir Linha"
       },

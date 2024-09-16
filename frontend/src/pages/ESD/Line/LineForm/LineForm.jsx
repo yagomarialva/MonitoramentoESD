@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
-  Box,
   Paper,
   Modal,
   TextField,
   Button,
+  Box,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { LockOutlined } from "@ant-design/icons";
+import InputAdornment from "@mui/material/InputAdornment";
+import LineAxisIcon from "@mui/icons-material/LineAxis";
+import { updateLine } from "../../../../api/linerApi";
+import "./LineForm.css";
 
 const style = {
   position: "absolute",
@@ -21,9 +26,7 @@ const style = {
 };
 
 const LineForm = ({ open, handleClose, onSubmit }) => {
-  const {
-    t,
-  } = useTranslation();
+  const { t } = useTranslation();
 
   const [line, setLine] = useState({
     name: "",
@@ -56,32 +59,59 @@ const LineForm = ({ open, handleClose, onSubmit }) => {
       aria-describedby="modal-modal-description"
     >
       <Paper sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {t("ESD_TEST.DIALOG.CREATE_STATION", {
-            appName: "App for Translations",
-          })}
+        <Typography
+          variant="h6"
+          id="contained-modal-title-vcenter"
+          gutterBottom
+          className="user-icon-container"
+        >
+          <LineAxisIcon className="user-icon" />
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-          <TextField
-            required
-            fullWidth
-            margin="normal"
-            id="name"
-            name="name"
-            label={t("ESD_TEST.TABLE.USER_ID", {
-              appName: "App for Translations",
-            })}
-            onChange={handleChange}
-          />
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
-          >
-            {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
-          </Button>
+        <Box
+          component="form"
+          noValidate
+          autoComplete="off"
+          onSubmit={handleSubmit}
+        >
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <TextField
+              required
+              fullWidth
+              margin="normal"
+              id="outlined-name"
+              name="name"
+              label={t("LINE.ADD_LINE", {
+                appName: "App for Translations",
+              })}
+              onChange={handleChange}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    { <LockOutlined />}
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Typography>
+          <Box className="button-container">
+            <Button
+              type="submit" // Botão muda para submit no modo de edição
+              variant="contained"
+              color="success"
+              onClick={handleSubmit} // Submete o formulário
+              className="custom-button custom-font-edit"
+            >
+              {t("LINE.DIALOG.SAVE", { appName: "App for Translations" })}
+            </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              color="success"
+              onClick={handleClose} // Fecha o modal
+              className="custom-button custom-font"
+            >
+              {t("LINE.DIALOG.CLOSE", { appName: "App for Translations" })}
+            </Button>
           </Box>
         </Box>
       </Paper>

@@ -36,7 +36,7 @@ export const createLine = async (line) => {
 // Atualiza um line existente por ID
 export const updateLine = async (line) => {
   try {
-    const { data } = await TokenApi.post("/adicionarLine", line);
+    const { data } = await TokenApi.post("/adicionarLinha", line);
     return data;
   } catch (error) {
     console.error(`Error updating line with ID:`, error);

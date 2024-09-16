@@ -1,0 +1,55 @@
+/* .ant-message-success {
+  background-color: #4caf50 !important;
+  color: white !important;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px;
+  font-weight: 400;
+  border: 1px solid #ccc;
+}
+
+.ant-message-fail {
+  background-color: #f44336 !important;
+  color: white !important;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px;
+  font-weight: 400;
+} */
+
+/* Estilos personalizados para mensagens de sucesso */
+.ant-message-success {
+  background-color: #d4edda; /* Cor de fundo verde claro */
+  border: 1px solid #c3e6cb; /* Borda verde claro */
+  color: #155724; /* Cor do texto verde escuro */
+  border-radius: 5px; /* Bordas arredondadas */
+  padding: 10px; /* Espaçamento interno */
+  font-size: 16px; /* Tamanho da fonte */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra leve */
+  top: 16px; /* Distância do topo */
+  right: 16px; /* Distância da borda direita */
+  z-index: 1050; /* Assegura que a mensagem fica acima de outros elementos */
+}
+
+/* Estilos personalizados para mensagens de erro */
+.ant-message-error {
+  background-color: #f8d7da; /* Cor de fundo vermelho claro */
+  border: 1px solid #f5c6cb; /* Borda vermelho claro */
+  color: #721c24; /* Cor do texto vermelho escuro */
+  border-radius: 5px; /* Bordas arredondadas */
+  padding: 10px; /* Espaçamento interno */
+  font-size: 16px; /* Tamanho da fonte */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra leve */
+}
+
+/* Estilos personalizados para o ícone de sucesso */
+.ant-message-success .anticon-check-circle {
+  color: #155724; /* Cor do ícone de sucesso */
+}
+
+/* Estilos personalizados para o ícone de erro */
+.ant-message-error .anticon-close-circle {
+  color: #721c24; /* Cor do ícone de erro */
+}

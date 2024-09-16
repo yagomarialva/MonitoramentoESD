@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getAllLines, createLine, deleteLine } from "../../../../api/linerApi";
+import {
+  getAllLines,
+  createLine,
+  deleteLine,
+  updateLine,
+} from "../../../../api/linerApi";
 import {
   List,
   Button,
@@ -9,24 +14,20 @@ import {
   Modal,
   Tooltip,
   Pagination,
-  Alert,
   Space,
+  message,
 } from "antd";
-import {
-  DeleteOutlined,
-  InfoCircleOutlined,
-  EditOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import LineModal from "../LineModal/LineModal";
 import LineForm from "../LineForm/LineForm";
 import LineConfirmModal from "../LineConfirmModal/LineConfirmModal";
-import LineEditForm from "../LineEditForm/LineEditForm";
 import { useNavigate } from "react-router-dom";
 import LineAxisIcon from "@mui/icons-material/LineAxis";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import "./Line.css";
+import "./SnackbarStyles.css"
+
 const LineTable = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -40,9 +41,6 @@ const LineTable = () => {
     editData: null,
     deleteConfirmOpen: false,
     lineToDelete: null,
-    snackbarOpen: false,
-    snackbarMessage: "",
-    snackbarSeverity: "success",
     filterSerialNumber: "",
     page: 1,
     rowsPerPage: 10,
@@ -52,12 +50,8 @@ const LineTable = () => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
 
-  const showSnackbar = (message, severity = "success") => {
-    handleStateChange({
-      snackbarMessage: message,
-      snackbarSeverity: severity,
-      snackbarOpen: true,
-    });
+  const showMessage = (messageText, type = "success") => {
+    message[type](messageText);
   };
 
   const handleOpen = (line) => handleStateChange({ line, open: true });
@@ -80,11 +74,30 @@ const LineTable = () => {
       await createLine(line);
       const result = await getAllLines();
       handleStateChange({ allLines: result });
-      showSnackbar(
+      showMessage(
         t("LINE.TOAST.CREATE_SUCCESS", { appName: "App for Translations" })
       );
     } catch (error) {
-      showSnackbar(
+      showMessage(
+        t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        "error"
+      );
+    }
+  };
+
+  const handleEditCellChange = async (params) => {
+    try {
+      await updateLine(params);
+      const result = await getAllLines();
+      handleStateChange({ allLines: result });
+      showMessage(
+        t("LINE.TOAST.UPDATE_SUCCESS", {
+          appName: "App for Translations",
+        })
+      );
+      return result;
+    } catch (error) {
+      showMessage(
         t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
@@ -97,11 +110,11 @@ const LineTable = () => {
       handleStateChange({
         allLines: state.allLines.filter((line) => line.id !== id),
       });
-      showSnackbar(
+      showMessage(
         t("LINE.TOAST.DELETE_SUCCESS", { appName: "App for Translations" })
       );
     } catch (error) {
-      showSnackbar(
+      showMessage(
         t("LINE.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
@@ -118,7 +131,7 @@ const LineTable = () => {
           localStorage.removeItem("token");
           navigate("/");
         }
-        showSnackbar(t(error.message));
+        showMessage(t(error.message), "error");
       }
     };
     fetchDataAllUsers();
@@ -154,7 +167,7 @@ const LineTable = () => {
     <>
       <div className="line-header-container">
         <div className="line-header-title-container">
-          <LineAxisIcon  className="axis-icon" />
+          <LineAxisIcon className="axis-icon" />
           <Typography.Title className="line-header-title" level={4}>
             {t("LINE.TABLE_HEADER")}
           </Typography.Title>
@@ -172,7 +185,7 @@ const LineTable = () => {
         placeholder={t("LINE.SEARCH_INPUT", {
           appName: "App for Translations",
         })}
-        prefix={<SearchOutlined />} // Use prefix para posicionar o ícone à esquerda
+        prefix={<SearchOutlined />}
         value={state.filterSerialNumber}
         onChange={handleFilterChange}
       />
@@ -180,7 +193,7 @@ const LineTable = () => {
         dataSource={paginatedLines}
         renderItem={(line, index) => (
           <List.Item
-            className={`list-item ${index % 2 === 0 ? "even" : "odd"}`} // Alterna as classes para linhas pares e ímpares
+            className={`list-item ${index % 2 === 0 ? "even" : "odd"}`}
             actions={[
               <Tooltip title={t("LINE.INFO_LINE")}>
                 <Button
@@ -202,7 +215,7 @@ const LineTable = () => {
             <List.Item.Meta title={`${line.name}`} />
           </List.Item>
         )}
-        className="custom-list" // Adiciona uma classe CSS ao List
+        className="custom-list"
       />
 
       <Space
@@ -213,15 +226,12 @@ const LineTable = () => {
           marginTop: 16,
         }}
       >
-        {/* Legenda */}
         <span>
           {`${(state.page - 1) * state.rowsPerPage + 1}-${Math.min(
             state.page * state.rowsPerPage,
             filteredLines.length
           )} de ${filteredLines.length}`}
         </span>
-
-        {/* Paginação */}
         <Pagination
           current={state.page}
           pageSize={state.rowsPerPage}
@@ -231,11 +241,10 @@ const LineTable = () => {
         />
       </Space>
 
-      {/* Modals */}
       <LineModal
         open={state.open}
         handleClose={handleClose}
-        lineName={state.line.name}
+        onSubmit={handleEditCellChange}
         line={state.line}
       />
       <LineForm
@@ -243,12 +252,6 @@ const LineTable = () => {
         handleClose={handleCloseModal}
         onSubmit={handleCreateLine}
       />
-      {/* <LineEditForm
-        open={state.openEditModal}
-        handleClose={handleEditClose}
-        onSubmit={handleEditCellChange}
-        initialData={state.editData}
-      /> */}
       <LineConfirmModal
         open={state.deleteConfirmOpen}
         handleClose={handleDeleteClose}
@@ -260,16 +263,6 @@ const LineTable = () => {
           appName: "App for Translations",
         })}
       />
-      {state.snackbarOpen && (
-        <Alert
-          message={state.snackbarMessage}
-          type={state.snackbarSeverity}
-          showIcon
-          closable
-          afterClose={() => handleStateChange({ snackbarOpen: false })}
-          style={{ position: "fixed", top: 16, right: 16, zIndex: 1000 }}
-        />
-      )}
     </>
   );
 };

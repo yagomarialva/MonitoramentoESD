@@ -1,43 +1,4 @@
-// import React from 'react';
-// import { Modal, Input, Button, Typography, Space, Card } from 'antd';
-// import { LockOutlined } from '@ant-design/icons';
-// import LineAxisIcon from "@mui/icons-material/LineAxis";
-// import './LineModal.css'; // Certifique-se de importar o CSS
-
-// const LineModal = ({ open, handleClose, line, handleEdit }) => {
-//   return (
-//     <Modal
-//       open={open}
-//       onCancel={handleClose}
-//       footer={null} // Removendo os botões padrão do modal
-//       className="custom-modal" // Adicionando uma classe CSS personalizada
-//     >
-//       <Card>
-// <div className="modal-header">
-//   <Typography.Title level={4}><LineAxisIcon className="axis-icon"/></Typography.Title>
-// </div>
-// <div className="modal-form">
-//   <Input
-//     placeholder="Enter value"
-//     disabled
-//     suffix={<LockOutlined />}
-//   />
-// </div>
-// <div className="modal-buttons">
-//   <Button onClick={handleEdit} className="modal-edit-button">
-//     Editar
-//   </Button>
-//   <Button onClick={handleClose} className="modal-close-button">
-//     Voltar
-//   </Button>
-// </div>
-//       </Card>
-//     </Modal>
-//   );
-// };
-
-// export default LineModal;
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Paper,
@@ -50,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { LockOutlined } from "@ant-design/icons";
 import InputAdornment from "@mui/material/InputAdornment";
 import LineAxisIcon from "@mui/icons-material/LineAxis";
+import { updateLine } from "../../../../api/linerApi";
 import "./LineModal.css";
 
 const style = {
@@ -63,8 +25,43 @@ const style = {
   p: 4,
 };
 
-const LineModal = ({ open, handleClose, line }) => {
+const LineModal = ({ open, handleClose, onSubmit, line }) => {
   const { t } = useTranslation();
+  const [isEditing, setIsEditing] = useState(false); // Estado de edição inicializado como false
+  const [station, setStation] = useState({
+    name: "",
+  });
+
+  useEffect(() => {
+    setIsEditing(false)
+    if (line) {
+      setStation(line);
+    }
+  }, [line]);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setStation((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    console.log('here', isEditing)
+    e.preventDefault();
+    try {
+      await onSubmit(station);
+        handleClose();
+    } catch (error) {
+      console.error("Error creating or updating station:", error);
+    }
+  };
+
+  const handleEditClick = (e) => {
+    e.preventDefault(); // Previne o comportamento padrão do botão de editar
+    setIsEditing(!isEditing); // Alterna o modo de edição
+  };
 
   return (
     <Modal
@@ -82,44 +79,70 @@ const LineModal = ({ open, handleClose, line }) => {
         >
           <LineAxisIcon className="user-icon" />
         </Typography>
-        <Box component="form" noValidate autoComplete="off">
+        <Box
+          component="form"
+          noValidate
+          autoComplete="off"
+          onSubmit={handleSubmit}
+        >
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <TextField
-              fullWidth
-              disabled
               required
-              label={t("LINE.TABLE.NAME", {
+              disabled={!isEditing} // O campo é desativado quando não está em edição
+              fullWidth
+              margin="normal"
+              id="outlined-name"
+              name="name"
+              label={t("ESD_TEST.TABLE.USER_ID", {
                 appName: "App for Translations",
               })}
-              defaultValue={line.name}
-              margin="normal"
+              value={station.name}
+              onChange={handleChange}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <LockOutlined />
+                    {!isEditing && <LockOutlined />}
                   </InputAdornment>
                 ),
               }}
             />
           </Typography>
-        </Box>
-        <Box className="button-container">
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleClose}
-            className="custom-button custom-font-edit"
-          >
-            {t("LINE.DIALOG.EDIT_LINE", { appName: "App for Translations" })}
-          </Button>
-          <Button
-            variant="outlined"
-            color="success"
-            onClick={handleClose}
-            className="custom-button custom-font"
-          >
-            {t("LINE.DIALOG.CLOSE", { appName: "App for Translations" })}
-          </Button>
+          <Box className="button-container">
+            {isEditing ? (
+              // Se isEditing for true, exibe o botão de salvar
+              <Button
+                type="submit" // Botão muda para submit no modo de edição
+                variant="contained"
+                color="success"
+                onClick={handleSubmit} // Submete o formulário
+                className="custom-button custom-font-edit"
+              >
+                {t("LINE.DIALOG.SAVE", { appName: "App for Translations" })}
+              </Button>
+            ) : (
+              // Se isEditing for false, exibe o botão de editar
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleEditClick} // Habilita o modo de edição
+                className="custom-button custom-font-edit"
+              >
+                {t("LINE.DIALOG.EDIT_LINE", {
+                  appName: "App for Translations",
+                })}
+              </Button>
+            )}
+
+            <Button
+             type="button"
+              variant="outlined"
+              color="success"
+              onClick={handleClose} // Fecha o modal
+              className="custom-button custom-font"
+            >
+              {t("LINE.DIALOG.CLOSE", { appName: "App for Translations" })}
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </Modal>
