@@ -5,19 +5,53 @@
     border-radius: 2px 0px 0px 0px;
     opacity: 0.9;
   }
+
+
+  .button-container {
+    margin-top: 24px; /* mt: 3 (em px, 3 * 8 = 24px) */
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px; /* gap: 12 (em px, 12 * 8 = 96px) */
+  }
   
-  .axis-icon {
+  .custom-button {
+    text-transform: none !important; /* Remove a exibição em letras maiúsculas */
+    height: 25px;
+    width: 46%;
+    border-radius: 0 !important;
+  }
+
+  .user-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .user-icon {
     margin-right: 8px;
     width: 35.5px !important;
     color: #389e0d;
   }
-  
   .modal-header {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 16px;
   }
+
+  .custom-font {
+    font-family: 'Selawik', sans-serif !important; /* Define a família da fonte */
+    font-size: 13px !important; /* Define o tamanho da fonte */
+    font-weight: 600 !important; /* Define o peso da fonte */
+    color: #333 !important; /* Define a cor da fonte */
+  }
+  
+  .custom-font-edit {
+    font-family: 'Selawik', sans-serif !important; /* Define a família da fonte */
+    font-size: 13px !important; /* Define o tamanho da fonte */
+    font-weight: 600 !important; /* Define o peso da fonte */
+  }
+  
   
   .modal-form {
     margin-bottom: 16px;

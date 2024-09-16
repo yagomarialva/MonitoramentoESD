@@ -144,7 +144,7 @@
         "DELETE_LINE": "Excluir Linha"
       },
       "DIALOG": {
-        "CLOSE": "Fechar",
+        "CLOSE": "Voltar",
         "SAVE": "Salvar",
         "CREATE_LINE": "Adicionar Linha",
         "EDIT_LINE": "Editar"
