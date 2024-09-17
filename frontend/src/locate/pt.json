@@ -157,10 +157,10 @@
       }
     },
     "STATION": {
-      "TABLE_HEADER": "Estação",
-      "ADD_STATION": "Adicionar Estação",
+      "TABLE_HEADER": "Controle - Estação",
+      "ADD_STATION": "Nova Estação",
       "EDIT_STATION": "Editar Estação",
-      "INFO_STATION": "Informações do Estação",
+      "INFO_STATION": "Informações da Estação",
       "DELETE_STATION": "Deletar Estação",
       "STATUS_STATION": "Status",
       "TABLE": {

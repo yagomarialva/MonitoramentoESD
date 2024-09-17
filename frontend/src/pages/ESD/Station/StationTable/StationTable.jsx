@@ -1,23 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getAllStations, createStation, deleteStation } from "../../../../api/stationApi";
 import {
-  IconButton,
-  Box,
-  Snackbar,
-  Alert,
-  Button,
+  getAllStations,
+  createStation,
+  deleteStation,
+} from "../../../../api/stationApi";
+// import {
+//   IconButton,
+//   Box,
+//   Snackbar,
+//   Alert,
+//   Button,
+//   List,
+//   ListItem,
+//   ListItemText,
+//   ListItemSecondaryAction,
+//   TextField,
+//   Container,
+//   Tooltip,
+//   Typography,
+//   TablePagination,
+// } from "@mui/material";
+import {
   List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  TextField,
-  Container,
-  Tooltip,
+  Button,
   Typography,
-  TablePagination,
-} from "@mui/material";
+  Input,
+  Modal,
+  Tooltip,
+  Pagination,
+  Space,
+  message,
+} from "antd";
 import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
 import StationModal from "../StationModal/StationModal";
 import StationForm from "../StationForm/StationForm";
@@ -29,6 +44,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import LineAxisIcon from "@mui/icons-material/LineAxis";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { SearchOutlined } from "@ant-design/icons";
+import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
 
 const StationTable = () => {
   const { t } = useTranslation();
@@ -48,9 +68,13 @@ const StationTable = () => {
     snackbarSeverity: "success",
     filterSerialNumber: "",
     filterDescription: "",
-    page: 0,
+    page: 1,
     rowsPerPage: 10,
   });
+
+  const showMessage = (messageText, type = "success") => {
+    message[type](messageText);
+  };
 
   const handleStateChange = (changes) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -79,19 +103,23 @@ const StationTable = () => {
     handleStateChange({ editData: station, openEditModal: true });
   };
 
+  const handlePageChange = (page) => {
+    handleStateChange({ page });
+  };
+
   const handleCreateStation = async (station) => {
     try {
       await createStation(station);
       const result = await getAllStations();
       handleStateChange({ allStations: result });
-      showSnackbar(
+      showMessage(
         t("STATION.TOAST.CREATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
       return result;
     } catch (error) {
-      showSnackbar(
+      showMessage(
         t("STATION.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
@@ -104,13 +132,13 @@ const StationTable = () => {
       handleStateChange({
         allStations: state.allStations.filter((station) => station.id !== id),
       });
-      showSnackbar(
+      showMessage(
         t("STATION.TOAST.DELETE_SUCCESS", {
           appName: "App for Translations",
         })
       );
     } catch (error) {
-      showSnackbar(
+      showMessage(
         t("STATION.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
@@ -122,14 +150,14 @@ const StationTable = () => {
       await createStation(params);
       const result = await getAllStations();
       handleStateChange({ allStations: result });
-      showSnackbar(
+      showMessage(
         t("STATION.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",
         })
       );
       return result;
     } catch (error) {
-      showSnackbar(
+      showMessage(
         t("STATION.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
@@ -175,188 +203,121 @@ const StationTable = () => {
     });
   };
 
-  const filteredStations = (
-    Array.isArray(state.allStations) ? state.allStations : []
-  ).filter((station) => {
-    const name = station.name
-      ? station.name.toLowerCase()
-      : "";
-   
+  const filteredStations = state.allStations.filter((station) => {
+    const name = station.name ? station.name.toLowerCase() : "";
     const filterSerialNumber = state.filterSerialNumber.toLowerCase();
-    return (
-      name.includes(filterSerialNumber) 
-    );
+    return name.includes(filterSerialNumber);
   });
 
   const paginatedStations = filteredStations.slice(
-    Math.max(0, state.page * state.rowsPerPage),
-    Math.max(0, state.page * state.rowsPerPage + state.rowsPerPage)
+    (state.page - 1) * state.rowsPerPage,
+    state.page * state.rowsPerPage
   );
 
   return (
     <>
-      <Typography paragraph>
-        <Container>
-          <Box>
-            <Row>
-              <Col sm={10}>
-                <TextField
-                  name="filterSerialNumber"
-                  label={t("STATION.TABLE.USER_ID", {
-                    appName: "App for Translations",
-                  })}
-                  variant="outlined"
-                  value={state.filterSerialNumber}
-                  onChange={handleFilterChange}
-                  sx={{ mb: 2, mr: 2 }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Col>
-              <Col sm={2}>
+      <div className="line-header-container">
+        <div className="line-header-title-container">
+          <PrecisionManufacturingOutlinedIcon className="axis-icon" />
+          <Typography.Title className="line-header-title" level={4}>
+            {t("STATION.TABLE_HEADER")}
+          </Typography.Title>
+        </div>
+        <Button
+          type="default"
+          onClick={handleOpenModal}
+          className="line-header-button"
+        >
+          + {t("STATION.ADD_STATION", { appName: "App for Translations" })}
+        </Button>
+      </div>
+      <Input
+        className="search-button"
+        placeholder={t("LINE.SEARCH_INPUT", {
+          appName: "App for Translations",
+        })}
+        prefix={<SearchOutlined />}
+        name="filterSerialNumber"
+        value={state.filterSerialNumber}
+        onChange={handleFilterChange}
+      />
+      <List
+        dataSource={paginatedStations}
+        renderItem={(line, index) => (
+          <List.Item
+            className={`list-item ${index % 2 === 0 ? "even" : "odd"}`}
+            actions={[
+              <Tooltip title={t("STATION.INFO_STATION")}>
                 <Button
-                  id="add-button"
-                  variant="contained"
-                  color="success"
-                  onClick={handleOpenModal}
-                >
-                  {t("STATION.ADD_STATION", {
-                    appName: "App for Translations",
-                  })}
-                </Button>
-              </Col>
-            </Row>
-            {paginatedStations.length === 0 ? (
-              <Typography variant="h6" align="center" color="textSecondary">
-                Sua lista está vazia
-              </Typography>
-            ) : (
-              <List>
-                {paginatedStations.map((station) => (
-                  <ListItem
-                    key={station.id}
-                    divider
-                    sx={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Tooltip
-                      title={`Id: ${station.id}`}
-                      arrow
-                    >
-                      <ListItemText
-                        primary={` ${station.name}`}
-                        secondary={
-                          <>
-                            <Typography variant="body2" color="textSecondary">
-                            {`Tamanho X: ${station.sizeX}`}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                            {`Tamanho Y: ${station.sizeY}`}
-                          </Typography>
+                  className="no-border-button-informations"
+                  icon={<VisibilityOutlinedIcon />}
+                  onClick={() => handleOpen(line)}
+                />
+              </Tooltip>,
+              <Tooltip title={t("STATION.DELETE_STATION")}>
+                <Button
+                  className="no-border-button-delete"
+                  icon={<DeleteOutlineOutlinedIcon />}
+                  danger
+                  onClick={() => handleDeleteOpen(line)}
+                />
+              </Tooltip>,
+            ]}
+          >
+            <List.Item.Meta title={`${line.name}`} />
+          </List.Item>
+        )}
+        className="custom-list"
+      />
 
-                          </>
-                        }
-                        className="textOverflow"
-                      />
-                    </Tooltip>
-                    <ListItemSecondaryAction>
-                      <Tooltip title={t("STATION.EDIT_STATION")}>
-                        <IconButton
-                          edge="end"
-                          aria-label="edit"
-                          onClick={() => handleEditOpen(station)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t("STATION.INFO_STATION")}>
-                        <IconButton
-                          edge="end"
-                          aria-label="info"
-                          onClick={() => handleOpen(station)}
-                        >
-                          <Info />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={t("STATION.DELETE_STATION")}>
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => handleDeleteOpen(station)}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </Tooltip>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-            )}
-            <TablePagination
-              component="div"
-              count={filteredStations.length}
-              page={state.page}
-              onPageChange={handleChangePage}
-              rowsPerPage={state.rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-            <StationModal
-              open={state.open}
-              handleClose={handleClose}
-              stationName={state.station.name}
-              station={state.station}
-            />
-            <StationForm
-              open={state.openModal}
-              handleClose={handleCloseModal}
-              onSubmit={handleCreateStation}
-            />
-            <StationEditForm
-              open={state.openEditModal}
-              handleClose={handleEditClose}
-              onSubmit={handleEditCellChange}
-              initialData={state.editData}
-            />
-            <StationConfirmModal
-              open={state.deleteConfirmOpen}
-              handleClose={handleDeleteClose}
-              handleConfirm={handleConfirmDelete}
-              title={t("STATION.CONFIRM_DIALOG.DELETE_STATION", {
-                appName: "App for Translations",
-              })}
-              description={t("STATION.CONFIRM_DIALOG.CONFIRM-TEXT", {
-                appName: "App for Translations",
-              })}
-            />
-            <Snackbar
-              open={state.snackbarOpen}
-              autoHideDuration={6000}
-              onClose={() => handleStateChange({ snackbarOpen: false })}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              className={`snackbar-content snackbar-${state.snackbarSeverity}`}
-            >
-              <Alert
-                onClose={() => handleStateChange({ snackbarOpen: false })}
-                severity={state.snackbarSeverity}
-                sx={{
-                  backgroundColor: "inherit",
-                  color: "inherit",
-                  fontWeight: "inherit",
-                  boxShadow: "inherit",
-                  borderRadius: "inherit",
-                  padding: "inherit",
-                }}
-              >
-                {state.snackbarMessage}
-              </Alert>
-            </Snackbar>
-          </Box>
-        </Container>
-      </Typography>
+      <Space
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 16,
+        }}
+      >
+        <span>
+          {`${(state.page - 1) * state.rowsPerPage + 1}-${Math.min(
+            state.page * state.rowsPerPage,
+            filteredStations.length
+          )} de ${filteredStations.length}`}
+        </span>
+        <Pagination
+          current={state.page}
+          pageSize={state.rowsPerPage}
+          total={filteredStations.length}
+          onChange={handlePageChange}
+          showSizeChanger={false}
+        />
+      </Space>
+
+      <StationForm
+        open={state.openModal}
+        handleClose={handleCloseModal}
+        onSubmit={handleCreateStation}
+      />
+
+      <StationModal
+        open={state.open}
+        handleClose={handleClose}
+        stationName={state.station.name}
+        onSubmit={handleEditCellChange}
+        station={state.station}
+      />
+
+      <StationConfirmModal
+        open={state.deleteConfirmOpen}
+        handleClose={handleDeleteClose}
+        handleConfirm={handleConfirmDelete}
+        title={t("STATION.CONFIRM_DIALOG.DELETE_STATION", {
+          appName: "App for Translations",
+        })}
+        description={t("STATION.CONFIRM_DIALOG.CONFIRM-TEXT", {
+          appName: "App for Translations",
+        })}
+      />
     </>
   );
 };

@@ -8,7 +8,11 @@ import {
   Button,
 } from "@mui/material";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
 import { useTranslation } from "react-i18next";
+import InputAdornment from "@mui/material/InputAdornment";
+import { LockOutlined } from "@ant-design/icons";
+import "./StationForm.css";
 
 const style = {
   position: "absolute",
@@ -22,9 +26,7 @@ const style = {
 };
 
 const StationForm = ({ open, handleClose, onSubmit }) => {
-  const {
-    t,
-  } = useTranslation();
+  const { t } = useTranslation();
 
   const [station, setStation] = useState({
     name: "",
@@ -57,25 +59,35 @@ const StationForm = ({ open, handleClose, onSubmit }) => {
       aria-describedby="modal-modal-description"
     >
       <Paper sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {t("ESD_TEST.DIALOG.CREATE_STATION", {
-            appName: "App for Translations",
-          })}
+        <Typography
+          variant="h6"
+          id="contained-modal-title-vcenter"
+          gutterBottom
+          className="user-icon-container"
+        >
+          <PrecisionManufacturingOutlinedIcon className="user-icon" />
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField
             required
             fullWidth
             margin="normal"
-            id="name"
+            id="outlined-name"
             name="name"
-            label={t("ESD_TEST.TABLE.USER_ID", {
+            label={t("LINE.ADD_LINE", {
               appName: "App for Translations",
             })}
             onChange={handleChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  {<LockOutlined />}
+                </InputAdornment>
+              ),
+            }}
           />
-                 <FormControl fullWidth margin="normal" required>
-            <InputLabel id="sizeX">Status</InputLabel>
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="sizeX">Size X</InputLabel>
             <Select
               labelId="sizeX"
               id="sizeX"
@@ -93,7 +105,7 @@ const StationForm = ({ open, handleClose, onSubmit }) => {
             </Select>
           </FormControl>
           <FormControl fullWidth margin="normal" required>
-            <InputLabel id="sizeY">Status</InputLabel>
+            <InputLabel id="sizeY">Size Y</InputLabel>
             <Select
               labelId="sizeY"
               id="sizeY"
@@ -110,15 +122,25 @@ const StationForm = ({ open, handleClose, onSubmit }) => {
               <MenuItem value={6}>6</MenuItem>
             </Select>
           </FormControl>
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
-          >
-            {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
-          </Button>
+          <Box className="button-container">
+            <Button
+              type="submit" // Botão muda para submit no modo de edição
+              variant="contained"
+              color="success"
+              onClick={handleSubmit} // Submete o formulário
+              className="custom-button custom-font-edit"
+            >
+              {t("LINE.DIALOG.SAVE", { appName: "App for Translations" })}
+            </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              color="success"
+              onClick={handleClose} // Fecha o modal
+              className="custom-button custom-font"
+            >
+              {t("LINE.DIALOG.CLOSE", { appName: "App for Translations" })}
+            </Button>
           </Box>
         </Box>
       </Paper>

@@ -1,78 +1,183 @@
 .snackbar-success .MuiAlert-root {
-    background-color: #4caf50 !important; /* Cor para mensagens de sucesso */
-    color: white !important;
-    color: #fff;
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 16px;
-    font-weight: 400;
+  background-color: #4caf50 !important; /* Cor para mensagens de sucesso */
+  color: white !important;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.snackbar-error .MuiAlert-root {
+  background-color: #f44336 !important; /* Cor para mensagens de erro */
+  color: white !important;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.no-border-button-informations {
+  border: none; /* Remove a borda */
+  box-shadow: none; /* Remove qualquer sombra de borda */
+  background: transparent; /* Define o fundo transparente */
+  margin-right: -18px; /* Adiciona a margem à direita */
+  color: #bfbfbf;
+}
+
+.no-border-button-delete {
+  border: none; /* Remove a borda */
+  box-shadow: none; /* Remove qualquer sombra de borda */
+  background: transparent; /* Define o fundo transparente */
+  margin-right: 51px; /* Adiciona a margem à direita */
+  color: #bfbfbf;
+}
+
+.ant-btn-dangerous {
+  color: #bfbfbf !important;
+  color: #bfbfbf !important;
+}
+.custom-list {
+  width: 89%;
+  margin: auto; /* Opcional: centraliza a lista horizontalmente */
+  margin-top: 2%;
+}
+
+.list-item {
+  transition: background-color 0.3s; /* Adiciona uma transição suave para a troca de cor */
+}
+
+.list-item.even {
+  background-color: #ffffff; /* Cor para linhas pares */
+}
+
+.list-item.odd {
+  background-color: #fdfdfd; /* Cor para linhas pares */
+}
+
+.list-item:hover {
+  background-color: #e0e0e0; /* Cor ao passar o mouse (opcional) */
+}
+
+:where(.css-dev-only-do-not-override-qnu6hi).ant-list
+  .ant-list-item
+  .ant-list-item-meta {
+  margin-left: 5%;
+}
+
+.axis-icon {
+  margin-right: 8px;
+  width: 35.5px !important;
+  color: #389e0d;
+}
+
+.line-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  /* border-style: solid;
+    border-color: red; */
+  width: 90%;
+  margin-left: 5%;
+}
+
+.search-button {
+  width: 212px !important;
+  margin-left: 5%;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-radius: 0;
+  height: 48px !important;
+}
+
+.search-button .ant-input-prefix {
+  color: #4caf50;
+}
+
+.line-header-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.line-header-title {
+  color: #2f2f2f !important;
+  font-size: 24px !important;
+  font-weight: bold !important;
+  line-height: 16px !important;
+  text-align: center !important;
+  margin-bottom: 0 !important;
+}
+
+.line-header-button {
+  border-color: #389e0d;
+  color: #389e0d;
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espaçamento entre o símbolo "+" e o texto */
+  border-width: 2px;
+}
+
+/* Media query para 1200x800 */
+@media (max-width: 1424px) and (min-width: 1404px) {
+  .add-monitor-button {
+    margin-left: 39% !important;
+    border: solid green 10px !important;
   }
-  
-  .snackbar-error .MuiAlert-root {
-    background-color: #f44336 !important; /* Cor para mensagens de erro */
-    color: white !important;
-    color: #fff;
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 16px;
-    font-weight: 400;
+}
+
+/* Media query para 1200x800 */
+@media (max-width: 1404px) and (min-width: 1383px) {
+  .add-monitor-button {
+    margin-left: 38% !important;
+    border: solid red 10px !important;
   }
-  
-  /* Media query para 1200x800 */
-  @media (max-width: 1424px) and (min-width: 1404px) {
-    .add-monitor-button {
-      margin-left: 39% !important;
-      border: solid green 10px !important;
-    }
+}
+
+@media (max-width: 2500px) and (min-width: 1425px) {
+  .add-monitor-button {
+    margin-left: 40% !important;
+    border: solid purple 10px !important;
   }
-  
-  /* Media query para 1200x800 */
-  @media (max-width: 1404px) and (min-width: 1383px) {
-    .add-monitor-button {
-      margin-left: 38% !important;
-      border: solid red 10px !important;
-    }
+}
+
+@media (max-width: 1383px) {
+  .add-monitor-button {
+    display: block;
+    margin-left: 32% !important;
+    border: solid pink 10px !important;
   }
-  
-  @media (max-width: 2500px) and (min-width: 1425px) {
-    .add-monitor-button {
-      margin-left: 40% !important;
-      border: solid purple 10px !important;
-    }
+}
+
+@media (max-width: 500px) {
+  .add-monitor-button {
+    margin-left: 40% !important;
+    border: solid yellow 10px !important;
   }
-  
-  @media (max-width: 1383px) {
-    .add-monitor-button {
-      display: block;
-      margin-left: 32% !important;
-      border: solid pink 10px !important;
-    }
-  }
-  
-  @media (max-width: 500px) {
-    .add-monitor-button {
-      margin-left: 40% !important;
-      border: solid yellow 10px !important;
-    }
-  }
-  
-  .ellipsis {
-    max-width: 60%;
-    /* font-size: 20dp; */
-    white-space: nowrap;
-    overflow: hidden; /* "overflow" value must be different from "visible" */
-    text-overflow: ellipsis;
-    /* border: 1px solid #ccc; */
-    margin-right: 20%;
-  }
-  
-  .textOverflow {
-    max-width: 60%;
-    /* font-size: 20dp; */
-    white-space: nowrap !important;
-    overflow: hidden !important; /* "overflow" value must be different from "visible" */
-    text-overflow: ellipsis !important;
-    /* border: 1px solid #ccc !important; */
-    margin-right: 20%;
-  }
-  
+}
+
+.ellipsis {
+  max-width: 60%;
+  /* font-size: 20dp; */
+  white-space: nowrap;
+  overflow: hidden; /* "overflow" value must be different from "visible" */
+  text-overflow: ellipsis;
+  /* border: 1px solid #ccc; */
+  margin-right: 20%;
+}
+
+.textOverflow {
+  max-width: 60%;
+  /* font-size: 20dp; */
+  white-space: nowrap !important;
+  overflow: hidden !important; /* "overflow" value must be different from "visible" */
+  text-overflow: ellipsis !important;
+  /* border: 1px solid #ccc !important; */
+  margin-right: 20%;
+}
