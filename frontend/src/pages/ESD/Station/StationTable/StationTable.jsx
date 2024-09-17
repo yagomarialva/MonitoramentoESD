@@ -25,7 +25,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { SearchOutlined } from "@ant-design/icons";
 import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
-
+import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 const StationTable = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -180,7 +180,7 @@ const StationTable = () => {
     <>
       <div className="line-header-container">
         <div className="line-header-title-container">
-          <PrecisionManufacturingOutlinedIcon className="axis-icon" />
+          <RouteOutlinedIcon className="axis-icon" />
           <Typography.Title className="line-header-title" level={4}>
             {t("STATION.TABLE_HEADER")}
           </Typography.Title>

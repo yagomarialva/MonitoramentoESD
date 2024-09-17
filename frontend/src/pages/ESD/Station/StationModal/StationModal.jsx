@@ -17,6 +17,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import LineAxisIcon from "@mui/icons-material/LineAxis";
 import { updateLine } from "../../../../api/linerApi";
 import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
+import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import "./StationModal.css";
 
 const style = {
@@ -83,7 +84,7 @@ const StationModal = ({ open, handleClose, onSubmit, station }) => {
           gutterBottom
           className="user-icon-container"
         >
-          <PrecisionManufacturingOutlinedIcon className="user-icon" />
+          <RouteOutlinedIcon className="user-icon" />
         </Typography>
         <Box
           component="form"
