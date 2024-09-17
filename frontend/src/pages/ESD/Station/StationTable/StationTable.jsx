@@ -6,22 +6,6 @@ import {
   createStation,
   deleteStation,
 } from "../../../../api/stationApi";
-// import {
-//   IconButton,
-//   Box,
-//   Snackbar,
-//   Alert,
-//   Button,
-//   List,
-//   ListItem,
-//   ListItemText,
-//   ListItemSecondaryAction,
-//   TextField,
-//   Container,
-//   Tooltip,
-//   Typography,
-//   TablePagination,
-// } from "@mui/material";
 import {
   List,
   Button,
@@ -33,18 +17,10 @@ import {
   Space,
   message,
 } from "antd";
-import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
 import StationModal from "../StationModal/StationModal";
 import StationForm from "../StationForm/StationForm";
 import StationConfirmModal from "../StationConfirmModal/StationConfirmModal";
-import StationEditForm from "../StationEditForm/StationEditForm";
 import { useNavigate } from "react-router-dom";
-// import "./StationTable.css";
-import SearchIcon from "@mui/icons-material/Search";
-import InputAdornment from "@mui/material/InputAdornment";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import LineAxisIcon from "@mui/icons-material/LineAxis";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { SearchOutlined } from "@ant-design/icons";
@@ -98,10 +74,6 @@ const StationTable = () => {
     handleStateChange({ stationToDelete: station, deleteConfirmOpen: true });
   const handleDeleteClose = () =>
     handleStateChange({ deleteConfirmOpen: false, stationToDelete: null });
-
-  const handleEditOpen = (station) => {
-    handleStateChange({ editData: station, openEditModal: true });
-  };
 
   const handlePageChange = (page) => {
     handleStateChange({ page });
@@ -192,16 +164,6 @@ const StationTable = () => {
     handleStateChange({ [name]: value });
   };
 
-  const handleChangePage = (event, newPage) => {
-    handleStateChange({ page: newPage });
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    handleStateChange({
-      rowsPerPage: parseInt(event.target.value, 10),
-      page: 0,
-    });
-  };
 
   const filteredStations = state.allStations.filter((station) => {
     const name = station.name ? station.name.toLowerCase() : "";

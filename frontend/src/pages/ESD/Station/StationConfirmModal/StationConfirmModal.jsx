@@ -48,7 +48,7 @@ const StationConfirmModal = ({
           className="user-icon-container"
           component="h2"
         >
-          <DeleteOutlineOutlinedIcon className="user-icon" />
+          <DeleteOutlineOutlinedIcon className="user-icon-delete" />
         </Typography>
         <Typography
           id="modal-modal-description"
@@ -59,6 +59,14 @@ const StationConfirmModal = ({
         </Typography>
         <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
           <Button
+            className="custom-button custom-font-delete"
+            variant="contained"
+            color="success"
+            onClick={handleConfirm}
+          >
+            {t("LINE.CONFIRM_DIALOG.SAVE", { appName: "App for Translations" })}
+          </Button>
+          <Button
             className="custom-button custom-font-edit"
             variant="outline-success"
             onClick={handleClose}
@@ -67,14 +75,6 @@ const StationConfirmModal = ({
             {t("LINE.CONFIRM_DIALOG.CLOSE", {
               appName: "App for Translations",
             })}
-          </Button>
-          <Button
-            className="custom-button custom-font-delete"
-            variant="contained"
-            color="success"
-            onClick={handleConfirm}
-          >
-            {t("LINE.CONFIRM_DIALOG.SAVE", { appName: "App for Translations" })}
           </Button>
         </Box>
       </Box>

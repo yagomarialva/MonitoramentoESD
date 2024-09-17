@@ -27,10 +27,10 @@
     align-items: center;
   }
   
-  .user-icon {
+  .user-icon-delete {
     margin-right: 8px;
     width: 35.5px !important;
-    color: #389e0d;
+    color: #F59E0B;
   }
   .modal-header {
     display: flex;

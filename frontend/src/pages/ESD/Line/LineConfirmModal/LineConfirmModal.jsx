@@ -49,7 +49,7 @@ const LineConfirmModal = ({
           className="user-icon-container"
           component="h2"
         >
-          <DeleteOutlineOutlinedIcon className="user-icon" />
+          <DeleteOutlineOutlinedIcon className="user-icon-delete" />
         </Typography>
         <Typography id="modal-modal-description" className="ant-modal-content" sx={{ mt: 2, ml:10 }}>
           {description}
