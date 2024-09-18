@@ -335,51 +335,6 @@ const LinkStantionLine = () => {
             onRowsPerPageChange={handleChangeRowsPerPage}
             rowsPerPageOptions={[10, 25, 50, 75, 100]}
           />
-
-          {/* <List>
-            {state.allLinks.map((link) => (
-              <ListItem key={link.id} divider>
-                <ListItemText
-                  primary={`${t("LINK_STATION_LINE.TABLE.LINE")}: ${
-                    link.lineID
-                  }`}
-                  secondary={`${t("LINK_STATION_LINE.TABLE.STATION")}: ${
-                    link.stationID
-                  } - ${t("LINK_STATION_LINE.TABLE.ORDER")}: ${link.order}`}
-                />
-                <ListItemSecondaryAction>
-                  <Tooltip title="Editar">
-                    <IconButton
-                      onClick={() => handleEditOpen(link)}
-                      edge="end"
-                      aria-label="edit"
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Informações">
-                    <IconButton
-                      onClick={() => handleOpen(link)}
-                      edge="end"
-                      aria-label="info"
-                    >
-                      <Info />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Excluir">
-                    <IconButton
-                      onClick={() => handleDeleteOpen(link)}
-                      edge="end"
-                      aria-label="delete"
-                    >
-                      <Delete />
-                    </IconButton>
-                  </Tooltip>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List> */}
-
           <LinkForm
             open={state.openModal}
             handleClose={handleCloseModal}

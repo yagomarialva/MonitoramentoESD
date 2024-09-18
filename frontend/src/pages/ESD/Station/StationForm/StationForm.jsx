@@ -12,6 +12,7 @@ import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionMan
 import { useTranslation } from "react-i18next";
 import InputAdornment from "@mui/material/InputAdornment";
 import { LockOutlined } from "@ant-design/icons";
+import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import "./StationForm.css";
 
 const style = {
@@ -65,7 +66,7 @@ const StationForm = ({ open, handleClose, onSubmit }) => {
           gutterBottom
           className="user-icon-container"
         >
-          <PrecisionManufacturingOutlinedIcon className="user-icon" />
+          <RouteOutlinedIcon className="user-icon" />
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField
