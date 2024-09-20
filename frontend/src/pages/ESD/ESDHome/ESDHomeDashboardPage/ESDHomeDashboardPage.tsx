@@ -10,6 +10,8 @@ import {
 import "./ESDTable.css";
 import StationMap from "./StationMap";
 import ESDHomeForm from "../ESDHomeForm/ESDHomeForm";
+import ESDFactoryMap from "./ESDFactoryMap/ESDFactoryMap";
+import { getAllLines } from "../../../../api/linerApi";
 
 interface Station {
   id: number;
@@ -142,6 +144,8 @@ const ESDDashboardPage: React.FC = () => {
     const fetchDataAllUsers = async () => {
       await fetchAndSetGroupedStations();
       try {
+        const lines = await getAllLines()
+        console.log('lines',lines)
         const toMount = await getAllStationMapper();
         const mounted = groupStationsByLine(toMount);
         setGroup(mounted);
@@ -157,7 +161,8 @@ const ESDDashboardPage: React.FC = () => {
 
   return (
     <>
-      <Button
+    <ESDFactoryMap></ESDFactoryMap>
+      {/* <Button
         id="add-button"
         variant="contained"
         color="success"
@@ -191,7 +196,7 @@ const ESDDashboardPage: React.FC = () => {
         >
           {state.snackbarMessage}
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </>
   );
 };

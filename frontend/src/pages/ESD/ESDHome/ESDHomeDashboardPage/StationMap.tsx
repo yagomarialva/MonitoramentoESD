@@ -6,6 +6,9 @@ import { useTranslation } from "react-i18next";
 import { createMonitor } from "../../../../api/monitorApi";
 import ESDHomeEditForm from "../ESDHomeEditForm/ESDHomeEditForm";
 import { Box, Snackbar, Alert, CircularProgress, Tooltip } from "@mui/material";
+import { Card, Switch, Button } from 'antd';
+import ComputerIcon from '@mui/icons-material/Computer';
+import AddIcon from '@mui/icons-material/Add';
 
 interface Monitor {
   id?: string;
@@ -30,6 +33,25 @@ interface StationMapProps {
   }[];
   refreshGroupedStations: () => Promise<void>;
 }
+
+// interface CardProps {
+//   id: string;
+//   title: string;
+//   content?: boolean[];
+// }
+
+// interface KanbanColumnProps {
+//   title: string;
+//   children: React.ReactNode;
+// }
+
+// interface AppState {
+//   [key: string]: {
+//     id: string;
+//     title: string;
+//     content: boolean[];
+//   }[];
+// }
 
 type Cell = Monitor | "empty"; // Union type for cell
 
@@ -142,8 +164,6 @@ const StationMap: React.FC<StationMapProps> = ({
     if (cell === "empty") return "empty";
 
     const { status, statusJig, statusOperador } = cell;
-    console.log("statusJig", statusJig);
-    console.log("statusOperador", statusOperador);
     let className = "";
     switch (`${statusJig}-${statusOperador}`) {
       case "PASS-PASS":
@@ -266,12 +286,12 @@ const StationMap: React.FC<StationMapProps> = ({
           </div>
         ))
       )}
-      <ESDHomeEditForm
+      {/* <ESDHomeEditForm
         open={state.openEditModal}
         handleClose={handleEditClose}
         onSubmit={handleEditCellChange}
         initialData={state.editData}
-      />
+      /> */}
       {selectedMonitor && (
         <MonitorEditForm
           open={state.openEditModal}

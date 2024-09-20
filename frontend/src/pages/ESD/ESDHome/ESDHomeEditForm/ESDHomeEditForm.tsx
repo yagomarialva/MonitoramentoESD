@@ -12,6 +12,23 @@ import {
   Button,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { SelectChangeEvent } from "@mui/material";
+
+interface Monitor {
+  id: string;
+  description: string;
+  serialNumber: string;
+  status: string;
+  statusOperador: string;
+  statusJig: string;
+}
+
+interface ESDHomeEditFormProps {
+  open: boolean;
+  handleClose: () => void;
+  onSubmit: (monitor: Monitor) => Promise<void>;
+  initialData?: Monitor | null; // Allow null
+}
 
 const style = {
   position: "absolute",
@@ -24,7 +41,7 @@ const style = {
   p: 4,
 };
 
-const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
+const ESDHomeEditForm: React.FC<ESDHomeEditFormProps> = ({ open, handleClose, onSubmit, initialData }) => {
   const {
     t,
     i18n: { changeLanguage, language },
@@ -37,45 +54,63 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
     changeLanguage(newLanguage);
   };
 
-  const [monitor, setMonitor] = useState({
-    id: "",
-    description: "",
-    serialNumber: "",
-    status: "",
-    statusOperador: "",
-    statusJig: "",
+  const [monitor, setMonitor] = useState<Monitor>({
+    id: initialData?.id || "",
+    description: initialData?.description || "",
+    serialNumber: initialData?.serialNumber || "",
+    status: initialData?.status || "",
+    statusOperador: initialData?.statusOperador || "",
+    statusJig: initialData?.statusJig || "",
   });
 
   const [isDescriptionEditable, setIsDescriptionEditable] = useState(false);
-  const [isDescriptionModified, setIsDescriptionModified] = useState(false); // Novo estado para rastrear a modificação da descrição
+  const [isDescriptionModified, setIsDescriptionModified] = useState(false); // Track description modification
 
   useEffect(() => {
     setIsDescriptionEditable(false);
     setIsDescriptionModified(false);
     if (initialData) {
       setMonitor(initialData);
+    } else {
+      setMonitor({
+        id: "",
+        description: "",
+        serialNumber: "",
+        status: "",
+        statusOperador: "",
+        statusJig: "",
+      });
     }
   }, [initialData]);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setMonitor((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>) => {
+    const { name, value } = e.target;
 
-    // Verifica se um dos selects foi alterado
-    if (name === "statusOperador" || name === "statusJig") {
-      setIsDescriptionEditable(true); // Habilita o campo de descrição
+    if ('checked' in e.target) { // Check if the target has a checked property
+      const checked = e.target.checked;
+      setMonitor((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
+    } else {
+      setMonitor((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
 
-    // Verifica se a descrição foi modificada em relação ao valor inicial
+    // Check if one of the selects was changed
+    if (name === "statusOperador" || name === "statusJig") {
+      setIsDescriptionEditable(true); // Enable description field
+    }
+
+    // Check if the description was modified
     if (name === "description") {
-      setIsDescriptionModified(value !== initialData.description);
+      setIsDescriptionModified(value !== initialData?.description);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await onSubmit(monitor);
@@ -143,10 +178,9 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
             </Select>
           </FormControl>
 
-          {/* Campo de descrição, desabilitado inicialmente e obrigatório após mudança */}
           <TextField
-            required={isDescriptionEditable} // Torna obrigatório após alteração
-            disabled={!isDescriptionEditable} // Desabilitado até uma mudança
+            required={isDescriptionEditable} // Becomes required after change
+            disabled={!isDescriptionEditable} // Disabled until change
             fullWidth
             margin="normal"
             id="outlined-description"
@@ -156,7 +190,7 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
               isDescriptionEditable
                 ? "Para alterar o status é necessário justificar o motivo."
                 : ""
-            } //
+            }
             value={monitor.description}
             onChange={handleChange}
           />
@@ -176,7 +210,7 @@ const ESDHomeEditForm = ({ open, handleClose, onSubmit, initialData }) => {
               type="submit"
               variant="contained"
               color="success"
-              disabled={!isDescriptionModified} // Botão desabilitado até que a descrição seja modificada
+              disabled={!isDescriptionModified} // Disabled until description is modified
             >
               {t("ESD_MONITOR.DIALOG.SAVE", {
                 appName: "App for Translations",
