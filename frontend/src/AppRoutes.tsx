@@ -1,22 +1,22 @@
-import React from "react";
-import "./i18n.js"; // ts => import './i18n.ts'
-import { useEffect } from "react";
-import { useAuth } from "./context/AuthContext.js";
-import HomePage from "./pages/HomePage/HomePage.jsx";
-import Operators from "./components/ESD/Operators/Operators.jsx";
-import Jig from "./components/ESD/Jigs/Jig.jsx";
-import Monitors from "./components/ESD/Monitors/Monitors.jsx";
+import React, { useEffect } from "react";
+import "./i18n"; // ts => import './i18n.ts'
+import { useAuth } from "./context/AuthContext"; // Remova a extensão do arquivo em imports no TS
+import HomePage from "./pages/HomePage/HomePage";
+import Operators from "./components/ESD/Operators/Operators";
+import Jig from "./components/ESD/Jigs/Jig";
+import Monitors from "./components/ESD/Monitors/Monitors";
 import { Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./pages/LoginPage/LoginPage.jsx";
-import SignUpPage from "./pages/SignUpPage/SignUpPage.jsx";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import ProtectedRoute from "./ProtectedRoute";
-import DashboardESD from "./components/ESD/DashboardESD/DashboardESD.jsx";
-import Line from "./components/ESD/Line/Line.jsx";
-import NotFoundPage from "./components/NotFoundPage/NotFoundPage.jsx";
-import Station from "./components/ESD/Station/Station.jsx";
-import LinkStationLine from "./components/ESD/LinkStationLine/LinkStationLine.jsx";
-import ESDTableView from "./pages/ESD/ESDHome/ESDHomeDashboardPage/ESDTableView.jsx";
-const AppRoutes = () => {
+import DashboardESD from "./components/ESD/DashboardESD/DashboardESD";
+import Line from "./components/ESD/Line/Line";
+import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
+import Station from "./components/ESD/Station/Station";
+import LinkStationLine from "./components/ESD/LinkStationLine/LinkStationLine";
+import ESDTableView from "./pages/ESD/ESDHome/ESDHomeDashboardPage/ESDTableView";
+
+const AppRoutes: React.FC = () => {
   useEffect(() => {
     document.title = "FCT Auto Test";
   }, []);
@@ -34,6 +34,7 @@ const AppRoutes = () => {
         />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignUpPage />} />
+        {/* Se quiser proteger a rota de registro */}
         {/* <Route
           path="/register"
           element={
@@ -106,7 +107,6 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/mocked"
           element={
@@ -115,7 +115,6 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>

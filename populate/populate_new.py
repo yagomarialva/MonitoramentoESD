@@ -62,7 +62,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 # SQL para inserir dados
-sql_monitor = "INSERT INTO monitoresd (serialNumber, status, statusOperador, statusJig, description, dateHour, lastDate) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+sql_monitor = "INSERT INTO monitoresd (serialNumber, statusOperador, statusJig, description, dateHour, lastDate) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 sql_jig = "INSERT INTO jig (name, description, created, lastUpdated) VALUES (%s, %s, %s, %s)"
 sql_line = "INSERT INTO line (ID, Name) VALUES (%s, %s)"
 sql_station = "INSERT INTO station (id, name, sizeX, sizeY, created, lastUpdated) VALUES (%s, %s, %s, %s, %s, %s)"
@@ -89,7 +89,6 @@ def check_user_exists(user_id):
 val_monitor = []
 for i in range(1, 6):  # Adapte o número de registros conforme necessário
     serial_number = generate_random_string(50)
-    status = random.choice(['PASS', 'FAIL'])
     status_operador = random.choice(['PASS', 'FAIL'])
     status_jig = random.choice(['PASS', 'FAIL'])
     description = generate_random_string(70)
@@ -98,7 +97,6 @@ for i in range(1, 6):  # Adapte o número de registros conforme necessário
     
     val_monitor.append((
         serial_number,
-        status,
         status_operador,
         status_jig,
         description,

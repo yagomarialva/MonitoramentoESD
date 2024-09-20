@@ -7,28 +7,36 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Logo from "./logo.png";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import TokenApi from "../../api/TokenApi";
 import { useAuth } from "../../context/AuthContext";
 
-const LoginPage = () => {
+interface SnackbarState {
+  snackbarOpen: boolean;
+  snackbarMessage: string;
+  snackbarSeverity: "success" | "error" | "warning" | "info";
+}
+
+const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const [username, setusername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const { login } = useAuth();
-  const [state, setState] = useState({
+  const [state, setState] = useState<SnackbarState>({
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarSeverity: "success",
   });
-  const handleStateChange = (changes) => {
+
+  const handleStateChange = (changes: Partial<SnackbarState>) => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
+
   const handleClick = () => {
     setLoading(true);
     TokenApi.post("/api/Authentication", {
@@ -42,7 +50,7 @@ const LoginPage = () => {
         navigate("/");
       })
       .catch(() => {
-        showSnackbar('Login ou senha invalidos, tente novamente!');
+        showSnackbar("Login ou senha inválidos, tente novamente!");
       })
       .finally(() => {
         const userData = { token: localStorage.getItem("token") };
@@ -51,7 +59,10 @@ const LoginPage = () => {
       });
   };
 
-  const showSnackbar = (message, severity = "error") => {
+  const showSnackbar = (
+    message: string,
+    severity: SnackbarState["snackbarSeverity"] = "error"
+  ) => {
     handleStateChange({
       snackbarMessage: message,
       snackbarSeverity: severity,
@@ -93,7 +104,9 @@ const LoginPage = () => {
           label="Nome"
           sx={{ my: 3 }}
           fullWidth
-          onChange={(e) => setusername(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setUsername(e.target.value)
+          }
           value={username}
         />
         <TextField
@@ -101,7 +114,9 @@ const LoginPage = () => {
           type="password"
           sx={{ mb: 3 }}
           fullWidth
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setPassword(e.target.value)
+          }
           value={password}
         />
 
@@ -115,30 +130,30 @@ const LoginPage = () => {
         >
           Fazer Login
         </LoadingButton>
-
       </Card>
+
       <Snackbar
-              open={state.snackbarOpen}
-              autoHideDuration={6000}
-              onClose={() => handleStateChange({ snackbarOpen: false })}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              className={`snackbar-content snackbar-${state.snackbarSeverity}`}
-            >
-              <Alert
-                onClose={() => handleStateChange({ snackbarOpen: false })}
-                severity={state.snackbarSeverity}
-                sx={{
-                  backgroundColor: "inherit",
-                  color: "inherit",
-                  fontWeight: "inherit",
-                  boxShadow: "inherit",
-                  borderRadius: "inherit",
-                  padding: "inherit",
-                }}
-              >
-                {state.snackbarMessage}
-              </Alert>
-            </Snackbar>
+        open={state.snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => handleStateChange({ snackbarOpen: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        className={`snackbar-content snackbar-${state.snackbarSeverity}`}
+      >
+        <Alert
+          onClose={() => handleStateChange({ snackbarOpen: false })}
+          severity={state.snackbarSeverity}
+          sx={{
+            backgroundColor: "inherit",
+            color: "inherit",
+            fontWeight: "inherit",
+            boxShadow: "inherit",
+            borderRadius: "inherit",
+            padding: "inherit",
+          }}
+        >
+          {state.snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
