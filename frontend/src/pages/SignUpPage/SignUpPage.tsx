@@ -11,30 +11,38 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import TokenApi from "../../api/TokenApi";
 import Logo from "./logo.png";
 
+// Tipos para as variáveis de estado
+interface SnackbarState {
+  open: boolean;
+  message: string;
+  severity: "success" | "error" | "warning" | "info";
+}
+
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$/;
 const nonEmptyRegex = /^\S.*$/;
 
-const SignUpPage = () => {
+const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [rolesName, setRolesName] = useState("");
-  const [badge, setBadge] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [rolesName, setRolesName] = useState<string>("");
+  const [badge, setBadge] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     message: "",
     severity: "success",
   });
 
-  const handleSnackbarOpen = (message, severity) => {
+  const handleSnackbarOpen = (message: string, severity: SnackbarState["severity"]) => {
     setSnackbar({
       open: true,
       message,
@@ -46,8 +54,8 @@ const SignUpPage = () => {
     setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
-  const handleChangeRole = (event) => {
-    setRolesName(event.target.value);
+  const handleChangeRole = (event: SelectChangeEvent) => {
+    setRolesName(event.target.value as string);
   };
 
   const handleSubmit = async () => {
@@ -84,7 +92,7 @@ const SignUpPage = () => {
       setRolesName("");
       setBadge("");
       handleSnackbarOpen("Usuário criado com sucesso!", "success");
-    } catch (error) {
+    } catch (error: any) {
       handleSnackbarOpen(error.response.data.errors.Password, "error");
     } finally {
       setLoading(false);
@@ -140,7 +148,7 @@ const SignUpPage = () => {
           fullWidth
           margin="normal"
           value={username}
-          error={username && !nonEmptyRegex.test(username)}
+          error={!!username && !nonEmptyRegex.test(username)}
           helperText={username && !nonEmptyRegex.test(username) ? "Nome não pode estar vazio." : ""}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -150,7 +158,7 @@ const SignUpPage = () => {
           fullWidth
           margin="normal"
           value={badge}
-          error={badge && !nonEmptyRegex.test(badge)}
+          error={!!badge && !nonEmptyRegex.test(badge)}
           helperText={badge && !nonEmptyRegex.test(badge) ? "Matricula não pode estar vazia." : ""}
           onChange={(e) => setBadge(e.target.value)}
         />
@@ -161,7 +169,7 @@ const SignUpPage = () => {
           fullWidth
           margin="normal"
           value={password}
-          error={password && !passwordRegex.test(password)}
+          error={!!password && !passwordRegex.test(password)}
           helperText={
             password && !passwordRegex.test(password)
               ? "A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número."
@@ -176,7 +184,7 @@ const SignUpPage = () => {
           fullWidth
           margin="normal"
           value={confirmPassword}
-          error={confirmPassword && password !== confirmPassword}
+          error={!!confirmPassword && password !== confirmPassword}
           helperText={confirmPassword && password !== confirmPassword ? "As senhas não coincidem." : ""}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />

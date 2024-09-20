@@ -25,13 +25,22 @@ import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress"; // Importa o indicador de progresso circular
 
+// Definição dos tipos para os dados do menu
+interface MenuItem {
+  text: string;
+  icon: React.ReactNode;
+  path: string;
+  roles: string[];
+  subItems?: { text: string; path: string }[];
+}
+
 // Funções de utilitário
-const getUserRoleFromToken = (token) => {
+const getUserRoleFromToken = (token: string | null): string => {
   return token === "administrator" ? "administrator" : "operator";
 };
 
-const getMenuItems = (userRole) => {
-  const allItems = [
+const getMenuItems = (userRole: string): MenuItem[] => {
+  const allItems: MenuItem[] = [
     {
       text: "Controle",
       icon: <HomeIcon />,
@@ -73,13 +82,17 @@ const getMenuItems = (userRole) => {
 };
 
 // Componente do MenuList
-const MenuList = ({ menuItems }) => {
-  const [expandedItem, setExpandedItem] = useState(null);
+interface MenuListProps {
+  menuItems: MenuItem[];
+}
+
+const MenuList: React.FC<MenuListProps> = ({ menuItems }) => {
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const handleItemClick = (item) => {
-    setExpandedItem(expandedItem === item ? null : item);
+  const handleItemClick = (itemText: string) => {
+    setExpandedItem(expandedItem === itemText ? null : itemText);
   };
 
   useEffect(() => {
@@ -91,40 +104,30 @@ const MenuList = ({ menuItems }) => {
     }
   }, [location, menuItems, expandedItem, currentPath]);
 
-  const isSelected = (path) => currentPath === path;
+  const isSelected = (path: string) => currentPath === path;
 
   return (
     <List>
       {menuItems.map((item, index) => (
         <React.Fragment key={index}>
-          <ListItem
-            disablePadding
-            sx={{
-              display: "flex", // Alinha os itens lado a lado
-              alignItems: "center", // Centraliza os itens verticalmente
-            }}
-          >
+          <ListItem disablePadding>
             <ListItemButton
               component={Link}
               to={item.path}
               className={`list-items-buttons ${
                 isSelected(item.path) ? "selected" : ""
               }`}
-              sx={{ flexGrow: 1 }} // Permite que o botão ocupe o espaço disponível
             >
               <ListItemIcon className="list-items-buttons-icons">
                 {item.icon}
-              </ListItemIcon >
+              </ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>
             {item.subItems && (
               <IconButton
-              className={`list-items-buttons ${
-                isSelected(item.path) ? "selected" : ""
-              }`}
-                onClick={() => item.subItems && handleItemClick(item.text)}
+                onClick={() => handleItemClick(item.text)}
                 edge="end"
-                sx={{ borderRadius: 0 }} // Define a área clicável como quadrada
+                sx={{ borderRadius: 0 }}
               >
                 {expandedItem === item.text ? <ExpandLess /> : <ExpandMore />}
               </IconButton>
@@ -152,20 +155,23 @@ const MenuList = ({ menuItems }) => {
 };
 
 // Componente principal Menu
-export default function Menu({ componentToShow }) {
+interface MenuProps {
+  componentToShow: React.ReactNode;
+}
+
+const Menu: React.FC<MenuProps> = ({ componentToShow }) => {
   const token = localStorage.getItem("role");
   const name = localStorage.getItem("name");
   const userRole = getUserRoleFromToken(token);
   const menuItems = getMenuItems(userRole);
   const { logout } = useAuth();
   const [open] = useState(true);
-  const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simula um tempo de carregamento
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000); // 1 segundo de atraso
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -199,7 +205,7 @@ export default function Menu({ componentToShow }) {
           className="drawer-card"
         >
           <CardContent>
-            {isLoading ? ( // Exibe o loading enquanto isLoading for true
+            {isLoading ? (
               <Box
                 sx={{
                   display: "flex",
@@ -208,7 +214,7 @@ export default function Menu({ componentToShow }) {
                   height: "500px",
                 }}
               >
-                <CircularProgress /> {/* Indicador de progresso */}
+                <CircularProgress />
               </Box>
             ) : (
               componentToShow
@@ -218,4 +224,6 @@ export default function Menu({ componentToShow }) {
       </Box>
     </Box>
   );
-}
+};
+
+export default Menu;
