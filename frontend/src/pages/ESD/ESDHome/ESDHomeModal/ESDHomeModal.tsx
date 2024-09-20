@@ -10,7 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 const style = {
-  position: "absolute",
+  position: "absolute" as const,
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -20,7 +20,21 @@ const style = {
   p: 4,
 };
 
-const ESDHomeModal = ({ open, handleClose, produce }) => {
+interface ESDHomeModalProps {
+  open: boolean;
+  handleClose: () => void;
+  produce?: {
+    monitorsEsd?: {
+      stationName?: string;
+    };
+    lineName?: string;
+    status?: string;
+    statusJig?: string;
+    statusOperador?: string;
+  };
+}
+
+const ESDHomeModal: React.FC<ESDHomeModalProps> = ({ open, handleClose, produce }) => {
   const { t } = useTranslation();
 
   return (
@@ -38,7 +52,7 @@ const ESDHomeModal = ({ open, handleClose, produce }) => {
               disabled
               required
               label="Data"
-              defaultValue={produce?.monitorsEsd.stationName ?? "N/A"}
+              defaultValue={produce?.monitorsEsd?.stationName ?? "N/A"}
               margin="normal"
             />
           </Typography>

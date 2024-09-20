@@ -1,31 +1,63 @@
 import React, { useState, useEffect } from "react";
 import "./StationMap.css";
 import MonitorModal from "./MonitorModal";
-import NoMonitorModal from "./NoMonitorModal";
 import MonitorEditForm from "../../Monitor/MonitorEditForm/MonitorEditForm";
 import { useTranslation } from "react-i18next";
-import { createMonitor, getAllMonitors } from "../../../../api/monitorApi";
-import { getAllStationMapper } from "../../../../api/mapingAPI";
+import { createMonitor } from "../../../../api/monitorApi";
 import ESDHomeEditForm from "../ESDHomeEditForm/ESDHomeEditForm";
-import {
-  IconButton,
-  Box,
-  Snackbar,
-  Alert,
-  Button,
-  TextField,
-  Container,
-  Tooltip,
-  Typography,
-  CircularProgress, // Importação do componente de carregamento
-} from "@mui/material";
+import { Box, Snackbar, Alert, CircularProgress, Tooltip } from "@mui/material";
 
-const StationMap = ({ groupedStations, refreshGroupedStations }) => {
+interface Monitor {
+  id?: string;
+  serialNumber?: string;
+  status?: string;
+  statusJig?: string;
+  statusOperador?: string;
+}
+
+interface Station {
+  station: {
+    sizeX: number;
+    sizeY: number;
+    name: string;
+  };
+  monitorsEsd?: Monitor[];
+}
+
+interface StationMapProps {
+  groupedStations: {
+    stations: Station[];
+  }[];
+  refreshGroupedStations: () => Promise<void>;
+}
+
+type Cell = Monitor | "empty"; // Union type for cell
+
+const StationMap: React.FC<StationMapProps> = ({
+  groupedStations,
+  refreshGroupedStations,
+}) => {
   const { t } = useTranslation();
-  const [selectedMonitor, setSelectedMonitor] = useState(null);
-  const [noMonitorCell, setNoMonitorCell] = useState(null);
-  const [loading, setLoading] = useState(true); // Estado de carregamento
-  const [state, setState] = useState({
+  const [selectedMonitor, setSelectedMonitor] = useState<Monitor | null>(null);
+  const [noMonitorCell, setNoMonitorCell] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [state, setState] = useState<{
+    allMonitors: Monitor[];
+    monitor: Monitor;
+    open: boolean;
+    openModal: boolean;
+    openEditModal: boolean;
+    editData: Monitor | null;
+    deleteConfirmOpen: boolean;
+    monitorToDelete: Monitor | null;
+    snackbarOpen: boolean;
+    snackbarMessage: string;
+    snackbarSeverity: "success" | "error";
+    filterSerialNumber: string;
+    filterDescription: string;
+    page: number;
+    rowsPerPage: number;
+  }>({
     allMonitors: [],
     monitor: {},
     open: false,
@@ -43,11 +75,18 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
     rowsPerPage: 10,
   });
 
-  const handleStateChange = (changes) => {
+  const handleStateChange = (changes: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
 
-  const showSnackbar = (message, severity = "success") => {
+  const isMonitor = (cell: Monitor | "empty"): cell is Monitor => {
+    return typeof cell !== "string"; // Checks if it's not "empty"
+  };
+
+  const showSnackbar = (
+    message: string,
+    severity: "success" | "error" = "success"
+  ) => {
     handleStateChange({
       snackbarMessage: message,
       snackbarSeverity: severity,
@@ -55,20 +94,21 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
     });
   };
 
-  const handleEditOpen = (monitor) => {
-    handleStateChange({ editData: monitor.monitorsEsd, openEditModal: true });
+  const handleEditOpen = (monitor: Monitor) => {
+    handleStateChange({ editData: monitor, openEditModal: true });
   };
 
-  const handleCellClick = (cell) => {
+  const handleCellClick = (cell: Cell) => {
     if (cell === "empty") {
       setNoMonitorCell("No monitor in this cell.");
     } else {
-      setSelectedMonitor(cell.monitorsEsd);
+      setSelectedMonitor(cell);
     }
   };
 
-  const handleEditClose = () =>
+  const handleEditClose = () => {
     handleStateChange({ openEditModal: false, editData: null });
+  };
 
   const handleCloseMonitorModal = () => {
     setSelectedMonitor(null);
@@ -78,9 +118,9 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
     setNoMonitorCell(null);
   };
 
-  const handleEditCellChange = async (params) => {
+  const handleEditCellChange = async (params: Monitor) => {
     try {
-      setLoading(true); // Ativa o carregamento
+      setLoading(true);
       await createMonitor(params);
       await refreshGroupedStations();
       showSnackbar(
@@ -94,15 +134,16 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
         "error"
       );
     } finally {
-      setLoading(false); // Desativa o carregamento
+      setLoading(false);
     }
   };
 
-  const getCellClassName = (cell) => {
+  const getCellClassName = (cell: Cell) => {
     if (cell === "empty") return "empty";
 
-    const { status, statusJig, statusOperador } = cell.monitorsEsd || {};
-
+    const { status, statusJig, statusOperador } = cell;
+    console.log("statusJig", statusJig);
+    console.log("statusOperador", statusOperador);
     let className = "";
     switch (`${statusJig}-${statusOperador}`) {
       case "PASS-PASS":
@@ -118,7 +159,8 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
         className = "monitor-fail operator-pass";
         break;
       default:
-        className = "monitor-unknown operator-unknown";
+        // className = "monitor-unknown operator-unknown";
+        className = "one-one";
         break;
     }
 
@@ -130,11 +172,11 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
       lineGroup.stations.forEach((station) => {
         (station.monitorsEsd || []).forEach((monitor) => {
           if (
-            monitor.monitorsEsd.statusJig === "FAIL" ||
-            monitor.monitorsEsd.statusOperador === "FAIL"
+            monitor.statusJig === "FAIL" ||
+            monitor.statusOperador === "FAIL"
           ) {
             showSnackbar(
-              `Alerta: O monitor ${monitor.monitorsEsd.serialNumber} apresenta falhas no ESD`,
+              `Alerta: O monitor ${monitor.serialNumber} apresenta falhas no ESD`,
               "error"
             );
           }
@@ -147,7 +189,7 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
     checkForFails();
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000); // 1 segundo de atraso
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [groupedStations]);
@@ -163,7 +205,7 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
             height: "500px",
           }}
         >
-          <CircularProgress /> {/* Indicador de progresso */}
+          <CircularProgress />
         </Box>
       ) : (
         groupedStations.map((lineGroup, lineIndex) => (
@@ -193,9 +235,8 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
                             <Tooltip
                               key={`tooltip-${cellIndex}`}
                               title={
-                                cell !== "empty" &&
-                                cell.monitorsEsd?.serialNumber
-                                  ? cell.monitorsEsd.serialNumber
+                                isMonitor(cell) && cell.serialNumber
+                                  ? cell.serialNumber
                                   : ""
                               }
                               arrow
@@ -206,12 +247,12 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
                                   cell
                                 )}`}
                                 onClick={
-                                  cell !== "empty"
+                                  isMonitor(cell)
                                     ? () => handleEditOpen(cell)
-                                    : null
+                                    : undefined
                                 }
                               >
-                                {cell === "empty" ? " " : cell.id}
+                                {isMonitor(cell) ? cell.id : " "}
                               </div>
                             </Tooltip>
                           ))}
@@ -237,12 +278,6 @@ const StationMap = ({ groupedStations, refreshGroupedStations }) => {
           handleClose={handleEditClose}
           onSubmit={handleEditCellChange}
           initialData={state.editData}
-        />
-      )}
-      {noMonitorCell && (
-        <NoMonitorModal
-          message={noMonitorCell}
-          onClose={handleCloseNoMonitorModal}
         />
       )}
       <Snackbar

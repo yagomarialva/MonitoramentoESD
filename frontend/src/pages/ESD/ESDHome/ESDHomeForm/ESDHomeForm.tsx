@@ -5,15 +5,13 @@ import {
   Paper,
   FormControl,
   Modal,
-  TextField,
   Button,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import { getAllLines, getLine } from "../../../../api/linerApi";
 import { getAllStations, getStation } from "../../../../api/stationApi";
 import {
@@ -26,7 +24,7 @@ import {
 import { getAllLinks, getLink } from "../../../../api/linkStationLine";
 
 const style = {
-  position: "absolute",
+  position: "absolute" as const,
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -36,24 +34,57 @@ const style = {
   p: 4,
 };
 
-const ESDHomeForm = ({ open, handleClose, onSubmit }) => {
-  const { t } = useTranslation();
-  const [allMonitors, setAllMonitors] = useState([]);
-  const [allLinks, setAllLinks] = useState([]);
-  const [mappedItem, setMappedItem] = useState({
-    monitorEsdId: 0,
-    linkStationAndLineId: 0
-  })
+interface ESDHomeFormProps {
+  open: boolean;
+  handleClose: () => void;
+  onSubmit: (mappedItem: MappedItem) => Promise<void>;
+}
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+interface MappedItem {
+  monitorEsdId: number;
+  linkStationAndLineId: number;
+}
+
+interface Monitor {
+  id: number;
+  serialNumber: string;
+}
+
+interface Link {
+  id: number;
+}
+
+const ESDHomeForm: React.FC<ESDHomeFormProps> = ({
+  open,
+  handleClose,
+  onSubmit,
+}) => {
+  const { t } = useTranslation();
+  const [allMonitors, setAllMonitors] = useState<Monitor[]>([]);
+  const [allLinks, setAllLinks] = useState<Link[]>([]);
+  const [mappedItem, setMappedItem] = useState<MappedItem>({
+    monitorEsdId: 0,
+    linkStationAndLineId: 0,
+  });
+
+  const handleChange = (e: SelectChangeEvent<number>) => {
+    const { name, value } = e.target;
     setMappedItem((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: Number(value), // Certifique-se de converter o valor para number
     }));
   };
 
-  const handleSubmit = async (e) => {
+  // const handleChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+  //   const { name, value } = e.target;
+  //   setMappedItem((prev) => ({
+  //     ...prev,
+  //     [name]: Number(value), // Certifique-se de converter o valor para number
+  //   }));
+  // };
+
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await onSubmit(mappedItem);
@@ -66,13 +97,10 @@ const ESDHomeForm = ({ open, handleClose, onSubmit }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const lines = await getAllLines();
-        const stations = await getAllStations();
-        const result = await getAllMonitors();
-        const links = await getAllLinks();
-        console.log("monitors", links);
-        setAllLinks(links);
-        setAllMonitors(result);
+        const resultMonitors = await getAllMonitors();
+        const resultLinks = await getAllLinks();
+        setAllMonitors(resultMonitors);
+        setAllLinks(resultLinks);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -80,41 +108,19 @@ const ESDHomeForm = ({ open, handleClose, onSubmit }) => {
     fetchData();
   }, []);
 
-  const handleLineSelect = async (id) => {
+  const handleMonitorSelect = async (id: number) => {
     try {
-      const selectedLine = await getLine(id);
-      // Atualize o estado se necessário com informações de `selectedLine`
+      await getMonitor(id);
     } catch (error) {
-      console.error("Error fetching line details:", error);
+      console.error("Error fetching monitor details:", error);
     }
   };
 
-  const handleMonitorSelect = async (id) => {
+  const handleLinkSelect = async (id: number) => {
     try {
-      const selectedLine = await getMonitor(id);
-      // Atualize o estado se necessário com informações de `selectedLine`
+      await getLink(id);
     } catch (error) {
-      console.error("Error fetching line details:", error);
-    }
-  };
-
-  const handleLinkSelect = async (id) => {
-    try {
-      const selectedLine = await getLink(id);
-      // const selectedMonitor = await getStation(id.stationID);
-      // console.log("selectedMonitor", selectedMonitor);
-      // Atualize o estado se necessário com informações de `selectedLine`
-    } catch (error) {
-      console.error("Error fetching line details:", error);
-    }
-  };
-
-  const handleStationSelect = async (id) => {
-    try {
-      const selectedStation = await getStation(id);
-      // Atualize o estado se necessário com informações de `selectedStation`
-    } catch (error) {
-      console.error("Error fetching station details:", error);
+      console.error("Error fetching link details:", error);
     }
   };
 
@@ -133,9 +139,7 @@ const ESDHomeForm = ({ open, handleClose, onSubmit }) => {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <FormControl fullWidth margin="normal" required>
-            <InputLabel id="monitorEsdId">
-              Monitor ESD
-            </InputLabel>
+            <InputLabel id="monitorEsdId">Monitor ESD</InputLabel>
             <Select
               labelId="monitorEsdId"
               id="monitorEsdId"
@@ -143,7 +147,7 @@ const ESDHomeForm = ({ open, handleClose, onSubmit }) => {
               value={mappedItem.monitorEsdId}
               onChange={(e) => {
                 handleChange(e);
-                handleMonitorSelect(e.target.value);
+                handleMonitorSelect(Number(e.target.value));
               }}
               label="Monitor ESD"
             >
@@ -156,7 +160,6 @@ const ESDHomeForm = ({ open, handleClose, onSubmit }) => {
           </FormControl>
           <FormControl fullWidth margin="normal" required>
             <InputLabel id="linkStationAndLineId">
-              {" "}
               {t("LINK_STATION_LINE.TABLE.LINE", {
                 appName: "App for Translations",
               })}
@@ -168,13 +171,13 @@ const ESDHomeForm = ({ open, handleClose, onSubmit }) => {
               value={mappedItem.linkStationAndLineId}
               onChange={(e) => {
                 handleChange(e);
-                handleLinkSelect(e.target.value);
+                handleLinkSelect(Number(e.target.value));
               }}
               label="Ligação"
             >
-              {allLinks.map((monitor) => (
-                <MenuItem key={monitor.id} value={monitor.id}>
-                  {monitor.id}
+              {allLinks.map((link) => (
+                <MenuItem key={link.id} value={link.id}>
+                  {link.id}
                 </MenuItem>
               ))}
             </Select>
