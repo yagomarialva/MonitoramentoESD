@@ -26,9 +26,9 @@ const ESDLine: React.FC<LineProps> = ({ title, children }) => (
       transition: "background-color 0.3s ease",
     }}
   >
-    <h3 style={{ marginBottom: "20px", fontSize: "18px", color: "#333" }}>
+    {/* <h3 style={{ marginBottom: "20px", fontSize: "18px", color: "#333" }}>
       {title}
-    </h3>
+    </h3> */}
     {children}
   </div>
 );
