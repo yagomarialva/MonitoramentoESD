@@ -1,0 +1,25 @@
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Ajuste para o layout */
+    gap: 10px;
+  }
+  
+  .icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .computer-icon, .add-icon {
+    font-size: 24px;
+  }
+  
+  .add-icon {
+    color: #888;
+  }
+  
+  .computer-icon {
+    color: #000;
+  }
+  

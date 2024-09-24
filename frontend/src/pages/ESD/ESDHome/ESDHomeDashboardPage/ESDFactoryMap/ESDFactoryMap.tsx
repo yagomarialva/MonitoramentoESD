@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ESDLine from "../ESDLine/ESDLine";
 import { getAllStationMapper } from "../../../../../api/mapingAPI";
-import Card from "antd/es/card/Card";
-import ComputerIcon from "@mui/icons-material/Computer";
-import AddIcon from "@mui/icons-material/Add";
-import { Tooltip } from "antd"; // Importando o Tooltip do Ant Design
-import PointOfSaleOutlinedIcon from "@mui/icons-material/PointOfSaleOutlined";
 import "./ESDFactoryMap.css";
+import ESDStation from "../ESDStation/ESDStation";
 
 interface Station {
   id: number;
@@ -97,66 +93,13 @@ const ESDFactoryMap: React.FC = () => {
                 .flatMap((link) => link.stations)
                 .find((entry: StationEntry) => entry.station.id === stationId);
 
-              if (stationEntry) {
-                const maxCells = 6;
-              //  console.log('stationEntry', stationEntry.linkStationAndLineID)
-                // Ordena os monitores pelo positionSequence
-                const sortedMonitors = [...stationEntry.monitorsEsd].sort(
-                  (a, b) => a.positionSequence - b.positionSequence
-                );
-
-                const displayItems = Array.from({ length: maxCells }, (_, index) => {
-                  const monitor = sortedMonitors[index]; // Usa os monitores ordenados
-
-                  return monitor ? (
-                    <Tooltip
-                      key={monitor.monitorsEsd.serialNumber}
-                      title={
-                        <div>
-                          <strong>Position Sequence:</strong> {monitor.positionSequence}
-                          <br />
-                          <strong>Serial Number:</strong> {monitor.monitorsEsd.serialNumber}
-                          <br />
-                          <strong>Description:</strong> {monitor.monitorsEsd.description}
-                          <br />
-                          <strong>Status Jig:</strong> {monitor.monitorsEsd.statusJig}
-                          <br />
-                          <strong>Status Operator:</strong> {monitor.monitorsEsd.statusOperador}
-                        </div>
-                      }
-                      placement="top"
-                    >
-                      <div
-                        className="icon-container"
-                        onClick={() =>
-                          console.log(
-                            `Link ID: ${stationEntry.linkStationAndLineID}, Linha: ${lineName}, Estação: ${stationEntry.station.name},Status Jig:${monitor.monitorsEsd.statusJig}, Status Operador:${monitor.monitorsEsd.statusOperador} Posição: ${monitor.positionSequence}`
-                          )
-                        }
-                      >
-                        <PointOfSaleOutlinedIcon className="computer-icon" />
-                      </div>
-                    </Tooltip>
-                  ) : (
-                    <AddIcon
-                      key={index}
-                      className="add-icon"
-                      onClick={() =>
-                        console.log(
-                          `Link ID: ${stationEntry.linkStationAndLineID}, Linha: ${lineName}, Estação: ${stationEntry.station.name}, Posição: célula vazia ${index + 1}`
-                        )
-                      }
-                    />
-                  );
-                });
-
-                return (
-                  <Card key={stationEntry.station.id} title={stationEntry.station.name}>
-                    <div className="card-grid">{displayItems}</div>
-                  </Card>
-                );
-              }
-              return null;
+              return stationEntry ? (
+                <ESDStation
+                  key={stationEntry.station.id}
+                  stationEntry={stationEntry}
+                  lineName={lineName}
+                />
+              ) : null;
             })}
           </ESDLine>
         ))}
