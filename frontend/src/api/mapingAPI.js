@@ -11,6 +11,16 @@ export const getAllStationMapper = async () => {
   }
 };
 
+export const getAllStationView = async () => {
+  try {
+    const { data } = await TokenApi.get("/api/StationView/todasEstacaoView");
+    return data;
+  } catch (error) {
+    console.error("Error fetching mapper:", error);
+    throw error;
+  }
+};
+
 // Obtém um monitor específico por ID
 export const getStationMapper = async (id) => {
   try {

@@ -5,9 +5,12 @@ import Card from "antd/es/card/Card";
 import ComputerIcon from "@mui/icons-material/Computer";
 import AddIcon from "@mui/icons-material/Add";
 import { Tooltip } from "antd"; // Importando o Tooltip do Ant Design
+import PointOfSaleOutlinedIcon from "@mui/icons-material/PointOfSaleOutlined";
+import "./ESDFactoryMap.css";
 
 interface Station {
   id: number;
+  linkStationAndLineID:number;
   name: string;
   sizeX: number;
   sizeY: number;
@@ -16,6 +19,9 @@ interface Station {
 interface MonitorDetails {
   serialNumber: string;
   description: string;
+  statusJig: string;      // Novo campo statusJig
+  statusOperador: string; // Novo campo statusOperator
+  linkStationAndLineID:number;
 }
 
 interface Monitor {
@@ -25,6 +31,7 @@ interface Monitor {
 
 interface StationEntry {
   station: Station;
+  linkStationAndLineID:number;
   monitorsEsd: Monitor[];
 }
 
@@ -52,15 +59,16 @@ const ESDFactoryMap: React.FC = () => {
     const groupedByLines: AppState = {};
 
     factoryMap.forEach((element: Link) => {
-      const lineId = element.line.id;
-      if (!groupedByLines[lineId]) {
-        groupedByLines[lineId] = { links: [], stations: new Set() };
+      const lineName = element.line.name || "Sem Nome"; // Usa o nome da linha ou "Sem Nome" se for nulo
+      if (!groupedByLines[lineName]) {
+        groupedByLines[lineName] = { links: [], stations: new Set() };
       }
-      groupedByLines[lineId].links.push(element);
+      groupedByLines[lineName].links.push(element);
       element.stations.forEach((stationEntry: StationEntry) => {
-        groupedByLines[lineId].stations.add(stationEntry.station.id);
+        groupedByLines[lineName].stations.add(stationEntry.station.id);
       });
     });
+
     setColumns(groupedByLines);
   };
 
@@ -80,8 +88,8 @@ const ESDFactoryMap: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ padding: "40px", backgroundColor: "#f0f2f5" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div className="container">
+      <div className="line-container">
         {Object.keys(columns).map((lineName) => (
           <ESDLine key={lineName} title={lineName}>
             {Array.from(columns[lineName]?.stations || []).map((stationId) => {
@@ -90,42 +98,61 @@ const ESDFactoryMap: React.FC = () => {
                 .find((entry: StationEntry) => entry.station.id === stationId);
 
               if (stationEntry) {
-                const maxCells = 12; // Maximo de 12 celulas
+                const maxCells = 6;
+              //  console.log('stationEntry', stationEntry.linkStationAndLineID)
+                // Ordena os monitores pelo positionSequence
+                const sortedMonitors = [...stationEntry.monitorsEsd].sort(
+                  (a, b) => a.positionSequence - b.positionSequence
+                );
+
                 const displayItems = Array.from({ length: maxCells }, (_, index) => {
-                  const monitor = stationEntry.monitorsEsd[index];
+                  const monitor = sortedMonitors[index]; // Usa os monitores ordenados
 
                   return monitor ? (
                     <Tooltip
                       key={monitor.monitorsEsd.serialNumber}
                       title={
                         <div>
+                          <strong>Position Sequence:</strong> {monitor.positionSequence}
+                          <br />
                           <strong>Serial Number:</strong> {monitor.monitorsEsd.serialNumber}
                           <br />
                           <strong>Description:</strong> {monitor.monitorsEsd.description}
+                          <br />
+                          <strong>Status Jig:</strong> {monitor.monitorsEsd.statusJig}
+                          <br />
+                          <strong>Status Operator:</strong> {monitor.monitorsEsd.statusOperador}
                         </div>
                       }
-                      placement="top" // Define o posicionamento do tooltip
+                      placement="top"
                     >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ComputerIcon style={{ fontSize: "24px", color: "#1890ff", marginRight: "8px" }} />
+                      <div
+                        className="icon-container"
+                        onClick={() =>
+                          console.log(
+                            `Link ID: ${stationEntry.linkStationAndLineID}, Linha: ${lineName}, Estação: ${stationEntry.station.name},Status Jig:${monitor.monitorsEsd.statusJig}, Status Operador:${monitor.monitorsEsd.statusOperador} Posição: ${monitor.positionSequence}`
+                          )
+                        }
+                      >
+                        <PointOfSaleOutlinedIcon className="computer-icon" />
                       </div>
                     </Tooltip>
                   ) : (
-                    <AddIcon key={index} style={{ fontSize: "24px", color: "#d9d9d9" }} />
+                    <AddIcon
+                      key={index}
+                      className="add-icon"
+                      onClick={() =>
+                        console.log(
+                          `Link ID: ${stationEntry.linkStationAndLineID}, Linha: ${lineName}, Estação: ${stationEntry.station.name}, Posição: célula vazia ${index + 1}`
+                        )
+                      }
+                    />
                   );
                 });
 
                 return (
                   <Card key={stationEntry.station.id} title={stationEntry.station.name}>
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(2, 1fr)", // Duas colunas
-                        gap: "8px",
-                      }}
-                    >
-                      {displayItems}
-                    </div>
+                    <div className="card-grid">{displayItems}</div>
                   </Card>
                 );
               }
