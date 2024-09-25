@@ -4,8 +4,12 @@ import { Tooltip, Modal } from "antd";
 import PointOfSaleOutlinedIcon from "@mui/icons-material/PointOfSaleOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import "./ESDStation.css"; // Importing the separate CSS file
+import { createMonitor } from "../../../../../api/monitorApi";
+import MonitorForm from "../../../Monitor/MonitorForm/MonitorForm";
+import { createStationMapper } from "../../../../../api/mapingAPI";
 
 interface MonitorDetails {
+  id: number;
   serialNumber: string;
   description: string;
   statusJig: string;
@@ -31,16 +35,26 @@ interface StationEntry {
 interface ESDStationProps {
   stationEntry: StationEntry;
   lineName: string;
+  onUpdate: () => void; // Nova prop para a função de atualização
 }
 
-const ESDStation: React.FC<ESDStationProps> = ({ stationEntry, lineName }) => {
-  console.log('stationEntry', stationEntry)
+const ESDStation: React.FC<ESDStationProps> = ({ stationEntry, lineName, onUpdate }) => {
   const maxCells = 6;
 
   // States to manage modal visibility and selected monitor details
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [state, setState] = useState({
+    openModal: false,
+  });
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
 
+  const handleStateChange = (changes: { openModal: boolean }) => {
+    setState((prevState) => ({ ...prevState, ...changes }));
+  };
+  
+  const handleOpenModal = () => handleStateChange({ openModal: true });
+  const handleCloseModal = () => handleStateChange({ openModal: false });
   const showModal = (content: React.ReactNode) => {
     setModalContent(content);
     setIsModalVisible(true);
@@ -57,6 +71,26 @@ const ESDStation: React.FC<ESDStationProps> = ({ stationEntry, lineName }) => {
   const sortedMonitors = [...stationEntry.monitorsEsd].sort(
     (a, b) => a.positionSequence - b.positionSequence
   );
+
+  const handleCreateMonitor = async (monitor: MonitorDetails) => {
+    try {
+      const createdMonitor = await createMonitor(monitor); // Aguarda a criação do monitor e pega o retorno completo, inclusive o ID
+      console.log("Monitor criado:", createdMonitor);
+
+      // Após o monitor ser criado com sucesso e ter um ID, faça o mapeamento
+      const mappMonitor = {
+        monitorEsdId: createdMonitor.id, // ID do monitor recém-criado
+        linkStationAndLineId: stationEntry.linkStationAndLineID,
+        positionSequence: selectedIndex, // Índice onde AddIcon foi clicado
+      };
+      console.log("mappMonitor:", mappMonitor);
+
+      await createStationMapper(mappMonitor); // Faz o mapeamento após criar o monitor
+      onUpdate(); // Chama a função de atualização passada pelo ESDFactoryMap
+    } catch (error) {
+      console.error("Erro ao criar e mapear o monitor:", error);
+    }
+  };
 
   const displayItems = Array.from({ length: maxCells }, (_, index) => {
     const monitor = sortedMonitors[index];
@@ -97,7 +131,8 @@ const ESDStation: React.FC<ESDStationProps> = ({ stationEntry, lineName }) => {
                   <strong>Status Jig:</strong> {monitor.monitorsEsd.statusJig}
                 </p>
                 <p>
-                  <strong>Status Operador:</strong> {monitor.monitorsEsd.statusOperador}
+                  <strong>Status Operador:</strong>{" "}
+                  {monitor.monitorsEsd.statusOperador}
                 </p>
                 <p>
                   <strong>Posição:</strong> {monitor.positionSequence}
@@ -113,24 +148,10 @@ const ESDStation: React.FC<ESDStationProps> = ({ stationEntry, lineName }) => {
       <AddIcon
         key={index}
         className="add-icon"
-        onClick={() =>
-          showModal(
-            <div>
-              <p>
-                <strong>Link ID:</strong> {stationEntry.linkStationAndLineID}
-              </p>
-              <p>
-                <strong>Linha:</strong> {lineName}
-              </p>
-              <p>
-                <strong>Estação:</strong> {stationEntry.station.name}
-              </p>
-              <p>
-                <strong>Posição:</strong> célula vazia {index + 1}
-              </p>
-            </div>
-          )
-        }
+        onClick={() => {
+          setSelectedIndex(index); // Definindo o índice do AddIcon clicado
+          handleOpenModal(); // Abrindo modal de criação
+        }}
       />
     );
   });
@@ -149,6 +170,11 @@ const ESDStation: React.FC<ESDStationProps> = ({ stationEntry, lineName }) => {
       >
         {modalContent}
       </Modal>
+      <MonitorForm
+        open={state.openModal}
+        handleClose={handleCloseModal}
+        onSubmit={handleCreateMonitor}
+      />
     </>
   );
 };

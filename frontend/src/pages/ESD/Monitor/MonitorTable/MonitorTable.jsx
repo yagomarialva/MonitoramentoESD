@@ -154,7 +154,7 @@ const MonitorTable = () => {
   }, [navigate, t]);
 
   const handleConfirmDelete = async () => {
-    await handleDelete(state.monitorToDelete.id);
+    await handleDelete(state.monitorToDelete);
     if (state.monitorToDelete) {
       handleDeleteClose();
     }

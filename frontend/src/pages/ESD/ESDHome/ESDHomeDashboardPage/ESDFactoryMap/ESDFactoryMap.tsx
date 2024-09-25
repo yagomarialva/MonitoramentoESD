@@ -6,18 +6,19 @@ import ESDStation from "../ESDStation/ESDStation";
 
 interface Station {
   id: number;
-  linkStationAndLineID:number;
+  linkStationAndLineID: number;
   name: string;
   sizeX: number;
   sizeY: number;
 }
 
 interface MonitorDetails {
+  id: number;
   serialNumber: string;
   description: string;
-  statusJig: string;      // Novo campo statusJig
-  statusOperador: string; // Novo campo statusOperator
-  linkStationAndLineID:number;
+  statusJig: string; 
+  statusOperador: string; 
+  linkStationAndLineID: number;
 }
 
 interface Monitor {
@@ -27,7 +28,7 @@ interface Monitor {
 
 interface StationEntry {
   station: Station;
-  linkStationAndLineID:number;
+  linkStationAndLineID: number;
   monitorsEsd: Monitor[];
 }
 
@@ -48,40 +49,42 @@ interface AppState {
 
 const ESDFactoryMap: React.FC = () => {
   const [columns, setColumns] = useState<AppState>({});
+  const [stationsData, setStationsData] = useState<StationEntry[]>([]);
 
-  const getAllLinksHandler = async () => {
-    const factoryMap = await getAllStationMapper();
+  // Função para buscar os dados da API e atualizar o estado
+  const fetchStations = async () => {
+    try {
+      const factoryMap = await getAllStationMapper();
 
-    const groupedByLines: AppState = {};
-
-    factoryMap.forEach((element: Link) => {
-      const lineName = element.line.name || "Sem Nome"; // Usa o nome da linha ou "Sem Nome" se for nulo
-      if (!groupedByLines[lineName]) {
-        groupedByLines[lineName] = { links: [], stations: new Set() };
-      }
-      groupedByLines[lineName].links.push(element);
-      element.stations.forEach((stationEntry: StationEntry) => {
-        groupedByLines[lineName].stations.add(stationEntry.station.id);
+      const groupedByLines: AppState = {};
+      
+      factoryMap.forEach((element: Link) => {
+        const lineName = element.line.name || "Sem Nome";
+        if (!groupedByLines[lineName]) {
+          groupedByLines[lineName] = { links: [], stations: new Set() };
+        }
+        groupedByLines[lineName].links.push(element);
+        element.stations.forEach((stationEntry: StationEntry) => {
+          groupedByLines[lineName].stations.add(stationEntry.station.id);
+        });
       });
-    });
 
-    setColumns(groupedByLines);
+      setColumns(groupedByLines); // Atualizando o estado de colunas
+      setStationsData(factoryMap); // Atualizando o estado com os dados das estações
+    } catch (error) {
+      console.error("Erro ao buscar dados:", error);
+    }
   };
 
+  // useEffect para buscar os dados na montagem do componente
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await getAllLinksHandler();
-      } catch (error: any) {
-        console.error("Error fetching data:", error);
-        if (error.message === "Request failed with status code 401") {
-          localStorage.removeItem("token");
-        }
-      }
-    };
-
-    fetchData();
+    fetchStations(); // Chama a função para buscar os dados
   }, []);
+
+  // Função para atualizar os dados ao chamar o `onUpdate` no componente filho
+  const handleUpdate = () => {
+    fetchStations(); // Atualiza ao ser chamado
+  };
 
   return (
     <div className="container">
@@ -94,10 +97,11 @@ const ESDFactoryMap: React.FC = () => {
                 .find((entry: StationEntry) => entry.station.id === stationId);
 
               return stationEntry ? (
-                <ESDStation
+                <ESDStation 
                   key={stationEntry.station.id}
                   stationEntry={stationEntry}
-                  lineName={lineName}
+                  onUpdate={handleUpdate} // Passa a função de atualização
+                  lineName={lineName} // Passa o nome da linha
                 />
               ) : null;
             })}

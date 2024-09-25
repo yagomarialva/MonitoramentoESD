@@ -3,7 +3,7 @@ const url = 'api/MonitorEsd'
 // Obtém todos os monitores
 export const getAllMonitors = async () => {
   try {
-    const { data } = await TokenApi.get(`${url}/todosMonitores`);
+    const { data } = await TokenApi.get(`${url}/monitores`);
     return data;
   } catch (error) {
     console.error("Error fetching all monitors:", error);
@@ -26,7 +26,8 @@ export const getMonitor = async (id) => {
 // Cria um novo monitor
 export const createMonitor = async (monitor) => {
   try {
-    const { data } = await TokenApi.post(`${url}/adicionarMonitor`, monitor);
+    const { data } = await TokenApi.post(`${url}/monitores`, monitor);
+    console.log('data', data)
     return data;
   } catch (error) {
     console.error("Error creating monitor:", error);
@@ -37,7 +38,7 @@ export const createMonitor = async (monitor) => {
 // Atualiza um monitor existente por ID
 export const updateMonitor = async (monitor) => {
   try {
-    const { data } = await TokenApi.post("/adicionarMonitor", monitor);
+    const { data } = await TokenApi.post("/monitores", monitor);
     return data;
   } catch (error) {
     console.error(`Error updating monitor with ID:`, error);
@@ -46,11 +47,11 @@ export const updateMonitor = async (monitor) => {
 };
 
 // Deleta um monitor por ID
-export const deleteMonitor = async (id) => {
+export const deleteMonitor = async (monitor) => {
   try {
-    await TokenApi.delete(`/deleteMonitor?id=${id}`);
+    await TokenApi.delete("/monitores", monitor);
   } catch (error) {
-    console.error(`Error deleting monitor with ID ${id}:`, error);
+    console.error(`Error deleting monitor with ID :`, error);
     throw error;
   }
 };
