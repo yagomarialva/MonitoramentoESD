@@ -27,7 +27,6 @@ export const getMonitor = async (id) => {
 export const createMonitor = async (monitor) => {
   try {
     const { data } = await TokenApi.post(`${url}/monitores`, monitor);
-    console.log('data', data)
     return data;
   } catch (error) {
     console.error("Error creating monitor:", error);

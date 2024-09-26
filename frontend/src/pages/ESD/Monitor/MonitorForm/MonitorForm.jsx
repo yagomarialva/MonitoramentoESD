@@ -9,17 +9,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
+import "./MonitorForm.css"; // Importando o arquivo CSS
 
 const MonitorForm = ({ open, handleClose, onSubmit }) => {
   const { t } = useTranslation();
@@ -27,7 +17,6 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
   const [monitor, setMonitor] = useState({
     serialNumber: "",
     description: "",
-    status: "",
     statusOperador: "",
     statusJig: "",
   });
@@ -81,52 +70,37 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Paper sx={style}>
+      <Paper className="modal-container">
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Adicionar Monitor
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        <Box component="form" onSubmit={handleSubmit} className="form-container">
+          {/* Cabeçalhos das colunas */}
+          <Typography className="form-header">Número de Série</Typography>
+          <Typography className="form-header">Descrição</Typography>
+          <Typography className="form-header">Status Operador</Typography>
+          <Typography className="form-header">Status JIG</Typography>
+
+          {/* Inputs abaixo dos cabeçalhos */}
           <TextField
             required
-            fullWidth
-            margin="normal"
+            className="text-field"
             id="serialNumber"
             name="serialNumber"
-            label={t("ESD_TEST.TABLE.USER_ID", {
-              appName: "App for Translations",
-            })}
             onChange={handleChange}
             error={!!errorName}
             helperText={errorName}
           />
           <TextField
             required
-            fullWidth
-            margin="normal"
+            className="text-field"
             id="description"
             name="description"
-            label={t("ESD_TEST.TABLE.NAME", {
-              appName: "App for Translations",
-            })}
             onChange={handleChange}
             error={!!error}
             helperText={error}
           />
-          <FormControl fullWidth margin="normal" required>
-            <InputLabel id="status">Status</InputLabel>
-            <Select
-              labelId="status"
-              id="status"
-              name="status"
-              value={monitor.status}
-              onChange={handleChange}
-              label="Status"
-            >
-              <MenuItem value="PASS">Pass</MenuItem>
-              <MenuItem value="FAIL">Fail</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="normal" required>
+          <FormControl className="select-field" required>
             <InputLabel id="statusOperador">Status Operador</InputLabel>
             <Select
               labelId="statusOperador"
@@ -140,8 +114,8 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
               <MenuItem value="FAIL">Fail</MenuItem>
             </Select>
           </FormControl>
-          <FormControl fullWidth margin="normal" required>
-            <InputLabel id="statusOperador">Status JIG</InputLabel>
+          <FormControl className="select-field" required>
+            <InputLabel id="statusJig">Status JIG</InputLabel>
             <Select
               labelId="statusJig"
               id="statusJig"
@@ -154,12 +128,13 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
               <MenuItem value="FAIL">Fail</MenuItem>
             </Select>
           </FormControl>
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+
+          {/* Botões */}
+          <Box className="button-container">
             <Button
               onClick={handleClose}
               variant="contained"
               color="error"
-              sx={{ mt: 2 }}
             >
               {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
             </Button>
@@ -167,7 +142,7 @@ const MonitorForm = ({ open, handleClose, onSubmit }) => {
               type="submit"
               variant="contained"
               color="success"
-              sx={{ mt: 2, ml: 2 }}
+              className="submit-button"
             >
               {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
             </Button>
