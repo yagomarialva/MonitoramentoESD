@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Paper,
@@ -6,13 +6,25 @@ import {
   TextField,
   Button,
   Box,
+  InputAdornment,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { LockOutlined } from "@ant-design/icons";
-import InputAdornment from "@mui/material/InputAdornment";
 import LineAxisIcon from "@mui/icons-material/LineAxis";
-import { updateLine } from "../../../../api/linerApi";
 import "./LineForm.css";
+
+// Definindo a interface para as propriedades do componente
+interface LineFormProps {
+  open: boolean;
+  handleClose: () => void;
+  onSubmit: (line: Line) => Promise<void>;
+}
+
+// Definindo a interface para o estado do line
+interface Line {
+  name: string;
+  description?: string; // descrição opcional, se necessário
+}
 
 const style = {
   position: "absolute",
@@ -25,15 +37,15 @@ const style = {
   p: 4,
 };
 
-const LineForm = ({ open, handleClose, onSubmit }) => {
+const LineForm: React.FC<LineFormProps> = ({ open, handleClose, onSubmit }) => {
   const { t } = useTranslation();
 
-  const [line, setLine] = useState({
+  const [line, setLine] = useState<Line>({
     name: "",
     description: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setLine((prev) => ({
       ...prev,
@@ -41,13 +53,13 @@ const LineForm = ({ open, handleClose, onSubmit }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await onSubmit(line);
       handleClose();
     } catch (error) {
-      console.error("Error creating bracelet:", error);
+      console.error("Error creating line:", error);
     }
   };
 
@@ -87,7 +99,7 @@ const LineForm = ({ open, handleClose, onSubmit }) => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    { <LockOutlined />}
+                    <LockOutlined />
                   </InputAdornment>
                 ),
               }}
@@ -98,7 +110,6 @@ const LineForm = ({ open, handleClose, onSubmit }) => {
               type="submit" // Botão muda para submit no modo de edição
               variant="contained"
               color="success"
-              onClick={handleSubmit} // Submete o formulário
               className="custom-button custom-font-edit"
             >
               {t("LINE.DIALOG.SAVE", { appName: "App for Translations" })}

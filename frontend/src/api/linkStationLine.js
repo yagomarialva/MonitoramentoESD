@@ -26,7 +26,7 @@ export const getLink = async (id) => {
 // Cria um novo monitor
 export const createLink = async (link) => {
   try {
-    const { data } = await TokenApi.post(`${url}/adicionarLinks`, link);
+    const { data } = await TokenApi.post(`${url}/incluir`, link);
     return data;
   } catch (error) {
     console.error("Error creating link:", error);
@@ -38,7 +38,7 @@ export const createLink = async (link) => {
 export const updateLink = async (link) => {
   console.log("updated link", link);
   try {
-    const { data } = await TokenApi.post(`${url}/adicionarLinks`, link);
+    const { data } = await TokenApi.post(`${url}/incluir`, link);
     return data;
   } catch (error) {
     console.error(`Error updating monitor with ID:`, error);
@@ -49,7 +49,7 @@ export const updateLink = async (link) => {
 // Deleta um monitor por ID
 export const deleteLink = async (id) => {
   try {
-    await TokenApi.delete(`${url}/deleteLink?id=${id}`);
+    await TokenApi.delete(`${url}/${id}`);
   } catch (error) {
     console.error(`Error deleting monitor with ID ${id}:`, error);
     throw error;

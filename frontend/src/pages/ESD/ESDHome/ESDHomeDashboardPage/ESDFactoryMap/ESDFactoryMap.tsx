@@ -33,7 +33,7 @@ interface StationEntry {
 }
 
 interface Line {
-  id: number;
+  id?: number;
   name: string;
 }
 
