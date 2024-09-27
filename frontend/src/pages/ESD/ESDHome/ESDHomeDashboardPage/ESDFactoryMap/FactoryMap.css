@@ -1,0 +1,40 @@
+.container {
+    padding: 40px;
+    background-color: #f0f2f5;
+  }
+  
+  .line-container {
+    display: flex; /* Flexbox para alinhar os itens */
+    flex-direction: column; /* Alinha verticalmente */
+    justify-content: flex-start; /* Inicia o alinhamento do topo */
+    gap: 20px; /* Espaço entre as linhas */
+  }
+  
+  .card-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* Two columns */
+    gap: 8px !important;
+  }
+  
+  .icon-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .computer-icon {
+    font-size: 24px !important;
+    color: #389E0D !important;
+    margin-right: 8px !important;
+  }
+  
+  .add-icon {
+    font-size: 24px;
+    color: #d9d9d9;
+  }
+  
+  .add-button-container {
+    display: flex;
+    justify-content: flex-end; /* Alinha o ícone à direita */
+    margin-top: 10px; /* Espaçamento acima do ícone */
+  }
+  

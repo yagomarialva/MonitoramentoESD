@@ -1,0 +1,24 @@
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Layout ajustado para três colunas */
+    gap: 10px; /* Espaçamento entre os ícones */
+}
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer; /* Cursor de pointer para indicar interatividade */
+}
+
+.computer-icon, .add-icon {
+    font-size: 24px; /* Tamanho ajustado dos ícones */
+}
+
+.add-icon {
+    color: #888; /* Cor para o ícone de adicionar */
+}
+
+.computer-icon {
+    color: #000; /* Cor para o ícone de computador */
+}

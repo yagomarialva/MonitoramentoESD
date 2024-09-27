@@ -92,11 +92,6 @@ const ESDStation: React.FC<ESDStationProps> = ({
     setIsModalVisible(true);
   };
 
-  // const showLineModal = (content: React.ReactNode) => {
-  //   setModalLineContent(content);
-  //   setIsModalLineVisible(true);
-  // };
-
   const handleOk = () => {
     setIsModalVisible(false);
   };
