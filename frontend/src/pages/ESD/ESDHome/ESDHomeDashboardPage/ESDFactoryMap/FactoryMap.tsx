@@ -57,6 +57,41 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     openLineModal: false,
   });
 
+  // Função para agrupar as linhas por id, removendo duplicados por linkStationAndLineID
+  const groupLinesById = (lines: Link[]) => {
+    const grouped: { [key: number]: Link } = {};
+
+    lines.forEach((link) => {
+      const lineId = link.line.id || 0; // Caso o id seja indefinido, usar 0 como fallback
+
+      if (!grouped[lineId]) {
+        grouped[lineId] = {
+          ...link,
+          stations: [],
+        };
+      }
+
+      // Remover duplicados com o mesmo linkStationAndLineID
+      const uniqueStations = link.stations.filter(
+        (stationEntry) =>
+          !grouped[lineId].stations.some(
+            (existingStation) =>
+              existingStation.linkStationAndLineID ===
+              stationEntry.linkStationAndLineID
+          )
+      );
+
+      grouped[lineId].stations = [
+        ...grouped[lineId].stations,
+        ...uniqueStations,
+      ];
+    });
+
+    return Object.values(grouped); // Retorna um array de linhas agrupadas
+  };
+
+  const groupedLines = groupLinesById(lines); // Agrupa as linhas antes de renderizar
+  console.log('groupedLines', groupedLines)
   const handleStateChange = (changes: {
     openModal: boolean;
     openLineModal?: boolean;
@@ -91,22 +126,22 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
         lineID: createdLine.id,
         stationID: stationCreated.id,
       };
-    //   console.log("mappMonitor", station);
       await createLink(link);
       onUpdate();
     } catch (error) {
       console.error("Erro ao criar e mapear o monitor:", error);
     }
   };
+
   return (
     <>
       <div className="container">
         <div className="line-container">
-          {lines.map((link) => (
-            <>
-              <AddIcon className="add-icon" onClick={handleOpenLineModal} />{" "}
+          {groupedLines.map((link) => (
+            <div key={link.id}>
+              <AddIcon className="add-icon" onClick={handleOpenLineModal} />
               <Line key={link.id} lineData={link} />
-            </>
+            </div>
           ))}
         </div>
         <LineForm
