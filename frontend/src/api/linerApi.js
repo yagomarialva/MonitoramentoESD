@@ -2,6 +2,18 @@ import TokenApi from "./TokenApi";
 const url = "api/Line";
 // `${url}`
 // Obtém todos os linees
+
+// Função auxiliar para manipulação de respostas
+const handleResponse = async (request) => {
+  try {
+      const response = await request();
+      return response.data;
+  } catch (error) {
+      console.error("API call failed: ", error);
+      throw error;
+  }
+};
+
 export const getAllLines = async () => {
   try {
     const { data } = await TokenApi.get(`${url}/TodasLinhas`);
@@ -20,6 +32,21 @@ export const getLine = async (id) => {
   } catch (error) {
     console.error(`Error fetching Line with ID ${id}:`, error);
     throw error;
+  }
+};
+
+export const getLineByName = async (name) => {
+  try {
+    // Chama a API e retorna o resultado
+    const response = await TokenApi.get(`${url}/BuscarNome/${name}`);
+    console.log('response', response)
+    return handleResponse(() => response);
+  } catch (error) {
+    // Exibe o erro no console para ajudar no debug
+    console.error(`Erro ao buscar a linha com nome ${name}:`, error);
+
+    // Retorna uma mensagem de erro personalizada ou lança o erro para ser tratado em outro lugar
+    throw new Error(`Falha ao buscar a linha com o nome ${name}. Por favor, tente novamente mais tarde.`);
   }
 };
 

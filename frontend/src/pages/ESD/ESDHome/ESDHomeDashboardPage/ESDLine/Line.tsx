@@ -168,9 +168,9 @@ const Line: React.FC<ESDStationProps> = ({ lineData }) => {
           <div className="add-button-container">
             <AddIcon onClick={handleClick} style={{ cursor: "pointer" }} />
           </div>
-          <div className="esd-line-title">
+          {/* <div className="esd-line-title">
             {lineData.line.name || "Sem Nome"}
-          </div>
+          </div> */}
           {lineData.stations.map((stationEntry) => (
             <Station
               key={stationEntry.station.id}

@@ -1,40 +1,92 @@
 .container {
-    padding: 40px;
-    background-color: #f0f2f5;
-  }
-  
-  .line-container {
-    display: flex; /* Flexbox para alinhar os itens */
-    flex-direction: column; /* Alinha verticalmente */
-    justify-content: flex-start; /* Inicia o alinhamento do topo */
-    gap: 20px; /* Espaço entre as linhas */
-  }
-  
-  .card-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important; /* Two columns */
-    gap: 8px !important;
-  }
-  
-  .icon-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .computer-icon {
-    font-size: 24px !important;
-    color: #389E0D !important;
-    margin-right: 8px !important;
-  }
-  
-  .add-icon {
-    font-size: 24px;
-    color: #d9d9d9;
-  }
-  
-  .add-button-container {
-    display: flex;
-    justify-content: flex-end; /* Alinha o ícone à direita */
-    margin-top: 10px; /* Espaçamento acima do ícone */
-  }
-  
+  padding: 40px;
+  background-color: #f0f2f5;
+  position: relative; /* Para que o botão possa ser posicionado dentro desse container */
+}
+
+.line-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.card-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 8px !important;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+}
+
+.computer-icon {
+  font-size: 24px !important;
+  color: #389E0D !important;
+  margin-right: 8px !important;
+}
+
+.add-icon {
+  font-size: 24px;
+  color: #d9d9d9;
+}
+
+.add-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.add-icon-fixed {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000; /* Certifica que o botão fique acima de outros elementos */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.add-icon-fixed:hover {
+  background-color: #0056b3; /* Cor de fundo mais escura ao passar o mouse */
+}
+
+/* Estilo básico para o Snackbar semelhante ao Ant Design */
+.ant-snackbar {
+  font-family: 'Roboto', sans-serif; /* Fonte similar ao Ant Design */
+  color: #595959; /* Cor de texto padrão */
+  border-radius: 1px;
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.12); /* Sombra padrão do Ant Design */
+  padding: 16px; /* Padding padrão */
+  max-width: 400px; /* Largura máxima */
+}
+
+/* Estilos para severidade 'success' */
+.ant-snackbar-success {
+  background-color: #f6ffed; /* Verde claro */
+  border: 1px solid #b7eb8f; /* Borda verde */
+}
+
+/* Estilos para severidade 'error' */
+.ant-snackbar-error {
+  background-color: #fff2f0; /* Vermelho claro */
+  border: 1px solid #ffccc7; /* Borda vermelha */
+}
+
+/* Estilos para o Alert dentro do Snackbar */
+.ant-alert {
+  background-color: inherit;
+  color: inherit;
+  font-weight: 500; /* Fonte semi-negrito */
+  display: flex;
+  align-items: center;
+}
+
+/* Posicionamento fixo no topo à direita */
+.snackbar-position {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 1000;
+}

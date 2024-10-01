@@ -94,39 +94,6 @@ const ESDDashboardPage: React.FC = () => {
     loading: true,
   });
 
-  const showSnackbar = (
-    message: string,
-    severity: "success" | "error" = "success"
-  ) => {
-    setState((prevState) => ({
-      ...prevState,
-      snackbarOpen: true,
-      snackbarMessage: message,
-      snackbarSeverity: severity,
-    }));
-  };
-
-  const handleOpenModal = () =>
-    setState((prev) => ({ ...prev, openModal: true }));
-  const handleCloseModal = () =>
-    setState((prev) => ({ ...prev, openModal: false }));
-
-  const handleCreateMappedItem = async (link: any) => {
-    try {
-      await createStationMapper(link);
-      const updatedData = await getAllStationMapper();
-      const groupedData = groupStationsByLine(updatedData);
-      setGroup(groupedData);
-      showSnackbar(
-        t("MAP_FACTORY.TOAST.CREATE_SUCCESS", {
-          appName: "App for Translations",
-        })
-      );
-    } catch (error: any) {
-      showSnackbar(error.response.data, "error");
-    }
-  };
-
   const fetchAndSetGroupedStations = async () => {
     try {
       const updatedStations = await getAllStationMapper();
@@ -141,8 +108,6 @@ const ESDDashboardPage: React.FC = () => {
     const fetchDataAllUsers = async () => {
       await fetchAndSetGroupedStations();
       try {
-        const lines = await getAllLines()
-        console.log('lines',lines)
         const toMount = await getAllStationMapper();
         const mounted = groupStationsByLine(toMount);
         setGroup(mounted);
@@ -159,41 +124,6 @@ const ESDDashboardPage: React.FC = () => {
   return (
     <>
     <ESDFactoryMap></ESDFactoryMap>
-      {/* <Button
-        id="add-button"
-        variant="contained"
-        color="success"
-        onClick={handleOpenModal}
-        sx={{ marginLeft: "auto" }}
-      >
-        {t("LINK_STATION_LINE.ADD_LINK_STATION_LINE")}
-      </Button>
-      <StationMap
-        groupedStations={Object.values(group).map((lineGroup) => ({
-          stations: lineGroup.stations,
-        }))}
-        refreshGroupedStations={fetchAndSetGroupedStations}
-      />
-
-      <ESDHomeForm
-        open={state.openModal}
-        handleClose={handleCloseModal}
-        onSubmit={handleCreateMappedItem}
-      />
-      <ESDHomeModal open={state.open} handleClose={handleCloseModal} />
-      <Snackbar
-        open={state.snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setState((prev) => ({ ...prev, snackbarOpen: false }))}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert
-          onClose={() => setState((prev) => ({ ...prev, snackbarOpen: false }))}
-          severity={state.snackbarSeverity}
-        >
-          {state.snackbarMessage}
-        </Alert>
-      </Snackbar> */}
     </>
   );
 };
