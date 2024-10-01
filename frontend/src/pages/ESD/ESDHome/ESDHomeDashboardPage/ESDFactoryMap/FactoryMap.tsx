@@ -205,24 +205,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     }
   };
 
-  // Função para excluir a linha selecionada
-  const handleDeleteLine = async () => {
-    if (selectedLineId !== null) {
-      try {
-        await deleteLink(selectedLinkId); // Chame a API para deletar a linha
-        await deleteLine(selectedLineId);
-        await deleteStation(selectedStationsId);
-        onUpdate(); // Atualiza a lista de linhas após a exclusão
-        showSnackbar("Linha excluída com sucesso!", "success");
-        setSelectedLineId(null); // Limpa a seleção após a exclusão
-        handleCloseModal();
-      } catch (error: any) {
-        console.error("Erro ao excluir a linha:", error);
-        showSnackbar("Erro ao excluir a linha.", "error");
-      }
-    }
-  };
-
   const handleConfirmDelete = async () => {
     if (selectedLineId !== null) {
       try {
@@ -239,12 +221,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
       }
     }
   };
-
-
-  // const handleLineChange = (lineId: number, lineName: string) => {
-  //   setSelectedLineId(lineId);
-  //   console.log(`Linha selecionada: ${lineName}, ID: ${lineId}`);
-  // };
 
   const handleLineChange = (link: Link) => {
     setSelectedLineId(link.line.id || null);
