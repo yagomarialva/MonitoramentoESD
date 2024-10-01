@@ -18,9 +18,17 @@ import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd"; // Importa o botão do Ant Design
 import { PlusOutlined } from "@ant-design/icons"; // Importa o ícone de adicionar
-import { Alert, Snackbar } from "@mui/material";
+import {
+  Alert,
+  IconButton,
+  Snackbar,
+  Badge,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { DeleteOutlined } from "@mui/icons-material";
 import ESDConfirmModal from "../../ESDConfirmModal/ESDConfirmModal";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 interface Station {
   id: number;
@@ -66,6 +74,13 @@ interface FactoryMapProps {
   onUpdate: () => void;
 }
 
+// Mock de notificações
+const mockNotifications = [
+  { id: 1, message: "Alerta de manutenção na linha 3" },
+  { id: 2, message: "Nova estação adicionada à linha 5" },
+  { id: 3, message: "Erro de comunicação com o monitor da estação 2" },
+];
+
 // Definir os tipos possíveis de severidade para o snackbar
 type SnackbarSeverity = "success" | "error";
 
@@ -83,6 +98,8 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     snackbarOpen: false,
     snackbarSeverity: "success" as SnackbarSeverity, // Severidade do Snackbar
   });
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Estado para abrir o menu de notificações
 
   // Atualiza o estado com os tipos corretos
   const handleStateChange = (changes: Partial<typeof state>) => {
@@ -234,8 +251,47 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     console.log(`LinkStationID: ${linkStationID}`); // Exibe apenas o ID
   };
 
+  const handleNotificationClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget); // Abre o menu ao clicar no sino
+  };
+
+  const handleNotificationClose = () => {
+    setAnchorEl(null); // Fecha o menu
+  };
+
   return (
     <>
+      <div className="notification-icon-fixed">
+        <IconButton
+          aria-label="notifications"
+          color="inherit"
+          onClick={handleNotificationClick}
+        >
+          <Badge badgeContent={mockNotifications.length} color="secondary">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        {/* Menu que contém as notificações */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleNotificationClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          {mockNotifications.map((notification) => (
+            <MenuItem key={notification.id} onClick={handleNotificationClose}>
+              {notification.message}
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
       <div className="container">
         <div className="line-container">
           {groupedLines.map((link) => (
@@ -308,6 +364,110 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
         </Snackbar>
       </div>
     </>
+    //   <>
+    //   {/* <div className="container">
+    //     {/* Ícone de notificações no canto superior direito */}
+    //     <div className="notification-icon">
+    //       <IconButton
+    //         aria-label="notifications"
+    //         color="inherit"
+    //         onClick={handleNotificationClick}
+    //       >
+    //         <Badge badgeContent={mockNotifications.length} color="secondary">
+    //           <NotificationsIcon />
+    //         </Badge>
+    //       </IconButton>
+    //       {/* Menu que contém as notificações */}
+    //       <Menu
+    //         anchorEl={anchorEl}
+    //         open={Boolean(anchorEl)}
+    //         onClose={handleNotificationClose}
+    //         anchorOrigin={{
+    //           vertical: "top",
+    //           horizontal: "right",
+    //         }}
+    //         transformOrigin={{
+    //           vertical: "top",
+    //           horizontal: "right",
+    //         }}
+    //       >
+    //         {mockNotifications.map((notification) => (
+    //           <MenuItem key={notification.id} onClick={handleNotificationClose}>
+    //             {notification.message}
+    //           </MenuItem>
+    //         ))}
+    //       </Menu>
+    //     </div>
+
+    //     <div className="line-container">
+    //       {groupedLines.map((link) => (
+    //         <>
+    //           <input
+    //             type="radio"
+    //             name="line"
+    //             value={link.line.id}
+    //             checked={selectedLineId === link.line.id}
+    //             onChange={() => {
+    //               if (link.line.id !== undefined) {
+    //                 if (selectedLineId === link.line.id) {
+    //                   setSelectedLineId(null);
+    //                 } else {
+    //                   handleLineChange(link);
+    //                 }
+    //               }
+    //             }}
+    //           />
+    //           <Line key={link.id} lineData={link} />
+    //         </>
+    //       ))}
+    //     </div>
+
+    //     <Button
+    //       type="primary"
+    //       shape="round"
+    //       icon={<PlusOutlined />}
+    //       size="large"
+    //       className="add-icon-fixed"
+    //       onClick={handleCreateLine}
+    //     >
+    //       Adicionar linha
+    //     </Button>
+    //     {selectedLineId !== null && (
+    //       <Button
+    //         type="primary"
+    //         shape="round"
+    //         icon={<DeleteOutlined />}
+    //         size="large"
+    //         onClick={handleOpenModal}
+    //         className="delete-icon-fixed"
+    //       >
+    //         Excluir linha
+    //       </Button>
+    //     )}
+
+    //     <ESDConfirmModal
+    //       open={modalOpen}
+    //       handleClose={handleCloseModal}
+    //       handleConfirm={handleConfirmDelete}
+    //       title="Confirmação de Exclusão"
+    //       description="Tem certeza de que deseja excluir esta linha?"
+    //     />
+
+    //     <Snackbar
+    //       open={state.snackbarOpen}
+    //       autoHideDuration={6000}
+    //       onClose={() => handleStateChange({ snackbarOpen: false })}
+    //       anchorOrigin={{ vertical: "top", horizontal: "right" }}
+    //     >
+    //       <Alert
+    //         onClose={() => handleStateChange({ snackbarOpen: false })}
+    //         severity={state.snackbarSeverity}
+    //       >
+    //         {state.snackbarMessage}
+    //       </Alert>
+    //     </Snackbar>
+    //   </div> */}
+    // </>
   );
 };
 
