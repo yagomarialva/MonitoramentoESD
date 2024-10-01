@@ -55,8 +55,8 @@
       },
       "CONFIRM_DIALOG": {
         "CONFIRM_TEXT": "Deseja excluir o Operador(a) ",
-        "CLOSE": "Fechar",
-        "SAVE": "Excluir",
+        "CLOSE": "Não",
+        "SAVE": "Sim",
         "DELETE_OPERATOR": "Excluir Operador(a)"
       },
       "DIALOG": {
@@ -139,8 +139,8 @@
       },
       "CONFIRM_DIALOG": {
         "CONFIRM-TEXT": "Deseja excluir a Linha?",
-        "CLOSE": "Voltar",
-        "SAVE": "Excluir",
+        "CLOSE": "Não",
+        "SAVE": "Sim",
         "DELETE_LINE": "Excluir Linha"
       },
       "DIALOG": {

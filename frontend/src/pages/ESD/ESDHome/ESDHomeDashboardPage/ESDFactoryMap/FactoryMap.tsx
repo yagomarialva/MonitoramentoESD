@@ -20,6 +20,7 @@ import { Button } from "antd"; // Importa o botão do Ant Design
 import { PlusOutlined } from "@ant-design/icons"; // Importa o ícone de adicionar
 import { Alert, Snackbar } from "@mui/material";
 import { DeleteOutlined } from "@mui/icons-material";
+import ESDConfirmModal from "../../ESDConfirmModal/ESDConfirmModal";
 
 interface Station {
   id: number;
@@ -75,6 +76,8 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   const [selectedStationsId, setSelectedStationsId] = useState<number | null>(
     null
   ); // Estado para o ID da linha selecionada
+  const [modalOpen, setModalOpen] = useState(false); // Estado para controle do modal
+
   const [state, setState] = useState({
     snackbarMessage: "", // Mensagem do Snackbar
     snackbarOpen: false,
@@ -84,6 +87,14 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   // Atualiza o estado com os tipos corretos
   const handleStateChange = (changes: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...changes }));
+  };
+
+  const handleOpenModal = () => {
+    setModalOpen(true); // Abrir o modal de confirmação
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false); // Fechar o modal de confirmação
   };
 
   const showSnackbar = (
@@ -204,12 +215,31 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
         onUpdate(); // Atualiza a lista de linhas após a exclusão
         showSnackbar("Linha excluída com sucesso!", "success");
         setSelectedLineId(null); // Limpa a seleção após a exclusão
+        handleCloseModal();
       } catch (error: any) {
         console.error("Erro ao excluir a linha:", error);
         showSnackbar("Erro ao excluir a linha.", "error");
       }
     }
   };
+
+  const handleConfirmDelete = async () => {
+    if (selectedLineId !== null) {
+      try {
+        await deleteLink(selectedLinkId); // Chame a API para deletar a linha
+        await deleteLine(selectedLineId);
+        await deleteStation(selectedStationsId);
+        onUpdate(); // Atualiza a lista de linhas após a exclusão
+        showSnackbar("Linha excluída com sucesso!", "success");
+        setSelectedLineId(null); // Limpa a seleção após a exclusão
+        handleCloseModal();
+      } catch (error: any) {
+        console.error("Erro ao excluir a linha:", error);
+        showSnackbar("Erro ao excluir a linha.", "error");
+      }
+    }
+  };
+
 
   // const handleLineChange = (lineId: number, lineName: string) => {
   //   setSelectedLineId(lineId);
@@ -271,12 +301,20 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
             shape="round"
             icon={<DeleteOutlined />}
             size="large"
-            onClick={handleDeleteLine}
+            onClick={handleOpenModal}
             className="delete-icon-fixed"
           >
             Excluir linha
           </Button>
         )}
+        {/* Modal de confirmação */}
+        <ESDConfirmModal
+          open={modalOpen}
+          handleClose={handleCloseModal}
+          handleConfirm={handleConfirmDelete}
+          title="Confirmação de Exclusão"
+          description="Tem certeza de que deseja excluir esta linha?"
+        />
         <Snackbar
           open={state.snackbarOpen}
           autoHideDuration={6000}
