@@ -60,17 +60,38 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   // Função para agrupar as linhas por id, removendo duplicados por linkStationAndLineID
   const groupLinesById = (lines: Link[]) => {
     const grouped: { [key: number]: Link } = {};
-
+  
+    function filterMonitors(uniqueStations: StationEntry[]) {
+      uniqueStations.forEach((stationEntry) => {
+        const uniqueMonitors: Monitor[] = [];
+  
+        stationEntry.monitorsEsd.forEach((monitor) => {
+          // Verifica se já existe um monitor com o mesmo ID
+          const exists = uniqueMonitors.find(
+            (m) => m.monitorsEsd.id === monitor.monitorsEsd.id
+          );
+  
+          // Se não existir, adiciona o monitor à lista
+          if (!exists) {
+            uniqueMonitors.push(monitor);
+          }
+        });
+  
+        // Atualiza a lista de monitores sem duplicatas
+        stationEntry.monitorsEsd = uniqueMonitors;
+      });
+    }
+  
     lines.forEach((link) => {
       const lineId = link.line.id || 0; // Caso o id seja indefinido, usar 0 como fallback
-
+  
       if (!grouped[lineId]) {
         grouped[lineId] = {
           ...link,
           stations: [],
         };
       }
-
+  
       // Remover duplicados com o mesmo linkStationAndLineID
       const uniqueStations = link.stations.filter(
         (stationEntry) =>
@@ -80,18 +101,23 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
               stationEntry.linkStationAndLineID
           )
       );
-
+  
+      // Remover monitores duplicados com o mesmo ID dentro de cada estação
+      filterMonitors(uniqueStations);
+  
       grouped[lineId].stations = [
         ...grouped[lineId].stations,
         ...uniqueStations,
       ];
     });
-
+  
     return Object.values(grouped); // Retorna um array de linhas agrupadas
   };
+  
 
   const groupedLines = groupLinesById(lines); // Agrupa as linhas antes de renderizar
-  console.log('groupedLines', groupedLines)
+//   console.log("groupedLines", groupedLines);
+
   const handleStateChange = (changes: {
     openModal: boolean;
     openLineModal?: boolean;

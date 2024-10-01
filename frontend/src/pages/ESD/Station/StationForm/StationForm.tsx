@@ -56,7 +56,6 @@ const StationForm: React.FC<StationFormProps> = ({
 
   // Tipagem do estado station
   const [station, setStation] = useState<StationData>({
-    id:0,
     name: "",
     sizeX: 6, // Valor padrão para garantir que seja um número
     sizeY: 6, // Valor padrão para garantir que seja um número

@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import Station from "../ESDStation/Station";
 import AddIcon from "@mui/icons-material/Add"; // Importando o ícone Add
 import "./Line.css"; // Importando o CSS
-import { createStation } from "../../../../../api/stationApi";
+import {
+  createStation,
+  getAllStations,
+  getStationByName,
+} from "../../../../../api/stationApi";
 import { createLink, getAllLinks } from "../../../../../api/linkStationLine";
 import StationForm from "../../../Station/StationForm/StationForm";
 
@@ -54,7 +58,6 @@ interface Link {
 
 interface ESDStationProps {
   lineData: Link;
-  // onUpdate: () => void;
 }
 
 const Line: React.FC<ESDStationProps> = ({ lineData }) => {
@@ -64,17 +67,24 @@ const Line: React.FC<ESDStationProps> = ({ lineData }) => {
   });
 
   const [lines, setLines] = useState<{ [key: number]: StationEntry[] }>({}); // Estado para armazenar os links agrupados
+  const [createdLinks, setCreatedLinks] = useState<Set<number>>(new Set()); // Estado para controlar os links criados
+  const [stations, setStations] = useState<StationEntry[]>(lineData.stations); // Estado para armazenar as estações
+
+  const fetchStations = async () => {
+    try {
+      const stationsData = await getAllStations();
+      console.log("stationsData", stationsData);
+      setStations(stationsData); // Atualiza o estado com as estações
+    } catch (error) {
+      console.error("Erro ao buscar as estações:", error);
+    }
+  };
 
   // Função para buscar todas as linhas e estações da API
   const fetchLinks = async () => {
-    // const linksData = await getAllLinks();
-    // const groupedLines = groupLinesById(linksData); // Agrupa as linhas por ID
-    // console.log('groupedLines', linksData)
     try {
       const linksData = await getAllLinks();
-      const groupedLines = groupLinesById(linksData); // Agrupa as linhas por ID
-      console.log('groupedLines', groupedLines)
-      setLines(groupedLines); // Atualiza o estado com as linhas agrupadas
+      setLines(linksData); // Atualiza o estado com as linhas agrupadas
     } catch (error) {
       console.error("Erro ao buscar as linhas:", error);
     }
@@ -104,40 +114,50 @@ const Line: React.FC<ESDStationProps> = ({ lineData }) => {
     handleOpenStationModal(); // Abre o modal quando a linha é clicada
   };
 
-  // Função para agrupar linhas por ID
-  const groupLinesById = (links: Link[]) => {
-    const grouped: { [key: number]: StationEntry[] } = {};
-
-    links.forEach((link) => {
-      const lineId = link.line.id || 0; // Caso o ID seja nulo, usa 0 como fallback
-
-      if (!grouped[lineId]) {
-        grouped[lineId] = [];
-      }
-
-      grouped[lineId] = [...grouped[lineId], ...link.stations];
-    });
-
-    return grouped;
-  };
-
   useEffect(() => {
-    fetchLinks(); // Chama a função para buscar os links quando o componente for montado
-  }, []);
+    fetchLinks();
+    fetchStations();
+  }, []); // Agora ele será chamado quando `lineData` ou `stations` mudar
 
   const handleCreateStation = async (station: any) => {
-    console.log("Informações da linha clicada:", lineData.line);
+    const linkId = lineData.id;
+
+    if (createdLinks.has(linkId)) {
+      return;
+    }
+
     try {
       const newStation = await createStation(station);
-      // console.log("newStation", newStation);
+      const stationName = await getStationByName(newStation.name);
       const link = {
         ordersList: lineData.id,
         lineID: lineData.line.id,
-        stationID: newStation.id,
+        stationID: stationName.id,
       };
+
       await createLink(link);
+      // Atualiza o estado de lines para incluir o novo link
+      setLines((prevLines) => ({
+        ...prevLines,
+        [linkId]: [
+          ...(prevLines[linkId] || []),
+          {
+            station: {
+              id: stationName.id,
+              name: stationName.name,
+              sizeX: station.sizeX,
+              sizeY: station.sizeY,
+              linkStationAndLineID: linkId, // Adiciona a propriedade linkStationAndLineID
+            },
+            linkStationAndLineID: linkId,
+            monitorsEsd: [], // Inicialize conforme necessário
+          } as StationEntry, // Força a tipagem correta
+        ],
+      }));
+      setCreatedLinks((prevLinks) => new Set(prevLinks).add(linkId));
+      await getAllLinks();
     } catch (error) {
-      console.error("Erro ao criar e mapear o monitor:", error);
+      console.error("Erro ao criar e mapear a estação:", error);
     }
   };
 

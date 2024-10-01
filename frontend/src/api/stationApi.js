@@ -22,6 +22,21 @@ export const getStation = async (id) => {
     return handleResponse(() => TokenApi.get(`/Buscarestacao/${id}`));
 };
 
+export const getStationByName = async (name) => {
+    try {
+      // Chama a API e retorna o resultado
+      const response = await TokenApi.get(`${url}/BuscarNomeEstacao/${name}`);
+      console.log('response', response)
+      return handleResponse(() => response);
+    } catch (error) {
+      // Exibe o erro no console para ajudar no debug
+      console.error(`Erro ao buscar a estação com nome ${name}:`, error);
+  
+      // Retorna uma mensagem de erro personalizada ou lança o erro para ser tratado em outro lugar
+      throw new Error(`Falha ao buscar a estação com o nome ${name}. Por favor, tente novamente mais tarde.`);
+    }
+  };
+  
 export const createStation = async (station) => {
     return handleResponse(() => TokenApi.post(`${url}/adicionarEstacao`, station));
 };
