@@ -228,7 +228,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
           autoHideDuration={6000}
           onClose={() => handleStateChange({ snackbarOpen: false })}
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`} // Classe baseada no estilo do Ant Design
+          className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
         >
           <Alert
             onClose={() => handleStateChange({ snackbarOpen: false })}

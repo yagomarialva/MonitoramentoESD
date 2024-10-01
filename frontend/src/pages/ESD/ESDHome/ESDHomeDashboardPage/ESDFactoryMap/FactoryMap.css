@@ -54,33 +54,49 @@
 
 /* Estilo básico para o Snackbar semelhante ao Ant Design */
 .ant-snackbar {
-  font-family: 'Roboto', sans-serif; /* Fonte similar ao Ant Design */
-  color: #595959; /* Cor de texto padrão */
-  border-radius: 1px;
-  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.12); /* Sombra padrão do Ant Design */
-  padding: 16px; /* Padding padrão */
+  font-family: 'Roboto', sans-serif;
+  color: #595959;
+  border-radius: 4px;
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.12);
+  padding: 0; /* Remover padding extra */
+  margin: 0; /* Remover margens */
   max-width: 400px; /* Largura máxima */
 }
 
 /* Estilos para severidade 'success' */
 .ant-snackbar-success {
-  background-color: #f6ffed; /* Verde claro */
-  border: 1px solid #b7eb8f; /* Borda verde */
+  background-color: #f6ffed;
+  border: 1px solid #b7eb8f; /* Borda geral */
+  position: relative; /* Necessário para a borda esquerda */
+}
+
+/* Adiciona borda esquerda */
+.ant-snackbar-success::before {
+  content: '';
+  position: absolute;
+  left: 0; /* Alinhado à esquerda */
+  top: 0;
+  bottom: 0;
+  width: 4px; /* Largura da borda */
+  background-color: #4caf50; /* Verde escuro */
+  border-radius: 4px 0 0 4px; /* Bordas arredondadas apenas do lado esquerdo */
 }
 
 /* Estilos para severidade 'error' */
 .ant-snackbar-error {
-  background-color: #fff2f0; /* Vermelho claro */
-  border: 1px solid #ffccc7; /* Borda vermelha */
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
 }
 
 /* Estilos para o Alert dentro do Snackbar */
 .ant-alert {
   background-color: inherit;
   color: inherit;
-  font-weight: 500; /* Fonte semi-negrito */
+  font-weight: 500;
   display: flex;
   align-items: center;
+  padding: 8px 16px; /* Ajuste fino de padding */
+  border-radius: 4px;
 }
 
 /* Posicionamento fixo no topo à direita */
