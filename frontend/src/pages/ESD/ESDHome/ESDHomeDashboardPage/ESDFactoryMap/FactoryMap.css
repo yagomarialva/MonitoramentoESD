@@ -48,6 +48,16 @@
   transition: background-color 0.3s ease;
 }
 
+.delete-icon-fixed {
+  position: fixed;
+  bottom: 85px;
+  right: 20px;
+  z-index: 1000; /* Certifica que o botão fique acima de outros elementos */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+
 .add-icon-fixed:hover {
   background-color: #0056b3; /* Cor de fundo mais escura ao passar o mouse */
 }

@@ -4,19 +4,22 @@ import "./FactoryMap.css"; // Importando o CSS
 import AddIcon from "@mui/icons-material/Add"; // Importando o ícone Add
 import {
   createLine,
+  deleteLine,
   getAllLines,
   getLineByName,
 } from "../../../../../api/linerApi";
 import {
   createStation,
+  deleteStation,
   getAllStations,
   getStationByName,
 } from "../../../../../api/stationApi";
-import { createLink } from "../../../../../api/linkStationLine";
+import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd"; // Importa o botão do Ant Design
 import { PlusOutlined } from "@ant-design/icons"; // Importa o ícone de adicionar
 import { Alert, Snackbar } from "@mui/material";
+import { DeleteOutlined } from "@mui/icons-material";
 
 interface Station {
   id: number;
@@ -67,7 +70,11 @@ type SnackbarSeverity = "success" | "error";
 
 const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   const navigate = useNavigate();
-
+  const [selectedLineId, setSelectedLineId] = useState<number | null>(null); // Estado para o ID da linha selecionada
+  const [selectedLinkId, setSelectedLinkId] = useState<number | null>(null); // Estado para o ID da linha selecionada
+  const [selectedStationsId, setSelectedStationsId] = useState<number | null>(
+    null
+  ); // Estado para o ID da linha selecionada
   const [state, setState] = useState({
     snackbarMessage: "", // Mensagem do Snackbar
     snackbarOpen: false,
@@ -151,7 +158,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
 
   // Função para criar uma nova linha com um nome aleatório
   const handleCreateLine = async () => {
-    const randomLineName = `Linha ${Math.floor(Math.random() * 1000)}`; // Gera um nome aleatório
+    const randomLineName = `Linha ${Math.floor(Math.random() * 1000000)}`; // Gera um nome aleatório
 
     try {
       const createdLine = await createLine({ name: randomLineName });
@@ -187,12 +194,64 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     }
   };
 
+  // Função para excluir a linha selecionada
+  const handleDeleteLine = async () => {
+    if (selectedLineId !== null) {
+      try {
+        await deleteLink(selectedLinkId); // Chame a API para deletar a linha
+        await deleteLine(selectedLineId);
+        await deleteStation(selectedStationsId);
+        onUpdate(); // Atualiza a lista de linhas após a exclusão
+        showSnackbar("Linha excluída com sucesso!", "success");
+        setSelectedLineId(null); // Limpa a seleção após a exclusão
+      } catch (error: any) {
+        console.error("Erro ao excluir a linha:", error);
+        showSnackbar("Erro ao excluir a linha.", "error");
+      }
+    }
+  };
+
+  // const handleLineChange = (lineId: number, lineName: string) => {
+  //   setSelectedLineId(lineId);
+  //   console.log(`Linha selecionada: ${lineName}, ID: ${lineId}`);
+  // };
+
+  const handleLineChange = (link: Link) => {
+    setSelectedLineId(link.line.id || null);
+    console.log(`Linha selecionada: ${link.line.name}, ID: ${link.line.id}`);
+    console.log(`Informações do link:`, link); // Exibe o objeto link completo
+    const linkStationAndLineID = link.stations[0]?.linkStationAndLineID; // Captura o linkStationAndLineID da primeira estação
+    const linkStationID = link.stations[0]?.station.id; // Captura o linkStationAndLineID da primeira estação
+    setSelectedLinkId(linkStationAndLineID);
+    setSelectedStationsId(linkStationID);
+    console.log(`LinkStationAndLineID: ${linkStationAndLineID}`); // Exibe apenas o ID
+    console.log(`LinkStationID: ${linkStationID}`); // Exibe apenas o ID
+  };
+
   return (
     <>
       <div className="container">
         <div className="line-container">
           {groupedLines.map((link) => (
-            <Line key={link.id} lineData={link} />
+            <>
+              <input
+                type="radio"
+                name="line"
+                value={link.line.id}
+                checked={selectedLineId === link.line.id}
+                onChange={() => {
+                  if (link.line.id !== undefined) {
+                    // Verifica se o ID não é undefined
+                    if (selectedLineId === link.line.id) {
+                      setSelectedLineId(null);
+                    } else {
+                      handleLineChange(link);
+                    }
+                  }
+                }}
+              />
+              <Line key={link.id} lineData={link} />
+            </>
           ))}
         </div>
         {/* Botão fixo no canto inferior direito */}
@@ -206,6 +265,18 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
         >
           Adicionar linha
         </Button>
+        {selectedLineId !== null && ( // Renderiza o botão de excluir se uma linha estiver selecionada
+          <Button
+            type="primary" // Mantenha como 'primary' ou altere para 'default' ou outro tipo válido
+            shape="round"
+            icon={<DeleteOutlined />}
+            size="large"
+            onClick={handleDeleteLine}
+            className="delete-icon-fixed"
+          >
+            Excluir linha
+          </Button>
+        )}
         <Snackbar
           open={state.snackbarOpen}
           autoHideDuration={6000}
