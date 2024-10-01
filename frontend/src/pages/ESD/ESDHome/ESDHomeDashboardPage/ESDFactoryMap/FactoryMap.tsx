@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Line from "../ESDLine/Line";
 import "./FactoryMap.css"; // Importando o CSS
 import AddIcon from "@mui/icons-material/Add"; // Importando o ícone Add
-import LineForm from "../../../Line/LineForm/LineForm";
 import {
   createLine,
   getAllLines,
@@ -70,8 +69,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   const navigate = useNavigate();
 
   const [state, setState] = useState({
-    openModal: false,
-    openLineModal: false,
     snackbarMessage: "", // Mensagem do Snackbar
     snackbarOpen: false,
     snackbarSeverity: "success" as SnackbarSeverity, // Severidade do Snackbar
@@ -152,21 +149,12 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
 
   const groupedLines = groupLinesById(lines); // Agrupa as linhas antes de renderizar
 
-  const handleOpenLineModal = () =>
-    handleStateChange({
-      openLineModal: true,
-      openModal: false,
-    });
+  // Função para criar uma nova linha com um nome aleatório
+  const handleCreateLine = async () => {
+    const randomLineName = `Linha ${Math.floor(Math.random() * 1000)}`; // Gera um nome aleatório
 
-  const handleCloseLineModal = () =>
-    handleStateChange({
-      openLineModal: false,
-      openModal: false,
-    });
-
-  const handleCreateLine = async (line: LineData) => {
     try {
-      const createdLine = await createLine(line);
+      const createdLine = await createLine({ name: randomLineName });
       await getAllLines();
       const lineName = await getLineByName(createdLine.name);
       const station = {
@@ -214,15 +202,10 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
           icon={<PlusOutlined />}
           size="large"
           className="add-icon-fixed"
-          onClick={handleOpenLineModal}
+          onClick={handleCreateLine} // Chama a função diretamente
         >
           Adicionar linha
         </Button>
-        <LineForm
-          open={state.openLineModal}
-          handleClose={handleCloseLineModal}
-          onSubmit={handleCreateLine}
-        />
         <Snackbar
           open={state.snackbarOpen}
           autoHideDuration={6000}
