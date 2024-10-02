@@ -201,7 +201,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
       await getAllStations();
       const stationName = await getStationByName(stationCreated.name);
       const link = {
-        ordersList: 0,
+        ordersList: createdLine.id,
         lineID: createdLine.id,
         stationID: stationName.id,
       };
@@ -312,7 +312,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
                   }
                 }}
               />
-              <Line key={link.id} lineData={link} />
+              <Line key={link.id} lineData={link} onUpdate={onUpdate} />
             </>
           ))}
         </div>
@@ -364,110 +364,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
         </Snackbar>
       </div>
     </>
-    //   <>
-    //   {/* <div className="container">
-    //     {/* Ícone de notificações no canto superior direito */}
-    //     <div className="notification-icon">
-    //       <IconButton
-    //         aria-label="notifications"
-    //         color="inherit"
-    //         onClick={handleNotificationClick}
-    //       >
-    //         <Badge badgeContent={mockNotifications.length} color="secondary">
-    //           <NotificationsIcon />
-    //         </Badge>
-    //       </IconButton>
-    //       {/* Menu que contém as notificações */}
-    //       <Menu
-    //         anchorEl={anchorEl}
-    //         open={Boolean(anchorEl)}
-    //         onClose={handleNotificationClose}
-    //         anchorOrigin={{
-    //           vertical: "top",
-    //           horizontal: "right",
-    //         }}
-    //         transformOrigin={{
-    //           vertical: "top",
-    //           horizontal: "right",
-    //         }}
-    //       >
-    //         {mockNotifications.map((notification) => (
-    //           <MenuItem key={notification.id} onClick={handleNotificationClose}>
-    //             {notification.message}
-    //           </MenuItem>
-    //         ))}
-    //       </Menu>
-    //     </div>
-
-    //     <div className="line-container">
-    //       {groupedLines.map((link) => (
-    //         <>
-    //           <input
-    //             type="radio"
-    //             name="line"
-    //             value={link.line.id}
-    //             checked={selectedLineId === link.line.id}
-    //             onChange={() => {
-    //               if (link.line.id !== undefined) {
-    //                 if (selectedLineId === link.line.id) {
-    //                   setSelectedLineId(null);
-    //                 } else {
-    //                   handleLineChange(link);
-    //                 }
-    //               }
-    //             }}
-    //           />
-    //           <Line key={link.id} lineData={link} />
-    //         </>
-    //       ))}
-    //     </div>
-
-    //     <Button
-    //       type="primary"
-    //       shape="round"
-    //       icon={<PlusOutlined />}
-    //       size="large"
-    //       className="add-icon-fixed"
-    //       onClick={handleCreateLine}
-    //     >
-    //       Adicionar linha
-    //     </Button>
-    //     {selectedLineId !== null && (
-    //       <Button
-    //         type="primary"
-    //         shape="round"
-    //         icon={<DeleteOutlined />}
-    //         size="large"
-    //         onClick={handleOpenModal}
-    //         className="delete-icon-fixed"
-    //       >
-    //         Excluir linha
-    //       </Button>
-    //     )}
-
-    //     <ESDConfirmModal
-    //       open={modalOpen}
-    //       handleClose={handleCloseModal}
-    //       handleConfirm={handleConfirmDelete}
-    //       title="Confirmação de Exclusão"
-    //       description="Tem certeza de que deseja excluir esta linha?"
-    //     />
-
-    //     <Snackbar
-    //       open={state.snackbarOpen}
-    //       autoHideDuration={6000}
-    //       onClose={() => handleStateChange({ snackbarOpen: false })}
-    //       anchorOrigin={{ vertical: "top", horizontal: "right" }}
-    //     >
-    //       <Alert
-    //         onClose={() => handleStateChange({ snackbarOpen: false })}
-    //         severity={state.snackbarSeverity}
-    //       >
-    //         {state.snackbarMessage}
-    //       </Alert>
-    //     </Snackbar>
-    //   </div> */}
-    // </>
   );
 };
 

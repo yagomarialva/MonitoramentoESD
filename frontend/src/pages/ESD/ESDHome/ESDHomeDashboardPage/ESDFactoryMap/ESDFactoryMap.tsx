@@ -63,6 +63,7 @@ const ESDFactoryMap: React.FC = () => {
 
   // useEffect para buscar os dados na montagem do componente
   useEffect(() => {
+    console.log('here')
     fetchStations(); // Chama a função para buscar os dados
   }, [navigate]);
 

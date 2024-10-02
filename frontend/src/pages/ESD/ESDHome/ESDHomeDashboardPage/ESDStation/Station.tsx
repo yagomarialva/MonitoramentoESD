@@ -49,6 +49,7 @@ const Station: React.FC<StationProps> = ({ stationEntry }) => {
   });
 
   return (
+    <>
     <div className="card-grid">
       {cells.map((cell, index) => (
         <div key={index} className="icon-container">
@@ -62,6 +63,7 @@ const Station: React.FC<StationProps> = ({ stationEntry }) => {
         </div>
       ))}
     </div>
+    </>
   );
 };
 

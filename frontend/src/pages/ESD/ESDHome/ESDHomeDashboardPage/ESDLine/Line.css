@@ -1,50 +1,69 @@
 .esd-line-container {
-    flex: 1;
-    padding: 20px;
-    min-height: 200px;
-    border: 2px dashed #d9d9d9;
-    border-radius: 12px;
-    background-color: #f0f2f5; /* Fundo suave para melhor contraste */
-    margin: 20px;
-    text-align: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px; /* Espaçamento aumentado para melhor distribuição */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra leve para profundidade */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  flex: 1;
+  padding: 20px;
+  min-height: 200px;
+  border: 2px dashed #d9d9d9;
+  border-radius: 12px;
+  background-color: #f0f2f5; /* Fundo suave para melhor contraste */
+  margin: 20px;
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px; /* Espaçamento aumentado para melhor distribuição */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra leve para profundidade */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container {
+  display: flex; /* or inline-flex */
 }
 
 .esd-line-container:hover {
-    background-color: #e6f7ff; /* Efeito de hover leve */
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada no hover */
+  background-color: #e6f7ff; /* Efeito de hover leve */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada no hover */
 }
 
 .esd-line-title {
-    margin-bottom: -80px; /* Ajustado para melhorar o espaçamento */
-    font-size: 20px; /* Tamanho ligeiramente maior para melhor legibilidade */
-    color: #1f1f1f; /* Cor de texto mais escura para contraste */
-    font-weight: 600; /* Título em negrito para ênfase */
-    text-transform: uppercase; /* Transformar texto para maiúsculas */
-    letter-spacing: 1px; /* Espaçamento entre letras para um visual mais limpo */
+  margin-bottom: -80px; /* Ajustado para melhorar o espaçamento */
+  font-size: 20px; /* Tamanho ligeiramente maior para melhor legibilidade */
+  color: #1f1f1f; /* Cor de texto mais escura para contraste */
+  font-weight: 600; /* Título em negrito para ênfase */
+  text-transform: uppercase; /* Transformar texto para maiúsculas */
+  letter-spacing: 1px; /* Espaçamento entre letras para um visual mais limpo */
 }
 
 .add-button-container {
-    display: flex;
-    justify-content: flex-end; /* Alinha o ícone à direita */
-    margin-top: 10px; /* Espaçamento acima do ícone */
-  }
-  
-  .line-container {
-    display: flex;
-    flex-direction: column !important; /* Alinha os itens verticalmente */
-    align-items: flex-start; /* Alinha os itens à esquerda */
-    margin-bottom: 20px; /* Espaçamento entre as linhas */
-  }
-  
-  .add-button-container {
-    display: flex;
-    justify-content: flex-start; /* Alinha o ícone à esquerda */
-    margin-bottom: 10px; /* Espaçamento abaixo do ícone */
-  }
-  
+  display: flex;
+  justify-content: flex-end; /* Alinha o ícone à direita */
+  margin-top: 10px; /* Espaçamento acima do ícone */
+}
+
+.line-container {
+  display: flex;
+  flex-direction: column !important; /* Alinha os itens verticalmente */
+  align-items: flex-start; /* Alinha os itens à esquerda */
+  margin-bottom: 20px; /* Espaçamento entre as linhas */
+}
+
+.add-button-container {
+  display: flex;
+  justify-content: flex-start; /* Alinha o ícone à esquerda */
+  margin-bottom: 10px; /* Espaçamento abaixo do ícone */
+}
+
+.line-container {
+  display: flex;
+  justify-content: space-between; /* Espaço entre as estações e o botão */
+  align-items: center; /* Alinha os itens no centro horizontalmente */
+}
+
+.esd-line-container {
+  display: flex;
+  gap: 10px; /* Espaço entre as estações */
+}
+
+.add-button-container {
+  display: flex;
+  align-items: center;
+}
