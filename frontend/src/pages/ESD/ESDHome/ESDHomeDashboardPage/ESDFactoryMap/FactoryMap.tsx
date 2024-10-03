@@ -92,15 +92,14 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     null
   ); // Estado para o ID da linha selecionada
   const [modalOpen, setModalOpen] = useState(false); // Estado para controle do modal
-
   const [state, setState] = useState({
     snackbarMessage: "", // Mensagem do Snackbar
     snackbarOpen: false,
     snackbarSeverity: "success" as SnackbarSeverity, // Severidade do Snackbar
   });
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Estado para abrir o menu de notificações
 
+  
   // Atualiza o estado com os tipos corretos
   const handleStateChange = (changes: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -191,7 +190,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     try {
       const createdLine = await createLine({ name: randomLineName });
       await getAllLines();
-      const lineName = await getLineByName(createdLine.name);
       const station = {
         name: createdLine.name,
         sizeX: 6,
@@ -208,8 +206,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
       await createLink(link);
       onUpdate();
 
-      // Exibir mensagem de sucesso no Snackbar
-      showSnackbar("Linha criada com sucesso!", "success");
     } catch (error: any) {
       console.error("Erro ao criar e mapear o monitor:", error);
       if (error.message === "Request failed with status code 401") {
@@ -241,14 +237,10 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
 
   const handleLineChange = (link: Link) => {
     setSelectedLineId(link.line.id || null);
-    console.log(`Linha selecionada: ${link.line.name}, ID: ${link.line.id}`);
-    console.log(`Informações do link:`, link); // Exibe o objeto link completo
     const linkStationAndLineID = link.stations[0]?.linkStationAndLineID; // Captura o linkStationAndLineID da primeira estação
     const linkStationID = link.stations[0]?.station.id; // Captura o linkStationAndLineID da primeira estação
     setSelectedLinkId(linkStationAndLineID);
     setSelectedStationsId(linkStationID);
-    console.log(`LinkStationAndLineID: ${linkStationAndLineID}`); // Exibe apenas o ID
-    console.log(`LinkStationID: ${linkStationID}`); // Exibe apenas o ID
   };
 
   const handleNotificationClick = (event: React.MouseEvent<HTMLElement>) => {
