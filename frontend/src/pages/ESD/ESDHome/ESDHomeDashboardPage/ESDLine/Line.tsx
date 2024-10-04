@@ -2,14 +2,7 @@ import React, { useState, useEffect } from "react";
 import Station from "../ESDStation/Station";
 import AddIcon from "@mui/icons-material/Add"; // Importando o ícone Add
 import "./Line.css"; // Importando o CSS
-import {
-  Alert,
-  IconButton,
-  Snackbar,
-  Badge,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import {
   createStation,
   deleteStation,
@@ -73,7 +66,6 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   const [selectedStationId, setSelectedStationId] = useState<number | null>(
     null
   );
-  const [modalOpen, setModalOpen] = useState(false);
   const [state, setState] = useState({
     snackbarMessage: "", // Mensagem do Snackbar
     snackbarOpen: false,
@@ -83,14 +75,6 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   // Atualiza o estado com os tipos corretos
   const handleStateChange = (changes: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...changes }));
-  };
-
-  const handleOpenModal = () => {
-    setModalOpen(true); // Abrir o modal de confirmação
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false); // Fechar o modal de confirmação
   };
 
   const navigate = useNavigate();
@@ -130,94 +114,6 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
     return selectedInfo;
   };
 
-  // const handleCreateStation = async () => {
-  //   const randomStationName = `Estação ${Math.floor(Math.random() * 1000000)}`;
-  //   const linkId = lineData.id;
-  //   const station = {
-  //     name: randomStationName,
-  //     sizeX: 6,
-  //     sizeY: 6,
-  //   };
-
-  //   if (createdLinks.has(linkId)) {
-  //     return; // Se o link já foi criado, não faz nada
-  //   }
-
-  //   try {
-  //     const newStation = await createStation(station);
-  //     const stationName = await getStationByName(newStation.name);
-  //     const link = {
-  //       ordersList: stationName.id,
-  //       lineID: lineData.line.id,
-  //       stationID: stationName.id,
-  //     };
-
-  //     await createLink(link);
-
-  //     // Adiciona a nova estação ao estado
-  //     setStations((prevStations) => [
-  //       ...prevStations,
-  //       {
-  //         station: {
-  //           id: stationName.id,
-  //           name: stationName.name,
-  //           sizeX: newStation.sizeX,
-  //           sizeY: newStation.sizeY,
-  //           linkStationAndLineID: linkId,
-  //         },
-  //         linkStationAndLineID: linkId,
-  //         monitorsEsd: [], // Adiciona um array vazio de monitores, se necessário
-  //       },
-  //     ]);
-  //     // Chama a função onUpdate após a criação da nova estação
-  //     onUpdate();
-  //   } catch (error) {
-  //     console.error("Erro ao criar e mapear a estação:", error);
-  //   }
-  // };
-
-  // const handleReturnStationInfo = async () => {
-  //   if (
-  //     !lineData?.stations ||
-  //     lineData.stations.length === 0 ||
-  //     !selectedStationId
-  //   ) {
-  //     console.error(
-  //       "Lista de estações ou ID de estação selecionada não estão definidos."
-  //     );
-  //     return;
-  //   }
-
-  //   const selectedStation = lineData.stations.find(
-  //     (stationEntry) => stationEntry?.station?.id === selectedStationId
-  //   );
-
-  //   if (!selectedStation) {
-  //     console.error("Estação selecionada não encontrada.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const selectedInfo = handleStationSelect(selectedStation);
-  //     console.log("Informações retornadas pelo botão:", selectedInfo.linkId);
-
-  //     await deleteLink(selectedInfo.linkId);
-  //     console.log(
-  //       "Informações retornadas pelo botão:",
-  //       selectedInfo.station.id
-  //     );
-
-  //     await deleteStation(selectedInfo.station.id);
-  //     onUpdate();
-  //     showSnackbar("Estação criada com sucesso!", "success");
-  //   } catch (error: any) {
-  //     console.error("Erro ao criar e mapear a estação:", error);
-  //     if (error.message === "Request failed with status code 401") {
-  //       localStorage.removeItem("token");
-  //       navigate("/");
-  //     }
-  //   }
-  // };
   const handleCreateStation = async () => {
     const randomStationName = `Estação ${Math.floor(Math.random() * 1000000)}`;
     const linkId = lineData.id;
@@ -263,7 +159,11 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
 
       // Mostra o Snackbar de sucesso
       showSnackbar("Estação criada com sucesso!", "success");
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message === "Request failed with status code 401") {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
       console.error("Erro ao criar e mapear a estação:", error);
 
       // Mostra o Snackbar de erro

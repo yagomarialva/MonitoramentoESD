@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import "./i18n"; // ts => import './i18n.ts'
-import { useAuth } from "./context/AuthContext"; // Remova a extensão do arquivo em imports no TS
 import HomePage from "./pages/HomePage/HomePage";
 import Operators from "./components/ESD/Operators/Operators";
 import Jig from "./components/ESD/Jigs/Jig";
 import Monitors from "./components/ESD/Monitors/Monitors";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import ProtectedRoute from "./ProtectedRoute";
@@ -14,7 +13,6 @@ import Line from "./components/ESD/Line/Line";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
 import Station from "./components/ESD/Station/Station";
 import LinkStationLine from "./components/ESD/LinkStationLine/LinkStationLine";
-import ESDTableView from "./pages/ESD/ESDHome/ESDHomeDashboardPage/ESDTableView";
 
 const AppRoutes: React.FC = () => {
   useEffect(() => {
@@ -104,14 +102,6 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <LinkStationLine />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/mocked"
-          element={
-            <ProtectedRoute>
-              <ESDTableView />
             </ProtectedRoute>
           }
         />

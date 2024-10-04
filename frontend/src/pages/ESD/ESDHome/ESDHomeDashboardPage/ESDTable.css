@@ -29,14 +29,6 @@
   height: 60px;
 }
 
-/* Estilos para estados de OK e NG */
-.ok {
-  background-color: green;
-}
-
-.ng {
-  background-color: red;
-}
 
 /* Estilo para o container principal */
 .container {
@@ -51,11 +43,6 @@
   flex-wrap: wrap !important;
   border: 1px solid rgb(180, 27, 27);
   width: 324px;
-}
-
-/* Margem à direita */
-.mRight {
-  /* margin-right: 30px; */
 }
 
 /* Estilo para o painel de controle */
@@ -106,52 +93,9 @@
   gap: 10px;
 }
 
-/* Ícone principal */
-.status-icon.main {
-  z-index: 3;
-  top: 0;
-}
-
-/* Estilos para apêndices de ícones */
-.status-icon.append1,
-.status-icon.append2 {
-  z-index: 2;
-  top: 30px;
-}
-
-/* Posicionamento dos apêndices */
-.status-icon.append1 {
-  left: -20px;
-}
-
-.status-icon.append2 {
-  left: 20px;
-}
-
-/* Mudança de cor do ícone com base no status */
-.status-icon.active {
-  background-color: green;
-  margin-top: 20px;
-}
-
-.status-icon.inactive {
-  background-color: red;
-  margin-left: 20px;
-  margin-top: 20px;
-}
-
-.status-icon.warning {
-  background-color: orange;
-}
-
 /* Efeito hover opcional para melhor visualização */
 .status-icon:hover {
   opacity: 0.8;
-}
-
-/* Grupo de ícones */
-.icons-group {
-  /* margem superior removida */
 }
 
 /* Estilos básicos para a tabela */
@@ -173,88 +117,11 @@
   font-weight: bold;
 }
 
-/* Estilo para ícones na tabela */
-.icon {
-  font-size: 24px;
-  color: #333;
-}
-
 /* Efeito hover para a tabela */
 .truth-table tr:hover {
   background-color: #e2e2e2;
 }
 
-/* Estilos para ícones específicos */
-.icon-one-one {
-  width: 52px;
-  height: 60px;
-  background-image: url('icons/one-one.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.icon-one-zero {
-  width: 52px;
-  height: 60px;
-  background-image: url('icons/one-zero.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.icon-zero-one {
-  width: 52px;
-  height: 60px;
-  background-image: url('icons/zero-one.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.icon-zero-zero {
-  width: 52px;
-  height: 60px;
-  background-image: url('icons/zero-zero.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-/* Container para as linhas */
-.line-container {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 20px;
-}
-
-/* Estilo para a matriz de cada estação */
-.station-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 20px);
-  grid-auto-rows: 20px;
-  gap: 5px;
-  margin-right: 20px;
-  border: 1px solid #ccc;
-  padding: 10px;
-}
-
-/* Estilo básico para cada monitor */
-.monitor {
-  width: 20px;
-  height: 20px;
-  background-color: gray;
-}
-
-/* Monitores com status 'PASS' */
-.monitor.pass {
-  background-color: green;
-}
-
-/* Monitores com status 'FAIL' */
-.monitor.fail {
-  background-color: red;
-}
 
 /* Título para as linhas */
 .line-title {

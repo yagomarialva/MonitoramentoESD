@@ -1,27 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Menu, Typography, Button, Card, Spin } from "antd";
+import { Layout, Menu, Typography, Button, Card, Spin, Dropdown } from "antd";
 import {
   HomeOutlined,
   UserOutlined,
   SettingOutlined,
   MonitorOutlined,
   PlusOutlined,
-  DownOutlined,
-  UpOutlined,
   LogoutOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
+import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import Logo from "./logo-compal.png";
 import "./Menu.css";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 const { Header, Sider, Content } = Layout;
 
 // Definição dos tipos para os dados do menu
@@ -87,15 +83,8 @@ interface MenuListProps {
 }
 
 const MenuList: React.FC<MenuListProps> = ({ menuItems }) => {
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const location = useLocation();
   const currentPath = location.pathname;
-
-  const handleItemClick = (itemText: string) => {
-    setExpandedItem(expandedItem === itemText ? null : itemText);
-  };
-
-  const isSelected = (path: string) => currentPath === path;
 
   return (
     <Menu mode="inline" theme="dark" defaultSelectedKeys={[currentPath]}>
@@ -143,8 +132,17 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
     return () => clearTimeout(timer);
   }, []);
 
+
+  const userMenu = (
+    <Menu>
+      <Menu.Item key="logout" onClick={logout}>
+        <LogoutOutlined /> Sair
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
-    <Layout >
+    <Layout>
       <Sider collapsible collapsed={collapsed}>
         <div className="collapse-button-container">
           <Button
@@ -160,7 +158,7 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
         <Header>
           <div className="header">
             <Typography.Title level={3}>
-            <img src={Logo} alt="" width="200px" className="logo-header" />
+              <img src={Logo} alt="" width="200px" className="logo-header" />
             </Typography.Title>
             <div>
               <SearchOutlinedIcon
@@ -173,12 +171,25 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
               <NotificationsNoneOutlinedIcon
                 style={{ marginRight: 30, color: "#FFFFFF" }}
               />
-              <Typography.Text style={{ marginRight: 30, color: "#FFFFFF" }}>
+              {/* <Typography.Text style={{ marginRight: 30, color: "#FFFFFF" }}>
                 {name}
-              </Typography.Text>
+              </Typography.Text> */}
               <TranslateOutlinedIcon
-                style={{ marginRight: 1, color: "#FFFFFF" }}
+                style={{ marginRight: 10, color: "#FFFFFF" }}
               />
+              <Dropdown overlay={userMenu} trigger={["click"]}>
+                <Typography.Text
+                  style={{
+                    marginRight: 3,
+                    color: "#FFFFFF",
+                    cursor: "pointer",
+                  }}
+                >
+                  {name}
+                  <DownOutlined />
+                </Typography.Text>
+              </Dropdown>
+
               {/* <Button
                 icon={<LogoutOutlined />}
                 type="primary"

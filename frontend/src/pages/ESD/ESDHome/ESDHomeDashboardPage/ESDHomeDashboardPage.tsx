@@ -1,14 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { AlertColor } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  createStationMapper,
-  getAllStationMapper,
-} from "../../../../api/mapingAPI";
+import { getAllStationMapper } from "../../../../api/mapingAPI";
 import "./ESDTable.css";
-import ESDFactoryMap from "./ESDFactoryMap/ESDFactoryMap";
-import { getAllLines } from "../../../../api/linerApi";
+import FactoryMap from "./ESDFactoryMap/FactoryMap";
+
+interface Station {
+  id: number;
+  linkStationAndLineID: number;
+  name: string;
+  sizeX: number;
+  sizeY: number;
+}
+
+interface MonitorDetails {
+  id: number;
+  serialNumber: string;
+  description: string;
+  statusJig: string;
+  statusOperador: string;
+  linkStationAndLineID: number;
+}
+
+interface Monitor {
+  positionSequence: number;
+  monitorsEsd: MonitorDetails;
+}
+
+interface StationEntry {
+  station: Station;
+  linkStationAndLineID: number;
+  monitorsEsd: Monitor[];
+}
+
+interface Line {
+  id?: number;
+  name: string;
+}
+
+interface Link {
+  id: number;
+  line: Line;
+  stations: StationEntry[];
+}
 
 interface Station {
   id: number;
@@ -21,109 +55,37 @@ interface StationItem {
   monitorsESD?: any[];
 }
 
-interface GroupedStation {
-  line: { id: number; name: string };
-  stations: StationItem[]; // This needs to match the expected StationItem structure
-}
-
-const groupStationsByLine = (
-  data: Station[]
-): Record<number, GroupedStation> => {
-  const grouped: Record<number, GroupedStation> = {};
-
-  data.forEach((entry) => {
-    const lineId = entry.line.id;
-
-    if (!grouped[lineId]) {
-      grouped[lineId] = { line: entry.line, stations: [] };
-    }
-
-    entry.stations.forEach((stationItem) => {
-      const existingStationIndex = grouped[lineId].stations.findIndex(
-        (s) => s.station.id === stationItem.station.id
-      );
-
-      if (existingStationIndex === -1) {
-        grouped[lineId].stations.push({
-          ...stationItem,
-          monitorsESD: stationItem.monitorsESD || [],
-        });
-      } else {
-        const existingStation = grouped[lineId].stations[existingStationIndex];
-        const existingMonitorsMap = new Map(
-          (existingStation.monitorsESD || []).map((m: any) => [m.id, m])
-        );
-
-        (stationItem.monitorsESD || []).forEach((monitor) => {
-          existingMonitorsMap.set(monitor.id, monitor);
-        });
-
-        grouped[lineId].stations[existingStationIndex] = {
-          ...existingStation,
-          monitorsESD: Array.from(existingMonitorsMap.values()),
-        };
-      }
-    });
-  });
-
-  return grouped;
-};
-
 const ESDDashboardPage: React.FC = () => {
-  const { t } = useTranslation();
-  const [group, setGroup] = useState<Record<number, GroupedStation>>({});
+  const [stationsData, setStationsData] = useState<Link[]>([]);
   const navigate = useNavigate();
 
-  const [state, setState] = useState<{
-    allLinks: any[];
-    link: null;
-    open: boolean;
-    openModal: boolean;
-    snackbarOpen: boolean;
-    snackbarMessage: string;
-    snackbarSeverity: AlertColor;
-    loading: boolean;
-  }>({
-    allLinks: [],
-    link: null,
-    open: false,
-    openModal: false,
-    snackbarOpen: false,
-    snackbarMessage: "",
-    snackbarSeverity: "success",
-    loading: true,
-  });
-
-  const fetchAndSetGroupedStations = async () => {
+  // Função para buscar os dados da API e atualizar o estado
+  const fetchStations = async () => {
     try {
-      const updatedStations = await getAllStationMapper();
-      const groupedData = groupStationsByLine(updatedStations);
-      setGroup(groupedData);
-    } catch (error) {
-      console.error("Failed to fetch stations", error);
+      const factoryMap = await getAllStationMapper();
+      setStationsData(factoryMap); // Atualiza o estado com os dados das estações
+    } catch (error: any) {
+      console.error("Erro ao buscar dados:", error);
+      if (error.message === "Request failed with status code 401") {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
     }
   };
 
+  // useEffect para buscar os dados na montagem do componente
   useEffect(() => {
-    const fetchDataAllUsers = async () => {
-      await fetchAndSetGroupedStations();
-      try {
-        const toMount = await getAllStationMapper();
-        const mounted = groupStationsByLine(toMount);
-        setGroup(mounted);
-      } catch (error: any) {
-        if (error.message === "Request failed with status code 401") {
-          localStorage.removeItem("token");
-          navigate("/");
-        }
-      }
-    };
-    fetchDataAllUsers();
+    fetchStations(); // Chama a função para buscar os dados
   }, [navigate]);
+
+  // Função para atualizar os dados ao chamar o `onUpdate` no componente filho
+  const handleUpdate = () => {
+    fetchStations(); // Atualiza ao ser chamado
+  };
 
   return (
     <>
-    <ESDFactoryMap></ESDFactoryMap>
+      <FactoryMap lines={stationsData} onUpdate={handleUpdate} />
     </>
   );
 };

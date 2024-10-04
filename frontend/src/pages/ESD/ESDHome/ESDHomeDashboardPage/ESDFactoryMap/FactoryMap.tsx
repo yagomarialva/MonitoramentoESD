@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import Line from "../ESDLine/Line";
 import "./FactoryMap.css"; // Importando o CSS
-import AddIcon from "@mui/icons-material/Add"; // Importando o ícone Add
 import {
   createLine,
   deleteLine,
   getAllLines,
-  getLineByName,
 } from "../../../../../api/linerApi";
 import {
   createStation,
@@ -18,17 +16,9 @@ import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd"; // Importa o botão do Ant Design
 import { PlusOutlined } from "@ant-design/icons"; // Importa o ícone de adicionar
-import {
-  Alert,
-  IconButton,
-  Snackbar,
-  Badge,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { Alert, IconButton, Snackbar, Menu, MenuItem } from "@mui/material";
 import { DeleteOutlined } from "@mui/icons-material";
 import ESDConfirmModal from "../../ESDConfirmModal/ESDConfirmModal";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 
 interface Station {
   id: number;
@@ -99,7 +89,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Estado para abrir o menu de notificações
 
-  
   // Atualiza o estado com os tipos corretos
   const handleStateChange = (changes: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...changes }));
@@ -205,14 +194,14 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
       };
       await createLink(link);
       onUpdate();
-
+      showSnackbar("Linha criada com sucesso!", "success");
     } catch (error: any) {
       console.error("Erro ao criar e mapear o monitor:", error);
       if (error.message === "Request failed with status code 401") {
+        showSnackbar("Sessão Expirada.", "error");
         localStorage.removeItem("token");
         navigate("/");
       }
-
       // Exibir mensagem de erro no Snackbar
       showSnackbar("Erro ao criar a linha.", "error");
     }
@@ -259,9 +248,9 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
           color="inherit"
           onClick={handleNotificationClick}
         >
-          <Badge badgeContent={mockNotifications.length} color="secondary">
+          {/* <Badge badgeContent={mockNotifications.length} color="secondary">
             <NotificationsIcon />
-          </Badge>
+          </Badge> */}
         </IconButton>
         {/* Menu que contém as notificações */}
         <Menu
