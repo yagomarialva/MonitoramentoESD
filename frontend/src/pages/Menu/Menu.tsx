@@ -108,7 +108,6 @@ const MenuList: React.FC<MenuListProps> = ({ menuItems }) => {
               <span>{item.text}</span>
             </>
           }
-          icon={expandedItem === item.text ? <UpOutlined /> : <DownOutlined />}
         >
           {item.subItems &&
             item.subItems.map((subItem, subIndex) => (
@@ -145,7 +144,7 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
   }, []);
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout >
       <Sider collapsible collapsed={collapsed}>
         <div className="collapse-button-container">
           <Button
@@ -158,14 +157,14 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
         <MenuList menuItems={menuItems} />
       </Sider>
       <Layout>
-        <Header style={{ backgroundColor: "#001529", color: "#FFFFFF" }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography.Title level={3} style={{ color: "#FFFFFF" }}>
-            <img src={Logo} alt="" width="200px" style={{ marginTop: "13px", marginLeft:'-15px' }} />
+        <Header>
+          <div className="header">
+            <Typography.Title level={3}>
+            <img src={Logo} alt="" width="200px" className="logo-header" />
             </Typography.Title>
             <div>
               <SearchOutlinedIcon
-                style={{ marginRight: 25, color: "#FFFFFF" }}
+                style={{ marginRight: 30, color: "#FFFFFF" }}
               />
               <HelpOutlineOutlinedIcon
                 style={{ marginRight: 30, color: "#FFFFFF" }}
@@ -174,7 +173,7 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
               <NotificationsNoneOutlinedIcon
                 style={{ marginRight: 30, color: "#FFFFFF" }}
               />
-              <Typography.Text style={{ marginRight: 16, color: "#FFFFFF" }}>
+              <Typography.Text style={{ marginRight: 30, color: "#FFFFFF" }}>
                 {name}
               </Typography.Text>
               <TranslateOutlinedIcon
@@ -191,7 +190,7 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
             </div>
           </div>
         </Header>
-        <Content style={{ margin: "16px" }}>
+        <Content style={{ margin: "20px" }}>
           <Card style={{ overflow: "auto", minHeight: "500px" }}>
             {isLoading ? (
               <div className="loading-spinner">

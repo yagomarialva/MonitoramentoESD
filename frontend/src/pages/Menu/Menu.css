@@ -16,6 +16,26 @@
   display: inline-flex;
 }
 
+.logo-header {
+  width: 200px;
+  margin-top: 13px;
+  margin-left: -15px;
+}
+/* marginRight: 25, color: "#FFFFFF" */
+.itens-header {
+  margin-right: -10px;
+  color: '#FFFFFF';
+}
+
+:where(.css-dev-only-do-not-override-qnu6hi).ant-card .ant-card-body {
+  padding: 0px !important;
+  border-radius: 0 0 8px 8px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
 .css-i4bv87-MuiSvgIcon-root {
   height: 2em !important;
 }
@@ -76,4 +96,10 @@
   max-height: 100%;
   width: 86% !important;
   background-color: var(--background-paper, #fff);
+}
+
+@media (min-width: 1400px) {
+  .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+      max-width: 100% !important;
+  }
 }
