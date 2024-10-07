@@ -1,24 +1,44 @@
+/* Define o estilo geral da estação */
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Layout ajustado para três colunas */
-    gap: 10px; /* Espaçamento entre os ícones */
-}
-
-.icon-container {
+    grid-template-columns: repeat(4, 1fr); /* Cria 4 colunas */
+    grid-template-rows: repeat(3, 1fr); /* Cria 3 linhas */
+    gap: 20px; /* Ajusta o espaçamento entre as células */
+    background-color: #d3d3d3; /* Fundo cinza para a estação */
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc; /* Borda da estação */
+  }
+  
+  /* Estilo para cada célula */
+  .icon-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer; /* Cursor de pointer para indicar interatividade */
-}
-
-.computer-icon, .add-icon {
-    font-size: 24px; /* Tamanho ajustado dos ícones */
-}
-
-.add-icon {
-    color: #888; /* Cor para o ícone de adicionar */
-}
-
-.computer-icon {
-    color: #000; /* Cor para o ícone de computador */
-}
+    background-color: white;
+    width: 60px; /* Largura fixa para garantir células quadradas */
+    height: 60px; /* Altura fixa para garantir células quadradas */
+    border: 1px solid #000; /* Borda das células */
+    border-radius: 4px;
+    margin-left: 5px; /* Espaçamento lateral esquerdo */
+    margin-right: 5px; /* Espaçamento lateral direito */
+    transition: background-color 0.3s;
+  }
+  
+  /* Estilo para o ícone do computador */
+  .computer-icon {
+    font-size: 30px;
+    color: #007bff; /* Azul para o ícone do computador */
+  }
+  
+  /* Estilo para o ícone de adicionar */
+  .add-icon {
+    font-size: 30px;
+    color: #28a745; /* Verde para o ícone de adicionar */
+  }
+  
+  /* Mudar a cor de fundo da célula ao passar o mouse */
+  .icon-container:hover {
+    background-color: #f0f0f0;
+  }
+  

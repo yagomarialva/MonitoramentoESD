@@ -1,6 +1,14 @@
 .container {
+  /* padding: 10px; */
+  background-color: #f0f2f5;
+  position: relative; /* Para que o botão possa ser posicionado dentro desse container */
+  margin-top: -43px !important;
+}
+
+.container-title {
   padding: 40px;
   background-color: #f0f2f5;
+  font-family: "Roboto", sans-serif;
   position: relative; /* Para que o botão possa ser posicionado dentro desse container */
 }
 
@@ -24,7 +32,7 @@
 
 .computer-icon {
   font-size: 24px !important;
-  color: #389E0D !important;
+  color: #389e0d !important;
   margin-right: 8px !important;
 }
 
@@ -63,7 +71,6 @@
   right: 13%;
   z-index: 1000;
   transition: background-color 0.3s ease;
-
 }
 
 .add-icon-fixed:hover {
@@ -72,7 +79,7 @@
 
 /* Estilo básico para o Snackbar semelhante ao Ant Design */
 .ant-snackbar {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #595959;
   border-radius: 4px;
   box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.12);
@@ -90,7 +97,7 @@
 
 /* Adiciona borda esquerda */
 .ant-snackbar-success::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0; /* Alinhado à esquerda */
   top: 0;
@@ -123,4 +130,34 @@
   top: 24px;
   right: 24px;
   z-index: 1000;
+}
+
+.line-item {
+  display: flex;
+  align-items: center; /* Alinha o rádio verticalmente */
+}
+
+.radio-button {
+  margin-right: 10px; /* Espaçamento entre o botão de rádio e o card */
+  align-self: flex-start; /* Garante que o botão esteja à esquerda */
+}
+
+.white-background-button {
+  background-color: white !important; /* Fundo branco */
+  border: none !important; /* Remove as bordas */
+  color: #bfbfbf; /* Cor do ícone ou texto */
+}
+
+.white-background-button:hover {
+  background-color: #f0f0f0 !important; /* Cor de fundo no hover */
+}
+
+.no-border {
+  box-shadow: none !important; /* Remove a sombra (caso tenha) */
+}
+:where(.css-dev-only-do-not-override-qnu6hi).ant-btn.ant-btn-round.ant-btn-sm {
+  border-radius: 24px;
+  padding-inline-start: 15px;
+  padding-inline-end: 15px;
+  width: 15px;
 }

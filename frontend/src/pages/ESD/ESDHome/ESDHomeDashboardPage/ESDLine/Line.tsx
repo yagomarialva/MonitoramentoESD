@@ -226,14 +226,15 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
     <div className="line-container">
       <div className="esd-line-container">
         {lineData.stations.map((stationEntry) => (
-          <div key={stationEntry.station.id}>
+          <div key={stationEntry.station.id} style={{ position: "relative" }}>
             <Station stationEntry={stationEntry} />
             <input
               type="radio"
               name="selectedStation"
               value={stationEntry.station.id}
-              onChange={() => handleStationSelect(stationEntry)}
+              onChange={() => handleStationSelect(stationEntry)} // Seleciona a estação ao mudar o radio button
               checked={selectedStationId === stationEntry.station.id}
+              style={{ position: "absolute", top: 10, left: '15px' }} // Ajuste de posição
             />
           </div>
         ))}
@@ -241,7 +242,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
       <div className="add-button-container">
         <AddIcon
           onClick={handleCreateStation}
-          style={{ cursor: "pointer", fontSize: "40px" }} // Tamanho do ícone aumentado para melhor usabilidade
+          style={{ fontSize: "40px", cursor: "pointer" }} // Tamanho do ícone e cursor de pointer
         />
       </div>
       <button

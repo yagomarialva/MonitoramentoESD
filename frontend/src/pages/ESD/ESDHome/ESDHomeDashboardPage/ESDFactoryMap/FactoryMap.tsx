@@ -19,6 +19,8 @@ import { PlusOutlined } from "@ant-design/icons"; // Importa o ícone de adicion
 import { Alert, IconButton, Snackbar, Menu, MenuItem } from "@mui/material";
 import { DeleteOutlined } from "@mui/icons-material";
 import ESDConfirmModal from "../../ESDConfirmModal/ESDConfirmModal";
+import RemoveCircleOutlineOutlinedIcon from "@mui/icons-material/RemoveCircleOutlineOutlined";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 
 interface Station {
   id: number;
@@ -273,53 +275,40 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
           ))}
         </Menu>
       </div>
+      <div className="container-title">Linha de produção</div>
       <div className="container">
         <div className="line-container">
           {groupedLines.map((link) => (
             <>
-              <input
-                type="radio"
-                name="line"
-                value={link.line.id}
-                checked={selectedLineId === link.line.id}
-                onChange={() => {
-                  if (link.line.id !== undefined) {
-                    // Verifica se o ID não é undefined
-                    if (selectedLineId === link.line.id) {
-                      setSelectedLineId(null);
-                    } else {
-                      handleLineChange(link);
-                    }
-                  }
-                }}
-              />
-              <Line key={link.id} lineData={link} onUpdate={onUpdate} />
+              <div className="line-item">
+                {/* Botão de adicionar linha */}
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<RemoveCircleOutlineOutlinedIcon />}
+                  size="small"
+                  onClick={() => {
+                    handleLineChange(link);
+                    handleOpenModal(); // Abre o modal de confirmação de exclusão
+                  }}
+                  className="white-background-button no-border" // Adiciona a classe para o fundo branco
+                ></Button>
+
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<AddCircleOutlineOutlinedIcon />}
+                  size="small"
+                  onClick={handleCreateLine} // Chama a função diretamente
+                  className="white-background-button no-border" // Adiciona a classe para o fundo branco
+                ></Button>
+
+                {/* Botão de excluir linha */}
+                <Line key={link.id} lineData={link} onUpdate={onUpdate} />
+              </div>
             </>
           ))}
         </div>
-        {/* Botão fixo no canto inferior direito */}
-        <Button
-          type="primary"
-          shape="round"
-          icon={<PlusOutlined />}
-          size="large"
-          className="add-icon-fixed"
-          onClick={handleCreateLine} // Chama a função diretamente
-        >
-          Adicionar linha
-        </Button>
-        {selectedLineId !== null && ( // Renderiza o botão de excluir se uma linha estiver selecionada
-          <Button
-            type="primary" // Mantenha como 'primary' ou altere para 'default' ou outro tipo válido
-            shape="round"
-            icon={<DeleteOutlined />}
-            size="large"
-            onClick={handleOpenModal}
-            className="delete-icon-fixed"
-          >
-            Excluir linha
-          </Button>
-        )}
         {/* Modal de confirmação */}
         <ESDConfirmModal
           open={modalOpen}
