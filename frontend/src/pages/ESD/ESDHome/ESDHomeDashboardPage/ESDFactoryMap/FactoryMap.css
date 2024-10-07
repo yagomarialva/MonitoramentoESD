@@ -5,6 +5,16 @@
   margin-top: -43px !important;
 }
 
+.button-container {
+  position: absolute; /* Posiciona os botões de forma absoluta dentro do contêiner */
+  top: 20px; /* Distância do topo */
+  right: 20px; /* Distância da direita */
+  display: flex; /* Para alinhar os botões em linha */
+  gap: 10px; /* Espaçamento entre os botões */
+  z-index: 1000; /* Garante que os botões fiquem acima de outros elementos */
+}
+
+
 .container-title {
   padding: 40px;
   background-color: #f0f2f5;

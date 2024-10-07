@@ -11,6 +11,8 @@ import {
 } from "../../../../../api/stationApi";
 import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
+import RemoveCircleOutlineOutlinedIcon from "@mui/icons-material/RemoveCircleOutlineOutlined";
+import { Button } from "antd"; // Importa o botão do Ant Design
 
 interface StationLine {
   id: number;
@@ -171,7 +173,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
     }
   };
 
-  const handleReturnStationInfo = async () => {
+  const handleDeleteStation = async () => {
     if (
       !lineData?.stations ||
       lineData.stations.length === 0 ||
@@ -225,32 +227,48 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   return (
     <div className="line-container">
       <div className="esd-line-container">
+        <div className="add-button-container">
+          <AddIcon
+            onClick={handleCreateStation}
+            style={{ fontSize: "40px", cursor: "pointer" }} // Tamanho do ícone e cursor de pointer
+          />
+          <Button
+            type="primary"
+            shape="round"
+            icon={<RemoveCircleOutlineOutlinedIcon />}
+            size="small"
+            onClick={handleDeleteStation}
+            className="white-background-button no-border" // Adiciona a classe para o fundo branco
+          ></Button>
+        </div>
         {lineData.stations.map((stationEntry) => (
-          <div key={stationEntry.station.id} style={{ position: "relative" }}>
+          <div key={stationEntry.station.id}>
+            <div className="radio-button">
+              <input
+                type="radio"
+                name="selectedStation"
+                value={stationEntry.station.id}
+                onChange={() => handleStationSelect(stationEntry)}
+                checked={selectedStationId === stationEntry.station.id}
+              />
+            </div>
             <Station stationEntry={stationEntry} />
-            <input
-              type="radio"
-              name="selectedStation"
-              value={stationEntry.station.id}
-              onChange={() => handleStationSelect(stationEntry)} // Seleciona a estação ao mudar o radio button
-              checked={selectedStationId === stationEntry.station.id}
-              style={{ position: "absolute", top: 10, left: '15px' }} // Ajuste de posição
-            />
           </div>
         ))}
-      </div>
-      <div className="add-button-container">
+        {/* <div className="add-button-container">
         <AddIcon
           onClick={handleCreateStation}
           style={{ fontSize: "40px", cursor: "pointer" }} // Tamanho do ícone e cursor de pointer
         />
+        <button
+          onClick={handleDeleteStation}
+          disabled={selectedStationId === null}
+        >
+          Excluir Estação Selecionada
+        </button>
+      </div> */}
       </div>
-      <button
-        onClick={handleReturnStationInfo}
-        disabled={selectedStationId === null}
-      >
-        Excluir Estação Selecionada
-      </button>
+
       <Snackbar
         open={state.snackbarOpen}
         autoHideDuration={6000}

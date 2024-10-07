@@ -1,16 +1,14 @@
 .line-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: column; /* Mantenha a direção da coluna para o contêiner principal */
+  align-items: center; /* Centraliza os itens dentro do contêiner */
   margin: 20px;
   padding: 10px;
-  border: 1px solid #e0e0e0;
+  border: none !important;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   background-color: #f9f9f9;
-  position: relative; 
-  border: none !important; /* Remove a borda */
-  box-shadow: none !important; /* Remove qualquer sombra padrão */
+  position: relative;
+  box-shadow: none !important;
 }
 
 /* Remove a borda do card */
@@ -19,29 +17,58 @@
   box-shadow: none !important; /* Remove qualquer sombra padrão */
 }
 
-
-
 .esd-line-container {
   display: flex;
   flex-wrap: wrap; /* Permite que as estações se reorganizem em várias linhas */
   justify-content: center; /* Centraliza as estações */
   gap: 20px; /* Espaçamento entre as estações */
   margin-bottom: 20px; /* Margem inferior para espaçamento */
+  border: solid red 2px !important; /* Contorno para testes */
+}
+
+.station-card {
+  display: flex !important;
+  flex-direction: column; /* Mantenha a direção da coluna para o contêiner principal */
+  align-items: center;
+  border: solid blue 2px !important; /* Contorno para testes */
+}
+
+.esd-line-container .station {
+  position: relative; /* Para posicionar o radio button em relação ao elemento station */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 150px; /* Ajuste o tamanho conforme necessário */
+  height: 150px; /* Ajuste o tamanho conforme necessário */
 }
 
 .radio-button {
-  position: absolute;
-  top: 10px; /* Coloca no topo */
-  left: 10px; /* Alinha à esquerda */
+  /* position: absolute;
+  top: 13px !important;
+  margin-left: -27px; */
+  border: solid red 2px !important; /* Contorno para testes */
 }
 
 .add-button-container {
-  position: absolute;
-  top: 50%; /* Coloca o botão no meio da altura */
-  right: 10px; /* Alinha à direita */
-  transform: translateY(-50%); /* Centraliza verticalmente */
+  display: flex; /* Ativa flexbox para o contêiner de botões */
+  align-items: center; /* Centraliza verticalmente os itens */
+  border: solid red 2px !important; /* Contorno para testes */
 }
 
+.add-button-container button {
+  margin-left: 10px; /* Espaçamento entre o ícone e o botão */
+}
+
+.button-container {
+  display: flex; /* Para alinhar os botões em linha */
+  align-items: center; /* Centraliza verticalmente */
+  margin-top: 20px; /* Espaçamento superior opcional */
+}
+
+.button-container button {
+  margin-left: 10px; /* Espaçamento entre o ícone e o botão */
+}
 
 button {
   padding: 10px 20px; /* Estilo do botão */

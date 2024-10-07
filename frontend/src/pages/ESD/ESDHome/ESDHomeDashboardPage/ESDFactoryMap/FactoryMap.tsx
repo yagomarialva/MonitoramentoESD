@@ -280,9 +280,32 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
         <div className="line-container">
           {groupedLines.map((link) => (
             <>
-              <div className="line-item">
+              <div className="container-title">
+                {" "}
                 {/* Botão de adicionar linha */}
                 <Button
+                  type="primary"
+                  shape="round"
+                  icon={<RemoveCircleOutlineOutlinedIcon />}
+                  size="small"
+                  onClick={() => {
+                    handleLineChange(link);
+                    handleOpenModal(); // Abre o modal de confirmação de exclusão
+                  }}
+                  className="white-background-button no-border" // Adiciona a classe para o fundo branco
+                ></Button>
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<AddCircleOutlineOutlinedIcon />}
+                  size="small"
+                  onClick={handleCreateLine} // Chama a função diretamente
+                  className="white-background-button no-border" // Adiciona a classe para o fundo branco
+                ></Button>
+              </div>
+              <div className="line-item">
+                {/* Botão de adicionar linha */}
+                {/* <Button
                   type="primary"
                   shape="round"
                   icon={<RemoveCircleOutlineOutlinedIcon />}
@@ -301,7 +324,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
                   size="small"
                   onClick={handleCreateLine} // Chama a função diretamente
                   className="white-background-button no-border" // Adiciona a classe para o fundo branco
-                ></Button>
+                ></Button> */}
 
                 {/* Botão de excluir linha */}
                 <Line key={link.id} lineData={link} onUpdate={onUpdate} />
