@@ -115,65 +115,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     });
   };
 
-  // Função para agrupar as linhas por id, removendo duplicados por linkStationAndLineID
-  const groupLinesById = (lines: Link[]) => {
-    const grouped: { [key: number]: Link } = {};
-
-    function filterMonitors(uniqueStations: StationEntry[]) {
-      uniqueStations.forEach((stationEntry) => {
-        const uniqueMonitors: Monitor[] = [];
-
-        stationEntry.monitorsEsd.forEach((monitor) => {
-          // Verifica se já existe um monitor com o mesmo ID
-          const exists = uniqueMonitors.find(
-            (m) => m.monitorsEsd.id === monitor.monitorsEsd.id
-          );
-
-          // Se não existir, adiciona o monitor à lista
-          if (!exists) {
-            uniqueMonitors.push(monitor);
-          }
-        });
-
-        // Atualiza a lista de monitores sem duplicatas
-        stationEntry.monitorsEsd = uniqueMonitors;
-      });
-    }
-
-    lines.forEach((link) => {
-      const lineId = link.line.id || 0; // Caso o id seja indefinido, usar 0 como fallback
-
-      if (!grouped[lineId]) {
-        grouped[lineId] = {
-          ...link,
-          stations: [],
-        };
-      }
-
-      // Remover duplicados com o mesmo linkStationAndLineID
-      const uniqueStations = link.stations.filter(
-        (stationEntry) =>
-          !grouped[lineId].stations.some(
-            (existingStation) =>
-              existingStation.linkStationAndLineID ===
-              stationEntry.linkStationAndLineID
-          )
-      );
-
-      // Remover monitores duplicados com o mesmo ID dentro de cada estação
-      filterMonitors(uniqueStations);
-
-      grouped[lineId].stations = [
-        ...grouped[lineId].stations,
-        ...uniqueStations,
-      ];
-    });
-
-    return Object.values(grouped); // Retorna um array de linhas agrupadas
-  };
-
-  const groupedLines = groupLinesById(lines); // Agrupa as linhas antes de renderizar
-
   // Função para criar uma nova linha com um nome aleatório
   const handleCreateLine = async () => {
     const randomLineName = `Linha ${Math.floor(Math.random() * 1000000)}`; // Gera um nome aleatório
@@ -226,6 +167,16 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     }
   };
 
+  const handlePrintLineData = () => {
+    const selectedLine = lines.find((line) => line.line.id === selectedLineId);
+    if (selectedLine) {
+      console.log("Dados da linha selecionada:", selectedLine);
+      handleLineChange(selectedLine);
+    } else {
+      console.log("Nenhuma linha selecionada.");
+    }
+  };
+
   const handleLineChange = (link: Link) => {
     setSelectedLineId(link.line.id || null);
     const linkStationAndLineID = link.stations[0]?.linkStationAndLineID; // Captura o linkStationAndLineID da primeira estação
@@ -234,130 +185,156 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     setSelectedStationsId(linkStationID);
   };
 
-  const handleNotificationClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget); // Abre o menu ao clicar no sino
-  };
-
-  const handleNotificationClose = () => {
-    setAnchorEl(null); // Fecha o menu
-  };
-
   return (
-    <>
-      <div className="notification-icon-fixed">
-        <IconButton
-          aria-label="notifications"
-          color="inherit"
-          onClick={handleNotificationClick}
-        >
-          {/* <Badge badgeContent={mockNotifications.length} color="secondary">
-            <NotificationsIcon />
-          </Badge> */}
-        </IconButton>
-        {/* Menu que contém as notificações */}
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleNotificationClose}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-        >
-          {mockNotifications.map((notification) => (
-            <MenuItem key={notification.id} onClick={handleNotificationClose}>
-              {notification.message}
-            </MenuItem>
-          ))}
-        </Menu>
-      </div>
-      <div className="container-title">Linha de produção</div>
-      <div className="container">
-        <div className="line-container">
-          {groupedLines.map((link) => (
-            <>
-              <div className="container-title">
-                {" "}
-                {/* Botão de adicionar linha */}
-                <Button
-                  type="primary"
-                  shape="round"
-                  icon={<RemoveCircleOutlineOutlinedIcon />}
-                  size="small"
-                  onClick={() => {
-                    handleLineChange(link);
-                    handleOpenModal(); // Abre o modal de confirmação de exclusão
-                  }}
-                  className="white-background-button no-border" // Adiciona a classe para o fundo branco
-                ></Button>
-                <Button
-                  type="primary"
-                  shape="round"
-                  icon={<AddCircleOutlineOutlinedIcon />}
-                  size="small"
-                  onClick={handleCreateLine} // Chama a função diretamente
-                  className="white-background-button no-border" // Adiciona a classe para o fundo branco
-                ></Button>
-              </div>
-              <div className="line-item">
-                {/* Botão de adicionar linha */}
-                {/* <Button
-                  type="primary"
-                  shape="round"
-                  icon={<RemoveCircleOutlineOutlinedIcon />}
-                  size="small"
-                  onClick={() => {
-                    handleLineChange(link);
-                    handleOpenModal(); // Abre o modal de confirmação de exclusão
-                  }}
-                  className="white-background-button no-border" // Adiciona a classe para o fundo branco
-                ></Button>
-
-                <Button
-                  type="primary"
-                  shape="round"
-                  icon={<AddCircleOutlineOutlinedIcon />}
-                  size="small"
-                  onClick={handleCreateLine} // Chama a função diretamente
-                  className="white-background-button no-border" // Adiciona a classe para o fundo branco
-                ></Button> */}
-
-                {/* Botão de excluir linha */}
-                <Line key={link.id} lineData={link} onUpdate={onUpdate} />
-              </div>
-            </>
-          ))}
-        </div>
-        {/* Modal de confirmação */}
-        <ESDConfirmModal
-          open={modalOpen}
-          handleClose={handleCloseModal}
-          handleConfirm={handleConfirmDelete}
-          title="Confirmação de Exclusão"
-          description="Tem certeza de que deseja excluir esta linha?"
-        />
-        <Snackbar
-          open={state.snackbarOpen}
-          autoHideDuration={6000}
-          onClose={() => handleStateChange({ snackbarOpen: false })}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
-        >
-          <Alert
-            onClose={() => handleStateChange({ snackbarOpen: false })}
-            severity={state.snackbarSeverity}
-            className="ant-alert"
+    <div className="app-container">
+      <header className="header">
+        <h1>Linha de produção</h1>
+        <div className="header-buttons">
+          <Button className="add-button" onClick={handleCreateLine}>
+            Adicionar
+          </Button>
+          <Button
+            className="add-button"
+            onClick={() => {
+              handlePrintLineData();
+              handleOpenModal();
+            }}
           >
-            {state.snackbarMessage}
-          </Alert>
-        </Snackbar>
+            Excluir
+          </Button>
+        </div>
+      </header>
+      <div className="body">
+        {lines.map((line) => (
+          <div className="card" key={line.id}>
+            <div className="card-header">
+              <input
+                type="radio"
+                name="selectedLine"
+                value={line.line.id}
+                checked={selectedLineId === line.line.id}
+                onChange={() => handleLineChange(line)}
+              />
+              <span>{line.line.name}</span>
+            </div>
+            <div className="card-body">
+              <Line lineData={line} onUpdate={onUpdate} />
+            </div>
+          </div>
+        ))}
       </div>
-    </>
+      <ESDConfirmModal
+        open={modalOpen}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmDelete}
+        title="Confirmação de Exclusão"
+        description="Tem certeza de que deseja excluir esta linha?"
+      />
+      <Snackbar
+        open={state.snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => handleStateChange({ snackbarOpen: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
+      >
+        <Alert
+          onClose={() => handleStateChange({ snackbarOpen: false })}
+          severity={state.snackbarSeverity}
+          className="ant-alert"
+        >
+          {state.snackbarMessage}
+        </Alert>
+      </Snackbar>
+      <footer className="app-footer">
+        <p>&copy; 2024 Minha Página. Todos os direitos reservados.</p>
+      </footer>
+    </div>
   );
+  // return (
+  //   <>
+  //     <div className="container-title">Linha de produção</div>
+  //     <div className="container">
+  //       <div className="line-container">
+  //         {groupedLines.map((link) => (
+  //           <>
+  //             <div className="container-title">
+  //               {" "}
+  //               {/* Botão de adicionar linha */}
+  //               <Button
+  //                 type="primary"
+  //                 shape="round"
+  //                 icon={<RemoveCircleOutlineOutlinedIcon />}
+  //                 size="small"
+  //                 onClick={() => {
+  //                   handleLineChange(link);
+  //                   handleOpenModal(); // Abre o modal de confirmação de exclusão
+  //                 }}
+  //                 className="white-background-button no-border" // Adiciona a classe para o fundo branco
+  //               ></Button>
+  //               <Button
+  //                 type="primary"
+  //                 shape="round"
+  //                 icon={<AddCircleOutlineOutlinedIcon />}
+  //                 size="small"
+  //                 onClick={handleCreateLine} // Chama a função diretamente
+  //                 className="white-background-button no-border" // Adiciona a classe para o fundo branco
+  //               ></Button>
+  //             </div>
+  //             <div className="line-item">
+  //               {/* Botão de adicionar linha */}
+  //               {/* <Button
+  //                 type="primary"
+  //                 shape="round"
+  //                 icon={<RemoveCircleOutlineOutlinedIcon />}
+  //                 size="small"
+  //                 onClick={() => {
+  //                   handleLineChange(link);
+  //                   handleOpenModal(); // Abre o modal de confirmação de exclusão
+  //                 }}
+  //                 className="white-background-button no-border" // Adiciona a classe para o fundo branco
+  //               ></Button>
+
+  //               <Button
+  //                 type="primary"
+  //                 shape="round"
+  //                 icon={<AddCircleOutlineOutlinedIcon />}
+  //                 size="small"
+  //                 onClick={handleCreateLine} // Chama a função diretamente
+  //                 className="white-background-button no-border" // Adiciona a classe para o fundo branco
+  //               ></Button> */}
+
+  //               {/* Botão de excluir linha */}
+  //               <Line key={link.id} lineData={link} onUpdate={onUpdate} />
+  //             </div>
+  //           </>
+  //         ))}
+  //       </div>
+  //       {/* Modal de confirmação */}
+  //       <ESDConfirmModal
+  //         open={modalOpen}
+  //         handleClose={handleCloseModal}
+  //         handleConfirm={handleConfirmDelete}
+  //         title="Confirmação de Exclusão"
+  //         description="Tem certeza de que deseja excluir esta linha?"
+  //       />
+  //       <Snackbar
+  //         open={state.snackbarOpen}
+  //         autoHideDuration={6000}
+  //         onClose={() => handleStateChange({ snackbarOpen: false })}
+  //         anchorOrigin={{ vertical: "top", horizontal: "right" }}
+  //         className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
+  //       >
+  //         <Alert
+  //           onClose={() => handleStateChange({ snackbarOpen: false })}
+  //           severity={state.snackbarSeverity}
+  //           className="ant-alert"
+  //         >
+  //           {state.snackbarMessage}
+  //         </Alert>
+  //       </Snackbar>
+  //     </div>
+  //   </>
+  // );
 };
 
 export default FactoryMap;

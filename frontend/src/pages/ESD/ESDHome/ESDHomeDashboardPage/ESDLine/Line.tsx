@@ -96,8 +96,12 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
     try {
       const stationsData = await getAllStations();
       setStations(stationsData); // Atualiza o estado com as estações
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao buscar as estações:", error);
+      if (error.message === "Request failed with status code 401") {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
     }
   };
 
@@ -225,66 +229,56 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   };
 
   return (
-    <div className="line-container">
-      <div className="esd-line-container">
-        <div className="add-button-container">
-          <AddIcon
-            onClick={handleCreateStation}
-            style={{ fontSize: "40px", cursor: "pointer" }} // Tamanho do ícone e cursor de pointer
-          />
-          <Button
-            type="primary"
-            shape="round"
-            icon={<RemoveCircleOutlineOutlinedIcon />}
-            size="small"
-            onClick={handleDeleteStation}
-            className="white-background-button no-border" // Adiciona a classe para o fundo branco
-          ></Button>
-        </div>
-        {lineData.stations.map((stationEntry) => (
-          <div key={stationEntry.station.id}>
-            <div className="radio-button">
-              <input
-                type="radio"
-                name="selectedStation"
-                value={stationEntry.station.id}
-                onChange={() => handleStationSelect(stationEntry)}
-                checked={selectedStationId === stationEntry.station.id}
-              />
-            </div>
-            <Station stationEntry={stationEntry} />
+    <>
+      <div className="line-container">
+        <div className="esd-line-container">
+          <div className="add-button-container">
+            <AddIcon
+              onClick={handleCreateStation}
+              style={{ fontSize: "40px", cursor: "pointer" }} // Tamanho do ícone e cursor de pointer
+            />
+            <Button
+              type="primary"
+              shape="round"
+              icon={<RemoveCircleOutlineOutlinedIcon />}
+              size="small"
+              onClick={handleDeleteStation}
+              className="white-background-button no-border" // Adiciona a classe para o fundo branco
+            ></Button>
           </div>
-        ))}
-        {/* <div className="add-button-container">
-        <AddIcon
-          onClick={handleCreateStation}
-          style={{ fontSize: "40px", cursor: "pointer" }} // Tamanho do ícone e cursor de pointer
-        />
-        <button
-          onClick={handleDeleteStation}
-          disabled={selectedStationId === null}
-        >
-          Excluir Estação Selecionada
-        </button>
-      </div> */}
-      </div>
+          {lineData.stations.map((stationEntry) => (
+            <div key={stationEntry.station.id}>
+              <div className="radio-button">
+                <input
+                  type="radio"
+                  name="selectedStation"
+                  value={stationEntry.station.id}
+                  onChange={() => handleStationSelect(stationEntry)}
+                  checked={selectedStationId === stationEntry.station.id}
+                />
+              </div>
+              <Station stationEntry={stationEntry} />
+            </div>
+          ))}
+        </div>
 
-      <Snackbar
-        open={state.snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => handleStateChange({ snackbarOpen: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
-      >
-        <Alert
+        <Snackbar
+          open={state.snackbarOpen}
+          autoHideDuration={6000}
           onClose={() => handleStateChange({ snackbarOpen: false })}
-          severity={state.snackbarSeverity}
-          className="ant-alert"
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
         >
-          {state.snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </div>
+          <Alert
+            onClose={() => handleStateChange({ snackbarOpen: false })}
+            severity={state.snackbarSeverity}
+            className="ant-alert"
+          >
+            {state.snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </div>
+    </>
   );
 };
 

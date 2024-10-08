@@ -171,3 +171,63 @@
   padding-inline-end: 15px;
   width: 15px;
 }
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: #4CAF50;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.app-header nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.app-header nav ul li {
+  display: inline;
+  margin: 0 15px;
+}
+
+.app-header nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.app-body {
+  flex: 1;
+  padding: 20px;
+}
+
+.app-body section {
+  margin-bottom: 20px;
+}
+
+.app-footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.add-button {
+  margin-right: 5px;
+}
