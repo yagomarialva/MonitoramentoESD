@@ -6,7 +6,6 @@
   padding: 10px;
   border: none !important;
   border-radius: 8px;
-  background-color: #f9f9f9;
   position: relative;
   box-shadow: none !important;
 }
@@ -15,6 +14,7 @@
 .line-container .esd-line-container .card {
   border: none !important; /* Remove a borda */
   box-shadow: none !important; /* Remove qualquer sombra padrão */
+  border: solid blue 2px !important; /* Contorno para testes */
 }
 
 .esd-line-container {
@@ -29,7 +29,6 @@
   display: flex !important;
   flex-direction: column; /* Mantenha a direção da coluna para o contêiner principal */
   align-items: center;
-  border: solid blue 2px !important; /* Contorno para testes */
 }
 
 .esd-line-container .station {
@@ -47,11 +46,16 @@
   top: 13px !important;
   margin-left: -27px; */
   margin-left: -15px;
+  
 }
 
 .add-button-container-stations {
-  display: flex; /* Ativa flexbox para o contêiner de botões */
-  align-items: center; /* Centraliza verticalmente os itens */
+  display: flex; 
+  align-items: center; 
+}
+
+.no-border {
+  border: none;
 }
 
 .add-button-container button {
@@ -114,3 +118,6 @@ input[type="radio"] {
   background-color: #d93600; /* Cor ao passar o mouse */
 }
 
+input[type=radio]#Red {
+  accent-color: #4caf50;
+}

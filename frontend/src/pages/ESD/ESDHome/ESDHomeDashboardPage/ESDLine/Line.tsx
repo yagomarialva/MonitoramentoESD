@@ -257,6 +257,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
                 <input
                   type="radio"
                   name="selectedStation"
+                  id="Red"
                   value={stationEntry.station.id}
                   onChange={() => handleStationSelect(stationEntry)}
                   checked={selectedStationId === stationEntry.station.id}

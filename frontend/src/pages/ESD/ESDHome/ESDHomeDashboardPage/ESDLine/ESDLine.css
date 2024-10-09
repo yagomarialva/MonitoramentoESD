@@ -29,3 +29,7 @@
     letter-spacing: 1px; /* Slight letter spacing for a cleaner look */
   }
   
+  input[type=radio]#Red {
+    accent-color: #4caf50;
+  }
+  

@@ -41,14 +41,26 @@ h1 {
 
 .add-button-container {
   display: flex;
-  justify-content: flex-end;
   margin-top: 10px;
   margin-right: 4px;
+  height: 32px;
   border-radius: 0;
   border: 2px solid #389e0d !important; /* Define uma borda azul */
   color: #389e0d !important; /* Define a cor do texto como azul */
   transition: background-color 0.3s ease; /* Adiciona transição suave */
-  font-weight: bold; /* Define o texto em negrito */
+  width: 129px;
+}
+
+.remove-button-container{
+  display: flex;
+  margin-top: 10px;
+  margin-right: 4px;
+  height: 32px;
+  border-radius: 0;
+  border: 2px solid #389e0d !important; /* Define uma borda azul */
+  color: #389e0d !important; /* Define a cor do texto como azul */
+  transition: background-color 0.3s ease; /* Adiciona transição suave */
+  width: 129px;
 }
 
 .notification-icon-fixed {
@@ -177,4 +189,9 @@ body {
 .body .card-body {
   border: none; /* Remove as bordas */
   box-shadow: none; /* Remove sombras (se aplicável) */
+  background-color: white;
+}
+
+input[type=radio]#Red {
+  accent-color: #4caf50;
 }

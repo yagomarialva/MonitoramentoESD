@@ -187,164 +187,84 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   };
 
   return (
-    <div className="app-container">
-      <header className="container-title">
-        <h1>Linha de produção</h1>
-        <div className="header-buttons">
-        <Button
-            className="add-button-container" /* Aplica o estilo outlined */
-            type="link"
-            icon={<RemoveCircleOutlineOutlinedIcon />}
-            size="large"
-            disabled={!selectedLineId}
-            onClick={() => {
-              handlePrintLineData();
-              handleOpenModal();
-            }}
-          >
-            Excluir
-          </Button>
-          <Button
-            className="add-button-container" /* Aplica o estilo outlined */
-            type="link"
-            icon={<AddCircleOutlineRoundedIcon />}
-            size="large"
-            onClick={handleCreateLine}
-          >
-            Adicionar
-          </Button>
-        </div>
-      </header>
-      <div className="body">
-        {lines.map((line) => (
-          <div className="card" key={line.id}>
-            <div className="card-header">
-              <input
-                type="radio"
-                name="selectedLine"
-                value={line.line.id}
-                checked={selectedLineId === line.line.id}
-                onChange={() => handleLineChange(line)}
-              />
-            </div>
-            <div className="card-body">
-              <Line lineData={line} onUpdate={onUpdate} />
-            </div>
+    <>
+      <div className="app-container">
+        <header className="container-title">
+          <h1>Linha de produção</h1>
+          <div className="header-buttons">
+            <Button
+              className="remove-button-container" /* Aplica o estilo outlined */
+              type="link"
+              icon={<RemoveCircleOutlineOutlinedIcon />}
+              size="large"
+              disabled={!selectedLineId}
+              onClick={() => {
+                handlePrintLineData();
+                handleOpenModal();
+              }}
+            >
+              Excluir
+            </Button>
+            <Button
+              className="add-button-container" /* Aplica o estilo outlined */
+              type="link"
+              icon={<AddCircleOutlineRoundedIcon />}
+              size="large"
+              onClick={handleCreateLine}
+            >
+              Adicionar
+            </Button>
           </div>
-        ))}
-      </div>
-      <ESDConfirmModal
-        open={modalOpen}
-        handleClose={handleCloseModal}
-        handleConfirm={handleConfirmDelete}
-        title="Confirmação de Exclusão"
-        description="Tem certeza de que deseja excluir esta linha?"
-      />
-      <Snackbar
-        open={state.snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => handleStateChange({ snackbarOpen: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
-      >
-        <Alert
+        </header>
+        <div className="body">
+          {lines.map((line) => (
+            <div className="card" key={line.id}>
+              <div className="card-header">
+                <input
+                  // type="radio"
+                  // name="selectedLine"
+                  type="radio"
+                  id="Red"
+                  name="colors"
+                  value={line.line.id}
+                  checked={selectedLineId === line.line.id}
+                  onChange={() => handleLineChange(line)}
+                />
+              </div>
+              <div className="card-body">
+                <Line lineData={line} onUpdate={onUpdate} />
+              </div>
+            </div>
+          ))}
+        </div>
+        <ESDConfirmModal
+          open={modalOpen}
+          handleClose={handleCloseModal}
+          handleConfirm={handleConfirmDelete}
+          title="Confirmação de Exclusão"
+          description="Tem certeza de que deseja excluir esta linha?"
+        />
+        <Snackbar
+          open={state.snackbarOpen}
+          autoHideDuration={6000}
           onClose={() => handleStateChange({ snackbarOpen: false })}
-          severity={state.snackbarSeverity}
-          className="ant-alert"
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
         >
-          {state.snackbarMessage}
-        </Alert>
-      </Snackbar>
-      <footer className="app-footer">
-        <p>&copy; 2024 Minha Página. Todos os direitos reservados.</p>
-      </footer>
-    </div>
+          <Alert
+            onClose={() => handleStateChange({ snackbarOpen: false })}
+            severity={state.snackbarSeverity}
+            className="ant-alert"
+          >
+            {state.snackbarMessage}
+          </Alert>
+        </Snackbar>
+        <footer className="app-footer">
+          <p>&copy; 2024 Compal. Todos os direitos reservados.</p>
+        </footer>
+      </div>
+    </>
   );
-  // return (
-  //   <>
-  //     <div className="container-title">Linha de produção</div>
-  //     <div className="container">
-  //       <div className="line-container">
-  //         {groupedLines.map((link) => (
-  //           <>
-  //             <div className="container-title">
-  //               {" "}
-  //               {/* Botão de adicionar linha */}
-  //               <Button
-  //                 type="primary"
-  //                 shape="round"
-  //                 icon={<RemoveCircleOutlineOutlinedIcon />}
-  //                 size="small"
-  //                 onClick={() => {
-  //                   handleLineChange(link);
-  //                   handleOpenModal(); // Abre o modal de confirmação de exclusão
-  //                 }}
-  //                 className="white-background-button no-border" // Adiciona a classe para o fundo branco
-  //               ></Button>
-  //               <Button
-  //                 type="primary"
-  //                 shape="round"
-  //                 icon={<AddCircleOutlineOutlinedIcon />}
-  //                 size="small"
-  //                 onClick={handleCreateLine} // Chama a função diretamente
-  //                 className="white-background-button no-border" // Adiciona a classe para o fundo branco
-  //               ></Button>
-  //             </div>
-  //             <div className="line-item">
-  //               {/* Botão de adicionar linha */}
-  //               {/* <Button
-  //                 type="primary"
-  //                 shape="round"
-  //                 icon={<RemoveCircleOutlineOutlinedIcon />}
-  //                 size="small"
-  //                 onClick={() => {
-  //                   handleLineChange(link);
-  //                   handleOpenModal(); // Abre o modal de confirmação de exclusão
-  //                 }}
-  //                 className="white-background-button no-border" // Adiciona a classe para o fundo branco
-  //               ></Button>
-
-  //               <Button
-  //                 type="primary"
-  //                 shape="round"
-  //                 icon={<AddCircleOutlineOutlinedIcon />}
-  //                 size="small"
-  //                 onClick={handleCreateLine} // Chama a função diretamente
-  //                 className="white-background-button no-border" // Adiciona a classe para o fundo branco
-  //               ></Button> */}
-
-  //               {/* Botão de excluir linha */}
-  //               <Line key={link.id} lineData={link} onUpdate={onUpdate} />
-  //             </div>
-  //           </>
-  //         ))}
-  //       </div>
-  //       {/* Modal de confirmação */}
-  //       <ESDConfirmModal
-  //         open={modalOpen}
-  //         handleClose={handleCloseModal}
-  //         handleConfirm={handleConfirmDelete}
-  //         title="Confirmação de Exclusão"
-  //         description="Tem certeza de que deseja excluir esta linha?"
-  //       />
-  //       <Snackbar
-  //         open={state.snackbarOpen}
-  //         autoHideDuration={6000}
-  //         onClose={() => handleStateChange({ snackbarOpen: false })}
-  //         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-  //         className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
-  //       >
-  //         <Alert
-  //           onClose={() => handleStateChange({ snackbarOpen: false })}
-  //           severity={state.snackbarSeverity}
-  //           className="ant-alert"
-  //         >
-  //           {state.snackbarMessage}
-  //         </Alert>
-  //       </Snackbar>
-  //     </div>
-  //   </>
-  // );
 };
 
 export default FactoryMap;

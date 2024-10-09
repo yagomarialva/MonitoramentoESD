@@ -4,6 +4,7 @@ import { Tooltip } from "antd";
 import ComputerIcon from "@mui/icons-material/Computer";
 import AddIcon from "@mui/icons-material/Add";
 import "./Station.css"; // Importando o CSS
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 
 interface Station {
   id?: number;
@@ -58,7 +59,9 @@ const Station: React.FC<StationProps> = ({ stationEntry }) => {
               <ComputerIcon className="computer-icon" />
             </Tooltip>
           ) : (
-            <AddIcon className="add-icon" />
+            <div className="add-icon">
+              <AddCircleOutlineRoundedIcon className="cell-icon"  />
+            </div>
           )}
         </div>
       ))}

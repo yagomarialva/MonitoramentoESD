@@ -12,7 +12,7 @@ import {
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import Logo from "./logo-compal.png";
@@ -31,7 +31,7 @@ interface MenuItem {
 
 // Funções de utilitário
 const getUserRoleFromToken = (token: string | null): string => {
-  return token === "administrator" ? "administrator" : "operator";
+  return token === "administrator" ? "administrador" : "operator";
 };
 
 const getMenuItems = (userRole: string): MenuItem[] => {
@@ -58,19 +58,22 @@ const getMenuItems = (userRole: string): MenuItem[] => {
       text: "Jigs",
       icon: <SettingOutlined />,
       path: "/jigs",
-      roles: ["operator", "administrator"],
+      roles: ["operator", "administrador"],
     },
     {
       text: "Monitores",
       icon: <MonitorOutlined />,
       path: "/monitors",
-      roles: ["operator", "administrator"],
+      roles: ["operator", "administrador"],
     },
     {
       text: "Cadastrar",
       icon: <PlusOutlined />,
       path: "/register",
-      roles: ["administrator"],
+      roles: ["operator","administrador"],
+      subItems: [
+        { text: "Cadastrar", path: "/register" },
+      ],
     },
   ];
 
@@ -116,6 +119,8 @@ interface MenuProps {
 }
 
 const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
+  const navigate = useNavigate();
+
   const token = localStorage.getItem("role");
   const name = localStorage.getItem("name");
   const userRole = getUserRoleFromToken(token);
@@ -124,6 +129,11 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false); // Estado para colapsar o Sider
 
+  const onLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -131,11 +141,9 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
 
     return () => clearTimeout(timer);
   }, []);
-
-
   const userMenu = (
     <Menu>
-      <Menu.Item key="logout" onClick={logout}>
+      <Menu.Item key="logout" onClick={onLogout}>
         <LogoutOutlined /> Sair
       </Menu.Item>
     </Menu>
