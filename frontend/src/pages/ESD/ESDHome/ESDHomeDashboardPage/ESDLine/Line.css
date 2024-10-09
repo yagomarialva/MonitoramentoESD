@@ -23,7 +23,6 @@
   justify-content: center; /* Centraliza as estações */
   gap: 20px; /* Espaçamento entre as estações */
   margin-bottom: 20px; /* Margem inferior para espaçamento */
-  border: solid red 2px !important; /* Contorno para testes */
 }
 
 .station-card {
@@ -47,13 +46,12 @@
   /* position: absolute;
   top: 13px !important;
   margin-left: -27px; */
-  border: solid red 2px !important; /* Contorno para testes */
+  margin-left: -15px;
 }
 
-.add-button-container {
+.add-button-container-stations {
   display: flex; /* Ativa flexbox para o contêiner de botões */
   align-items: center; /* Centraliza verticalmente os itens */
-  border: solid red 2px !important; /* Contorno para testes */
 }
 
 .add-button-container button {
@@ -115,3 +113,4 @@ input[type="radio"] {
 .delete-button:hover {
   background-color: #d93600; /* Cor ao passar o mouse */
 }
+

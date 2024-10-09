@@ -21,6 +21,7 @@ import { DeleteOutlined } from "@mui/icons-material";
 import ESDConfirmModal from "../../ESDConfirmModal/ESDConfirmModal";
 import RemoveCircleOutlineOutlinedIcon from "@mui/icons-material/RemoveCircleOutlineOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 
 interface Station {
   id: number;
@@ -187,20 +188,30 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
 
   return (
     <div className="app-container">
-      <header className="header">
+      <header className="container-title">
         <h1>Linha de produção</h1>
         <div className="header-buttons">
-          <Button className="add-button" onClick={handleCreateLine}>
-            Adicionar
-          </Button>
-          <Button
-            className="add-button"
+        <Button
+            className="add-button-container" /* Aplica o estilo outlined */
+            type="link"
+            icon={<RemoveCircleOutlineOutlinedIcon />}
+            size="large"
+            disabled={!selectedLineId}
             onClick={() => {
               handlePrintLineData();
               handleOpenModal();
             }}
           >
             Excluir
+          </Button>
+          <Button
+            className="add-button-container" /* Aplica o estilo outlined */
+            type="link"
+            icon={<AddCircleOutlineRoundedIcon />}
+            size="large"
+            onClick={handleCreateLine}
+          >
+            Adicionar
           </Button>
         </div>
       </header>
@@ -215,7 +226,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
                 checked={selectedLineId === line.line.id}
                 onChange={() => handleLineChange(line)}
               />
-              <span>{line.line.name}</span>
             </div>
             <div className="card-body">
               <Line lineData={line} onUpdate={onUpdate} />

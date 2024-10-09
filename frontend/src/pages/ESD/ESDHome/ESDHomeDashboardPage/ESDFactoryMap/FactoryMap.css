@@ -5,18 +5,16 @@
   margin-top: -43px !important;
 }
 
-.button-container {
-  position: absolute; /* Posiciona os botões de forma absoluta dentro do contêiner */
-  top: 20px; /* Distância do topo */
-  right: 20px; /* Distância da direita */
-  display: flex; /* Para alinhar os botões em linha */
-  gap: 10px; /* Espaçamento entre os botões */
-  z-index: 1000; /* Garante que os botões fiquem acima de outros elementos */
+h1 {
+  margin-top: 14px !important;
+  font-size: 24px !important; /* Define o tamanho da fonte para 24 pixels */
 }
 
 
 .container-title {
-  padding: 40px;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
   background-color: #f0f2f5;
   font-family: "Roboto", sans-serif;
   position: relative; /* Para que o botão possa ser posicionado dentro desse container */
@@ -40,39 +38,17 @@
   align-items: center;
 }
 
-.computer-icon {
-  font-size: 24px !important;
-  color: #389e0d !important;
-  margin-right: 8px !important;
-}
-
-.add-icon {
-  font-size: 24px;
-  color: #d9d9d9;
-}
 
 .add-button-container {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
-}
-
-.add-icon-fixed {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000; /* Certifica que o botão fique acima de outros elementos */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
-}
-
-.delete-icon-fixed {
-  position: fixed;
-  bottom: 85px;
-  right: 20px;
-  z-index: 1000; /* Certifica que o botão fique acima de outros elementos */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
+  margin-right: 4px;
+  border-radius: 0;
+  border: 2px solid #389e0d !important; /* Define uma borda azul */
+  color: #389e0d !important; /* Define a cor do texto como azul */
+  transition: background-color 0.3s ease; /* Adiciona transição suave */
+  font-weight: bold; /* Define o texto em negrito */
 }
 
 .notification-icon-fixed {
@@ -81,10 +57,6 @@
   right: 13%;
   z-index: 1000;
   transition: background-color 0.3s ease;
-}
-
-.add-icon-fixed:hover {
-  background-color: #0056b3; /* Cor de fundo mais escura ao passar o mouse */
 }
 
 /* Estilo básico para o Snackbar semelhante ao Ant Design */
@@ -142,15 +114,7 @@
   z-index: 1000;
 }
 
-.line-item {
-  display: flex;
-  align-items: center; /* Alinha o rádio verticalmente */
-}
 
-.radio-button {
-  margin-right: 10px; /* Espaçamento entre o botão de rádio e o card */
-  align-self: flex-start; /* Garante que o botão esteja à esquerda */
-}
 
 .white-background-button {
   background-color: white !important; /* Fundo branco */
@@ -179,6 +143,7 @@
   box-sizing: border-box;
 }
 
+
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
@@ -190,35 +155,14 @@ body {
   min-height: 100vh;
 }
 
-.app-header {
-  background-color: #4CAF50;
-  color: white;
-  padding: 20px;
-  text-align: center;
+.app-header {  
+  display: flex;
+  justify-content: space-between;
 }
 
-.app-header nav ul {
-  list-style: none;
-  padding: 0;
-}
-
-.app-header nav ul li {
-  display: inline;
-  margin: 0 15px;
-}
-
-.app-header nav ul li a {
-  color: white;
-  text-decoration: none;
-}
-
-.app-body {
-  flex: 1;
-  padding: 20px;
-}
-
-.app-body section {
-  margin-bottom: 20px;
+.header-buttons {
+  display: flex;
+  justify-content: space-between;
 }
 
 .app-footer {
@@ -228,6 +172,9 @@ body {
   padding: 10px 0;
 }
 
-.add-button {
-  margin-right: 5px;
+.body .card, 
+.body .card-header, 
+.body .card-body {
+  border: none; /* Remove as bordas */
+  box-shadow: none; /* Remove sombras (se aplicável) */
 }

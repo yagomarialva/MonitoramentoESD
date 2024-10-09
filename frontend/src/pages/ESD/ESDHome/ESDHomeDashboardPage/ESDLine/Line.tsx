@@ -12,6 +12,7 @@ import {
 import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
 import RemoveCircleOutlineOutlinedIcon from "@mui/icons-material/RemoveCircleOutlineOutlined";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import { Button } from "antd"; // Importa o botão do Ant Design
 
 interface StationLine {
@@ -232,18 +233,22 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
     <>
       <div className="line-container">
         <div className="esd-line-container">
-          <div className="add-button-container">
-            <AddIcon
-              onClick={handleCreateStation}
-              style={{ fontSize: "40px", cursor: "pointer" }} // Tamanho do ícone e cursor de pointer
-            />
-            <Button
+          <div className="add-button-container-stations">
+          <Button
               type="primary"
               shape="round"
               icon={<RemoveCircleOutlineOutlinedIcon />}
               size="small"
               onClick={handleDeleteStation}
-              className="white-background-button no-border" // Adiciona a classe para o fundo branco
+              className="white-background-button no-border"
+            ></Button>
+            <Button
+              type="primary"
+              shape="round"
+              icon={<AddCircleOutlineRoundedIcon />}
+              size="small"
+              onClick={handleCreateStation}
+              className="white-background-button no-border"
             ></Button>
           </div>
           {lineData.stations.map((stationEntry) => (
