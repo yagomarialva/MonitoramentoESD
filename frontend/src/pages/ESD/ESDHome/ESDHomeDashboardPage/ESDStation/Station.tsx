@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tooltip } from "antd";
+import { Tooltip, Modal, Button } from "antd";
 import ComputerIcon from "@mui/icons-material/Computer";
 import { Alert, Snackbar } from "@mui/material";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
@@ -13,6 +13,7 @@ import {
   getAllStationMapper,
   getAllStationView,
 } from "../../../../../api/mapingAPI";
+import Monitor from "../ESDMonitor/Monitor";
 
 interface Station {
   id?: number;
@@ -53,6 +54,12 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const { station, monitorsEsd } = stationEntry;
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const [modalText, setModalText] = useState<any | null>("-");
+  const [modalTitleText, setModalTitleText] = useState<any | null>("-");
+  const [modalIndexText, setModalIndexTitleText] = useState<any | null>("-");
+  const [visible, setVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<any | null>(null);
@@ -98,7 +105,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       onUpdate(); // Dispara a atualização
       setOpenModal(false); // Fecha o modal após a criação
       // Mostra o Snackbar de sucesso
-      showSnackbar(`Monitor ${result.serialNumber} adicionado com sucesso!`, "success");
+      showSnackbar(
+        `Monitor ${result.serialNumber} adicionado com sucesso!`,
+        "success"
+      );
     } catch (error) {
       console.error("Erro ao criar monitor:", error);
     }
@@ -128,7 +138,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   });
 
   const handleCellClick = (
-    cell: Monitor | null,
+    cell: any | "null",
     index: number,
     stationInfo: StationEntry
   ) => {
@@ -138,7 +148,29 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       stationInfo,
     };
     setSelectedMonitor(selectedCell);
-    console.log('selectedCell', selectedCell)
+    setModalText(selectedCell.cell.description);
+    setModalTitleText(selectedCell.cell.serialNumber);
+    setModalIndexTitleText(index);
+    console.log("selectedCell", selectedCell);
+  };
+
+  //modal
+  const showModal = () => {
+    setVisible(true);
+  };
+
+  const handleOk = () => {
+    // setModalText('The modal will be closed after two seconds');
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setVisible(false);
+      setConfirmLoading(false);
+    }, 2000);
+  };
+
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+    setVisible(false);
   };
 
   return (
@@ -152,7 +184,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           >
             {cell ? (
               <Tooltip title={cell.monitorsEsd.serialNumber}>
-                <ComputerIcon className="computer-icon" />
+                <ComputerIcon className="computer-icon" onClick={showModal} />
               </Tooltip>
             ) : (
               <div className="add-icon" onClick={handleOpenModal}>
@@ -177,6 +209,24 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           </Alert>
         </Snackbar>
       </div>
+      <Modal
+        title={modalTitleText}
+        visible={visible}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      >
+        <Monitor monitor={{
+          positionSequence: modalIndexText,
+          monitorsEsd: {
+            id: modalIndexText,
+            serialNumber: modalTitleText,
+            description: modalText,
+            statusJig: "TRUE",
+            statusOperador: "FALSE"
+          }
+        }}/>
+      </Modal>
       <MonitorForm
         open={openModal}
         handleClose={handleCloseModal}
