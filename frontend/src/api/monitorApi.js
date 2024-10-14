@@ -3,7 +3,7 @@ const url = 'api/MonitorEsd'
 // Obtém todos os monitores
 export const getAllMonitors = async () => {
   try {
-    const { data } = await TokenApi.get(`${url}/monitores`);
+    const { data } = await TokenApi.get(`${url}/todosminitores`);
     return data;
   } catch (error) {
     console.error("Error fetching all monitors:", error);

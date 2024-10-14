@@ -1,9 +1,9 @@
 import TokenApi from "./TokenApi";
-
+const url = '/api/StationView'
 // Obtém todos os monitores
 export const getAllStationMapper = async () => {
   try {
-    const { data } = await TokenApi.get("/api/StationView/factoryMap");
+    const { data } = await TokenApi.get(`${url}/factoryMap`);
     return data;
   } catch (error) {
     console.error("Error fetching mapper:", error);
@@ -13,7 +13,7 @@ export const getAllStationMapper = async () => {
 
 export const getAllStationView = async () => {
   try {
-    const { data } = await TokenApi.get("/api/StationView/todasEstacaoView");
+    const { data } = await TokenApi.get(`${url}/todasEstacaoView`);
     return data;
   } catch (error) {
     console.error("Error fetching mapper:", error);
@@ -35,7 +35,7 @@ export const getStationMapper = async (id) => {
 // Cria um novo monitor
 export const createStationMapper = async (monitor) => {
   try {
-    const { data } = await TokenApi.post("/api/StationView/adicionarEstacaoView", monitor);
+    const { data } = await TokenApi.post(`${url}/adicionarEstacaoView`, monitor);
     return data;
   } catch (error) {
     console.error("Error mapping:", error);

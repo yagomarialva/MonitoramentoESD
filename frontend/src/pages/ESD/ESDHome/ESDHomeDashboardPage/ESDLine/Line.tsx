@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Station from "../ESDStation/Station";
-import AddIcon from "@mui/icons-material/Add"; // Importando o ícone Add
 import "./Line.css"; // Importando o CSS
 import { Alert, Snackbar } from "@mui/material";
 import {
@@ -263,7 +262,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
                   checked={selectedStationId === stationEntry.station.id}
                 />
               </div>
-              <Station stationEntry={stationEntry} />
+              <Station stationEntry={stationEntry} onUpdate={onUpdate} />
             </div>
           ))}
         </div>

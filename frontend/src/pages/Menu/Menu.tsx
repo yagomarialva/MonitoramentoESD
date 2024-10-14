@@ -65,6 +65,9 @@ const getMenuItems = (userRole: string): MenuItem[] => {
       icon: <MonitorOutlined />,
       path: "/monitors",
       roles: ["operator", "administrador"],
+      subItems: [
+        { text: "Monitores", path: "/monitors" },
+      ],
     },
     {
       text: "Cadastrar",
