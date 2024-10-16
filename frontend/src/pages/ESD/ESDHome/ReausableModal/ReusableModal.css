@@ -1,0 +1,59 @@
+.ellipsis-modal {
+    /* Adicione seu estilo específico para o modal aqui */
+  }
+  
+  .modal-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon-action {
+    cursor: pointer;
+    margin-left: 8px;
+  }
+
+  .title-icons {
+    display: flex;
+    gap: 16px;
+    margin-right: 32px;
+  }
+  
+  
+  /* Footer personalizado do Modal */
+.modal-footer {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 16px !important;
+  margin-top: 32px !important;
+}
+
+/* Botões do Modal */
+.modal-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #1890ff;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.modal-button:hover {
+  background-color: #40a9ff;
+}
+
+.modal-button:last-child {
+  background-color: #f5222d;
+}
+
+.modal-button:last-child:hover {
+  background-color: #ff4d4f;
+}
+

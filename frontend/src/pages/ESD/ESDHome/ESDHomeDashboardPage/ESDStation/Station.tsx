@@ -7,13 +7,19 @@ import "./Station.css"; // Importando o CSS
 import MonitorForm from "../../../Monitor/MonitorForm/MonitorForm";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { createMonitor } from "../../../../../api/monitorApi";
+import { createMonitor, getAllMonitors } from "../../../../../api/monitorApi";
 import {
   createStationMapper,
   getAllStationMapper,
   getAllStationView,
 } from "../../../../../api/mapingAPI";
 import Monitor from "../ESDMonitor/Monitor";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  LaptopOutlined,
+} from "@mui/icons-material";
+import ReusableModal from "../../ReausableModal/ReusableModal";
 
 interface Station {
   id?: number;
@@ -48,6 +54,9 @@ interface StationProps {
   onUpdate: () => void; // Prop para disparar a atualização
 }
 
+const truncateText = (text: string, maxLength: number) =>
+  text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
 type SnackbarSeverity = "success" | "error";
 
 const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
@@ -58,14 +67,17 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const [modalText, setModalText] = useState<any | null>("-");
   const [modalTitleText, setModalTitleText] = useState<any | null>("-");
   const [modalIndexText, setModalIndexTitleText] = useState<any | null>("-");
-  const [visible, setVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<any | null>(null);
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const handleModalClose = () => {
+    setModalVisible(false);
+  };
 
   const [state, setState] = useState({
     snackbarMessage: "", // Mensagem do Snackbar
@@ -90,8 +102,6 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   };
 
   const handleCreateMonitor = async (monitor: any) => {
-    if (!selectedMonitor) return;
-
     try {
       const result = await createMonitor(monitor);
       const selectedCell = {
@@ -137,40 +147,48 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     cells[monitor.positionSequence] = monitor;
   });
 
+  const handleEditCellChange = async (params: any) => {
+    try {
+       const result  = await createMonitor(params); // Atualiza o monitor com os dados passados
+      showSnackbar(
+        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
+          appName: "App for Translations",
+        })
+      );
+      onUpdate(); // Chama a função onUpdate para atualizar a visualização
+      return result; // Retorna os resultados atualizados
+    } catch (error) {
+      showSnackbar(
+        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        "error"
+      );
+    }
+  };
+
   const handleCellClick = (
     cell: any | "null",
     index: number,
     stationInfo: StationEntry
   ) => {
     const selectedCell = {
-      cell: cell ? cell.monitorsEsd : "celula vazia",
+      cell: cell
+        ? cell.monitorsEsd
+        : {
+            serialNumber: "N/A",
+            description: "Célula vazia",
+            stationInfo,
+            // Adicione outros campos que você precisa inicializar com valores padrão
+          },
       index,
       stationInfo,
     };
+
     setSelectedMonitor(selectedCell);
     setModalText(selectedCell.cell.description);
     setModalTitleText(selectedCell.cell.serialNumber);
     setModalIndexTitleText(index);
+
     console.log("selectedCell", selectedCell);
-  };
-
-  //modal
-  const showModal = () => {
-    setVisible(true);
-  };
-
-  const handleOk = () => {
-    // setModalText('The modal will be closed after two seconds');
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-    }, 2000);
-  };
-
-  const handleCancel = () => {
-    console.log("Clicked cancel button");
-    setVisible(false);
   };
 
   return (
@@ -184,7 +202,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           >
             {cell ? (
               <Tooltip title={cell.monitorsEsd.serialNumber}>
-                <ComputerIcon className="computer-icon" onClick={showModal} />
+                <ComputerIcon
+                  className="computer-icon"
+                  onClick={() => setModalVisible(true)}
+                />
               </Tooltip>
             ) : (
               <div className="add-icon" onClick={handleOpenModal}>
@@ -209,24 +230,24 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           </Alert>
         </Snackbar>
       </div>
-      <Modal
+
+      <ReusableModal
+        visible={modalVisible}
+        onClose={handleModalClose}
+        onEdit={() => console.log("Editar")} // Implementar lógica de edição
+        onDelete={() => console.log("Excluir")} // Implementar lógica de exclusão
         title={modalTitleText}
-        visible={visible}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      >
-        <Monitor monitor={{
-          positionSequence: modalIndexText,
+        monitor={{
+          positionSequence: selectedMonitor?.index,
           monitorsEsd: {
-            id: modalIndexText,
+            id: selectedMonitor?.index,
             serialNumber: modalTitleText,
-            description: modalText,
+            description: selectedMonitor?.cell.description,
             statusJig: "TRUE",
-            statusOperador: "FALSE"
-          }
-        }}/>
-      </Modal>
+            statusOperador: "FALSE",
+          },
+        }}
+      />
       <MonitorForm
         open={openModal}
         handleClose={handleCloseModal}

@@ -1,9 +1,8 @@
-.ellipsis {
-    max-width: 60%;
-    /* font-size: 20dp; */
-    white-space: nowrap;
-    overflow: hidden; /* "overflow" value must be different from "visible" */
-    text-overflow: ellipsis;
-    /* border: 1px solid #ccc; */
-    margin-right: 20%;
-  }
+.ellipsis-text {
+  display: inline-block;
+  max-width: 100px; /* Ajuste conforme necessário */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
