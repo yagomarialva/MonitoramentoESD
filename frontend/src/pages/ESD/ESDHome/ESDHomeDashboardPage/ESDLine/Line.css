@@ -8,16 +8,36 @@
   border-radius: 8px;
   position: relative;
   box-shadow: none !important;
+  /* border: solid red 2px !important;  */
 }
 
 /* Remove a borda do card */
 .line-container .esd-line-container .card {
   border: none !important; /* Remove a borda */
   box-shadow: none !important; /* Remove qualquer sombra padrão */
-  border: solid blue 2px !important; /* Contorno para testes */
+  /* border: solid blue 2px !important;  */
+}
+
+.line-content {
+  display: flex;
+  align-items: flex-start; /* Alinha os itens no início do eixo vertical */
+}
+
+.add-button-container-stations {
+  margin-right: auto; /* Espaço entre os botões e as estações */
+  margin-left: 1px;
+  margin-top: 25%;
+  /* Você pode adicionar mais estilos, se necessário */
 }
 
 .esd-line-container {
+  flex: 1; /* Permite que o contêiner de estações ocupe o restante do espaço */
+  /* Outros estilos conforme necessário */
+}
+
+
+.esd-line-container {
+  /* border: solid green 2px !important;  */
   display: flex;
   flex-wrap: wrap; /* Permite que as estações se reorganizem em várias linhas */
   justify-content: center; /* Centraliza as estações */
@@ -51,7 +71,8 @@
 
 .add-button-container-stations {
   display: flex; 
-  align-items: center; 
+  align-items: center;
+  /* border: solid blue 2px !important;  */
 }
 
 .no-border {

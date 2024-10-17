@@ -57,12 +57,23 @@ h1 {
   margin-right: 4px;
   height: 32px;
   border-radius: 0;
-  border: 2px solid #389e0d !important; /* Define uma borda azul */
-  color: #389e0d !important; /* Define a cor do texto como azul */
+  border: 2px solid red !important; /* Define uma borda azul */
+  color: red !important; /* Define a cor do texto como azul */
   transition: background-color 0.3s ease; /* Adiciona transição suave */
   width: 129px;
 }
 
+.enable-button-container{
+  display: flex;
+  margin-top: 10px;
+  margin-right: 4px;
+  height: 32px;
+  border-radius: 0;
+  border: 2px solid red !important; /* Define uma borda azul */
+  color: #389e0d !important; /* Define a cor do texto como azul */
+  transition: background-color 0.3s ease; /* Adiciona transição suave */
+  width: 129px;
+}
 .notification-icon-fixed {
   position: fixed;
   bottom: 78%;

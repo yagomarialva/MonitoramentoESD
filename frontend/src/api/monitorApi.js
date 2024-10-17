@@ -48,7 +48,7 @@ export const updateMonitor = async (monitor) => {
 // Deleta um monitor por ID
 export const deleteMonitor = async (monitor) => {
   try {
-    await TokenApi.delete("/monitores", monitor);
+    await TokenApi.delete(`${url}/${monitor}`, monitor);
   } catch (error) {
     console.error(`Error deleting monitor with ID :`, error);
     throw error;

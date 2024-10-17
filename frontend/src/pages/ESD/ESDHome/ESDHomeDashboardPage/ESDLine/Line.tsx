@@ -68,6 +68,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   const [selectedStationId, setSelectedStationId] = useState<number | null>(
     null
   );
+  const [isEditing, setIsEditing] = useState<boolean>(false); // Estado para controlar o modo de edição
   const [state, setState] = useState({
     snackbarMessage: "", // Mensagem do Snackbar
     snackbarOpen: false,
@@ -231,37 +232,128 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   return (
     <>
       <div className="line-container">
-        <div className="esd-line-container">
+        <div className="line-content">
+          {" "}
+          {/* Novo contêiner para flex */}
           <div className="add-button-container-stations">
-          <Button
-              type="primary"
-              shape="round"
-              icon={<RemoveCircleOutlineOutlinedIcon />}
-              size="small"
-              onClick={handleDeleteStation}
-              className="white-background-button no-border"
-            ></Button>
+            {isEditing && (
+              <>
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<RemoveCircleOutlineOutlinedIcon />}
+                  size="small"
+                  onClick={handleDeleteStation}
+                  disabled={!isEditing}
+                  className="white-background-button no-border"
+                />
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<AddCircleOutlineRoundedIcon />}
+                  size="small"
+                  disabled={!isEditing}
+                  onClick={handleCreateStation}
+                  className="white-background-button no-border"
+                />
+              </>
+            )}
             <Button
               type="primary"
               shape="round"
-              icon={<AddCircleOutlineRoundedIcon />}
-              size="small"
-              onClick={handleCreateStation}
+              onClick={() => setIsEditing(!isEditing)} // Alterna o modo de edição
               className="white-background-button no-border"
-            ></Button>
+            >
+              {isEditing ? "Finalizar Edição" : "Editar Estações"}
+            </Button>
           </div>
+          <div className="esd-line-container">
+            {lineData.stations.map((stationEntry) => (
+              <div key={stationEntry.station.id}>
+                {isEditing && ( // Renderiza os botões de rádio apenas no modo de edição
+                  <div className="radio-button">
+                    <input
+                      type="radio"
+                      name="selectedStation"
+                      id={`station-${stationEntry.station.id}`} // ID único para cada estação
+                      value={stationEntry.station.id}
+                      onChange={() => handleStationSelect(stationEntry)}
+                      checked={selectedStationId === stationEntry.station.id}
+                    />
+                  </div>
+                )}
+                <Station stationEntry={stationEntry} onUpdate={onUpdate} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <Snackbar
+          open={state.snackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => handleStateChange({ snackbarOpen: false })}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
+        >
+          <Alert
+            onClose={() => handleStateChange({ snackbarOpen: false })}
+            severity={state.snackbarSeverity}
+            sx={{ width: "100%" }}
+          >
+            {state.snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </div>
+
+      {/* <div className="line-container">
+          <div className="add-button-container-stations">
+            {isEditing && (
+              <>
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<RemoveCircleOutlineOutlinedIcon />}
+                  size="small"
+                  onClick={handleDeleteStation}
+                  disabled={!isEditing}
+                  className="white-background-button no-border"
+                ></Button>
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<AddCircleOutlineRoundedIcon />}
+                  size="small"
+                  disabled={!isEditing}
+                  onClick={handleCreateStation}
+                  className="white-background-button no-border"
+                ></Button>
+              </>
+            )}
+            <Button
+              type="primary"
+              shape="round"
+              onClick={() => setIsEditing(!isEditing)} // Alterna o modo de edição
+              className="white-background-button no-border"
+            >
+              {isEditing ? "Finalizar Edição" : "Editar Estações"}
+            </Button>
+          </div>
+        <div className="esd-line-container">
+
           {lineData.stations.map((stationEntry) => (
             <div key={stationEntry.station.id}>
-              <div className="radio-button">
-                <input
-                  type="radio"
-                  name="selectedStation"
-                  id="Red"
-                  value={stationEntry.station.id}
-                  onChange={() => handleStationSelect(stationEntry)}
-                  checked={selectedStationId === stationEntry.station.id}
-                />
-              </div>
+              {isEditing && ( // Renderiza os botões de rádio apenas no modo de edição
+                <div className="radio-button">
+                  <input
+                    type="radio"
+                    name="selectedStation"
+                    id={`station-${stationEntry.station.id}`} // ID único para cada estação
+                    value={stationEntry.station.id}
+                    onChange={() => handleStationSelect(stationEntry)}
+                    checked={selectedStationId === stationEntry.station.id}
+                  />
+                </div>
+              )}
               <Station stationEntry={stationEntry} onUpdate={onUpdate} />
             </div>
           ))}
@@ -277,12 +369,12 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
           <Alert
             onClose={() => handleStateChange({ snackbarOpen: false })}
             severity={state.snackbarSeverity}
-            className="ant-alert"
+            sx={{ width: "100%" }}
           >
             {state.snackbarMessage}
           </Alert>
         </Snackbar>
-      </div>
+      </div> */}
     </>
   );
 };

@@ -8,6 +8,7 @@ import {
 import Monitor from "../ESDHomeDashboardPage/ESDMonitor/Monitor";
 import "./ReusableModal.css";
 import type { ColumnsType } from "antd/es/table";
+import { deleteMonitor } from "../../../../api/monitorApi";
 
 const { TabPane } = Tabs;
 
@@ -53,10 +54,8 @@ interface ReusableModalProps {
   monitor: Monitor;
 }
 
-
 const truncateText = (text: string, maxLength: number) =>
   text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
-
 
 const ReusableModal: React.FC<ReusableModalProps> = ({
   visible,
@@ -87,7 +86,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const [showMonitorInput, setShowMonitorInput] = useState(false);
   const [isMonitorTabActive, setMonitorTabActive] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editableData, setEditableData] = useState<monitorsESD>(monitor.monitorsESD);
+  const [editableData, setEditableData] = useState<monitorsESD>(
+    monitor.monitorsESD
+  );
 
   const operatorFailures = [
     "Erro de configuração",
@@ -105,6 +106,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   // Resetar o estado sempre que o modal abrir
   useEffect(() => {
+    console.log('monitor', monitor)
     if (visible) {
       setFooterVisible(false);
       setActionType(null);
@@ -154,9 +156,14 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     setIsEditing(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async (id: any) => {
     setFooterVisible(true);
     setActionType("excluir");
+    try {
+      await deleteMonitor(id);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClose = () => {
@@ -164,27 +171,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     setIsEditing(false); // Resetando o estado de edição ao fechar o modal
   };
 
-  // const handleSubmit = async (e: { preventDefault: () => void; }) => {
-  //   e.preventDefault();
-  //   try {
-  //     // await onSubmit(monitor);
-  //     console.log('monitor submit', monitor)
-  //     handleClose();
-  //   } catch (error) {
-  //     console.error("Error creating or updating monitor:", error);
-  //   }
-  // };
-
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-  
-    // Criação do objeto atualizado com os dados do monitor
-    // const updatedMonitor: Monitor = {
-    //   positionSequence: monitor.positionSequence,
-    //   monitorsESD: {
-    //     ...editableData, // Captura o estado atual do formulário editado
-    //   },
-    // };
+
     const updatedMonitorESD = {
       id: editableData.id,
       serialNumber: editableData.serialNumber,
@@ -195,9 +184,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       // dateHour: editableData.dateHour || new Date().toISOString(), // Valor padrão de data/hora
       // lastDate: editableData.lastDate || new Date().toISOString(),
     };
-  
+
     try {
-      console.log('updatedMonitorESD', updatedMonitorESD)
+      console.log("updatedMonitorESD", updatedMonitorESD);
       await onSubmit(updatedMonitorESD); // Envia o objeto atualizado
       handleClose(); // Fecha o modal após o envio bem-sucedido
     } catch (error) {
@@ -205,7 +194,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     }
   };
 
-  
   //table
   const monitorColumns: ColumnsType<DataType> = [
     {
@@ -217,7 +205,12 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
           {isEditing ? (
             <Input
               value={editableData.serialNumber}
-              onChange={(e) => setEditableData({ ...editableData, serialNumber: e.target.value })}
+              onChange={(e) =>
+                setEditableData({
+                  ...editableData,
+                  serialNumber: e.target.value,
+                })
+              }
             />
           ) : (
             <span className="ellipsis-text">{truncateText(text, 10)}</span>
@@ -234,7 +227,12 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
           {isEditing ? (
             <Input
               value={editableData.description}
-              onChange={(e) => setEditableData({ ...editableData, description: e.target.value })}
+              onChange={(e) =>
+                setEditableData({
+                  ...editableData,
+                  description: e.target.value,
+                })
+              }
             />
           ) : (
             <span className="ellipsis-text">{truncateText(text, 10)}</span>
@@ -242,45 +240,11 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         </Tooltip>
       ),
     },
-    // {
-    //   title: "Status Jig",
-    //   dataIndex: "statusJig",
-    //   key: "statusJig",
-    //   render: (text: string) => (
-    //     <Tooltip title={text}>
-    //       {isEditing ? (
-    //         <Input
-    //           value={editableData.statusJig}
-    //           onChange={(e) => setEditableData({ ...editableData, statusJig: e.target.value })}
-    //         />
-    //       ) : (
-    //         <span className="ellipsis-text">{truncateText(text, 10)}</span>
-    //       )}
-    //     </Tooltip>
-    //   ),
-    // },
-    // {
-    //   title: "Status Operador",
-    //   dataIndex: "statusOperador",
-    //   key: "statusOperador",
-    //   render: (text: string) => (
-    //     <Tooltip title={text}>
-    //       {isEditing ? (
-    //         <Input
-    //           value={editableData.statusOperador}
-    //           onChange={(e) => setEditableData({ ...editableData, statusOperador: e.target.value })}
-    //         />
-    //       ) : (
-    //         <span className="ellipsis-text">{truncateText(text, 10)}</span>
-    //       )}
-    //     </Tooltip>
-    //   ),
-    // },
   ];
 
   const monitorData: DataType[] = [
     {
-      key: monitor.monitorsESD?.id?.toString() || 'N/A',
+      key: monitor.monitorsESD?.id?.toString() || "N/A",
       serialNumber: monitor.monitorsESD.serialNumber,
       description: monitor.monitorsESD.description,
       statusJig: monitor.monitorsESD.statusJig,
@@ -320,8 +284,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     console.log(activeKey === "1");
   };
 
-
-  
   return (
     <Modal
       className="ellipsis-modal"
@@ -363,31 +325,35 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         )
       }
     >
-    <div>
-      <Tabs defaultActiveKey="1" onChange={handleTabChange}>
-        <TabPane tab="Monitor" key="1">
-          <Table columns={monitorColumns} dataSource={monitorData} pagination={false} />
-        </TabPane>
-        <TabPane tab="Log" key="2">
-          <div style={{ display: "flex", gap: "16px" }}>
+      <div>
+        <Tabs defaultActiveKey="1" onChange={handleTabChange}>
+          <TabPane tab="Monitor" key="1">
             <Table
-              title={() => "Logs de Operador"}
-              columns={logColumns}
-              dataSource={operatorLogs}
+              columns={monitorColumns}
+              dataSource={monitorData}
               pagination={false}
-              style={{ width: "50%" }}
             />
-            <Table
-              title={() => "Logs de Jigs"}
-              columns={logColumns}
-              dataSource={jigLogs}
-              pagination={false}
-              style={{ width: "50%" }}
-            />
-          </div>
-        </TabPane>
-      </Tabs>
-    </div>
+          </TabPane>
+          <TabPane tab="Log" key="2">
+            <div style={{ display: "flex", gap: "16px" }}>
+              <Table
+                title={() => "Logs de Operador"}
+                columns={logColumns}
+                dataSource={operatorLogs}
+                pagination={false}
+                style={{ width: "50%" }}
+              />
+              <Table
+                title={() => "Logs de Jigs"}
+                columns={logColumns}
+                dataSource={jigLogs}
+                pagination={false}
+                style={{ width: "50%" }}
+              />
+            </div>
+          </TabPane>
+        </Tabs>
+      </div>
 
       {isFooterVisible && actionType === "editar" && isMonitorTabActive && (
         <div className="failure-lists">

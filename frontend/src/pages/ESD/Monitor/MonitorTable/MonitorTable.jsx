@@ -281,7 +281,7 @@ const MonitorTable = () => {
             sx={{ mx: 1 }}
           ></Button>
           <Button
-            onClick={() => handleDeleteOpen(params.row)}
+            onClick={() => handleDeleteOpen(params.row.id)}
             startIcon={
               <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
                 <IconButton edge="end" aria-label="delete">

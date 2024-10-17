@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tooltip, Modal, Button } from "antd";
+import { Tooltip } from "antd";
 import ComputerIcon from "@mui/icons-material/Computer";
 import { Alert, Snackbar } from "@mui/material";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
@@ -7,18 +7,13 @@ import "./Station.css"; // Importando o CSS
 import MonitorForm from "../../../Monitor/MonitorForm/MonitorForm";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { createMonitor, getAllMonitors, updateMonitor } from "../../../../../api/monitorApi";
+import { createMonitor, updateMonitor } from "../../../../../api/monitorApi";
 import {
   createStationMapper,
   getAllStationMapper,
   getAllStationView,
 } from "../../../../../api/mapingAPI";
 import Monitor from "../ESDMonitor/Monitor";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  LaptopOutlined,
-} from "@mui/icons-material";
 import ReusableModal from "../../ReausableModal/ReusableModal";
 // import MonitorEditForm from "../../MonitorEditForm/MonitorEditForm";
 
@@ -68,6 +63,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const [modalText, setModalText] = useState<any | null>("-");
   const [modalTitleText, setModalTitleText] = useState<any | null>("-");
   const [modalIndexText, setModalIndexTitleText] = useState<any | null>("-");
+  const [modalIndexView, setModalIndexView] = useState<any | null>("-");
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -174,7 +170,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const handleCellClick = (
     cell: any | "null",
     index: number,
-    stationInfo: StationEntry
+    stationInfo: any
   ) => {
     const selectedCell = {
       cell: cell
@@ -188,12 +184,12 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       index,
       stationInfo,
     };
-
+    console.log('selectedCell123', selectedCell.stationInfo)
     setSelectedMonitor(selectedCell);
     setModalText(selectedCell.cell.description);
     setModalTitleText(selectedCell.cell.serialNumber);
     setModalIndexTitleText(index);
-
+    // setModalIndexView(selectedCell)
   };
 
   
