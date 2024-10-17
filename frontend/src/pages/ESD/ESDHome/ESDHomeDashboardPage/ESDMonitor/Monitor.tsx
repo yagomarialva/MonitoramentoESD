@@ -4,8 +4,8 @@ import type { ColumnsType } from "antd/es/table";
 
 const { TabPane } = Tabs;
 
-interface MonitorsEsd {
-  id: number;
+interface monitorsESD {
+  id: string;
   serialNumber: string;
   description: string;
   statusJig: string;
@@ -15,7 +15,7 @@ interface MonitorsEsd {
 interface MonitorProps {
   monitor: {
     positionSequence: number;
-    monitorsEsd: MonitorsEsd;
+    monitorsESD: monitorsESD;
   };
   onMonitorTabActive: (active: boolean) => void; // Nova prop
   isEditing: boolean; // Nova prop para edição
@@ -39,7 +39,7 @@ const truncateText = (text: string, maxLength: number) =>
   text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
 
 const Monitor: React.FC<MonitorProps> = ({ monitor, onMonitorTabActive, isEditing }) => {
-  const [editableData, setEditableData] = useState<MonitorsEsd>(monitor.monitorsEsd);
+  const [editableData, setEditableData] = useState<monitorsESD>(monitor.monitorsESD);
   const monitorColumns: ColumnsType<DataType> = [
     {
       title: "Serial Number",
@@ -113,11 +113,11 @@ const Monitor: React.FC<MonitorProps> = ({ monitor, onMonitorTabActive, isEditin
 
   const monitorData: DataType[] = [
     {
-      key: monitor.monitorsEsd.id.toString(),
-      serialNumber: monitor.monitorsEsd.serialNumber,
-      description: monitor.monitorsEsd.description,
-      statusJig: monitor.monitorsEsd.statusJig,
-      statusOperador: monitor.monitorsEsd.statusOperador,
+      key: monitor.monitorsESD.id.toString(),
+      serialNumber: monitor.monitorsESD.serialNumber,
+      description: monitor.monitorsESD.description,
+      statusJig: monitor.monitorsESD.statusJig,
+      statusOperador: monitor.monitorsESD.statusOperador,
     },
   ];
 

@@ -7,7 +7,7 @@ import "./Station.css"; // Importando o CSS
 import MonitorForm from "../../../Monitor/MonitorForm/MonitorForm";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { createMonitor, getAllMonitors } from "../../../../../api/monitorApi";
+import { createMonitor, getAllMonitors, updateMonitor } from "../../../../../api/monitorApi";
 import {
   createStationMapper,
   getAllStationMapper,
@@ -20,6 +20,7 @@ import {
   LaptopOutlined,
 } from "@mui/icons-material";
 import ReusableModal from "../../ReausableModal/ReusableModal";
+// import MonitorEditForm from "../../MonitorEditForm/MonitorEditForm";
 
 interface Station {
   id?: number;
@@ -73,6 +74,8 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<any | null>(null);
 
+  
+
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const handleModalClose = () => {
@@ -102,6 +105,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   };
 
   const handleCreateMonitor = async (monitor: any) => {
+    console.log('monitor to edir', monitor)
     try {
       const result = await createMonitor(monitor);
       const selectedCell = {
@@ -148,8 +152,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   });
 
   const handleEditCellChange = async (params: any) => {
+    console.log('params', params)
     try {
-       const result  = await createMonitor(params); // Atualiza o monitor com os dados passados
+      const result = await updateMonitor(params); // Atualiza o monitor com os dados passados
+      console.log('result', result)
       showSnackbar(
         t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",
@@ -188,8 +194,9 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     setModalTitleText(selectedCell.cell.serialNumber);
     setModalIndexTitleText(index);
 
-    console.log("selectedCell", selectedCell);
   };
+
+  
 
   return (
     <>
@@ -234,12 +241,12 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       <ReusableModal
         visible={modalVisible}
         onClose={handleModalClose}
-        onEdit={() => console.log("Editar")} // Implementar lógica de edição
-        onDelete={() => console.log("Excluir")} // Implementar lógica de exclusão
+        onEdit={() => console.log("Editar")} 
+        onDelete={() => console.log("Excluir")} 
         title={modalTitleText}
         monitor={{
           positionSequence: selectedMonitor?.index,
-          monitorsEsd: {
+          monitorsESD: {
             id: selectedMonitor?.index,
             serialNumber: modalTitleText,
             description: selectedMonitor?.cell.description,
@@ -247,6 +254,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
             statusOperador: "FALSE",
           },
         }}
+        onSubmit={handleEditCellChange}
       />
       <MonitorForm
         open={openModal}
