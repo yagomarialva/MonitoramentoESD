@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Tooltip, Checkbox, Input, Typography, Table, Tabs } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -7,6 +6,7 @@ import {
 } from "@mui/icons-material";
 import Monitor from "../ESDHomeDashboardPage/ESDMonitor/Monitor";
 import "./ReusableModal.css";
+import { Modal, Tooltip, Checkbox, Input, Typography, Table, Tabs } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { deleteMonitor } from "../../../../api/monitorApi";
 
@@ -26,8 +26,6 @@ interface monitorsESD {
   id: number;
   serialNumber: string;
   description: string;
-  // statusJig: string;
-  // statusOperador: string;
 }
 
 interface LogData {
@@ -178,11 +176,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       id: editableData.id,
       serialNumber: editableData.serialNumber,
       description: editableData.description,
-      // statusJig: editableData.statusJig,
-      // statusOperador: editableData.statusOperador,
-      // positionSequence: editableData.positionSequence || 0, // Default se necessário
-      // dateHour: editableData.dateHour || new Date().toISOString(), // Valor padrão de data/hora
-      // lastDate: editableData.lastDate || new Date().toISOString(),
     };
 
     try {
