@@ -149,14 +149,17 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   };
 
   const handleEdit = () => {
-    setFooterVisible(true);
+    setFooterVisible(!isFooterVisible);
     setActionType("editar");
-    setIsEditing(true);
+    setIsEditing(!isEditing);
   };
 
   const handleDelete = async (id: any) => {
-    setFooterVisible(true);
+    setFooterVisible(!isFooterVisible);
     setActionType("excluir");
+    if (isEditing) {
+      setIsEditing(false);
+    }
     try {
       await deleteMonitor(id);
     } catch (error) {
@@ -206,7 +209,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
               }
             />
           ) : (
-            <span className="ellipsis-text">{truncateText(text, 10)}</span>
+            <span className="ellipsis-text">{truncateText(text, 15)}</span>
           )}
         </Tooltip>
       ),
@@ -228,7 +231,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
               }
             />
           ) : (
-            <span className="ellipsis-text">{truncateText(text, 10)}</span>
+            <span className="ellipsis-text">{truncateText(text, 15)}</span>
           )}
         </Tooltip>
       ),
@@ -252,7 +255,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       key: "message",
       render: (text: string) => (
         <Tooltip title={text}>
-          <span className="ellipsis-text">{truncateText(text, 10)}</span>
+          <span className="ellipsis-text">{truncateText(text, 15)}</span>
         </Tooltip>
       ),
     },
@@ -286,7 +289,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
             <LaptopOutlined style={{ marginRight: "8px", fontSize: "18px" }} />
             <Tooltip title={title}>
               <span className="ellipsis-text">
-                {title.length > 5 ? `${title.slice(0, 5)}...` : title}
+                {title.length > 5 ? `${title.slice(0, 20)}...` : title}
               </span>
             </Tooltip>
           </div>

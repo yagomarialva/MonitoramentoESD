@@ -200,10 +200,9 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           >
             {cell ? (
               <Tooltip title={cell.monitorsEsd.serialNumber}>
-                <ComputerIcon
-                  className="computer-icon"
-                  onClick={() => setModalVisible(true)}
-                />
+                <div className="computer-icon">
+                  <ComputerIcon className="dut-icon" onClick={() => setModalVisible(true)} />
+                </div>
               </Tooltip>
             ) : (
               <div className="add-icon" onClick={handleOpenModal}>

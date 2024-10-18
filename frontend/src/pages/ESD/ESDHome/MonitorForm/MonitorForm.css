@@ -4,11 +4,6 @@
   gap: 8px; /* Espaçamento entre ícone e texto */
 }
 
-.ellipsis-text {
-  font-size: 18px;
-  white-space: nowrap; /* Garante que o texto não quebre */
-}
-
 .modal-container {
   max-width: 600px;
   padding: 0.1px;

@@ -16,10 +16,14 @@
   margin-bottom: -12px;
 }
 
+.dut-icon{
+  margin-left: 13px;
+  color: #389E0D;
+}
 .computer-icon,
 .add-icon {
   font-size: 5px !important;
-  color: #333;
+  color: #BFBFBF;
   width: 50px !important;
   height: 50px !important;
   background-color: white;
