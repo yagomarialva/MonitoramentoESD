@@ -109,6 +109,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   };
 
   useEffect(() => {
+    console.log('lineData.stations',lineData.stations)
     fetchStations();
   }, []); // Agora ele será chamado quando `stations` mudar
 
@@ -124,7 +125,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   };
 
   const handleCreateStation = async () => {
-    const randomStationName = `Estação ${Math.floor(Math.random() * 1000000)}`;
+    const randomStationName = `Estação ${Math.floor(Math.random() * 100000000000)}`;
     const linkId = lineData.id;
     const station = {
       name: randomStationName,
@@ -181,6 +182,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   };
 
   const handleDeleteStation = async () => {
+
     if (
       !lineData?.stations ||
       lineData.stations.length === 0 ||

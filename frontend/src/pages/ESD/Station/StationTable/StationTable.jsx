@@ -11,7 +11,6 @@ import {
   Button,
   Typography,
   Input,
-  Modal,
   Tooltip,
   Pagination,
   Space,
@@ -24,7 +23,6 @@ import { useNavigate } from "react-router-dom";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { SearchOutlined } from "@ant-design/icons";
-import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 const StationTable = () => {
   const { t } = useTranslation();
@@ -74,7 +72,6 @@ const StationTable = () => {
     handleStateChange({ stationToDelete: station, deleteConfirmOpen: true });
   const handleDeleteClose = () =>
     handleStateChange({ deleteConfirmOpen: false, stationToDelete: null });
-
   const handlePageChange = (page) => {
     handleStateChange({ page });
   };

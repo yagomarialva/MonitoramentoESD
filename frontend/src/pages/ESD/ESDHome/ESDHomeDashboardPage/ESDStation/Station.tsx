@@ -15,6 +15,7 @@ import {
 import Monitor from "../ESDMonitor/Monitor";
 import ReusableModal from "../../ReausableModal/ReusableModal";
 import MonitorForm from "../../MonitorForm/MonitorForm";
+import { deleteStation } from "../../../../../api/stationApi";
 // import MonitorEditForm from "../../MonitorEditForm/MonitorEditForm";
 
 interface Station {
@@ -99,6 +100,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 
   const handleCreateMonitor = async (monitor: any) => {
     console.log("monitor to edir", monitor);
+ 
     try {
       const result = await createMonitor(monitor);
       const selectedCell = {
@@ -116,8 +118,16 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         `Monitor ${result.serialNumber} adicionado com sucesso!`,
         "success"
       );
-    } catch (error) {
+    } catch (error:any) {
       console.error("Erro ao criar monitor:", error);
+      showSnackbar(
+        `Monitor não foi adicionado!`,
+        "error"
+      );
+      if (error.message === "Request failed with status code 401") {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
     }
   };
 
@@ -163,6 +173,8 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       );
     }
   };
+
+
 
   const handleCellClick = (
     cell: any | "null",
@@ -233,6 +245,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         onClose={handleModalClose}
         onEdit={() => console.log("Editar")}
         onDelete={() => console.log("Excluir")}
+        onUpdate={onUpdate}
         title={modalTitleText}
         monitor={{
           positionSequence: selectedMonitor?.index,

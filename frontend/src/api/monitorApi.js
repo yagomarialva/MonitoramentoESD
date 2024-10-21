@@ -12,13 +12,13 @@ export const getAllMonitors = async () => {
 };
 
 // Obtém um monitor específico por ID
-export const getMonitor = async (id) => {
+export const getMonitor = async (serialNumber) => {
   try {
-    const { data } = await TokenApi.get(`/BuscarMonitores/${id}`);
+    const { data } = await TokenApi.get(`${url}/Pesquisa${serialNumber}`);
     console.log('data', data)
     return data;
   } catch (error) {
-    console.error(`Error fetching monitor with ID ${id}:`, error);
+    console.error(`Error fetching monitor with ID ${serialNumber}:`, error);
     throw error;
   }
 };
@@ -37,7 +37,7 @@ export const createMonitor = async (monitor) => {
 // Atualiza um monitor existente por ID
 export const updateMonitor = async (monitor) => {
   try {
-    const { data } = await TokenApi.post(`${url}/monitores`, monitor);
+    const { data } = await TokenApi.post(`${url}/${monitor}`);
     return data;
   } catch (error) {
     console.error(`Error updating monitor with ID:`, error);

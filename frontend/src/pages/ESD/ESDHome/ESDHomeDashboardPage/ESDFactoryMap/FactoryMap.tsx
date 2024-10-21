@@ -76,35 +76,42 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     message[type](content); // Exibe uma mensagem de sucesso ou erro
   };
 
+  const handleError = (error: any) => {
+    console.error("Erro:", error);
+    if (error.message === "Request failed with status code 401") {
+      showMessage("Sessão Expirada.", "error");
+      localStorage.removeItem("token");
+      navigate("/");
+    } else {
+      showMessage("Erro ao processar a operação.", "error");
+    }
+  };
+  
+
   const handleCreateLine = async () => {
     const randomLineName = `Linha ${Math.floor(Math.random() * 1000000)}`;
 
     try {
       const createdLine = await createLine({ name: randomLineName });
-      await getAllLines();
+  
       const station = { name: createdLine.name, sizeX: 6, sizeY: 6 };
       const stationCreated = await createStation(station);
-      await getAllStations();
+  
       const stationName = await getStationByName(stationCreated.name);
       const link = {
         ordersList: createdLine.id,
         lineID: createdLine.id,
         stationID: stationName.id,
       };
+  
       await createLink(link);
       onUpdate();
       showMessage("Linha criada com sucesso!", "success");
     } catch (error: any) {
-      console.error("Erro ao criar e mapear o monitor:", error);
-      if (error.message === "Request failed with status code 401") {
-        showMessage("Sessão Expirada.", "error");
-        localStorage.removeItem("token");
-        navigate("/");
-      } else {
-        showMessage("Erro ao criar a linha.", "error");
-      }
+      handleError(error);
     }
   };
+  
 
   const handleConfirmDelete = () => {
     confirm({
