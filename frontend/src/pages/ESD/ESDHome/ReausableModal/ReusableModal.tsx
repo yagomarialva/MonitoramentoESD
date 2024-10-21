@@ -104,7 +104,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   // Resetar o estado sempre que o modal abrir
   useEffect(() => {
-    console.log('monitor', monitor)
+    console.log("monitor", monitor);
     if (visible) {
       setFooterVisible(false);
       setActionType(null);
@@ -297,14 +297,22 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
             <Tooltip title="Editar">
               <EditOutlined className="icon-action" onClick={handleEdit} />
             </Tooltip>
-            <Tooltip title="Excluir">
-              <DeleteOutlined className="icon-action" onClick={handleDelete} />
-            </Tooltip>
+            {/* Renderiza o ícone de deletar apenas se isEditing for falso */}
+            {!isEditing && (
+              <Tooltip title="Excluir">
+                <DeleteOutlined
+                  className="icon-action"
+                  onClick={handleDelete}
+                />
+              </Tooltip>
+            )}
           </div>
         </div>
       }
       visible={visible}
       onCancel={handleClose}
+      bodyStyle={{ border: "none" }} // Remove bordas do corpo do modal
+      style={{ border: "none" }} // Remove bordas do modal
       footer={
         isFooterVisible && (
           <div className="modal-footer">
@@ -352,75 +360,93 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       </div>
 
       {isFooterVisible && actionType === "editar" && isMonitorTabActive && (
-        <div className="failure-lists">
-          <h4>Possíveis Falhas do Operador:</h4>
-          <ul>
-            {operatorFailures.map((failure) => (
-              <li key={failure}>
-                <Checkbox
-                  checked={selectedOperatorFailures.includes(failure)}
-                  onChange={(e) =>
-                    handleFailureSelect(e.target.checked, failure, "operator")
-                  }
-                >
-                  {failure}
-                </Checkbox>
-              </li>
-            ))}
-            <li>
-              <Checkbox
-                checked={showOperatorInput}
-                onChange={(e) =>
-                  handleFailureSelect(e.target.checked, "Outros", "operator")
-                }
-              >
-                Outros
-              </Checkbox>
-              {showOperatorInput && (
-                <Input
-                  placeholder="Descreva a falha"
-                  value={operatorOtherFailure || ""}
-                  onChange={(e) => setOperatorOtherFailure(e.target.value)}
-                  style={{ width: "70%", marginLeft: "8px" }}
-                />
-              )}
-            </li>
-          </ul>
+        <>
+          <div className="failure-lists">
+            {/* Coluna para falhas do operador */}
+            <div className="failure-column">
+              <div className="failure-column-header">Operador:</div>
+              <ul>
+                {operatorFailures.map((failure) => (
+                  <li key={failure}>
+                    <Checkbox
+                      checked={selectedOperatorFailures.includes(failure)}
+                      onChange={(e) =>
+                        handleFailureSelect(
+                          e.target.checked,
+                          failure,
+                          "operator"
+                        )
+                      }
+                    >
+                      {failure}
+                    </Checkbox>
+                  </li>
+                ))}
+                <li className="other-failure">
+                  <Checkbox
+                    checked={showOperatorInput}
+                    onChange={(e) =>
+                      handleFailureSelect(
+                        e.target.checked,
+                        "Outros",
+                        "operator"
+                      )
+                    }
+                  >
+                    Outros
+                  </Checkbox>
+                  {showOperatorInput && (
+                    <Input
+                      placeholder="Descreva a falha"
+                      value={operatorOtherFailure || ""}
+                      onChange={(e) => setOperatorOtherFailure(e.target.value)}
+                    />
+                  )}
+                </li>
+              </ul>
+            </div>
 
-          <h4>Possíveis Falhas do Monitor:</h4>
-          <ul>
-            {monitorFailures.map((failure) => (
-              <li key={failure}>
-                <Checkbox
-                  checked={selectedMonitorFailures.includes(failure)}
-                  onChange={(e) =>
-                    handleFailureSelect(e.target.checked, failure, "monitor")
-                  }
-                >
-                  {failure}
-                </Checkbox>
-              </li>
-            ))}
-            <li>
-              <Checkbox
-                checked={showMonitorInput}
-                onChange={(e) =>
-                  handleFailureSelect(e.target.checked, "Outros", "monitor")
-                }
-              >
-                Outros
-              </Checkbox>
-              {showMonitorInput && (
-                <Input
-                  placeholder="Descreva a falha"
-                  value={monitorOtherFailure || ""}
-                  onChange={(e) => setMonitorOtherFailure(e.target.value)}
-                  style={{ width: "70%", marginLeft: "8px" }}
-                />
-              )}
-            </li>
-          </ul>
-        </div>
+            {/* Coluna para falhas do monitor */}
+            <div className="failure-column">
+              <div className="failure-column-header">Monitor:</div>
+              <ul>
+                {monitorFailures.map((failure) => (
+                  <li key={failure}>
+                    <Checkbox
+                      checked={selectedMonitorFailures.includes(failure)}
+                      onChange={(e) =>
+                        handleFailureSelect(
+                          e.target.checked,
+                          failure,
+                          "monitor"
+                        )
+                      }
+                    >
+                      {failure}
+                    </Checkbox>
+                  </li>
+                ))}
+                <li className="other-failure">
+                  <Checkbox
+                    checked={showMonitorInput}
+                    onChange={(e) =>
+                      handleFailureSelect(e.target.checked, "Outros", "monitor")
+                    }
+                  >
+                    Outros
+                  </Checkbox>
+                  {showMonitorInput && (
+                    <Input
+                      placeholder="Descreva a falha"
+                      value={monitorOtherFailure || ""}
+                      onChange={(e) => setMonitorOtherFailure(e.target.value)}
+                    />
+                  )}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </>
       )}
     </Modal>
   );

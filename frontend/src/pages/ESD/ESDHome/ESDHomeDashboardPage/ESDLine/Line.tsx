@@ -99,6 +99,8 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
       setStations(stationsData); // Atualiza o estado com as estações
     } catch (error: any) {
       console.error("Erro ao buscar as estações:", error);
+      localStorage.removeItem("token");
+      navigate("/");
       if (error.message === "Request failed with status code 401") {
         localStorage.removeItem("token");
         navigate("/");
@@ -231,10 +233,8 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
 
   return (
     <>
-      <div className="line-container">
-        <div className="line-content">
-          {" "}
-          {/* Novo contêiner para flex */}
+      <div className="container">
+        <div className="button-for-edit">
           <div className="add-button-container-stations">
             {isEditing && (
               <>
@@ -262,119 +262,52 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
               type="primary"
               shape="round"
               onClick={() => setIsEditing(!isEditing)} // Alterna o modo de edição
-              className="white-background-button no-border"
+              className="white-background-button no-border color-button"
             >
               {isEditing ? "Finalizar Edição" : "Editar Estações"}
             </Button>
-          </div>
-          <div className="esd-line-container">
-            {lineData.stations.map((stationEntry) => (
-              <div key={stationEntry.station.id}>
-                {isEditing && ( // Renderiza os botões de rádio apenas no modo de edição
-                  <div className="radio-button">
-                    <input
-                      type="radio"
-                      name="selectedStation"
-                      id={`station-${stationEntry.station.id}`} // ID único para cada estação
-                      value={stationEntry.station.id}
-                      onChange={() => handleStationSelect(stationEntry)}
-                      checked={selectedStationId === stationEntry.station.id}
-                    />
-                  </div>
-                )}
-                <Station stationEntry={stationEntry} onUpdate={onUpdate} />
-              </div>
-            ))}
           </div>
         </div>
-
-        <Snackbar
-          open={state.snackbarOpen}
-          autoHideDuration={6000}
-          onClose={() => handleStateChange({ snackbarOpen: false })}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
-        >
-          <Alert
-            onClose={() => handleStateChange({ snackbarOpen: false })}
-            severity={state.snackbarSeverity}
-            sx={{ width: "100%" }}
-          >
-            {state.snackbarMessage}
-          </Alert>
-        </Snackbar>
-      </div>
-
-      {/* <div className="line-container">
-          <div className="add-button-container-stations">
-            {isEditing && (
-              <>
-                <Button
-                  type="primary"
-                  shape="round"
-                  icon={<RemoveCircleOutlineOutlinedIcon />}
-                  size="small"
-                  onClick={handleDeleteStation}
-                  disabled={!isEditing}
-                  className="white-background-button no-border"
-                ></Button>
-                <Button
-                  type="primary"
-                  shape="round"
-                  icon={<AddCircleOutlineRoundedIcon />}
-                  size="small"
-                  disabled={!isEditing}
-                  onClick={handleCreateStation}
-                  className="white-background-button no-border"
-                ></Button>
-              </>
-            )}
-            <Button
-              type="primary"
-              shape="round"
-              onClick={() => setIsEditing(!isEditing)} // Alterna o modo de edição
-              className="white-background-button no-border"
-            >
-              {isEditing ? "Finalizar Edição" : "Editar Estações"}
-            </Button>
-          </div>
-        <div className="esd-line-container">
-
-          {lineData.stations.map((stationEntry) => (
-            <div key={stationEntry.station.id}>
-              {isEditing && ( // Renderiza os botões de rádio apenas no modo de edição
-                <div className="radio-button">
-                  <input
-                    type="radio"
-                    name="selectedStation"
-                    id={`station-${stationEntry.station.id}`} // ID único para cada estação
-                    value={stationEntry.station.id}
-                    onChange={() => handleStationSelect(stationEntry)}
-                    checked={selectedStationId === stationEntry.station.id}
-                  />
+        <div className="line-container">
+          <div className="line-content">
+            <div className="esd-line-container">
+              {lineData.stations.map((stationEntry) => (
+                <div key={stationEntry.station.id}>
+                  {isEditing && ( // Renderiza os botões de rádio apenas no modo de edição
+                    <div className="radio-button">
+                      <input
+                        type="radio"
+                        name="selectedStation"
+                        id={`station-${stationEntry.station.id}`} // ID único para cada estação
+                        value={stationEntry.station.id}
+                        onChange={() => handleStationSelect(stationEntry)}
+                        checked={selectedStationId === stationEntry.station.id}
+                      />
+                    </div>
+                  )}
+                  <Station stationEntry={stationEntry} onUpdate={onUpdate} />
                 </div>
-              )}
-              <Station stationEntry={stationEntry} onUpdate={onUpdate} />
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
 
-        <Snackbar
-          open={state.snackbarOpen}
-          autoHideDuration={6000}
-          onClose={() => handleStateChange({ snackbarOpen: false })}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
-        >
-          <Alert
+          <Snackbar
+            open={state.snackbarOpen}
+            autoHideDuration={6000}
             onClose={() => handleStateChange({ snackbarOpen: false })}
-            severity={state.snackbarSeverity}
-            sx={{ width: "100%" }}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
           >
-            {state.snackbarMessage}
-          </Alert>
-        </Snackbar>
-      </div> */}
+            <Alert
+              onClose={() => handleStateChange({ snackbarOpen: false })}
+              severity={state.snackbarSeverity}
+              sx={{ width: "100%" }}
+            >
+              {state.snackbarMessage}
+            </Alert>
+          </Snackbar>
+        </div>
+      </div>
     </>
   );
 };

@@ -14,7 +14,7 @@ import {
 } from "../../../../../api/stationApi";
 import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
-import { Button, Modal, message, Radio } from "antd"; // Elementos do Ant Design
+import { Button, Modal, message, Radio, Checkbox } from "antd"; // Elementos do Ant Design
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons"; // Ant Design Icons
 
 interface Station {
@@ -133,6 +133,10 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     setSelectedStationsId(link.stations[0]?.station.id || null);
   };
 
+  const handleLineChange_new = (lineId: number) => {
+    setSelectedLineId((prev) => (prev === lineId ? null : lineId));
+  };
+
   return (
     <div className="app-container">
       <header className="container-title">
@@ -174,9 +178,14 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
           <div className="card" key={line.id}>
             <div className="card-header">
               {isEditing && (
-                <Radio
+                // <Radio
+                //   checked={selectedLineId === line.line.id}
+                //   onChange={() => handleLineChange(line)}
+                // />
+                <Checkbox
                   checked={selectedLineId === line.line.id}
                   onChange={() => handleLineChange(line)}
+                  className="green-checkbox"
                 />
               )}
             </div>

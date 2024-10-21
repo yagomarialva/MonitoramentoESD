@@ -51,6 +51,10 @@
   align-items: center;
 }
 
+.button-for-edit {
+  margin-top: 225px;
+}
+
 .esd-line-container .station {
   position: relative; /* Para posicionar o radio button em relação ao elemento station */
   padding: 20px;
@@ -110,7 +114,7 @@ button:disabled {
 }
 
 button:hover:not(:disabled) {
-  background-color: #0056b3; /* Cor de fundo ao passar o mouse */
+  background-color: #4caf50;; /* Cor de fundo ao passar o mouse */
 }
 
 input[type="radio"] {
@@ -141,4 +145,16 @@ input[type="radio"] {
 
 input[type=radio]#Red {
   accent-color: #4caf50;
+}
+
+.container {
+  background-color: white !important;
+  /* border: solid blue 2px !important; */
+
+  right: 17px;
+}
+
+
+.color-button{
+  color: #389e0d !important;
 }

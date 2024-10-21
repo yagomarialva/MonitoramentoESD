@@ -30,6 +30,11 @@
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); /* Sombra leve ao redor dos ícones */
 }
 
+.computer-icon,
+.add-icon :hover {
+  cursor: pointer;
+}
+
 .icon-container:nth-child(6) {
   margin-right: 40px; /* Corredor extra após a 6ª célula */
 }

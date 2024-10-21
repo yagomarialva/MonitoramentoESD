@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 600px; /* Largura máxima do modal */
 }
 
 .title-content {
@@ -50,4 +51,73 @@
 
 .modal-button:last-child:hover {
   background-color: #ff4d4f;
+}
+
+/* Layout geral: Flexbox horizontal para as colunas */
+.failure-lists {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px; /* Espaço entre as duas colunas */
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  max-height: 300px; /* Altura máxima para permitir rolagem */
+}
+
+/* Colunas individuais (Operador e Monitor) */
+.failure-column {
+  display: flex;
+  flex-direction: column; /* Organiza título e lista verticalmente */
+  flex: 1; /* Ambas as colunas ocupam o mesmo espaço */
+  min-width: 220px;
+}
+
+/* Estilo do cabeçalho de cada coluna */
+.failure-column-header {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #595959;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #d9d9d9;
+  margin-bottom: 12px;
+}
+
+/* Lista de falhas */
+.failure-column ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilo das linhas (itens) */
+.failure-column li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Espaço entre checkbox e input */
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0; /* Linha divisória */
+}
+
+.failure-column li:last-child {
+  border-bottom: none; /* Remove a linha divisória do último item */
+}
+
+/* Checkbox estilo */
+.failure-column input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* Input de texto para "Outros" */
+.failure-column input[type="text"] {
+  width: 70%;
+  padding: 6px 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
