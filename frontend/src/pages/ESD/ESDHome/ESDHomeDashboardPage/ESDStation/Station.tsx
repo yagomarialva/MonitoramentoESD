@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Tooltip } from "antd";
+import React, { useEffect, useState, useCallback } from "react";
+import { Tooltip, message } from "antd";
 import ComputerIcon from "@mui/icons-material/Computer";
 import { Alert, Snackbar } from "@mui/material";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import "./Station.css"; // Importando o CSS
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { createMonitor, updateMonitor } from "../../../../../api/monitorApi";
+import { createMonitor, getMonitor, updateMonitor } from "../../../../../api/monitorApi";
 import {
   createStationMapper,
   getAllStationMapper,
@@ -16,6 +16,8 @@ import Monitor from "../ESDMonitor/Monitor";
 import ReusableModal from "../../ReausableModal/ReusableModal";
 import MonitorForm from "../../MonitorForm/MonitorForm";
 import { deleteStation } from "../../../../../api/stationApi";
+import useWebSocket, { ReadyState } from "react-use-websocket";
+import { Description } from "@mui/icons-material";
 // import MonitorEditForm from "../../MonitorEditForm/MonitorEditForm";
 
 interface Station {
@@ -70,6 +72,11 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<any | null>(null);
 
+  const [socketUrl, setSocketUrl] = useState("wss://echo.websocket.org");
+  const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
+
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const handleModalClose = () => {
@@ -99,8 +106,6 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   };
 
   const handleCreateMonitor = async (monitor: any) => {
-    console.log("monitor to edir", monitor);
- 
     try {
       const result = await createMonitor(monitor);
       const selectedCell = {
@@ -118,12 +123,9 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         `Monitor ${result.serialNumber} adicionado com sucesso!`,
         "success"
       );
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Erro ao criar monitor:", error);
-      showSnackbar(
-        `Monitor não foi adicionado!`,
-        "error"
-      );
+      showSnackbar(`Monitor não foi adicionado!`, "error");
       if (error.message === "Request failed with status code 401") {
         localStorage.removeItem("token");
         navigate("/");
@@ -144,21 +146,46 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     }
   };
 
+  const showMessage = (content: string, type: "success" | "error") => {
+    message[type](content); // Exibe uma mensagem de sucesso ou erro
+  };
+
   useEffect(() => {
     fetchStations();
-  }, []); // Chamada inicial
 
+    if (lastMessage !== null) {
+      setMessageHistory((prev) => prev.concat(lastMessage));
+    }
+  }, [lastMessage]);
+
+  const handleClickChangeSocketUrl = useCallback(
+    () => setSocketUrl("wss://demos.kaazing.com/echo"),
+    []
+  );
   const cells = new Array(12).fill(null);
+  const handleClickSendMessage = useCallback(() => sendMessage("Hello"), []);
+
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: "Connecting",
+    [ReadyState.OPEN]: "Open",
+    [ReadyState.CLOSING]: "Closing",
+    [ReadyState.CLOSED]: "Closed",
+    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+  }[readyState];
 
   monitorsEsd.forEach((monitor) => {
     cells[monitor.positionSequence] = monitor;
   });
 
   const handleEditCellChange = async (params: any) => {
-    console.log("params", params);
     try {
-      const result = await updateMonitor(params); // Atualiza o monitor com os dados passados
-      console.log("result", result);
+      const monitorView = await getMonitor(selectedMonitor.cell.serialNumber);
+      const updatedResult = {
+        id: monitorView.id,
+        serialNumber: params.serialNumber,
+        description: params.description
+      }
+      const result = await updateMonitor(updatedResult)
       showSnackbar(
         t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",
@@ -166,15 +193,18 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       );
       onUpdate(); // Chama a função onUpdate para atualizar a visualização
       return result; // Retorna os resultados atualizados
-    } catch (error) {
+    } catch (error: any) {
       showSnackbar(
         t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
         "error"
       );
+      if (error.message === "Request failed with status code 401") {
+        showMessage("Sessão Expirada.", "error");
+        localStorage.removeItem("token");
+        navigate("/");
+      }
     }
   };
-
-
 
   const handleCellClick = (
     cell: any | "null",
@@ -188,17 +218,14 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
             serialNumber: "N/A",
             description: "Célula vazia",
             stationInfo,
-            // Adicione outros campos que você precisa inicializar com valores padrão
           },
       index,
       stationInfo,
     };
-    console.log("selectedCell123", selectedCell.stationInfo);
     setSelectedMonitor(selectedCell);
     setModalText(selectedCell.cell.description);
     setModalTitleText(selectedCell.cell.serialNumber);
     setModalIndexTitleText(index);
-    // setModalIndexView(selectedCell)
   };
 
   return (
@@ -213,7 +240,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
             {cell ? (
               <Tooltip title={cell.monitorsEsd.serialNumber}>
                 <div className="computer-icon">
-                  <ComputerIcon className="dut-icon" onClick={() => setModalVisible(true)} />
+                  <ComputerIcon
+                    className="dut-icon"
+                    onClick={() => setModalVisible(true)}
+                  />
                 </div>
               </Tooltip>
             ) : (

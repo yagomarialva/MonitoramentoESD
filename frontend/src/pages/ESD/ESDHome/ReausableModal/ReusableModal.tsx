@@ -6,9 +6,10 @@ import {
 } from "@mui/icons-material";
 import Monitor from "../ESDHomeDashboardPage/ESDMonitor/Monitor";
 import "./ReusableModal.css";
-import { Modal, Tooltip, Checkbox, Input, Typography, Table, Tabs } from "antd";
+import { Modal, Tooltip, Checkbox, Input, message, Table, Tabs } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { deleteMonitor, getMonitor } from "../../../../api/monitorApi";
+import { useNavigate } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
@@ -87,6 +88,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const [showOperatorInput, setShowOperatorInput] = useState(false);
   const [showMonitorInput, setShowMonitorInput] = useState(false);
   const [isMonitorTabActive, setMonitorTabActive] = useState(false);
+  const navigate = useNavigate();
   const [state, setState] = useState({
     allStations: [],
     station: {},
@@ -126,7 +128,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   // Resetar o estado sempre que o modal abrir
   useEffect(() => {
-    console.log("monitor", monitor.monitorsESD);
     if (visible) {
       setFooterVisible(false);
       setActionType(null);
@@ -145,6 +146,10 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       });
     }
   }, [visible]);
+
+  const showMessage = (content: string, type: "success" | "error") => {
+    message[type](content); // Exibe uma mensagem de sucesso ou erro
+  };
 
   // Garante que a lista de falhas seja exibida corretamente ao ativar o modo de edição
   useEffect(() => {
@@ -219,7 +224,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     };
 
     try {
-      console.log("updatedMonitorESD", updatedMonitorESD);
       await onSubmit(updatedMonitorESD); // Envia o objeto atualizado
       handleClose(); // Fecha o modal após o envio bem-sucedido
     } catch (error) {
@@ -231,19 +235,23 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     confirm({
       title: "Confirmação de Exclusão",
       icon: <DeleteOutlined />,
-      content: "Tem certeza de que deseja excluir esta linha?",
+      content: "Tem certeza de que deseja excluir este monitor?",
       onOk: async () => {
         try {
           const monitorToDelete = await getMonitor(
             monitor.monitorsESD.serialNumber
           );
-          console.log("monitorToDelete", monitorToDelete.id);
           await deleteMonitor(monitorToDelete.id);
           onUpdate();
           onClose();
           showSnackbar("Linha excluída com sucesso!", "success");
-        } catch (error) {
+        } catch (error:any) {
           console.error("Erro ao excluir a linha:", error);
+          if (error.message === "Request failed with status code 401") {
+            showMessage("Sessão Expirada.", "error");
+            localStorage.removeItem("token");
+            navigate("/");
+          }
         }
       },
     });
@@ -373,7 +381,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         }
         visible={visible}
         onCancel={handleClose}
-        bodyStyle={{ border: "none" }} // Remove bordas do corpo do modal
         style={{ border: "none" }} // Remove bordas do modal
         footer={
           isFooterVisible && (

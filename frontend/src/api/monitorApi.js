@@ -37,10 +37,10 @@ export const createMonitor = async (monitor) => {
 // Atualiza um monitor existente por ID
 export const updateMonitor = async (monitor) => {
   try {
-    const { data } = await TokenApi.post(`${url}/${monitor}`);
+    const { data } = await TokenApi.post(`${url}/monitores`, monitor);
     return data;
   } catch (error) {
-    console.error(`Error updating monitor with ID:`, error);
+    console.error("Error creating monitor:", error);
     throw error;
   }
 };
