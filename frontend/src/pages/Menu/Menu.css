@@ -87,8 +87,14 @@
 
 :where(.css-dev-only-do-not-override-qnu6hi).ant-layout .ant-layout-sider-children {
   height: 100%;
-  margin-top: 46.9px;
+  margin-top: 46.9px ;
   padding-top: 0.1px;
+}
+
+:where(.css-qnu6hi).ant-layout .ant-layout-sider-children {
+  height: 100%;
+  margin-top: -0.1px;
+  padding-top: 36.1px !important;
 }
 
 .drawer-card {
