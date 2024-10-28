@@ -228,6 +228,15 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     setModalIndexTitleText(index);
   };
 
+  const handleDelete = () => {
+    console.log("Monitor deletado com sucesso!");
+    showSnackbar(
+      t("ESD_MONITOR.TOAST.DELETE_SUCCESS", {
+        appName: "App for Translations",
+      })
+    );
+  };
+
   return (
     <>
       <div className="card-grid">
@@ -274,7 +283,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         visible={modalVisible}
         onClose={handleModalClose}
         onEdit={() => console.log("Editar")}
-        onDelete={() => console.log("Excluir")}
+        onDelete={handleDelete}
         onUpdate={onUpdate}
         title={modalTitleText}
         monitor={{

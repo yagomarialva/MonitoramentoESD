@@ -109,7 +109,6 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   };
 
   useEffect(() => {
-    // console.log('lineData.stations',lineData.stations)
     fetchStations();
   }, []); // Agora ele será chamado quando `stations` mudar
 
@@ -120,7 +119,6 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
       station: stationEntry.station,
       linkId: stationEntry.linkStationAndLineID,
     };
-    // console.log("Informações da estação selecionada:", selectedInfo);
     return selectedInfo;
   };
 
@@ -204,14 +202,9 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
 
     try {
       const selectedInfo = handleStationSelect(selectedStation);
-      // console.log("Informações retornadas pelo botão:", selectedInfo.linkId);
 
       await deleteLink(selectedInfo.linkId);
-      // console.log(
-      //   "Informações retornadas pelo botão:",
-      //   selectedInfo.station.id
-      // );
-
+  
       await deleteStation(selectedInfo.station.id);
 
       // Chama a função onUpdate após a exclusão da estação

@@ -12,6 +12,7 @@ import {
   getAllStations,
   getStationByName,
 } from "../../../../../api/stationApi";
+import { useTranslation } from "react-i18next";
 import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, message, Radio, Checkbox } from "antd"; // Elementos do Ant Design
@@ -65,6 +66,7 @@ const { confirm } = Modal; // Modal de confirmação do Ant Design
 
 const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [selectedLineId, setSelectedLineId] = useState<number | null>(null);
   const [selectedLinkId, setSelectedLinkId] = useState<number | null>(null);
   const [selectedStationsId, setSelectedStationsId] = useState<number | null>(
@@ -76,48 +78,65 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     message[type](content); // Exibe uma mensagem de sucesso ou erro
   };
 
+  // t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
+  //   appName: "App for Translations",
+  // })
+
   const handleError = (error: any) => {
     console.error("Erro:", error);
     if (error.message === "Request failed with status code 401") {
-      showMessage("Sessão Expirada.", "error");
+      // showMessage("Sessão Expirada.", "error");
+      showMessage(
+        t("ESD_MONITOR.MAP_FACTORY.TOAST.EXPIRED_SESSION", {
+          appName: "App for Translations",
+        }),
+        "error"
+      );
       localStorage.removeItem("token");
       navigate("/");
     } else {
-      showMessage("Erro ao processar a operação.", "error");
+      showMessage(
+        t("ESD_MONITOR.MAP_FACTORY.TOAST.ERROR", {
+          appName: "App for Translations",
+        }),
+        "error"
+      );
     }
   };
-  
 
   const handleCreateLine = async () => {
     const randomLineName = `Linha ${Math.floor(Math.random() * 1000000)}`;
 
     try {
       const createdLine = await createLine({ name: randomLineName });
-  
+
       const station = { name: createdLine.name, sizeX: 6, sizeY: 6 };
       const stationCreated = await createStation(station);
-  
+
       const stationName = await getStationByName(stationCreated.name);
       const link = {
         ordersList: createdLine.id,
         lineID: createdLine.id,
         stationID: stationName.id,
       };
-  
+
       await createLink(link);
       onUpdate();
-      showMessage("Linha criada com sucesso!", "success");
+      showMessage(
+        t("LINE.TOAST.CREATE_SUCCESS", { appName: "App for Translations" }),
+        "success"
+      );
     } catch (error: any) {
       handleError(error);
     }
   };
-  
 
   const handleConfirmDelete = () => {
     confirm({
       title: "Confirmação de Exclusão",
       icon: <DeleteOutlined />,
       content: "Tem certeza de que deseja excluir esta linha?",
+      className: "custom-modal", // Adiciona a classe personalizada ao modal
       onOk: async () => {
         try {
           await deleteLink(selectedLinkId);
@@ -131,6 +150,12 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
           showMessage("Erro ao excluir a linha.", "error");
         }
       },
+      okButtonProps: {
+        className: "custom-button", // Adiciona a classe personalizada ao botão OK
+      },
+      cancelButtonProps: {
+        className: "custom-cancel-button", // Adiciona a classe personalizada ao botão Cancelar
+      },
     });
   };
 
@@ -140,11 +165,10 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     setSelectedStationsId(link.stations[0]?.station.id || null);
   };
 
-
   return (
     <div className="app-container">
       <header className="container-title">
-        <h1>Linha de produção</h1>
+        <h1>{t("LINE.TABLE_HEADER")}</h1>
         <div className="header-buttons">
           {isEditing && (
             <>
@@ -155,7 +179,9 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
                 onClick={handleConfirmDelete}
                 className="white-background-button no-border remove-button-container"
               >
-                Excluir
+                {t("LINE.CONFIRM_DIALOG.DELETE_LINE", {
+                  appName: "App for Translations",
+                })}
               </Button>
               <Button
                 type="link"
@@ -163,7 +189,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
                 onClick={handleCreateLine}
                 className="white-background-button no-border add-button-container"
               >
-                Adicionar
+                {t("LINE.ADD_LINE", { appName: "App for Translations" })}
               </Button>
             </>
           )}

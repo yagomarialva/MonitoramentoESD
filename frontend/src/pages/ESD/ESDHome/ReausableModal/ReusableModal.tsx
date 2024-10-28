@@ -6,6 +6,7 @@ import {
 } from "@mui/icons-material";
 import Monitor from "../ESDHomeDashboardPage/ESDMonitor/Monitor";
 import "./ReusableModal.css";
+import { useTranslation } from "react-i18next";
 import { Modal, Tooltip, Checkbox, Input, message, Table, Tabs } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { deleteMonitor, getMonitor } from "../../../../api/monitorApi";
@@ -89,6 +90,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const [showMonitorInput, setShowMonitorInput] = useState(false);
   const [isMonitorTabActive, setMonitorTabActive] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [state, setState] = useState({
     allStations: [],
     station: {},
@@ -234,8 +236,8 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const handleConfirmDelete = () => {
     confirm({
       title: "Confirmação de Exclusão",
-      icon: <DeleteOutlined />,
       content: "Tem certeza de que deseja excluir este monitor?",
+      className: "custom-modal", // Adiciona a classe personalizada ao modal
       onOk: async () => {
         try {
           const monitorToDelete = await getMonitor(
@@ -243,16 +245,23 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
           );
           await deleteMonitor(monitorToDelete.id);
           onUpdate();
+          onDelete(); // Chama o callback após a exclusão
           onClose();
           showSnackbar("Linha excluída com sucesso!", "success");
         } catch (error:any) {
-          console.error("Erro ao excluir a linha:", error);
+          showMessage("Erro ao excluir a linha:", error);
           if (error.message === "Request failed with status code 401") {
             showMessage("Sessão Expirada.", "error");
             localStorage.removeItem("token");
             navigate("/");
           }
         }
+      },
+      okButtonProps: {
+        className: "custom-button", // Adiciona a classe personalizada ao botão OK
+      },
+      cancelButtonProps: {
+        className: "custom-cancel-button", // Adiciona a classe personalizada ao botão Cancelar
       },
     });
   };
@@ -385,14 +394,14 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         footer={
           isFooterVisible && (
             <div className="modal-footer">
+              <button className="modal-button-monitor-cancel" onClick={handleClose}>
+                Cancelar
+              </button>
               <button
-                className="modal-button"
+                className="modal-button-monitor-save"
                 onClick={actionType === "editar" ? handleSubmit : onDelete}
               >
                 {actionType === "editar" ? "Salvar" : "Excluir"}
-              </button>
-              <button className="modal-button" onClick={onDelete}>
-                Cancelar
               </button>
             </div>
           )
@@ -427,102 +436,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
             </TabPane>
           </Tabs>
         </div>
-
-        {isFooterVisible && actionType === "editar" && isMonitorTabActive && (
-          <>
-            <div className="failure-lists">
-              {/* Coluna para falhas do operador */}
-              <div className="failure-column">
-                <div className="failure-column-header">Operador:</div>
-                <ul>
-                  {operatorFailures.map((failure) => (
-                    <li key={failure}>
-                      <Checkbox
-                        checked={selectedOperatorFailures.includes(failure)}
-                        onChange={(e) =>
-                          handleFailureSelect(
-                            e.target.checked,
-                            failure,
-                            "operator"
-                          )
-                        }
-                      >
-                        {failure}
-                      </Checkbox>
-                    </li>
-                  ))}
-                  <li className="other-failure">
-                    <Checkbox
-                      checked={showOperatorInput}
-                      onChange={(e) =>
-                        handleFailureSelect(
-                          e.target.checked,
-                          "Outros",
-                          "operator"
-                        )
-                      }
-                    >
-                      Outros
-                    </Checkbox>
-                    {showOperatorInput && (
-                      <Input
-                        placeholder="Descreva a falha"
-                        value={operatorOtherFailure || ""}
-                        onChange={(e) =>
-                          setOperatorOtherFailure(e.target.value)
-                        }
-                      />
-                    )}
-                  </li>
-                </ul>
-              </div>
-
-              {/* Coluna para falhas do monitor */}
-              <div className="failure-column">
-                <div className="failure-column-header">Monitor:</div>
-                <ul>
-                  {monitorFailures.map((failure) => (
-                    <li key={failure}>
-                      <Checkbox
-                        checked={selectedMonitorFailures.includes(failure)}
-                        onChange={(e) =>
-                          handleFailureSelect(
-                            e.target.checked,
-                            failure,
-                            "monitor"
-                          )
-                        }
-                      >
-                        {failure}
-                      </Checkbox>
-                    </li>
-                  ))}
-                  <li className="other-failure">
-                    <Checkbox
-                      checked={showMonitorInput}
-                      onChange={(e) =>
-                        handleFailureSelect(
-                          e.target.checked,
-                          "Outros",
-                          "monitor"
-                        )
-                      }
-                    >
-                      Outros
-                    </Checkbox>
-                    {showMonitorInput && (
-                      <Input
-                        placeholder="Descreva a falha"
-                        value={monitorOtherFailure || ""}
-                        onChange={(e) => setMonitorOtherFailure(e.target.value)}
-                      />
-                    )}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </>
-        )}
       </Modal>
     </>
   );

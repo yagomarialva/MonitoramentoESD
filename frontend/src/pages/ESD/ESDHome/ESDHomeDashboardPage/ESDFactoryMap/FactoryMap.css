@@ -239,36 +239,146 @@ input[type=radio]#Red {
 
 
 
-/* .green-checkbox .ant-checkbox-inner {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%; 
-  border: 2px solid green; 
-  transition: all 0.3s;
+/* modal */
+/* Estilos gerais do modal */
+.custom-modal .ant-modal-content {
+  width: 299px !important;
+  height: 161px !important;
+  padding: 24px 38px;
+  border-radius: 2px 0px 0px 0px;
+  top: 162px;
+  right: -111px;
+  opacity: 1;
 }
 
-.green-checkbox.ant-checkbox-checked .ant-checkbox-inner {
-  background-color: green; 
-  border-color: green;
+/* Container dos botões */
+.button-container {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
 }
 
-.green-checkbox .ant-checkbox-inner::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  background-color: white;
-  border-radius: 50%; 
-  transform: translate(-50%, -50%) scale(0); 
-  transition: all 0.3s;
+/* Estilos dos botões personalizados */
+.custom-button {
+  text-transform: none !important;
+  height: 25px;
+  width: 46%;
+  border-radius: 0 !important;
 }
 
-.green-checkbox.ant-checkbox-checked .ant-checkbox-inner::after {
-  transform: translate(-50%, -50%) scale(1); 
+/* Container do ícone do usuário */
+.user-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-:where(.css-dev-only-do-not-override-qnu6hi).ant-checkbox-checked .ant-checkbox-inner {
-  background-color: green;
-} */
+/* Estilos para o ícone de exclusão */
+.user-icon-delete {
+  margin-right: 108px !important;
+  padding-bottom: 13px;
+  /* width: 35.5px !important;
+  height: 24px !important;  */
+  color: #F59E0B;
+}
+
+/* Estilos para o cabeçalho do modal */
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Fonte personalizada para o texto de exclusão */
+.custom-font-delete {
+  font-family: 'Selawik', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: white !important;
+}
+
+/* Fonte personalizada para o texto de edição */
+.custom-font-edit {
+  /* font-family: 'Selawik', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important; */
+  /* border: 2px solid green !important;
+  color: green !important;
+  background-color: transparent !important;
+  font-weight: 600 !important;
+  font-family: 'Selawik', sans-serif !important;
+  font-size: 13px !important; */
+  height: 26px;
+  /* border: none; */
+  border-radius: 0;
+  background-color: #389e0d !important;
+  width: 100px;
+}
+
+/* Botão de cancelamento personalizado */
+.custom-cancel-button {
+  /* border: 2px solid green !important;
+  color: green !important;
+  background-color: transparent !important;
+  font-weight: 600 !important;
+  font-family: 'Selawik', sans-serif !important;
+  font-size: 13px !important; */
+  height: 26px;
+  /* border: none; */
+  border-radius: 0;
+  width: 100px;
+}
+
+/* Formulário do modal */
+.modal-form {
+  margin-bottom: 16px;
+}
+
+/* Estilo do ícone de input (exemplo de cadeado) */
+.modal-form .ant-input-suffix {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* Container para os botões dentro do modal */
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* Botões de edição e fechamento do modal */
+.modal-edit-button,
+.modal-close-button {
+  width: 105px;
+  height: 22px;
+  margin-right: 20px;
+}
+
+/* Estilo para inputs como labels */
+.textfield-as-label {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  font-size: inherit;
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+
+/* Remoção de bordas e sombra do input */
+.textfield-as-label .MuiInputBase-input {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Margem ajustada para tipografia */
+.css-cij06z-MuiTypography-root {
+  margin-left: 33px !important;
+}

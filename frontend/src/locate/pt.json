@@ -81,7 +81,7 @@
       "STATUS_MONITOR": "Status",
       "TABLE": {
         "SERIAL_NUMBER": "Número de Série",
-        "DESCRIPTION":"Descrição",
+        "DESCRIPTION": "Descrição",
         "NAME": "Monitor",
         "ACTIONS": "Ações",
         "STATUS": "Status",
@@ -115,9 +115,9 @@
       }
     },
     "LINE": {
-      "TABLE_HEADER": "Controle - linha",
-      "SEARCH_INPUT":"Título",
-      "ADD_LINE": "Nova linha",
+      "TABLE_HEADER": "Linha de produção",
+      "SEARCH_INPUT": "Título",
+      "ADD_LINE": "Adicionar",
       "EDIT_LINE": "Editar Linha",
       "INFO_LINE": "Informações do Linha",
       "DELETE_LINE": "Deletar Linha",
@@ -150,10 +150,10 @@
         "EDIT_LINE": "Editar"
       },
       "TOAST": {
-        "CREATE_SUCCESS": "Linha criada com sucesso",
-        "TOAST_ERROR": "Operação não pode ser concluída",
-        "DELETE_SUCCESS": "Linha Excluída com sucesso",
-        "UPDATE_SUCCESS": "Linha atualizada com sucesso"
+        "CREATE_SUCCESS": "Linha criada com sucesso.",
+        "TOAST_ERROR": "Operação não pode ser concluída.",
+        "DELETE_SUCCESS": "Linha Excluída com sucesso.",
+        "UPDATE_SUCCESS": "Linha atualizada com sucesso."
       }
     },
     "STATION": {
@@ -215,9 +215,9 @@
         "DENSITY": "Ajustar Exibição",
         "SEARCH": "Pesquisar",
         "LINK_STATION_LINE": "Ligação",
-        "LINE":"Linha",
-        "ORDER":"Ordem",
-        "STATION":"Estação",
+        "LINE": "Linha",
+        "ORDER": "Ordem",
+        "STATION": "Estação",
         "COMPACT": "Compacto",
         "STANDARD": "Padrão",
         "CONFORTABLE": "Confortável"
@@ -227,7 +227,7 @@
         "CLOSE": "Fechar",
         "SAVE": "Excluir",
         "DELETE_LINK_STATION_LINE": "Excluir Ligação",
-        "EMPTY":"Não há itens a serem listados"
+        "EMPTY": "Não há itens a serem listados"
       },
       "DIALOG": {
         "CLOSE": "Fechar",
@@ -260,9 +260,9 @@
         "DENSITY": "Ajustar Exibição",
         "SEARCH": "Pesquisar",
         "LINK_STATION_LINE": "Ligação",
-        "LINE":"Linha",
-        "ORDER":"Ordem",
-        "STATION":"Estação",
+        "LINE": "Linha",
+        "ORDER": "Ordem",
+        "STATION": "Estação",
         "COMPACT": "Compacto",
         "STANDARD": "Padrão",
         "CONFORTABLE": "Confortável"
@@ -272,7 +272,7 @@
         "CLOSE": "Fechar",
         "SAVE": "Excluir",
         "DELETE_LINK_STATION_LINE": "Excluir Ligação",
-        "EMPTY":"Não há itens a serem listados"
+        "EMPTY": "Não há itens a serem listados"
       },
       "DIALOG": {
         "CLOSE": "Fechar",
@@ -281,7 +281,9 @@
         "EDIT_LINK_STATION_LINE": "Editar Ligação"
       },
       "TOAST": {
+        "ERROR":"Erro ao processar a operação.",
         "CREATE_SUCCESS": "Monitor associado com sucesso!",
+        "EXPIRED_SESSION": "Sessão Expirada",
         "TOAST_ERROR": "Operação não pode ser concluída",
         "DELETE_SUCCESS": "Monitor associado Excluído com sucesso",
         "UPDATE_SUCCESS": "Monitor associado atualizado com sucesso"
