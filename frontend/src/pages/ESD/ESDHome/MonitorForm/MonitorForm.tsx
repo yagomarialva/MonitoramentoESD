@@ -1,8 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Modal, Tooltip, Input, Table, Button,
-} from "antd";
+import { Modal, Tooltip, Input, Table, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { LaptopOutlined } from "@mui/icons-material";
 import "./MonitorForm.css"; // CSS customizado
@@ -44,22 +42,6 @@ const MonitorForm: React.FC<MonitorFormProps> = ({
   };
 
   const handleSubmit = async () => {
-    const nameRegex = /^(?![\s-]+$)[\w-]{1,50}$/;
-
-    if (!nameRegex.test(monitor.serialNumber)) {
-      setErrorName(
-        "Número inválido. Deve conter apenas letras, números, hífens ou underscores e não pode ter mais de 50 caracteres."
-      );
-      return;
-    }
-
-    if (!nameRegex.test(monitor.description)) {
-      setError(
-        "Descrição inválida. Deve conter apenas letras, números, hífens ou underscores e não pode ter mais de 50 caracteres."
-      );
-      return;
-    }
-
     setError("");
     setErrorName("");
 
@@ -74,6 +56,13 @@ const MonitorForm: React.FC<MonitorFormProps> = ({
   const handleCloseModal = () => {
     setError("");
     setErrorName("");
+    // Reseta os valores do monitor quando o modal é fechado
+    setMonitor({
+      serialNumber: "",
+      description: "",
+      statusOperador: "",
+      statusJig: "",
+    });
     handleClose();
   };
 
@@ -134,10 +123,17 @@ const MonitorForm: React.FC<MonitorFormProps> = ({
         style={{ marginBottom: "16px" }} // Espaço entre tabela e botões
       />
       <div className="button-container-monitor-to-add">
-        <Button onClick={handleCloseModal} className="submit-button-cancel-monitor">
+        <Button
+          onClick={handleCloseModal}
+          className="submit-button-cancel-monitor"
+        >
           {t("ESD_TEST.DIALOG.CLOSE", { appName: "App for Translations" })}
         </Button>
-        <Button type="primary" onClick={handleSubmit} className="submit-button-add-monitor">
+        <Button
+          type="primary"
+          onClick={handleSubmit}
+          className="submit-button-add-monitor"
+        >
           {t("ESD_TEST.DIALOG.SAVE", { appName: "App for Translations" })}
         </Button>
       </div>

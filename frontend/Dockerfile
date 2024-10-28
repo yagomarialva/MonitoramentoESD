@@ -7,8 +7,11 @@ WORKDIR /app
 # Copia o arquivo package.json e o package-lock.json para o contêiner
 COPY package*.json ./
 
-# Instala as dependências
-RUN npm install
+RUN npm cache clean --force
+# Instala as dependências e remove o cache para reduzir o tamanho da imagem
+RUN npm config set strict-ssl false
+RUN npm install --force && npm cache clean --force
+
 
 # Copia todos os arquivos do projeto para o contêiner
 COPY . .
@@ -19,14 +22,17 @@ RUN npm run build
 # Etapa de produção
 FROM nginx:alpine
 
-# Copia o build do React para o diretório padrão do nginx
+# Remove o arquivo de configuração padrão do Nginx para evitar conflitos
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copia o build do React para o diretório padrão do Nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Copia o arquivo de configuração do nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Exposição da porta padrão do nginx
+# Exposição da porta padrão do Nginx
 EXPOSE 80
 
-# Inicia o servidor nginx
+# Inicia o servidor Nginx
 CMD ["nginx", "-g", "daemon off;"]

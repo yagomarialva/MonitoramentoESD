@@ -19,6 +19,7 @@
 .dut-icon{
   margin-left: 13px;
   color: #389E0D;
+  margin-top: 12px;
 }
 
 .computer-icon,
@@ -41,6 +42,7 @@
 }
 
 .cell-icon {
+  margin-top: 12px;
   margin-left: 14px;
 }
 
