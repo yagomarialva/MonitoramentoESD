@@ -38,6 +38,7 @@ interface LogData {
   key: string;
   message: string;
   date: string;
+  hour:string;
 }
 
 interface DataType {
@@ -97,8 +98,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const [activeKey, setActiveKey] = useState("1");
 
   const [operatorLogData, setOperatorLogData] = useState([]); // Renomeado para evitar conflitos
-  const [jigLogData, setJigLogData] = useState([]); 
-
+  const [jigLogData, setJigLogData] = useState([]);
 
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -165,10 +165,10 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     message[type](content); // Exibe uma mensagem de sucesso ou erro
   };
 
-  
-  
   // Garante que a lista de falhas seja exibida corretamente ao ativar o modo de edição
   useEffect(() => {
+    console.log('operatorLogData', operatorLogData)
+    console.log('jigLogData', jigLogData)
     setEditableData(monitor.monitorsESD);
 
     if (isFooterVisible && actionType === "editar") {
@@ -359,55 +359,68 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     },
   ];
 
-  const logColumns: ColumnsType<LogData> = [
+  const logColumns: ColumnsType<any> = [
     {
-      title: "Message",
-      dataIndex: "message",
-      key: "message",
+      title: "messageContent",
+      dataIndex: "messageContent",
+      key: "messageContent",
       render: (text: string) => (
         <Tooltip title={text}>
           <span className="ellipsis-text">{truncateText(text, 15)}</span>
         </Tooltip>
       ),
     },
+    // {
+    //   title: "messageType",
+    //   dataIndex: "messageType",
+    //   key: "messageType",
+    // },
     {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
+      title: "created",
+      dataIndex: "created",
+      key: "created",
     },
   ];
 
-  const operatorLogs: LogData[] = [
-    { key: "1", message: "Operador iniciou tarefa", date: "2024-10-09" },
-    { key: "2", message: "Operador finalizou tarefa", date: "2024-10-09" },
-  ];
+  const operatorLogs: LogData[] = operatorLogData;
 
-  const jigLogs: LogData[] = [
-    { key: "1", message: "Jig conectado", date: "2024-10-08" },
-    { key: "2", message: "Jig desconectado", date: "2024-10-09" },
-  ];
+  const jigLogs: LogData[] = jigLogData;
 
   const handleTabChange = async (key: React.SetStateAction<string>) => {
     setActiveKey(key);
     if (key === "2") {
       console.log("here");
       try {
-        const monitorToDelete = await getMonitor(
-          monitor.monitorsESD.serialNumber
-        );
-        console.log('monitorToDelete',monitorToDelete.id)
-        const getLogs = await getMonitorLogs(monitorToDelete.id)
-        console.log('getLogs', getLogs)
-      } catch (error:any) {
+        // const monitorToDelete = await getMonitor(
+        //   monitor.monitorsESD.serialNumber
+        // );
+        // console.log("monitorToDelete", monitorToDelete.id);
+        // const getLogs = await getMonitorLogs(monitorToDelete.id);
+        // console.log("getLogs", getLogs);
+        const monitorToDelete = await getMonitor(monitor.monitorsESD.serialNumber);
+        const allLogs = await getMonitorLogs(monitorToDelete.id);
+
+        // Filtrando logs em categorias de "Operador" e "Jig"
+        const filteredOperatorLogs = allLogs.filter((log: { messageType: string; }) => log.messageType === "operador");
+        const filteredJigLogs = allLogs.filter((log: { messageType: string; }) => log.messageType === "jig");
+
+        // Atualizando os estados
+        setOperatorLogData(filteredOperatorLogs);
+        setJigLogData(filteredJigLogs);
+        console.log('filteredOperatorLogs', filteredOperatorLogs)
+      } catch (error: any) {
         if (error.message === "Request failed with status code 401") {
           showMessage("Sessão Expirada.", "error");
           localStorage.removeItem("token");
           navigate("/");
         }
+        if (error.message === "Request failed with status code 404") {
+          console.log("here");
+        }
       }
     }
   };
-  
+
   return (
     <>
       <Modal
