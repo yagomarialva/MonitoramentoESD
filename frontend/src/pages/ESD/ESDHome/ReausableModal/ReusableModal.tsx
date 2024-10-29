@@ -9,7 +9,11 @@ import "./ReusableModal.css";
 import { useTranslation } from "react-i18next";
 import { Modal, Tooltip, Checkbox, Input, message, Table, Tabs } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { deleteMonitor, getMonitor } from "../../../../api/monitorApi";
+import {
+  deleteMonitor,
+  getMonitor,
+  getMonitorLogs,
+} from "../../../../api/monitorApi";
 import { useNavigate } from "react-router-dom";
 
 const { TabPane } = Tabs;
@@ -68,8 +72,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   title,
   onSubmit,
   monitor,
-  onUpdate
+  onUpdate,
 }) => {
+  console.log("monitor", monitor);
   const [isFooterVisible, setFooterVisible] = useState(false);
   const [actionType, setActionType] = useState<"editar" | "excluir" | null>(
     null
@@ -89,6 +94,12 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const [showOperatorInput, setShowOperatorInput] = useState(false);
   const [showMonitorInput, setShowMonitorInput] = useState(false);
   const [isMonitorTabActive, setMonitorTabActive] = useState(false);
+  const [activeKey, setActiveKey] = useState("1");
+
+  const [operatorLogData, setOperatorLogData] = useState([]); // Renomeado para evitar conflitos
+  const [jigLogData, setJigLogData] = useState([]); 
+
+
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [state, setState] = useState({
@@ -132,6 +143,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   useEffect(() => {
     if (visible) {
       setFooterVisible(false);
+      setActiveKey("1");
       setActionType(null);
       setSelectedOperatorFailures([]);
       setSelectedMonitorFailures([]);
@@ -153,9 +165,12 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     message[type](content); // Exibe uma mensagem de sucesso ou erro
   };
 
+  
+  
   // Garante que a lista de falhas seja exibida corretamente ao ativar o modo de edição
   useEffect(() => {
     setEditableData(monitor.monitorsESD);
+
     if (isFooterVisible && actionType === "editar") {
       setMonitorTabActive(true);
     }
@@ -233,6 +248,22 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     }
   };
 
+  const handleGetLogMonitor = async () => {
+    try {
+      const monitorToDelete = await getMonitor(
+        monitor.monitorsESD.serialNumber
+      );
+      console.log("monitorToDelete", monitorToDelete);
+    } catch (error: any) {
+      showMessage("Erro ao excluir a linha:", error);
+      if (error.message === "Request failed with status code 401") {
+        showMessage("Sessão Expirada.", "error");
+        localStorage.removeItem("token");
+        navigate("/");
+      }
+    }
+  };
+
   const handleConfirmDelete = () => {
     confirm({
       title: "Confirmação de Exclusão",
@@ -248,7 +279,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
           onDelete(); // Chama o callback após a exclusão
           onClose();
           showSnackbar("Linha excluída com sucesso!", "success");
-        } catch (error:any) {
+        } catch (error: any) {
           showMessage("Erro ao excluir a linha:", error);
           if (error.message === "Request failed with status code 401") {
             showMessage("Sessão Expirada.", "error");
@@ -273,10 +304,10 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       dataIndex: "serialNumber",
       key: "serialNumber",
       render: (text: string) => (
-        <Tooltip title={text}>
+        <Tooltip title={text || "N/A"}>
           {isEditing ? (
             <Input
-              value={editableData.serialNumber}
+              value={editableData.serialNumber || ""}
               onChange={(e) =>
                 setEditableData({
                   ...editableData,
@@ -285,7 +316,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
               }
             />
           ) : (
-            <span className="ellipsis-text">{truncateText(text, 15)}</span>
+            <span className="ellipsis-text">
+              {truncateText(text || "N/A", 15)}
+            </span>
           )}
         </Tooltip>
       ),
@@ -295,10 +328,10 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       dataIndex: "description",
       key: "description",
       render: (text: string) => (
-        <Tooltip title={text}>
+        <Tooltip title={text || "N/A"}>
           {isEditing ? (
             <Input
-              value={editableData.description}
+              value={editableData.description || ""}
               onChange={(e) =>
                 setEditableData({
                   ...editableData,
@@ -307,7 +340,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
               }
             />
           ) : (
-            <span className="ellipsis-text">{truncateText(text, 15)}</span>
+            <span className="ellipsis-text">
+              {truncateText(text || "N/A", 15)}
+            </span>
           )}
         </Tooltip>
       ),
@@ -352,10 +387,27 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     { key: "2", message: "Jig desconectado", date: "2024-10-09" },
   ];
 
-  const handleTabChange = (activeKey: string) => {
-    console.log(activeKey === "1");
+  const handleTabChange = async (key: React.SetStateAction<string>) => {
+    setActiveKey(key);
+    if (key === "2") {
+      console.log("here");
+      try {
+        const monitorToDelete = await getMonitor(
+          monitor.monitorsESD.serialNumber
+        );
+        console.log('monitorToDelete',monitorToDelete.id)
+        const getLogs = await getMonitorLogs(monitorToDelete.id)
+        console.log('getLogs', getLogs)
+      } catch (error:any) {
+        if (error.message === "Request failed with status code 401") {
+          showMessage("Sessão Expirada.", "error");
+          localStorage.removeItem("token");
+          navigate("/");
+        }
+      }
+    }
   };
-
+  
   return (
     <>
       <Modal
@@ -368,7 +420,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
               />
               <Tooltip title={title}>
                 <span className="ellipsis-text">
-                  {title.length > 5 ? `${title.slice(0, 20)}...` : title}
+                  {title.length > 5 ? `${title.slice(0, 20)}` : title}
                 </span>
               </Tooltip>
             </div>
@@ -394,7 +446,10 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         footer={
           isFooterVisible && (
             <div className="modal-footer">
-              <button className="modal-button-monitor-cancel" onClick={handleClose}>
+              <button
+                className="modal-button-monitor-cancel"
+                onClick={handleClose}
+              >
                 Cancelar
               </button>
               <button
@@ -408,7 +463,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         }
       >
         <div>
-          <Tabs defaultActiveKey="1" onChange={handleTabChange}>
+          <Tabs activeKey={activeKey} onChange={handleTabChange}>
             <TabPane tab="Monitor" key="1">
               <Table
                 columns={monitorColumns}

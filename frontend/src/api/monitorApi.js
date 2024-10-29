@@ -1,5 +1,7 @@
 import TokenApi from "./TokenApi";
 const url = 'api/MonitorEsd'
+const url_logs = 'api/LogMonitorEsd'
+
 // Obtém todos os monitores
 export const getAllMonitors = async () => {
   try {
@@ -10,6 +12,20 @@ export const getAllMonitors = async () => {
     throw error;
   }
 };
+
+// Obtém um monitor específico por ID
+export const getMonitorLogs = async (id) => {
+  try {
+    const { data } = await TokenApi.get(`${url_logs}/ListMonitorEsd?id=${id}&page=1&pageSize=50`);
+    console.log('data', data)
+    return data;
+  } catch (error) {
+    console.error(`Error fetching monitor with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+
 
 // Obtém um monitor específico por ID
 export const getMonitor = async (serialNumber) => {
