@@ -1,70 +1,75 @@
-﻿using BiometricFaceApi.Data;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using BiometricFaceApi.Services;
 
 namespace BiometricFaceApi.Repositories
 {
     public class LinkStationAndLineRepository : ILinkStationAndLineRepository
     {
-        private readonly IOracleDataAccessRepository oraConnector;
+        private readonly IOracleDataAccessRepository _oraConnector;
 
         public LinkStationAndLineRepository(IOracleDataAccessRepository oracleDataAccessRepository)
         {
-            oraConnector = oracleDataAccessRepository;
+            _oraConnector = oracleDataAccessRepository;
         }
-        public async Task<List<LinkStationAndLineModel>> GetAllLinks()
+        public async Task<List<LinkStationAndLineModel>> GetAllLinksAsync()
         {
-            var result = await oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetAllLinks, new { });
+            var result = await _oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetAllLinks, new { });
             return result;
         }
-        public async Task<List<LinkStationAndLineModel>?> GetByLineId(int id)
+        public async Task<List<LinkStationAndLineModel>?> GetByLineIdAsync(int lineId)
         {
-            var result = await oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetByLineId, new { id});
+            var result = await _oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetByLineId, new { lineId });
             return result;
         }
-        public async Task<LinkStationAndLineModel?> GetByLinkId(int id)
+        public async Task<LinkStationAndLineModel?> GetByLinkIdAsync(int id)
         {
-            var result = await oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetByLinkId, new { id });
+            var result = await _oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetByLinkId, new { id });
             return result.FirstOrDefault();
         }
-        public async Task<List<LinkStationAndLineModel>?> GetByStationId(int id)
+        public async Task<List<LinkStationAndLineModel>?> GetByStationIdAsync(int stationId)
         {
-            var result = await oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetByLinkStationId, new { id });
-            return result; 
+            var result = await _oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetByLinkStationId, new { stationId });
+            return result;
         }
-        public async Task<LinkStationAndLineModel?> GetByLineIdAndStationId(int lineId, int stationId)
+        public async Task<LinkStationAndLineModel?> GetByLineIdAndStationIdAsync(int lineId, int stationId)
         {
-            var result = await oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetByLinkLineAndStationById, new { lineId,stationId });
+            var result = await _oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.GetByLinkLineAndStationById, new { lineId, stationId });
             return result.FirstOrDefault();
         }
-        public async Task<LinkStationAndLineModel?> Include(LinkStationAndLineModel model)
+        public async Task<LinkStationAndLineModel> IncludeAsync(LinkStationAndLineModel model)
         {
-            LinkStationAndLineModel? linkAndModelUp;
             if (model.ID > 0)
             {
                 //update
-                await oraConnector.SaveData(SQLScripts.UpdateLinkAndStation, model);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                linkAndModelUp = model;
+
+                model.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+                await _oraConnector.SaveData<LinkStationAndLineModel>(SQLScripts.UpdateLinkAndStation, model);
+                CheckForErrors();
+                return model;
             }
             else
             {
-                //include
-                await oraConnector.SaveData<LinkStationAndLineModel>(SQLScripts.InsertLinkAndStation, model);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                linkAndModelUp = await GetByLineIdAndStationId(model.LineID,model.StationID);
+                //insert 
+
+                model.Created = DateTimeHelperService.GetManausCurrentDateTime();
+                await _oraConnector.SaveData<LinkStationAndLineModel>(SQLScripts.InsertLinkAndStation, model);
+                CheckForErrors();
+                return await GetByLineIdAndStationIdAsync(model.LineID, model.StationID);
             }
-            return linkAndModelUp;
         }
-        public async Task<LinkStationAndLineModel> Delete(int id)
+        public async Task<LinkStationAndLineModel> DeleteAsync(int id)
         {
-            LinkStationAndLineModel? linkAndStationDel = await GetByLinkId(id);
-            await oraConnector.SaveData<dynamic>(SQLScripts.DeleteLinkAndStation, new { id });
+            LinkStationAndLineModel? linkAndStationDel = await GetByLinkIdAsync(id);
+            await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteLinkAndStation, new { id });
             return linkAndStationDel;
+        }
+
+        private void CheckForErrors()
+        {
+            if (_oraConnector.Error != null)
+                throw new Exception($"Error: {_oraConnector.Error}");
         }
     }
 }

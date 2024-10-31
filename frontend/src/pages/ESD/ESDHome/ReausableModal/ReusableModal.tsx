@@ -370,11 +370,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         </Tooltip>
       ),
     },
-    // {
-    //   title: "messageType",
-    //   dataIndex: "messageType",
-    //   key: "messageType",
-    // },
     {
       title: "created",
       dataIndex: "created",
@@ -391,12 +386,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     if (key === "2") {
       console.log("here");
       try {
-        // const monitorToDelete = await getMonitor(
-        //   monitor.monitorsESD.serialNumber
-        // );
-        // console.log("monitorToDelete", monitorToDelete.id);
-        // const getLogs = await getMonitorLogs(monitorToDelete.id);
-        // console.log("getLogs", getLogs);
         const monitorToDelete = await getMonitor(monitor.monitorsESD.serialNumber);
         const allLogs = await getMonitorLogs(monitorToDelete.id);
 

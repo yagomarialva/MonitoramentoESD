@@ -1,155 +1,169 @@
 ﻿using BiometricFaceApi.Models;
-using BiometricFaceApi.Repositories;
 using BiometricFaceApi.Repositories.Interfaces;
-using System.Reflection.Metadata;
 
 namespace BiometricFaceApi.Services
 {
     public class LineService
     {
-        private ILineRepository _repository;
+        private readonly ILineRepository _repository;
+
         public LineService(ILineRepository lineRepository)
         {
             _repository = lineRepository;
         }
-        public async Task<(object?, int)> GetAllLine()
+
+        public async Task<(object?, int)> GetAllLinesAsync()
         {
             object? content;
             int statusCode;
+
             try
             {
-                List<LineModel> line = await _repository.GetAllLine();
-                if (!line.Any())
+                List<LineModel> lines = await _repository.GetAllAsync();
+
+                if (!lines.Any())
                 {
                     content = "Nenhuma linha cadastrada.";
                     statusCode = StatusCodes.Status404NotFound;
-                    return (content, statusCode);
                 }
                 else
                 {
-                    line.ForEach(async prod =>
-                    {
-                        prod.ID = prod.ID;
-                        prod.Name = prod.Name;
-                    });
+                    content = lines;
+                    statusCode = StatusCodes.Status200OK;
+                }
 
+                return (content, statusCode);
+            }
+            catch (Exception ex)
+            {
+                content = $"Erro ao obter linhas: {ex.Message}";
+                statusCode = StatusCodes.Status400BadRequest;
+                return (content, statusCode);
+            }
+        }
+
+        public async Task<(object?, int)> GetLineByIdAsync(int id)
+        {
+            object? content;
+            int statusCode;
+
+            try
+            {
+                var line = await _repository.GetByIdAsync(id);
+
+                if (line == null)
+                {
+                    content = $"Linha com ID {id} não encontrada.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+                else
+                {
                     content = line;
                     statusCode = StatusCodes.Status200OK;
                 }
+
                 return (content, statusCode);
-
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-
-                content = exception.Message;
+                content = $"Erro ao obter linha: {ex.Message}";
                 statusCode = StatusCodes.Status400BadRequest;
                 return (content, statusCode);
             }
-
         }
-        public async Task<(object?, int)> GetLineId(int id)
-        {
-            object? result;
-            int statusCode;
-            try
-            {
-                var monitor = await _repository.GetLineID(id);
-                if (monitor == null)
-                {
-                    result = $"ID:{id} não encontrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                    return (result, statusCode);
-                }
-                result = monitor;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
-            }
-            catch (Exception exception)
-            {
-                result = exception.Message;
-                statusCode = StatusCodes.Status500InternalServerError;
-            }
-            return (result, statusCode);
 
-        }
-        public async Task<(object?, int)> GetLineName(string lineName)
-        {
-            object? result;
-            int statusCode;
-            try
-            {
-                var monitor = await _repository.GetLineName(lineName);
-                if (monitor == null)
-                {
-                    result = $"{lineName} não encontrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                    return (result, statusCode);
-                }
-                result = monitor;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
-            }
-            catch (Exception exception)
-            {
-                result = exception.Message;
-                statusCode = StatusCodes.Status500InternalServerError;
-            }
-            return (result, statusCode);
-
-        }
-        public async Task<(object?, int)> Include(LineModel lineModel)
+        public async Task<(object?, int)> GetLineByNameAsync(string lineName)
         {
             object? content;
             int statusCode;
+
             try
             {
-                LineModel? lineUp = await _repository.GetLineID(lineModel.ID);
-                lineModel.ID = lineUp != null ? lineUp.ID : lineModel.ID;
-                content = await _repository.Include(lineModel);
+                var line = await _repository.GetByNameAsync(lineName);
+
+                if (line == null)
+                {
+                    content = $"Linha com nome '{lineName}' não encontrada.";
+                    statusCode = StatusCodes.Status404NotFound;
+                }
+                else
+                {
+                    content = line;
+                    statusCode = StatusCodes.Status200OK;
+                }
+
+                return (content, statusCode);
+            }
+            catch (Exception ex)
+            {
+                content = $"Erro ao obter linha: {ex.Message}";
+                statusCode = StatusCodes.Status400BadRequest;
+                return (content, statusCode);
+            }
+        }
+
+        public async Task<(object?, int)> AddOrUpdateLineAsync(LineModel lineModel)
+        {
+            object? content;
+            int statusCode;
+
+            try
+            {
+                LineModel? existingLine = await _repository.GetByIdAsync(lineModel.ID);
+
+                if (existingLine != null)
+                    lineModel.ID = existingLine.ID;
+
+                content = await _repository.AddOrUpdateAsync(lineModel);
+
                 if (lineModel.ID > 0)
+                {
                     statusCode = StatusCodes.Status200OK;
+                }
                 else
+                {
                     statusCode = StatusCodes.Status201Created;
+                }
+
+                return (content, statusCode);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                content = "Verificar  dados se estão corretos.";
+                content = $"Erro ao adicionar ou atualizar linha: {ex.Message}";
                 statusCode = StatusCodes.Status400BadRequest;
+                return (content, statusCode);
             }
-            return (content, statusCode);
         }
-        public async Task<(object?, int)> Delete(int id)
+
+        public async Task<(object?, int)> DeleteLineAsync(int id)
         {
             object? content;
             int statusCode;
+
             try
             {
-                var repositoryLine = await _repository.GetLineID(id);
-                if (repositoryLine != null)
+                var line = await _repository.GetByIdAsync(id);
+
+                if (line == null)
                 {
-                    content = new
-                    {
-                        Id = repositoryLine.ID,
-                        nome = repositoryLine.Name
-                    };
-                    await _repository.Delete(repositoryLine.ID);
-                    statusCode = StatusCodes.Status200OK;
+                    content = "Linha não encontrada.";
+                    statusCode = StatusCodes.Status404NotFound;
                 }
                 else
                 {
-                    content = "Dados incorretos ou inválidos";
-                    statusCode = StatusCodes.Status404NotFound;
+                    await _repository.DeleteAsync(line.ID);
+                    content = new { line.ID, line.Name };
+                    statusCode = StatusCodes.Status200OK;
                 }
+
+                return (content, statusCode);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-
-                content = exception.Message;
-                statusCode = StatusCodes.Status500InternalServerError;
+                content = $"Erro ao deletar linha: {ex.Message}";
+                statusCode = StatusCodes.Status400BadRequest;
+                return (content, statusCode);
             }
-            return (content, statusCode);
-
         }
     }
 }

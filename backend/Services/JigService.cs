@@ -5,138 +5,128 @@ namespace BiometricFaceApi.Services
 {
     public class JigService
     {
-        private IJigRepository _repository;
+        private readonly IJigRepository _repository;
 
         public JigService(IJigRepository repository)
         {
             _repository = repository;
-
         }
-        public async Task<(object?, int)> GetAllJigs()
+
+        public async Task<(object? result, int statusCode)> GetAllJigsAsync()
         {
-            object? result;
-            int statusCode;
             try
             {
-                List<JigModel> jigs = await _repository.GetAllJig();
-                if (!jigs.Any())
+                var jigs = await _repository.GetAllAsync();
+                if (jigs == null || !jigs.Any())
                 {
-                    result = ("Nenhum Jig cadastrado.");
-                    statusCode = StatusCodes.Status404NotFound;
-                }
-                else
-                {
-                    result = jigs;
-                    statusCode = StatusCodes.Status200OK;
-                    return (result, statusCode);
+                    return ("Nenhum Jig cadastrado.", StatusCodes.Status404NotFound);
                 }
 
-            }
-            catch (Exception exeption)
-            {
-
-                result = exeption.Message;
-                statusCode = StatusCodes.Status400BadRequest;
-            }
-            return (result, statusCode);
-        }
-        public async Task<(object?, int)> GetJigId(int id)
-        {
-            object? result;
-            int statusCode;
-            try
-            {
-                var station = await _repository.GetByJigId(id);
-                if (station == null)
-                {
-                    result = ("Jig Id não encontrado.");
-                    statusCode = StatusCodes.Status404NotFound;
-                    return (result, statusCode);
-                }
-                result = station;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
+                return (jigs, StatusCodes.Status200OK);
             }
             catch (Exception exception)
             {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return HandleError(exception);
             }
-            return (result, statusCode);
         }
-        public async Task<(object?, int)> GetName(string name)
+
+        public async Task<(object? result, int statusCode)> GetJigByIdAsync(int id)
         {
-            object? result;
-            int statusCode;
             try
             {
-                var station = await _repository.GetByName(name);
-                if (station == null)
+                var jig = await _repository.GetByIdAsync(id);
+                if (jig == null)
                 {
-                    result = ("Jig Id não encontrado.");
-                    statusCode = StatusCodes.Status404NotFound;
+                    return ("Jig Id não encontrado.", StatusCodes.Status404NotFound);
                 }
-                result = station;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
+
+                return (jig, StatusCodes.Status200OK);
             }
             catch (Exception exception)
             {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return HandleError(exception);
             }
-            return (result, statusCode);
         }
-        public async Task<(object?, int)> Include(JigModel model)
+        public async Task<(object? result, int statusCode)> GetJigBySnAsync(string serialNumber)
         {
-            object? content;
-            int statusCode;
             try
             {
-                JigModel? lineUp = await _repository.GetByJigId(model.ID);
-                model.ID = lineUp != null ? lineUp.ID : model.ID;
-                content = await _repository.Include(model);
-                if (model.ID > 0)
-                    statusCode = StatusCodes.Status200OK;
-                else
-                    statusCode = StatusCodes.Status201Created;
-            }
-            catch (Exception)
-            {
-                content = "Verificar  dados se estão corretos.";
-                statusCode = StatusCodes.Status400BadRequest;
-            }
-            return (content, statusCode);
-        }
-        public async Task<(object?, int)> Delete(int id)
-        {
-            object? content;
-            int statusCode;
-            try
-            {
-                var repositorJig = await _repository.GetByJigId(id);
-                if (repositorJig != null && repositorJig.ID > 0)
+                var jig = await _repository.GetJigBySnAsync(serialNumber);
+                if (jig == null)
                 {
-                   
-                    await _repository.Delete(repositorJig.ID);
-                    content = repositorJig;
-                    statusCode = StatusCodes.Status200OK;
+                    return ($"Jig com serial number: {serialNumber} não encontrado.", StatusCodes.Status404NotFound);
                 }
-                else
-                {
-                    content = "Dados incorretos ou inválidos";
-                    statusCode = StatusCodes.Status404NotFound;
-                }
+
+                return (jig, StatusCodes.Status200OK);
             }
             catch (Exception exception)
             {
-
-                content = exception.Message;
-                statusCode = StatusCodes.Status500InternalServerError;
+                return HandleError(exception);
             }
+        }
+        public async Task<(object? result, int statusCode)> GetJigByNameAsync(string name)
+        {
+            try
+            {
+                var jig = await _repository.GetByNameAsync(name);
+                if (jig == null)
+                {
+                    return ("Jig não encontrado.", StatusCodes.Status404NotFound);
+                }
 
-            return (content, statusCode);
+                return (jig, StatusCodes.Status200OK);
+            }
+            catch (Exception exception)
+            {
+                return HandleError(exception);
+            }
+        }
+        public async Task<(object? result, int statusCode)> AddOrUpdateJigAsync(JigModel model)
+        {
+            try
+            {
+                var existingJig = await _repository.GetByIdAsync(model.ID);
+                model.ID = existingJig?.ID ?? model.ID;
+
+                var savedJig = await _repository.AddOrUpdateAsync(model);
+
+                var statusCode = model.ID > 0 ? StatusCodes.Status200OK : StatusCodes.Status201Created;
+                return (savedJig, statusCode);
+            }
+            catch (Exception exception)
+            {
+                return HandleError(exception, "Verifique se os dados estão corretos.");
+            }
+        }
+        public async Task<(object? result, int statusCode)> DeleteJigAsync(int id)
+        {
+            try
+            {
+                var jig = await _repository.GetByIdAsync(id);
+                if (jig == null)
+                {
+                    return ("Jig não encontrado ou já excluído.", StatusCodes.Status404NotFound);
+                }
+
+                await _repository.DeleteAsync(id);
+                return (jig, StatusCodes.Status200OK);
+            }
+            catch (Exception exception)
+            {
+                return HandleError(exception);
+            }
+        }
+        // Método auxiliar para padronizar o tratamento de exceções
+        private (object? result, int statusCode) HandleError(Exception exception, string? customMessage = null)
+        {
+            var errorMessage = customMessage ?? exception.Message;
+            // Adicionar um log aqui, se necessário
+            return (errorMessage, StatusCodes.Status400BadRequest);
+        }
+        public async Task<JigModel?> GetSerialNumberAsync(string serial)
+        {
+            var result = await _repository.GetJigSerialNumberAsync(serial);
+            return result;
         }
     }
-
 }

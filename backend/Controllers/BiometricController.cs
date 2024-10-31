@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using System.Text.Json;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Services;
-using BiometricFaceApi.Repositories.Interfaces;
-using BiometricFaceApi.Models;
-
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BiometricFaceApi.Controllers
 {
@@ -13,37 +9,91 @@ namespace BiometricFaceApi.Controllers
     [ApiController]
     public class BiometricController : ControllerBase
     {
-
         protected readonly UserService _userService;
         protected readonly ImageService _imageService;
-        protected readonly ProduceActivityService _produceActivityService;
         protected readonly BiometricService _biometricService;
+        protected readonly JigService _jigRepository;
 
-       
-        
-        public BiometricController(IUsersRepository usersRepository,
-                                   IImageRepository imageRepository,
-                                   IProduceActivityRepository produceActivityRepository)
+
+        public BiometricController(UserService userService,
+                                ImageService imageService,
+                                BiometricService biometricService, JigService jigRepository)
         {
-            _userService = new UserService(usersRepository);
-            _imageService = new ImageService(imageRepository);
-            _biometricService = new BiometricService(_userService, _imageService,_produceActivityService);
- 
-           
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _imageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
+            _biometricService = biometricService ?? throw new ArgumentNullException(nameof(biometricService));
+            _jigRepository =  jigRepository ?? throw new ArgumentNullException(nameof(jigRepository));
         }
+
         /// <summary>
-        /// Buscar todos operadores
+        /// Buscar todos operadores.
         /// </summary>
-        /// <response code="200">Retorna dados de todos operadores.</response>
+        /// <response code="200">Retorna dados de todos operadores com imagem.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,tecnico,developer")]
+        /// <response code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
-        [Route("todosUsers")]
-        public async Task<ActionResult> GetAllUsers()
+        [Route("ListUsersPaginated")]
+        public async Task<ActionResult> GetUsersPaginated([FromQuery] int page = 1, [FromQuery] int pageSize = 50)
         {
-            var response = await _biometricService.GetAllUsers();
-            return Ok(response);
+            var (result, statusCode) = await _biometricService.GetUsersPaginatedAsync(page, pageSize);
+            return StatusCode(statusCode, result);
+            
+        }
+
+       // [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpPost("verify-jig")]
+        public async Task<IActionResult> VerifyJigAndFace( IFormFile imageFile,string serialNumber)
+        {
+            var (photo, personId, jig) = await _biometricService.Verify(imageFile, serialNumber);
+
+            if (personId == 0 || jig == null)
+            {
+                return NotFound(new { message = "Jig não encontrado ou falha no reconhecimento facial." });
+            }
+
+            return Ok(new
+            {
+                PersonId = personId,
+                Photo = photo, // Exemplo, pode ser a string Base64 da foto
+                Jig = new
+                {
+                    jig.ID,
+                    jig.Name,
+                    jig.SerialNumber
+                }
+            });
+        }
+
+
+        /// <summary>
+        /// Buscar todos operadores com imagem
+        /// </summary>
+        /// <response code="200">Retorna dados de todos operadores com imagem.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet]
+        [Route("ListUsersImages")]
+        public async Task<ActionResult> GetAllUsersImage([FromQuery] int page = 1, [FromQuery] int pageSize = 50)
+        {
+            var (result, statusCode) = await _biometricService.GetAllUsersImageAsync(page, pageSize);
+            return StatusCode(statusCode, result);
+        }
+
+        /// <summary>
+        /// Buscar todos operadores sem imagem
+        /// </summary>
+        /// <response code="200">Retorna dados de todos operadores sem imagem.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
+        /// <response code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet]
+        [Route("ListUsersNoImage")]
+        public async Task<ActionResult> GetAllUsersNoImage([FromQuery] int page = 1, [FromQuery] int pageSize = 50)
+        {
+            var (result, statusCode) = await _biometricService.GetAllUsersNoImageAsync(page, pageSize);
+            return StatusCode(statusCode, result);
         }
 
         /// <summary>
@@ -51,82 +101,64 @@ namespace BiometricFaceApi.Controllers
         /// </summary>
         /// <response code="200">Retorna dados de operadores.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,tecnico,developer")]
-        [HttpGet]
-        [Route("Badge")]
-        public async Task<ActionResult> GetByBadge(string badge)
+        /// <response code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet("Badge")]
+        public async Task<IActionResult> GetByBadge(string badge)
         {
-            var response = await _biometricService.GetUserByBadger(badge);
+            var response = await _biometricService.GetUserByBadgeAsync(badge);
             return Ok(response);
         }
 
-
         /// <summary>
-        /// Cadastra e Atualiza de dados do operador.
+        /// Cadastra e Atualiza dados do operador.
         /// </summary>
         /// <remarks>Cadastra o operador na base de dados; Para atualizar dados basta usar a matricula do operador.</remarks>
         /// <param name="biometric">Dados de cadastro do operador</param>
-        /// <response code="200">Dados atualizado com sucesso.</response>
+        /// <response code="200">Dados atualizados com sucesso.</response>
         /// <response code="201">Dados cadastrados com sucesso.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,tecnico,developer")]
-        [HttpPost]
-        [Route("adicionar")]
-        public async Task<ActionResult> InsertBiometric([FromForm] BiometricModel biometric)
+        /// <response code="500">Erro do servidor interno!</response>
+        [HttpPost("adicionar")]
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        public async Task<IActionResult> InsertBiometric([FromForm] BiometricModel biometric)
         {
-            var result = await _biometricService.ManagerOperator(biometric);
-
-            return StatusCode(result.Item2, result.Item1);
-
+            var (result, statusCode) = await _biometricService.ManageOperatorAsync(biometric);
+            return StatusCode(statusCode, result);
         }
 
+       
+
         /// <summary>
-        /// Buscar operador pelo id
+        /// Buscar operador pelo ID
         /// </summary>
-        /// <param name="id"> Buscar operador</param>
+        /// <param name="id">ID do operador</param>
         /// <response code="200">Retorna dados do operador.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,tecnico,developer")]
-        [HttpGet]
-        [Route("operador/{id}")]
-        public async Task<ActionResult> GetUserById(int id)
+        /// <response code="500">Erro do servidor interno!</response>
+        [HttpGet("operador/{id}")]
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        public async Task<IActionResult> GetUserById(int id)
         {
-            var response = await _biometricService.GetUserById(id);
+            var response = await _biometricService.GetUserByIdAsync(id);
             return Ok(response);
         }
 
         /// <summary>
-        /// Deleta operador
+        /// Deleta operador pelo ID
         /// </summary>
-        /// <param name="id"> Deleta operador</param>
-        /// <returns></returns>
+        /// <param name="id">ID do operador</param>
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,tecnico,developer")]
-        [HttpDelete]
-        [Route("delete/{id}")]
-        public async Task<ActionResult> DeleteBiometic(int id)
+        /// <response code="500">Erro do servidor interno!</response>
+        [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        public async Task<IActionResult> DeleteBiometric(int id)
         {
-            var (result, statusCode) = await _biometricService.DelByUser(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            if (!string.IsNullOrEmpty(jsonResponse))
-            {
-                return StatusCode(statusCode, result);
-            }
-            else
-            {
-                return StatusCode(statusCode);
-            }
-
+            var (result, statusCode) = await _biometricService.DeleteUserByIdAsync(id);
+            return StatusCode(statusCode, result);
         }
-
-
     }
 }

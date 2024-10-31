@@ -1,131 +1,104 @@
 ﻿using BiometricFaceApi.Models;
-using BiometricFaceApi.Repositories;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-//using Org.BouncyCastle.Asn1.Mozilla;
-using System.Text.Json;
 
 namespace BiometricFaceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StationViewController : Controller
+    public class StationViewController : ControllerBase
     {
-        private readonly StationViewService _stationViewRepository;
-        private readonly MonitorEsdService _monitorEsdService;
-        private readonly LinkStationAndLineService _linkStationAndLineService;
-        private readonly StationService _stationService;
-        private readonly LineService _lineService;
-        public StationViewController(IStationViewRepository stationViewRepository, IMonitorEsdRepository monitorEsdRepository,
-            ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationRepository, ILineRepository lineRepository)
+        private readonly StationViewService _stationViewService;
+
+        public StationViewController(
+            IStationViewRepository stationViewRepository,
+            IMonitorEsdRepository monitorEsdRepository,
+            ILinkStationAndLineRepository linkStationAndLineRepository,
+            IStationRepository stationRepository,
+            ILineRepository lineRepository,
+            ILogMonitorEsdRepository logMonitorEsdRepository)
         {
-            _stationViewRepository = new StationViewService(stationViewRepository, monitorEsdRepository, linkStationAndLineRepository, lineRepository, stationRepository);
-            _linkStationAndLineService = new LinkStationAndLineService(linkStationAndLineRepository, stationRepository, lineRepository);
+            _stationViewService = new StationViewService(
+                stationViewRepository,
+                monitorEsdRepository,
+                linkStationAndLineRepository,
+                lineRepository,
+                stationRepository,
+                logMonitorEsdRepository);
         }
 
         /// <summary>
-        /// Buscar todos 
+        /// Buscar todos as Estações View.
         /// </summary>
-        /// <param > Buscar todas as Estações View</param>
         /// <response code="200">Retorna todos.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpGet]
-        [Route("todasEstacaoView")]
+        /// <response code="404">Nenhuma estação encontrada.</response>
+        /// <response code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico,tecnico")]
+        [HttpGet("todasEstacaoView")]
         public async Task<ActionResult> BuscarTodos()
         {
-            var (result, statusCode) = await _stationViewRepository.GetAllStationView();
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _stationViewService.GetAllStationView();
             return StatusCode(statusCode, result);
-
         }
 
         /// <summary>
-        /// Buscar id 
+        /// Buscar Estacao View por Id.
         /// </summary>
-        /// <param name="id"> Buscar Estacao View por Id</param>
-        /// <response code="200">Retorna Estacao View por Id</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpGet]
-        [Route("BuscarEstacaoView/{id}")]
+        /// <param name="id">Id da Estação View.</param>
+        /// <response code="200">Retorna Estação View por Id.</response>
+        /// <response code="404">Estação View não encontrada.</response>
+        /// <response code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico,tecnico")]
+        [HttpGet("BuscarEstacaoView/{id}")]
         public async Task<ActionResult> BuscarIdEstacaoView(int id)
         {
-            var (result, statusCode) = await _stationViewRepository.GetStationViewId(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _stationViewService.GetStationViewById(id);
             return StatusCode(statusCode, result);
         }
 
-
         /// <summary>
-        /// Cadastra e Atualiza de dados do Estação View.
+        /// Cadastra ou Atualiza dados do Estação View.
         /// </summary>
-        /// <remarks>Cadastra monitor na base de dados; Para atualizar dados basta usar Id da Estação View.</remarks>
-        /// <param name="model">Dados de cadastro da Estavação View</param>
-        /// <response code="200">Dados atualizado com sucesso.</response>
+        /// <param name="model">Dados de cadastro da Estação View.</param>
+        /// <response code="200">Dados atualizados com sucesso.</response>
         /// <response code="201">Dados cadastrados com sucesso.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpPost]
-        [Route("adicionarEstacaoView")]
+        /// <response code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico,tecnico")]
+        [HttpPost("adicionarEstacaoView")]
         public async Task<ActionResult> Include(StationViewModel model)
         {
-            var (result, statusCode) = await _stationViewRepository.Include(model);
-
+            var (result, statusCode) = await _stationViewService.Include(model);
             return StatusCode(statusCode, result);
-        }
-        [HttpGet]
-        [Route("factoryMap")]
-        public async Task<ActionResult> ShowMap()
-        {
-            var (result, statusCode) = await _stationViewRepository.FactoryView();
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            if (!string.IsNullOrEmpty(jsonResponse))
-            {
-                return StatusCode(statusCode, result);
-            }
-            else
-            {
-                return StatusCode(statusCode);
-            }
         }
 
         /// <summary>
-        /// Deletar Estação View
+        /// Gera um mapa de fábricas.
         /// </summary>
-        /// <param name="id"> Deleta Estação View</param>
-        /// <returns></returns>
-        /// <response code="200">Remove dados do banco de dados.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpDelete]
-        [Route("deleteStationView/{id}")]
+        /// <response code="200">Mapa gerado com sucesso.</response>
+        /// <response code="500">Erro do servidor interno!</response>
+        [HttpGet("factoryMap")]
+        public async Task<ActionResult> FactoryMap()
+        {
+            var (result, statusCode) = await _stationViewService.FactoryView();
+            return StatusCode(statusCode, result);
+        }
+
+        /// <summary>
+        /// Deletar Estação View.
+        /// </summary>
+        /// <param name="id">Id da Estação View a ser deletada.</param>
+        /// <response code="200">Dados removidos do banco de dados.</response>
+        /// <response code="404">Estação View não encontrada.</response>
+        /// <response code="500">Erro do servidor interno!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico,tecnico")]
+        [HttpDelete("deleteStationView/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var (result, statusCode) = await _stationViewRepository.Delete(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            if (!string.IsNullOrEmpty(jsonResponse))
-            {
-                return StatusCode(statusCode, result);
-            }
-            else
-            {
-                return StatusCode(statusCode);
-            }
+            var (result, statusCode) = await _stationViewService.Delete(id);
+            return StatusCode(statusCode, result);
         }
     }
 }

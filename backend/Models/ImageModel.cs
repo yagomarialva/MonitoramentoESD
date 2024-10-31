@@ -1,20 +1,27 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
 
 namespace BiometricFaceApi.Models
 {
-
+    [Table("IMAGES")]
     public class ImageModel
     {
+        [Column("ID")]
         public int ID { get; set; }
 
+        [Column("USERID")]
         public int UserId { get; set; }
         public virtual UserModel? User { get; set; }
-        [IgnoreDataMember, NotMapped]
 
+        [Column("PICTURESTREAM")]
+        public byte[]? PictureStream { get; set; }
+
+        [Column("CREATED")]
+        public DateTime Created { get; set; }
+        [Column("LASTUPDATED")]
+        public DateTime LastUpdated { get; set; }
+
+        [IgnoreDataMember, NotMapped]
         public IFormFile ImageFile
         {
             get
@@ -35,11 +42,7 @@ namespace BiometricFaceApi.Models
                 }
             }
         }
-
         private IFormFile? ObservableImageFile { get; set; }
-
-        public byte[]? PictureStream { get; set; }
-
         //converte imagem pra string
         public string GetPictureToBase()
         {

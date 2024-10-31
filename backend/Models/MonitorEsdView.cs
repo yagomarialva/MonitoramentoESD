@@ -2,12 +2,15 @@
 {
     public class MonitorEsdView
     {
-        public int PositionSequence { get; set; }
         public MonitorEsdModel MonitorsEsd { get; set; }
-
+        public int PositionSequence { get; set; }
+        public LogMonitorEsdModel LogOperator { get; set; }
+        public LogMonitorEsdModel LogJig { get; set; }
+       
         public MonitorEsdView()
         {
-            MonitorsEsd = new MonitorEsdModel();
+            LogOperator = new LogMonitorEsdModel();
+            LogJig = new LogMonitorEsdModel();
 
         }
     }

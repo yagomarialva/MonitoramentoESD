@@ -1,49 +1,74 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 
-using System.Security.Policy;
 namespace BiometricFaceApi.Services
 {
     public class UserService
     {
-        private IUsersRepository users;
-        public UserService(IUsersRepository users)
-        {
-            this.users = users;
-        }
-        public async Task<List<UserModel>> GetAllUsers()
-        {
+        private readonly IUsersRepository _usersRepository;
 
-            return await users.GetAllUsers();
-        }
-        public async Task<UserModel> GetUserById(int id)
+        public UserService(IUsersRepository usersRepository)
         {
-
-            return await users.ForId(id);
-        }
-        public async Task<UserModel> GetUserByBadge(string badge)
-        {
-
-            return await users.ForBadge(badge);
+            _usersRepository = usersRepository;
         }
 
-        public async Task<UserModel?>GetByName (string name)
+        // Retorna todos os usuários
+        public async Task<List<UserModel>> GetAllUsersAsync()
         {
-            return await users.GetByName(name);
-        }
-        public async Task<UserModel?> Include(UserModel user)
-        {
-           return await users.Include(user);
-        }
-        public async Task<UserModel> Update(UserModel user, int id)
-        {
-            return await users.Update(user, id);
-        }
-        public async Task<UserModel> Delete(int id)
-        {
-            return await users.Delete(id);
+            var result = await _usersRepository.GetAllAsync();
+            return result;
         }
 
+        public async Task<List<UserModel>> GetListUsersAsync(int page, int pageSize)
+        {
+            var result = await _usersRepository.GetListUsersAsync(page, pageSize);
+            return result;
+        }
+        // Retorna usuários por id
+        public async Task<UserModel?> GetUserByIdAsync(int id)
+        {
+            var result = await _usersRepository.GetByIdAsync(id);
+            return result;
+        }
 
+        // Retorna usuários por matricula
+        public async Task<UserModel?> GetUserByBadgeAsync(string badge)
+        {
+            var result  = await _usersRepository.GetByBadgeAsync(badge);
+            return result;
+        }
+
+        // Retorna usuários por nome
+        public async Task<UserModel?> GetByNameAsync(string name)
+        {
+            var result = await _usersRepository.GetByNameAsync(name);
+            return result;
+        }
+
+        // Adiciona um usuário
+        public async Task<UserModel?> AddUserAsync(UserModel user)
+        {
+            var result = await _usersRepository.AddAsync(user);
+            return result;
+        }
+
+        // Atualiza um usuário ja existente
+        public async Task<UserModel?> UpdateUserAsync(UserModel user, int id)
+        {
+            var result = await _usersRepository.UpdateAsync(user, id);
+            return result;
+        }
+
+        // Deleta um usuário existente
+        public async Task<UserModel> DeleteUserAsync(int id)
+        {
+            var resul = await _usersRepository.DeleteAsync(id);
+            return resul;   
+        }
+        public async Task<int> GetTotalUsers()
+        {
+            var result = await _usersRepository.GetTotalUserCount();
+            return result;
+        }
     }
 }

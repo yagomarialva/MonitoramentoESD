@@ -1,75 +1,126 @@
-﻿using BiometricFaceApi.Data;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Immutable;
+using BiometricFaceApi.Services;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 
 namespace BiometricFaceApi.Repositories
 {
     public class RecordStatusRepository : IRecordStatusRepository
     {
-        private readonly IOracleDataAccessRepository oraConnector;
+        private readonly IOracleDataAccessRepository _oraConnector;
         public RecordStatusRepository(IOracleDataAccessRepository oraConnector)
         {
-            this.oraConnector = oraConnector;
+            _oraConnector = oraConnector ?? throw new ArgumentNullException(nameof(oraConnector));
         }
-        public async Task<List<RecordStatusProduceModel>> GetAllRecordStatusProduces()
+        public async Task<List<RecordStatusProduceModel>> GetAllAsync()
         {
-            var result = await oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetAllRecordStatus, new { });
-            return result;
-        }
-
-        public async Task<RecordStatusProduceModel?> GetByRecordStatusId(int id)
-        {
-            var result = await oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetRecordStatusById, new {id });
-            return result.FirstOrDefault();
-        }
-
-        public async Task<RecordStatusProduceModel?> GetByProduceActvId(int produceActivityId)
-        {
-            var result = await oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetRecordProduceActId, new { produceActivityId });
-            return result.FirstOrDefault();
-        }
-
-        public async Task<RecordStatusProduceModel?> GetByUserId(int userId)
-        {
-            var result = await oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetRecordProduceUserId, new { userId });
-            return result.FirstOrDefault();
-        }
-
-
-        public async Task<RecordStatusProduceModel?> Include(RecordStatusProduceModel recordModel)
-        {
-            RecordStatusProduceModel? recordUp;
-            if (recordModel.ID > 0)
+            try
             {
-                //update
-                await oraConnector.SaveData(SQLScripts.UpdateRecordStatusProduce, recordModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                recordUp = recordModel;
+                return await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetAllRecordStatus, new { });
             }
-            else
+            catch (Exception ex)
             {
-                //include
-                await oraConnector.SaveData<RecordStatusProduceModel>(SQLScripts.InsereRecordStatusProduce, recordModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                recordUp = await GetByRecordStatusId(recordModel.ID);
+               
+                throw new Exception("\"Erro ao buscar todos os status registro.", ex);
             }
-            return recordUp;
         }
 
-
-        public async Task<RecordStatusProduceModel> Delete(int id)
+        public async Task<RecordStatusProduceModel?> GetByIdAsync(int id)
         {
-            RecordStatusProduceModel? recordDel = await GetByRecordStatusId(id);
-            await oraConnector.SaveData<dynamic>(SQLScripts.DeleteRecordStatusProduce, new { id });
-            return recordDel;
+            try
+            {
+                var result = await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetRecordStatusById, new { id });
+                return result.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao buscar status registro com ID {id}.", ex);
+            }
         }
 
+        public async Task<RecordStatusProduceModel?> GetByProduceActivityIdAsync(int produceActivityId)
+        {
+            try
+            {
+                var result = await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetRecordProduceActId, new { produceActivityId });
+                return result.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao  buscar status de registro para  atividade de produção com o ID {produceActivityId}.", ex);
+            }
+        }
+
+        public async Task<RecordStatusProduceModel?> GetByUserIdAsync(int userId)
+        {
+            try
+            {
+                var result = await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetRecordProduceUserId, new { userId });
+                return result.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao buscar status do resgistro para o ID de usuário {userId}.", ex);
+            }
+        }
+
+
+        public async Task<RecordStatusProduceModel?> AddOrUpdateAsync(RecordStatusProduceModel recordModel)
+        {
+            if (recordModel == null) throw new ArgumentNullException(nameof(recordModel));
+
+            recordModel.DateEvent = DateTime.Now;
+            
+            try
+            {
+                if (recordModel.ID > 0)
+                {
+                    // Update record
+                    recordModel.DateEvent = DateTimeHelperService.GetManausCurrentDateTime();
+                    await _oraConnector.SaveData<RecordStatusProduceModel>(SQLScripts.UpdateRecordStatusProduce, recordModel);
+                }
+                else
+                {
+                    // Insert new record
+                    recordModel.DateEvent = DateTimeHelperService.GetManausCurrentDateTime();
+                    await _oraConnector.SaveData<RecordStatusProduceModel>(SQLScripts.InsereRecordStatusProduce, recordModel);
+                }
+
+                if (_oraConnector.Error != null)
+                {
+                    throw new Exception($"Erro no banco de dados: {_oraConnector.Error}");
+                }
+
+                return recordModel;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao salvar o status do registro com ID: {recordModel.ID}", ex);
+            }
+        }
+
+
+        public async Task<RecordStatusProduceModel> DeleteAsync(int id)
+        {
+            try
+            {
+                var recordToDelete = await GetByIdAsync(id);
+                if (recordToDelete == null)
+                {
+                    throw new KeyNotFoundException($"Registro com ID {id} não encontrado.");
+                }
+
+                await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteRecordStatusProduce, new { id });
+
+                return recordToDelete;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao excluir o status do registro com ID {id}.", ex);
+            }
+        }
 
     }
 }

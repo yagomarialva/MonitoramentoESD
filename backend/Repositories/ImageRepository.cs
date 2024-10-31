@@ -1,92 +1,114 @@
-﻿using BiometricFaceApi.Data;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using BiometricFaceApi.Services;
 
 
 namespace BiometricFaceApi.Repositories
 {
     public class ImageRepository : IImageRepository
     {
-        private readonly IOracleDataAccessRepository oraConnector;
+        private readonly IOracleDataAccessRepository _oraConnector;
         public ImageRepository(IOracleDataAccessRepository oracleConnector)
         {
-            this.oraConnector = oracleConnector;
+            _oraConnector = oracleConnector;
         }
-
-        public async Task<List<ImageModel>> AllImage()
+        public async Task<List<ImageModel?>> GetAllImagesAsync()
         {
-            var result = await oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetAllImage, new { });
-
+            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetAllImage, new { });
             return result;
         }
-        public async Task<ImageModel> ImageForId(int id)
+        public async Task<List<ImageModel?>> GetListImagesAsync(int page, int pageSize)
         {
-            var result = await oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetImageById, new { id });
+            var result = await _oraConnector.LoadData<ImageModel?, dynamic>(SQLScripts.GetListImage,
+                new { Offset = (page - 1) * pageSize, Limit = pageSize });
+            return result.ToList() ?? throw new KeyNotFoundException($"Nenhuma image cadastrado.");
+        }
+        public async Task<ImageModel?> GetImageByIdAsync(int id)
+        {
+            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetImageById, new { id });
             return result.FirstOrDefault();
 
+
         }
-        public async Task<ImageModel> ImageForUserId(int userId)
+        public async Task<ImageModel?> GetImageByUserIdAsync(int userId)
         {
-            var result = await oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetUserId, new { userId });
+            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetUserId, new { userId });
             return result.FirstOrDefault();
         }
-        public async Task<(bool, string)> AddImage(ImageModel data)
+        public async Task<ImageModel?> GetByImageAsync(string img)
         {
-            var result = (state: true, error: string.Empty);
+            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetImageByString, new {img});
+            return result.FirstOrDefault();
+        }
+        public async Task<ImageModel?> AddImageAsync(ImageModel image)
+        {
             try
             {
-                if (data != null)
+                image.Created = DateTimeHelperService.GetManausCurrentDateTime();
+                image.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+                await _oraConnector.SaveData<ImageModel>(SQLScripts.InsertImage, image);
+                if (_oraConnector.Error != null)
                 {
-                    if (data.ImageFile == null)
-                        throw new Exception("erro por imagem vazia");
+                    throw new Exception($"Erro de banco de dados: {_oraConnector.Error}");
+                }
 
-                    await oraConnector.SaveData<ImageModel>(SQLScripts.InsertImage, data);
-                    if (oraConnector.Error != null)
-                        throw new Exception($"Error:{oraConnector.Error}");
-                }
-                else
-                {
-                    throw new Exception("erro por data vazia");
-                }
-               
-                return result;
+                return image;
             }
-            catch (Exception ex)
+            catch (Exception ex )
             {
-                result = (state: false, error: ex.Message);
-                return result;
+                throw new Exception("Falha ao tentar adicionar imagem.", ex);
             }
-
         }
-        public async Task<ImageModel?> Update(ImageModel imageEntity)
+        public async Task<ImageModel?> UpdateImageAsync(ImageModel imageEntity)
         {
-            ImageModel nextEntityImage = await ImageForUserId(imageEntity.UserId);
+            ImageModel? nextEntityImage = await GetImageByUserIdAsync(imageEntity.UserId);
             if (nextEntityImage == null)
             {
-                throw new Exception($"O usuário para o ID {imageEntity.UserId} não foi encontrado no banco de dados.");
+                throw new Exception($"O imagem do usuário para o ID {imageEntity.UserId} não foi encontrado no banco de dados.");
             }
             nextEntityImage.PictureStream = imageEntity.PictureStream;
-            await oraConnector.SaveData<ImageModel>(SQLScripts.UpdateImage, nextEntityImage);
-            if (oraConnector.Error != null)
-                throw new Exception($"Error:{oraConnector.Error}");
+            nextEntityImage.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+            await _oraConnector.SaveData<ImageModel>(SQLScripts.UpdateImage, nextEntityImage);
+            if (_oraConnector.Error != null)
+                throw new Exception($"Error:{_oraConnector.Error}");
+           
+            return await GetImageByUserIdAsync(imageEntity.UserId);
 
-            return new ImageModel();
         }
-        public async Task<bool> Delete(int id)
+        public async Task<bool> DeleteImageAsync(int imageId)
         {
-            ImageModel delEntityImage = await ImageForId(id);
-            if (delEntityImage == null)
+            var existingImage = await GetImageByIdAsync(imageId);
+            if (existingImage == null)
             {
-                throw new Exception($"O usuário para ID:{id} não foi encontrado no banco de dados.");
+                throw new KeyNotFoundException($"Nenhuma imagem encontrada para ID {imageId}");
             }
-            await oraConnector.SaveData<ImageModel>(SQLScripts.DeleteImage, delEntityImage);
-            if (oraConnector.Error != null)
-                throw new Exception($"Error:{oraConnector.Error}");
+
+            await _oraConnector.SaveData<ImageModel>(SQLScripts.DeleteImage, existingImage);
+            if (_oraConnector.Error != null)
+            {
+                throw new Exception($"Erro de banco de dados: {_oraConnector.Error}");
+            }
+
             return true;
+        }
+
+        
+
+        public class OperationResult
+        {
+            public bool IsSuccess { get; }
+            public string Message { get; }
+
+            private OperationResult(bool isSuccess, string message)
+            {
+                IsSuccess = isSuccess;
+                Message = message;
+            }
+
+            public static OperationResult Success() => new OperationResult(true, string.Empty);
+
+            public static OperationResult Failure(string message) => new OperationResult(false, message);
         }
 
 

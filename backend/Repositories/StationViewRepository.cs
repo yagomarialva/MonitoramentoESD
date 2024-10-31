@@ -1,158 +1,213 @@
-﻿using BiometricFaceApi.Data;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using BiometricFaceApi.Services;
 
 namespace BiometricFaceApi.Repositories
 {
     public class StationViewRepository : IStationViewRepository
     {
-        private readonly IOracleDataAccessRepository oraConnector;
-        private readonly ILinkStationAndLineRepository linkStationAndLineRepository;
-        private readonly IMonitorEsdRepository monitorEsdRepository;
-        private readonly IStationRepository stationRepository;
-        private readonly ILineRepository lineRepository;
-        public StationViewRepository(IOracleDataAccessRepository oraConnector,
-            ILinkStationAndLineRepository linkStationAndLineRepository, IMonitorEsdRepository monitorEsdRepository, IStationRepository stationRepository, ILineRepository lineRepository)
-        {
-            this.oraConnector = oraConnector;
-            this.linkStationAndLineRepository = linkStationAndLineRepository;
-            this.monitorEsdRepository = monitorEsdRepository;
-            this.stationRepository = stationRepository;
-            this.lineRepository = lineRepository;
+        private readonly IOracleDataAccessRepository _oraConnector;
+        private readonly ILinkStationAndLineRepository _linkStationAndLineRepository;
+        private readonly IMonitorEsdRepository _monitorEsdRepository;
+        private readonly IStationRepository _stationRepository;
+        private readonly ILineRepository _lineRepository;
 
-        }
-        public async Task<List<StationViewModel>> GetAllStationView()
+        public StationViewRepository(IOracleDataAccessRepository oraConnector,
+            ILinkStationAndLineRepository linkStationAndLineRepository,
+            IMonitorEsdRepository monitorEsdRepository,
+            IStationRepository stationRepository,
+            ILineRepository lineRepository)
         {
-            var result = await oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetAllStationView, new { });
+            _oraConnector = oraConnector;
+            _linkStationAndLineRepository = linkStationAndLineRepository;
+            _monitorEsdRepository = monitorEsdRepository;
+            _stationRepository = stationRepository;
+            _lineRepository = lineRepository;
+        }
+
+        public async Task<List<StationViewModel>> GetAllStationViewsAsync()
+        {
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetAllStationView, new { });
             return result;
         }
-        public async Task<StationViewModel?> GetByStationViewId(int guid)
+
+        public async Task<StationViewModel?> GetStationViewByIdAsync(int id)
         {
-            var id = guid.ToString();    
-            var result = await oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetStationViewById, new { id });
-            return result.FirstOrDefault();
-        }
-        public async Task<StationViewModel?> GetByPositionSeguenceId(int postitionId)
-        {
-            var result = await oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetStationViewPositionById, new { postitionId });
+            
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetStationViewById, new { id });
             return result.FirstOrDefault();
         }
 
-        // Task realiza o include e update, include caso nao haja no banco, update caso ja 
-        // tenha alguma propriedade cadastrada.
-        public async Task<StationViewModel?> Include(StationViewModel stationView)
+        public async Task<StationViewModel?> GetByPositionSequenceIdAsync(int positionId)
         {
-            StationViewModel? stationModelUp = await GetByStationViewId(stationView.ID);
-            var stationViews = await GetAllStationView();
-            if (stationModelUp == null)
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetStationViewPositionById, new { positionId });
+            return result.FirstOrDefault();
+        }
+
+        public async Task<StationViewModel?> GetStationViewByLinkStAndLineByIdAsync(int linkStationAndLineId, int seguenceNumber)
+        {
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetStationViewPositionByLinkId, new { linkStationAndLineId, seguenceNumber });
+            return result.FirstOrDefault();
+        }
+
+        public async Task<StationViewModel?> AddOrUpdateAsync(StationViewModel stationView)
+        {
+            StationViewModel? existingStationView = await GetStationViewByIdAsync(stationView.ID);
+            return existingStationView == null
+                ? await InsertStationViewAsync(stationView)
+                : await UpdateStationViewAsync(existingStationView, stationView);
+        }
+
+        private async Task<StationViewModel?> InsertStationViewAsync(StationViewModel stationView)
+        {
+            // Verifique se o LinkStationAndLineId é válido
+            var linkDetails = await _linkStationAndLineRepository.GetByLinkIdAsync(stationView.LinkStationAndLineId);
+            if (linkDetails == null)
+                throw new Exception("Id de link é inválido!");
+
+            stationView.LinkStationAndLine = linkDetails;
+            stationView.LinkStationAndLine.Station = await _stationRepository.GetByIdAsync(stationView.LinkStationAndLine.StationID);
+
+            // Verifique se o MonitorEsdId é válido
+            var monitorEsd = await _monitorEsdRepository.GetMonitorByIdAsync(stationView.MonitorEsdId);
+            if (monitorEsd == null)
+                throw new Exception("Monitor ESD não encontrado!");
+
+            // Checa se a combinação de monitor ESD e estação já existe
+            var stationViews = await GetAllStationViewsAsync();
+            var linkWithMonitor = stationViews
+                .Where(link => (link.MonitorEsdId == stationView.MonitorEsdId && link.LinkStationAndLineId == stationView.LinkStationAndLineId) || link.MonitorEsdId == stationView.MonitorEsdId)
+                .ToList();
+
+            if (linkWithMonitor.Any())
+                throw new Exception("A combinação de monitor ESD e estação já existe ou monitor ESD já está vinculado com outra estação!");
+
+            // Verifica a capacidade máxima de monitores
+            var links = stationViews.Where(x => x.LinkStationAndLineId == stationView.LinkStationAndLineId).ToList();
+            var counterLinks = links.Count();
+            var maxQuantity = stationView.LinkStationAndLine.Station?.SizeY * stationView.LinkStationAndLine.Station?.SizeX;
+
+            if (counterLinks >= maxQuantity)
+                throw new Exception($"Quantidade de monitores ESD excedida, máximo {maxQuantity}!");
+
+            // Chama o método para verificar a disponibilidade da posição
+            await CheckPositionAvailabilityAsync(stationView, counterLinks);
+
+            // Insere a nova StationView
+            stationView.Created = DateTimeHelperService.GetManausCurrentDateTime();
+            stationView.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+            //stationView.PositionSequence = counterLinks;
+            await _oraConnector.SaveData(SQLScripts.InsertStationView, stationView);
+            CheckForError();
+            return stationView;
+        }
+        private async Task CheckPositionAvailabilityAsync(StationViewModel stationView, int counterLinks)
+        {
+            // Verifique se a posição especificada já está ocupada
+            if (stationView.PositionSequence >= 0)
             {
-                // include
-                var linkDetails = await linkStationAndLineRepository.GetByLinkId(stationView.LinkStationAndLineId);
-                if (linkDetails == null)
-                    throw new Exception("Id de link é invalido!");
-
-                stationView.LinkStationAndLine = linkDetails;
-                stationView.LinkStationAndLine.Station = await stationRepository.GetByStationId(stationView.LinkStationAndLine.StationID);
-
-                var linkWithMonitor = stationViews.Where(link => (link.MonitorEsdId == stationView.MonitorEsdId && link.LinkStationAndLineId == stationView.LinkStationAndLineId) || link.MonitorEsdId == stationView.MonitorEsdId).ToList();
-
-                if (linkWithMonitor.Any())
-                    throw new Exception("A combinação de monitor esd e estação já existe ou monitor esd já está vinculado com outra estação!");
-
-                var links = stationViews.Where(x => x.LinkStationAndLineId == stationView.LinkStationAndLineId).ToList();
-                var counterLinks = links.Count();
-                var maxQuantity = stationView.LinkStationAndLine.Station?.SizeY * stationView.LinkStationAndLine.Station?.SizeX;
-
-                if (counterLinks >= maxQuantity)
-                    throw new Exception($"Quantidade de monitores esd excedida, maximo {maxQuantity}!");
-                stationView.PositionSequence = counterLinks;
-                await oraConnector.SaveData<StationViewModel>(SQLScripts.InsertStationView, stationView);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
+                var existingStationViewAtPosition = await GetStationViewByLinkStAndLineByIdAsync(stationView.PositionSequence, stationView.LinkStationAndLineId);
+                if (existingStationViewAtPosition != null)
+                {
+                    throw new Exception("Já existe uma estação cadastrada nesta posição.");
+                }
             }
             else
             {
-                // update
-                var linkDetails = await linkStationAndLineRepository.GetByLinkId(stationModelUp.LinkStationAndLineId);
-                var currentMonitorEsd = await monitorEsdRepository.GetByMonitorId(stationModelUp.MonitorEsdId);
-
-                stationModelUp.MonitorEsd = currentMonitorEsd;
-                stationModelUp.LinkStationAndLine = linkDetails;
-                stationModelUp.LinkStationAndLine.Station = await stationRepository.GetByStationId(stationModelUp.LinkStationAndLine.StationID);
-
-                var maxQuantity = linkDetails?.Station?.SizeY * linkDetails?.Station?.SizeX ?? 0;
-
-                if (stationView.PositionSequence < 0 || stationView.PositionSequence >= maxQuantity)
-                    throw new Exception("A sequência informada não é valida.");
-                //check get details about new monitor e new station
-                var newMonitorEsd = await monitorEsdRepository.GetByMonitorId(stationView.MonitorEsdId);
-                var newLinkStationAndLine = await linkStationAndLineRepository.GetByLinkId(stationView.LinkStationAndLineId);
-
-                if (newMonitorEsd == null)
-                    throw new Exception($"Id {stationView.MonitorEsdId} de Monitor ESD é invalido");
-                if (newLinkStationAndLine == null)
-                    throw new Exception($"Id {stationView.LinkStationAndLineId} de sessão de linha é invalido");
-
-                newLinkStationAndLine.Line = await lineRepository.GetLineID(newLinkStationAndLine.LineID);
-                newLinkStationAndLine.Station = await stationRepository.GetByStationId(newLinkStationAndLine.StationID);
-
-                var lastLinkOfStation = stationViews.Where(link => link.LinkStationAndLineId == newLinkStationAndLine.ID).FirstOrDefault();
-
-                MonitorEsdModel? currentMonitorOfNewLinkStationAndLine = null;
-                var currentLinkStationAndLineOfNewMonitorEsd = stationViews.Where(link => link.MonitorEsdId == newMonitorEsd.ID).FirstOrDefault();
-
-                if (lastLinkOfStation != null)
-                    currentMonitorOfNewLinkStationAndLine = await monitorEsdRepository.GetByMonitorId(lastLinkOfStation.MonitorEsdId);
-
-                // check if monitor have link with another station
-                MonitorEsdModel? auxMonitorEsd = stationModelUp.MonitorEsd;
-                int auxPositionSequence = stationModelUp.PositionSequence;
-
-                if (stationView.LinkStationAndLineId != stationModelUp.LinkStationAndLineId)
-                    throw new Exception($"Não é possivel alterar id de vinculo de estações. Estação de id {stationView.LinkStationAndLineId} e  Monitor esd de id {stationView.MonitorEsdId}, " +
-                        $"está sendo relacionado com a Estação de id {stationModelUp.LinkStationAndLineId} e Monitor esd de id {stationModelUp.MonitorEsdId}");
-
-                //monitor esd haven't station
-                if (currentLinkStationAndLineOfNewMonitorEsd == null)
-                {
-                    stationModelUp.MonitorEsdId = newMonitorEsd.ID;
-                    stationModelUp.MonitorEsd = newMonitorEsd;
-                    stationModelUp.PositionSequence = stationView.PositionSequence;
-                }
-                else if (!stationModelUp.LinkStationAndLineId.Equals(currentLinkStationAndLineOfNewMonitorEsd.LinkStationAndLineId))
-                {
-                    stationModelUp.MonitorEsdId = newMonitorEsd.ID;
-                    stationModelUp.MonitorEsd = newMonitorEsd;
-                    stationModelUp.PositionSequence = stationView.PositionSequence;
-
-                    currentLinkStationAndLineOfNewMonitorEsd.MonitorEsd = auxMonitorEsd;
-                    currentLinkStationAndLineOfNewMonitorEsd.MonitorEsdId = auxMonitorEsd.ID;
-                    currentLinkStationAndLineOfNewMonitorEsd.PositionSequence = auxPositionSequence;
-                    currentLinkStationAndLineOfNewMonitorEsd.LastUpdated = DateTime.Now;
-
-                    await oraConnector.SaveData<StationViewModel>(SQLScripts.UpdateStationView, currentLinkStationAndLineOfNewMonitorEsd);
-                    if (oraConnector.Error != null)
-                        throw new Exception($"Error:{oraConnector.Error}");
-
-                }
-
-                await oraConnector.SaveData<StationViewModel>(SQLScripts.UpdateStationView, stationModelUp);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
+                // Se a posição não foi especificada, adiciona na próxima posição disponível
+                stationView.PositionSequence = counterLinks; // ou outra lógica para determinar a posição
             }
-            return stationView;
         }
-        public async Task<StationViewModel> Delete(int id)
+        private async Task<StationViewModel?> UpdateStationViewAsync(StationViewModel existingStationView, StationViewModel updatedStationView)
         {
-            StationViewModel? stationViewDel = await GetByStationViewId(id);
-            if (stationViewDel == null)
+            //armazena data atual 
+            var lastUpdated = updatedStationView.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+
+            var linkDetails = await _linkStationAndLineRepository.GetByLinkIdAsync(existingStationView.LinkStationAndLineId);
+            var currentMonitorEsd = await _monitorEsdRepository.GetMonitorByIdAsync(existingStationView.MonitorEsdId);
+
+            existingStationView.MonitorEsd = currentMonitorEsd;
+            existingStationView.LinkStationAndLine = linkDetails;
+            existingStationView.LinkStationAndLine.Station = await _stationRepository.GetByIdAsync(existingStationView.LinkStationAndLine.StationID);
+
+            var maxQuantity = linkDetails?.Station?.SizeY * linkDetails?.Station?.SizeX ?? 0;
+
+            if (updatedStationView.PositionSequence < 0 || updatedStationView.PositionSequence >= maxQuantity)
+                throw new Exception("A sequência informada não é válida.");
+
+            // Chama o método para verificar a disponibilidade da posição
+            await CheckPositionAvailabilityAsync(updatedStationView, maxQuantity); // Aqui, maxQuantity é a quantidade máxima de posições disponíveis
+
+            var newMonitorEsd = await _monitorEsdRepository.GetMonitorByIdAsync(updatedStationView.MonitorEsdId);
+            var newLinkStationAndLine = await _linkStationAndLineRepository.GetByLinkIdAsync(updatedStationView.LinkStationAndLineId);
+
+            ValidateUpdateParameters(newMonitorEsd, newLinkStationAndLine);
+
+            newLinkStationAndLine.Line = await _lineRepository.GetByIdAsync(newLinkStationAndLine.LineID);
+            newLinkStationAndLine.Station = await _stationRepository.GetByIdAsync(newLinkStationAndLine.StationID);
+
+            updatedStationView.LastUpdated = lastUpdated;
+            await HandleMonitorEsdUpdate(existingStationView, updatedStationView, newMonitorEsd, newLinkStationAndLine);
+            await _oraConnector.SaveData(SQLScripts.UpdateStationView, existingStationView);
+            CheckForError();
+            return existingStationView;
+        }
+
+        private void ValidateUpdateParameters(MonitorEsdModel? newMonitorEsd, LinkStationAndLineModel? newLinkStationAndLine)
+        {
+            if (newMonitorEsd == null)
+                throw new Exception($"Id {newMonitorEsd.ID} de Monitor ESD é inválido");
+            if (newLinkStationAndLine == null)
+                throw new Exception($"Id {newLinkStationAndLine.ID} de sessão de linha é inválido");
+        }
+
+        private async Task HandleMonitorEsdUpdate(StationViewModel existingStationView, StationViewModel updatedStationView, MonitorEsdModel newMonitorEsd, LinkStationAndLineModel newLinkStationAndLine)
+        {
+            var allStationViews = await GetAllStationViewsAsync();
+
+            // Verifique se o monitor ESD não está vinculado a outra estação
+            var currentLinkStationAndLineOfNewMonitorEsd = allStationViews
+                .FirstOrDefault(link => link.MonitorEsdId == newMonitorEsd.ID);
+
+            if (currentLinkStationAndLineOfNewMonitorEsd == null)
             {
-                throw new Exception($" StationView com ID:{id} não foi encontrado no banco de dados.");
+                existingStationView.MonitorEsdId = newMonitorEsd.ID;
+                existingStationView.MonitorEsd = newMonitorEsd;
+                existingStationView.PositionSequence = updatedStationView.PositionSequence;
             }
-            await oraConnector.SaveData<dynamic>(SQLScripts.DeleteStationView, new { id });
+            else if (!existingStationView.LinkStationAndLineId.Equals(currentLinkStationAndLineOfNewMonitorEsd.LinkStationAndLineId))
+            {
+                throw new Exception($"Não é possível alterar id de vínculo de estações. Estação de id {updatedStationView.LinkStationAndLineId} e Monitor ESD de id {updatedStationView.MonitorEsdId} " +
+                    $"está sendo relacionado com a Estação de id {existingStationView.LinkStationAndLineId} e Monitor ESD de id {existingStationView.MonitorEsdId}");
+            }
+        }
+
+        public async Task<StationViewModel> DeleteAsync(int id)
+        {
+            StationViewModel? stationViewDel = await GetStationViewByIdAsync(id);
+            if (stationViewDel == null)
+                throw new Exception($"StationView com ID:{id} não foi encontrado no banco de dados.");
+        
+            await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteStationView, new { id });
             return stationViewDel;
+        }
+        public async Task <StationViewModel?>DeleteMonitorEsdByStationView(int id)
+        {
+            StationViewModel? stwMonitor = await GetStationViewByMonitorIdAsync(id);
+            await _oraConnector.SaveData<dynamic>(SQLScripts.Delele_MonitorByStationView, new { id });
+            return stwMonitor;
+        }
+        private void CheckForError()
+        {
+            if (_oraConnector.Error != null)
+                throw new Exception($"Error : {_oraConnector.Error}");
+        }
+
+        public async Task<StationViewModel?> GetStationViewByMonitorIdAsync(int id)
+        {
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetMonitorByIdInST, new { id });
+            return result.FirstOrDefault();
         }
     }
 }

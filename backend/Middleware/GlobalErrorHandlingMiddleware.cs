@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 
 namespace BiometricFaceApi.Middleware
@@ -13,15 +11,17 @@ namespace BiometricFaceApi.Middleware
         {
             _next = next;
         }
+
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
+                // Passa a requisição para o próximo middleware
                 await _next(context);
             }
             catch (Exception exception)
             {
-
+                // Trata exceções inesperadas
                 await HandleExceptionAsync(context, exception);
             }
         }
@@ -29,32 +29,37 @@ namespace BiometricFaceApi.Middleware
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             HttpStatusCode status;
-            string stackTrace = String.Empty;
             string mensagem;
+            string stackTrace = string.Empty;
 
-            var exceptionType = exception.GetType();
-
-            if (exceptionType == typeof(Exception))
+            // Verifica o tipo de exceção e define o status HTTP apropriado
+            if (exception is UnauthorizedAccessException)
             {
-                mensagem = exception.Message;
-                status = HttpStatusCode.BadRequest;
-                stackTrace = (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIROMMENT") == "Development" ||
-                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIROMMENT") == "Production") ? exception.StackTrace : exception.Message;
+                status = HttpStatusCode.Unauthorized;
+                mensagem = "Acesso não autorizado.";
             }
-
+            else if (exception is ArgumentException)
+            {
+                status = HttpStatusCode.BadRequest;
+                mensagem = "Erro nos argumentos fornecidos.";
+            }
+            else if (exception is KeyNotFoundException)
+            {
+                status = HttpStatusCode.NotFound;
+                mensagem = exception.Message;
+            }
             else
             {
-                mensagem = exception.Message;
                 status = HttpStatusCode.InternalServerError;
-                stackTrace = exception.StackTrace;
+                mensagem = "Erro interno do servidor.";
             }
 
-            var result = JsonSerializer.Serialize(new { status, mensagem, stackTrace });
-
+            // Serializa apenas o código de status e a mensagem de erro
+            var result = JsonSerializer.Serialize(new { status = (int)status, mensagem });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)status;
+
             return context.Response.WriteAsync(result);
         }
-
     }
 }

@@ -1,42 +1,71 @@
 ﻿using BiometricFaceApi.Models;
-using BiometricFaceApi.Repositories;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.VisualBasic;
 
 namespace BiometricFaceApi.Services
 {
     public class ImageService
     {
-        private IImageRepository _images;
+        private IImageRepository _imageRepository;
 
-        public ImageService(IImageRepository images)
+        public ImageService(IImageRepository imageRepository)
         {
-            _images = images;
+            _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
         }
 
-        public async Task<List<ImageModel>> GetAllImages()
+        // Retorna todas as imagens
+        public async Task<List<ImageModel?>> GetAllImagesAsync()
         {
-            return await _images.AllImage();
+            var result = await _imageRepository.GetAllImagesAsync();
+            return result;
         }
-        public async Task<ImageModel> GetImageById(int idImage)
+
+        public async Task<List<ImageModel?>> GetListImagesAsync(int page, int pageSize)
         {
-            return await _images.ImageForId(idImage);
+            var result = await _imageRepository.GetListImagesAsync(page, pageSize);
+            return result;
         }
-        public async Task<ImageModel> GetImageByUserId(int userId)
+        // Retorna a imagem pelo ID
+        public async Task<ImageModel?> GetImageByIdAsync(int idImage)
         {
-            return await _images.ImageForUserId(userId);
+            var result = await _imageRepository.GetImageByIdAsync(idImage);
+            return result;
         }
-        public async Task<(bool, string)> AddImage(ImageModel PictureStream)
+
+        public async Task<ImageModel?> GetImageByStringAsync(string idImage)
         {
-            return await _images.AddImage(PictureStream);
+            var result = await _imageRepository.GetByImageAsync(idImage);
+            return result;
         }
-        public async Task<ImageModel?> Update(ImageModel imageEntity)
+
+        // Retorna a imagem pelo ID do usuário
+        public async Task<ImageModel?> GetImageByUserIdAsync(int userId)
         {
-            return await _images.Update(imageEntity);
+            var result = await _imageRepository.GetImageByUserIdAsync(userId);
+            return result;
         }
-        public async Task<bool> Delete(int id)
+
+        // Adiciona uma imagem
+        public async Task<ImageModel?> AddImageAsync(ImageModel pictureStream)
         {
-            return await _images.Delete(id);
+            // Tenta adicionar a imagem ao repositório
+            var result = await _imageRepository.AddImageAsync(pictureStream);
+            return result;
+        }
+
+        // Atualiza uma imagem existente
+        public async Task<ImageModel?> UpdateImageAsync(ImageModel imageEntity)
+        {
+            var result = await _imageRepository.UpdateImageAsync(imageEntity);
+            return result;
+        }
+
+        // Deleta uma imagem pelo ID
+        public async Task<bool> DeleteImageAsync(int image)
+        {
+            var result = await _imageRepository.DeleteImageAsync(image);
+            return result;
         }
     }
+
+   
 }

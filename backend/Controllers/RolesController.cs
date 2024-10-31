@@ -3,7 +3,6 @@ using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace BiometricFaceApi.Controllers
 {
@@ -11,90 +10,75 @@ namespace BiometricFaceApi.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        private RolesService _service;
-        public RolesController(IRolesRepository service)
+        private readonly RolesService _service;
+
+        public RolesController(IRolesRepository repository)
         {
-            _service = new RolesService(service);
+            _service = new RolesService(repository);
         }
+
         /// <summary>
-        /// Busca todos
+        /// Recupera todas as funções.
         /// </summary>
-        /// <response code="200">Retorna todos os roles.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpGet]
-        [Route("todosRoles")]
-        public async Task<ActionResult> BuscarTodos()
+        /// <response code="200">Retorna todas as funções.</response>
+        /// <response code="400">Nenhuma função encontrada.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
+        /// <response code="500">Erro interno do servidor!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllRoles()
         {
-            var (result, statusCode) = await _service.GetAllRoles();
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _service.GetAllRolesAsync();
             return StatusCode(statusCode, result);
         }
 
         /// <summary>
-        /// Buscar roles de produção por id
+        /// Recupera uma função pelo seu ID.
         /// </summary>
-        /// <param name="id"> Buscar roles por id</param>
-        /// <response code="200">Retorna dados de roles.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpGet]
-        [Route("buscaRoles/{id}")]
-        public async Task<ActionResult> GetStatusAsync(int id)
+        /// <param name="id">O ID da função a ser recuperada.</param>
+        /// <response code="200">Retorna dados da função.</response>
+        /// <response code="404">Função não encontrada.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
+        /// <response code="500">Erro interno do servidor!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetRoleById(int id)
         {
-            var (result, statusCode) = await _service.GetByRolesId(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _service.GetRoleByIdAsync(id);
             return StatusCode(statusCode, result);
         }
 
         /// <summary>
-        /// Cadastra e Atualiza roles.
+        /// Adiciona ou atualiza uma função.
         /// </summary>
-        /// <remarks>Altera roles .</remarks>
-        /// <param name="model">Dados de cadastro de roles</param>
-        /// <response code="200">Dados atualizado com sucesso.</response>
-        /// <response code="201">Dados cadastrados com sucesso.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
+        /// <param name="model">Dados da função para adição ou atualização.</param>
+        /// <response code="200">Função atualizada com sucesso.</response>
+        /// <response code="201">Função adicionada com sucesso.</response>
+        /// <response code="400">Dados inválidos fornecidos.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
+        /// <response code="500">Erro interno do servidor!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpPost]
-        [Route("adicionarRoles")]
-        public async Task<ActionResult> ManagerMonitor(RolesModel model)
+        public async Task<IActionResult> UpsertRole([FromBody] RolesModel model)
         {
-            var result = await _service.Include(model);
-
-            return StatusCode(result.Item2, result.Item1);
+            var (response, statusCode) = await _service.IncludeRoleAsync(model);
+            return StatusCode(statusCode, response);
         }
 
         /// <summary>
-        /// Deletar roles
+        /// Exclui uma função pelo seu ID.
         /// </summary>
-        /// <param name="id"> Deleta roles</param>
-        /// <returns></returns>
-        /// <response code="200">Remove dados do banco de dados.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpDelete]
-        [Route("deleteRoles/{id}")]
-        public async Task<ActionResult> Delete(int id)
+        /// <param name="id">O ID da função a ser excluída.</param>
+        /// <response code="200">Função excluída com sucesso.</response>
+        /// <response code="404">Função não encontrada.</response>
+        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
+        /// <response code="500">Erro interno do servidor!</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteRole(int id)
         {
-            var (result, statusCode) = await _service.Delete(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            if (!string.IsNullOrEmpty(jsonResponse))
-            {
-                return StatusCode(statusCode, result);
-            }
-            else
-            {
-                return StatusCode(statusCode);
-            }
+            var (result, statusCode) = await _service.DeleteRoleAsync(id);
+            return StatusCode(statusCode, result);
         }
     }
 }

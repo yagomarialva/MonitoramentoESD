@@ -7,157 +7,131 @@ namespace BiometricFaceApi.Services
 {
     public class AuthenticationService
     {
-        private IAuthenticationRepository auths;
-        private readonly SecurityService securityService;
-        private readonly IRolesRepository rolesRepository;
-        public AuthenticationService(IAuthenticationRepository auths, JwtAuthentication jwt, SecurityService securityService, IRolesRepository rolesRepository)
+        private IAuthenticationRepository _authRepository;
+        private readonly SecurityService _securityService;
+        private readonly IRolesRepository _rolesRepository;
+        
+
+
+        public AuthenticationService(
+            IAuthenticationRepository authRepository,
+            SecurityService securityService,
+            IRolesRepository rolesRepository,
+            JwtAuthentication twt)
         {
-            this.auths = auths;
-            this.securityService = securityService;
-            this.rolesRepository = rolesRepository;
+            _authRepository = authRepository;
+            _securityService = securityService;
+            _rolesRepository = rolesRepository;
+            
         }
 
-        // User authentication method
-        public async Task<AuthenticationModel?> AuthenticateUser(LoginModel login)
+        // Autenticar usuário
+        public async Task<AuthenticationModel?> AuthenticateUserAsync(LoginModel login)
         {
-            AuthenticationModel? user = null;
-            if (!string.IsNullOrEmpty(login?.Username?.Trim()) && !string.IsNullOrEmpty(login?.Password?.Trim()))
+            if (login == null || string.IsNullOrWhiteSpace(login.Username) || string.IsNullOrWhiteSpace(login.Password))
             {
-                user = await auths.AuthenticateUser(login.Username, securityService.EncryptAES(login.Password));
+                return null; // Retorna null se as credenciais estiverem vazias ou inválidas
             }
-            return user;
+
+            var encryptedPassword = _securityService.EncryptAES(login.Password);
+            return await _authRepository.AuthenticateUserAsync(login.Username.Trim(), encryptedPassword);
         }
 
-        // Utilizando a mesma rota é possível atualizar e inserir usuários autenticados
-        public async Task<(object?, int)> ManagerAuth(AuthenticationModel auth)
+        // Gerenciar autenticação: atualizar ou inserir usuário
+        public async Task<(object? Content, int StatusCode)> ManageAuthAsync(AuthenticationModel auth)
         {
-            object? content = null;
-            int statusCode = StatusCodes.Status200OK;
+            if (auth == null)
+            {
+                return ("Objeto de autenticação inválido!", StatusCodes.Status400BadRequest);
+            }
 
             try
             {
-                //get all valid roles
-                var roles = await rolesRepository.GetAllRoles();
-                if (roles != null && !roles.Where(r => r.RolesName?.ToLower() == auth.RolesName?.ToLower()).Any())
+                // Verificar se o perfil (role) é válido
+                var roles = await _rolesRepository.GetAllRolesAsync();
+                if (roles != null && roles.All(r => r.RolesName?.ToLower() != auth.RolesName?.ToLower()))
                 {
                     throw new Exception("Perfil selecionado é inválido!");
                 }
-                if (auth != null)
-                {
-                    auth.Password = securityService.EncryptAES(auth.Password);
-                    var repositoryAuths = await auths.AuthGetByBadge(auth.Badge);
-                    if (repositoryAuths != null && repositoryAuths.ID > 0)
-                    {
-                        //update
-                        repositoryAuths.ID = repositoryAuths.ID;
-                        await auths.AuthUpdate(auth, repositoryAuths.ID);
-                        var updateAuthentication = new AuthenticationModel
-                        {
-                            ID = repositoryAuths.ID,
-                            Badge = auth.Badge,
-                            Username = auth.Username,
-                            Password = auth.Password,
-                            RolesName = auth.RolesName?.ToLower()
-                        };
-                        content = updateAuthentication;
 
+                auth.Password = _securityService.EncryptAES(auth.Password);
+
+                // Verificar se o usuário já existe
+                var existingAuth = await _authRepository.GetByBadgeAsync(auth.Badge);
+                if (existingAuth != null && existingAuth.ID > 0)
+                {
+                    // Atualizar usuário existente
+                    await _authRepository.UpdateAsync(auth, existingAuth.ID);
+                    return (new { existingAuth.ID, auth.Badge, auth.Username, auth.RolesName }, StatusCodes.Status200OK);
+                }
+                else
+                {
+                    // Inserir novo usuário
+                    auth.RolesName = auth.RolesName?.ToLower();
+                    var addedAuth = await _authRepository.AddAsync(auth);
+                    if (addedAuth == null)
+                    {
+                        throw new Exception("Dados incorretos ou inválidos.");
                     }
-                    else
-                    {
-                        // include
-                        auth.RolesName = auth.RolesName?.ToLower();
-                        repositoryAuths = await auths.AuthInclude(auth);
-                        if (repositoryAuths == null)
-                        {
-                            throw new Exception("Dados incorretos ou inválidos.");
-                        }
-                        else
-                        {
-                            content = repositoryAuths;
-                            statusCode = StatusCodes.Status201Created;
-                        }
-                    }
-                }
-                else
-                {
-                    throw new Exception("Objeto de autenticação inválido!");
-                }
-            }
-            catch (Exception exception)
-            {
-                content = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
-            }
-            return (content, statusCode);
-        }
 
-        // Pesquise usuários autenticados por ID
-        public async Task<(object?, int)> GetAtuhById(int authId)
-        {
-            object? content;
-            int statusCode;
-            try
-            {
-                var repositoryAtuhs = await auths.AuthGetById(authId);
-                if (repositoryAtuhs != null && repositoryAtuhs.ID > 0)
-                {
-                    var result = await auths.AuthGetById(authId);
-                    content = new
-                    {
-                        ID = repositoryAtuhs.ID,
-                        Username = repositoryAtuhs.Username,
-                        Badge = repositoryAtuhs.Badge,
-                        Password = repositoryAtuhs.Password,
-                        RolesName = repositoryAtuhs.RolesName
-                    };
-                    statusCode = StatusCodes.Status200OK;
-                }
-                else
-                {
-                    content = "Dados incorretos ou inválidos";
-                    statusCode = StatusCodes.Status400BadRequest;
-                }
-            }
-            catch (Exception exception)
-            {
-                content = exception.Message;
-                statusCode = StatusCodes.Status500InternalServerError;
-            }
-            return (content, statusCode);
-        }
-
-        // Realizar exclusão por usuários autenticados por ID
-        public async Task<(object?, int)> DelByAtuh(int id)
-        {
-            object? content;
-            int statusCode;
-            try
-            {
-                var repositoryAtuhs = await auths.AuthGetById(id);
-                if (repositoryAtuhs != null && repositoryAtuhs.ID > 0)
-                {
-                    await auths.AuthDelete(repositoryAtuhs.ID);
-                    content = new
-                    {
-                        ID = repositoryAtuhs.ID,
-                        UserName = repositoryAtuhs.Username,
-                        Badge = repositoryAtuhs.Badge,
-                    };
-                    statusCode = StatusCodes.Status200OK;
-                }
-                else
-                {
-                    content = "Dados incorretos ou inválidos";
-                    statusCode = StatusCodes.Status400BadRequest;
+                    return (addedAuth, StatusCodes.Status201Created);
                 }
             }
             catch (Exception ex)
             {
-                content = ex.Message;
-                statusCode = StatusCodes.Status500InternalServerError;
+                return (ex.Message, StatusCodes.Status400BadRequest);
             }
-            return (content, statusCode);
         }
 
+        // Buscar usuário autenticado por ID
+        public async Task<(object? Content, int StatusCode)> GetAuthByIdAsync(int authId)
+        {
+            try
+            {
+                var auth = await _authRepository.GetByIdAsync(authId);
+                if (auth == null || auth.ID <= 0)
+                {
+                    return ("Usuário não encontrado.", StatusCodes.Status404NotFound);
+                }
+
+                return (new
+                {
+                    auth.ID,
+                    auth.Username,
+                    auth.Badge,
+                    auth.RolesName
+                }, StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                return (ex.Message, StatusCodes.Status400BadRequest);
+            }
+        }
+
+        // Excluir usuário autenticado por ID
+        public async Task<(object? Content, int StatusCode)> DeleteAuthAsync(int id)
+        {
+            try
+            {
+                var auth = await _authRepository.GetByIdAsync(id);
+                if (auth == null || auth.ID <= 0)
+                {
+                    return ("Usuário não encontrado.", StatusCodes.Status404NotFound);
+                }
+
+                await _authRepository.DeleteAsync(auth.ID);
+
+                return (new
+                {
+                    auth.ID,
+                    auth.Username,
+                    auth.Badge
+                }, StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                return (ex.Message, StatusCodes.Status400BadRequest);
+            }
+        }
     }
 }

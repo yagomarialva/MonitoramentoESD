@@ -1,10 +1,7 @@
 ﻿using BiometricFaceApi.Repositories.Interfaces;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
 namespace BiometricFaceApi.Repositories
 {
     public class OracleDataAccessRepository : IOracleDataAccessRepository
@@ -26,7 +23,8 @@ namespace BiometricFaceApi.Repositories
                 {
                     error = null;
                     var RetreivedList = await connection.QueryAsync<T>(SqlCommand, parameters, null, commandTimeout: timeout ?? 5000, null);
-                    return RetreivedList.AsList();
+                    
+                    return  RetreivedList.AsList();
                 }
                 catch (Exception ex)
                 {
@@ -43,6 +41,7 @@ namespace BiometricFaceApi.Repositories
                 using (IDbConnection connection = new OracleConnection(connectionString ?? this.ConnectionString))
                 {
                     await connection.ExecuteAsync(SqlCommand, parameters);
+                    
                 }
             }
             catch (Exception ex)
@@ -51,13 +50,14 @@ namespace BiometricFaceApi.Repositories
             }
 
         }
-        public  async Task SaveDataAdmin<T1, T2>(string insertAdminUserQuery, T2 value, string? ConnectionString = null)
+        public async Task SaveDataAdmin<T1, T2>(string insertAdminUserQuery, T2 value, string? ConnectionString = null)
         {
             try
             {
                 error = null;
                 using (IDbConnection connection = new OracleConnection(this.ConnectionString))
                 {
+                    connection.Open(); //sincrono
                     await connection.ExecuteAsync(insertAdminUserQuery, value);
                 }
             }

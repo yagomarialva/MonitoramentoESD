@@ -1,31 +1,38 @@
+using BiometricFaceApi.Auth;
 using BiometricFaceApi.Data;
-using Microsoft.EntityFrameworkCore;
+using BiometricFaceApi.Hubs;
+using BiometricFaceApi.Middleware;
 using BiometricFaceApi.Repositories;
 using BiometricFaceApi.Repositories.Interfaces;
-using BiometricFaceApi.Auth;
-using System.Configuration;
+using BiometricFaceApi.Security;
+using BiometricFaceApi.Services;
+using BiometricFaceApi.SqlInterceptor;
+using BiometricFaceApi.SwaggerSettings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using BiometricFaceApi.Security;
-using Microsoft.AspNetCore.Identity;
-using BiometricFaceApi.Middleware;
-using BiometricFaceApi.SwaggerSettings;
+using System.Text;
+
+
+
+
 namespace BiometricFaceApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
             var secretKey = configuration["jwt:secretKey"] ?? "";
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-            // Configura  o do AutoMapper
+            // Configura��o do AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
+
             // Add services to the container.
             builder.Services.AddControllers();
 
@@ -35,11 +42,13 @@ namespace BiometricFaceApi
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.AllowAnyOrigin()  // Permite qualquer origem
+                                      policy.WithOrigins("*")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
+                                            //.AllowCredentials();
                                   });
             });
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -56,6 +65,7 @@ namespace BiometricFaceApi
                         Encoding.UTF8.GetBytes(secretKey))
                 };
                 });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -68,7 +78,8 @@ namespace BiometricFaceApi
 
                 //remove virtual properties
                 c.SchemaFilter<SwaggerSchemaFilter>();
-                // Jwt Autorization settings 
+
+                // Jwt Authorization settings 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description =
@@ -99,7 +110,7 @@ namespace BiometricFaceApi
                     }
                 });
 
-                // Documetation variable
+                // Documentation variable
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
@@ -113,8 +124,9 @@ namespace BiometricFaceApi
             if (connectionString is not null)
             {
                 // Repositores
+                builder.Services.AddDbContext<BiometricFaceDBContex>(opt => opt.UseOracle(connectionString, oraOptions => oraOptions.UseOracleSQLCompatibility("11")).
+                AddInterceptors(new QueryCommandInterceptor()));
                 builder.Services.AddSingleton<IOracleDataAccessRepository, OracleDataAccessRepository>(ora => new OracleDataAccessRepository(connectionString));
-
                 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
                 builder.Services.AddScoped<IImageRepository, ImageRepository>();
                 builder.Services.AddScoped<IRecordStatusRepository, RecordStatusRepository>();
@@ -127,8 +139,29 @@ namespace BiometricFaceApi
                 builder.Services.AddScoped<ILineRepository, LineRepository>();
                 builder.Services.AddScoped<ILinkStationAndLineRepository, LinkStationAndLineRepository>();
                 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+                builder.Services.AddScoped<ILogMonitorEsdRepository, LogMonitorEsdRepository>();
                 builder.Services.AddSingleton<JwtAuthentication>();
+                builder.Services.AddScoped<UserService>();
+                builder.Services.AddScoped<ImageService>();
+                builder.Services.AddScoped<BiometricService>();
+                builder.Services.AddScoped<RecordStatusService>();
+                builder.Services.AddScoped<AuthenticationService>();
+                builder.Services.AddScoped<JigService>();
+                builder.Services.AddScoped<LineService>();
+                builder.Services.AddScoped<LinkStationAndLineService>();
+                builder.Services.AddScoped<StationService>();
+                builder.Services.AddScoped<IDbInitializerRepository>(provider =>
+                {
+                    var oracleRepo = provider.GetRequiredService<IOracleDataAccessRepository>();
+                    var securityService = provider.GetRequiredService<SecurityService>();
+                    var dbContex = provider.GetService<BiometricFaceDBContex>();
+
+                    return new DbInitializerRepository(oracleRepo, securityService, dbContex, builder.Configuration);
+                });
+                builder.Services.AddSignalR();
+
             }
+
             builder.Services.AddScoped<SecurityService>(ss => new SecurityService(securityKeyA, securityKeyB));
             var app = builder.Build();
 
@@ -145,11 +178,25 @@ namespace BiometricFaceApi
 
             app.UseMiddleware(typeof(GlobalErrorHandlingMiddleware));
             app.UseHttpsRedirection();
-            app.UseCors("AllowAllOrigins");
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-            app.Run();
+
+            // Mapeie o hub
+            app.MapHub<CommunicationHub>("/loghub");
+
+            // Cria��o do usu�rio administrador padr�o
+            using (var scope = app.Services.CreateScope()) // Cria um escopo
+            {
+                var scopedServices = scope.ServiceProvider;
+                var dbInitializer = scopedServices.GetRequiredService<IDbInitializerRepository>();
+                await dbInitializer.InitializeAsync();
+
+
+            }
+
+            await app.RunAsync();
         }
     }
 }

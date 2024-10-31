@@ -1,141 +1,99 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
-
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BiometricFaceApi.Services
 {
     public class StationViewService
     {
+        private readonly IStationViewRepository _stationViewRepository;
+        private readonly IMonitorEsdRepository _monitorEsdRepository;
+        private readonly ILinkStationAndLineRepository _linkRepository;
+        private readonly ILineRepository _lineRepository;
+        private readonly IStationRepository _stationRepository;
+        private readonly LinkStationAndLineService _linkStationAndLineService;
+        private readonly ILogMonitorEsdRepository _logMonitorEsdRepository;
 
-
-        protected readonly IStationViewRepository _stationViewRepository;
-        protected readonly IMonitorEsdRepository _monitorEsdRepository;
-        protected readonly ILinkStationAndLineRepository _linkRepository;
-        protected readonly ILineRepository _lineRepository;
-        protected readonly IStationRepository _stationRepository;
-        protected readonly LinkStationAndLineService _linkStationAndLineService;
         public StationViewService(IStationViewRepository stationViewRepository,
                                   IMonitorEsdRepository monitorEsdRepository,
                                   ILinkStationAndLineRepository linkStationAndLineRepository,
                                   ILineRepository lineRepository,
-                                  IStationRepository stationRepository)
+                                  IStationRepository stationRepository,
+                                  ILogMonitorEsdRepository logMonitorEsdRepository)
         {
-
             _stationViewRepository = stationViewRepository;
             _monitorEsdRepository = monitorEsdRepository;
             _linkRepository = linkStationAndLineRepository;
             _lineRepository = lineRepository;
             _stationRepository = stationRepository;
             _linkStationAndLineService = new LinkStationAndLineService(linkStationAndLineRepository, stationRepository, lineRepository);
+            _logMonitorEsdRepository = logMonitorEsdRepository;
         }
+
         public async Task<(object? Result, int StatusCode)> GetAllStationView()
         {
             try
             {
-                var monitorEds = await _monitorEsdRepository.GetAllMonitor();
-                var (data, status) = await _linkStationAndLineService.GetAllLinkStationAndLine();
-                var LinkStaionAndLines = data != null ? (List<LinkStationAndLineModel>)data : new List<LinkStationAndLineModel>();
-                var stationView = await _stationViewRepository.GetAllStationView();
-                if (!stationView.Any())
-                {
-                    return ("Nenhuma Linha de Produção foi encontrada.", StatusCodes.Status404NotFound);
-                }
-                stationView.ForEach(station =>
-                {
-                    station.LinkStationAndLine = LinkStaionAndLines.Find(link => link.ID == station.LinkStationAndLineId);
-                    station.MonitorEsd = monitorEds.Find(monitor => monitor.ID == station.MonitorEsdId);
-                });
-                return (stationView, StatusCodes.Status200OK);
+                var stationViews = await LoadFactoryViewDataAsync();
+                return stationViews.Any()
+                    ? (stationViews, StatusCodes.Status200OK)
+                    : ("Nenhuma Linha de Produção foi encontrada.", StatusCodes.Status404NotFound);
             }
             catch (Exception ex)
             {
-                // Log the exception if necessary
-                return (ex.Message ?? "Erro ao processar a solicitação.", StatusCodes.Status500InternalServerError);
+                return HandleException(ex);
             }
         }
-        public async Task<(object? Result, int StatusCode)> GetStationViewId(int id)
+
+        public async Task<(object? Result, int StatusCode)> GetStationViewById(int id)
         {
             try
             {
-                var monitor = await _stationViewRepository.GetByStationViewId(id);
-                if (monitor == null)
-                {
-                    return ("Linha de Produção não encontrada.", StatusCodes.Status404NotFound);
-                }
-                return (monitor, StatusCodes.Status200OK);
+                var stationView = await _stationViewRepository.GetStationViewByIdAsync(id);
+                return stationView != null
+                    ? (stationView, StatusCodes.Status200OK)
+                    : ("Linha de Produção não encontrada.", StatusCodes.Status404NotFound);
             }
             catch (Exception ex)
             {
-                // Log the exception if necessary
-                return (ex.Message ?? "Erro ao processar a solicitação.", StatusCodes.Status500InternalServerError);
+                return HandleException(ex);
             }
         }
+
         public async Task<(object? Result, int StatusCode)> Include(StationViewModel stationViewModel)
         {
+            var allStation = await LoadAllStationViewsAsync();
+            var isExistCombination = allStation.Find(
+                station => station.LinkStationAndLineId ==
+                stationViewModel.LinkStationAndLineId && station.MonitorEsdId ==
+                stationViewModel.MonitorEsdId) != null;
+
+
             if (stationViewModel.MonitorEsdId <= 0 || stationViewModel.LinkStationAndLineId <= 0)
             {
-                return ("Todos os campos são obrigatórios.", StatusCodes.Status400BadRequest);
+                return ("Todos os campos são obrigatórios.", StatusCodes.Status409Conflict);
+            }
+            if (await IsExistCombination(stationViewModel))
+            {
+                return ("O monitor ESD já está vinculado a uma estação.", StatusCodes.Status409Conflict);
             }
 
             try
             {
-                //stationViewModel.Created = DateTime.UtcNow;
-                //stationViewModel.LastUpdated = DateTime.UtcNow;
-
-                var result = await _stationViewRepository.Include(stationViewModel);
+                var result = await _stationViewRepository.AddOrUpdateAsync(stationViewModel);
                 return (result, StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
-                // Log the exception if necessary
-                return (ex.Message ?? "Não foi possível salvar as alterações. Verifique se todos os itens estão cadastrados.",
-                        StatusCodes.Status400BadRequest);
+                return HandleIncludeException(ex);
             }
         }
-        public async Task<(object?, int)> FactoryView()
-        {
-            object? result;
-            int statusCode;
-            try
-            {
-                List<LineView> lineViews = new List<LineView>();
-                List<StationViewModel> stationViewersAll = await _stationViewRepository.GetAllStationView();
-                List<LinkStationAndLineModel> linksAll = await _linkRepository.GetAllLinks();
-                List<LineModel> linesAll = await _lineRepository.GetAllLine();
-                List<StationModel> stationAll = await _stationRepository.GetAllStation();
-                List<MonitorEsdModel> monitoreAll = await _monitorEsdRepository.GetAllMonitor();
-                lineViews.AddRange(linksAll.Select(link => new LineView()
-                {
-                    Line = new LineModel { ID = link.LineID },
-                    Stations = linksAll.Where(x => x.LineID == link.LineID).OrderBy(k => k.OrdersList).Select(stationView => new StationView
-                    {
-                        Station = stationAll.Find(z => z.ID == stationView.StationID),
-                        MonitorsEsd = stationViewersAll.Where(x => x.LinkStationAndLineId == link.ID).OrderBy(x => x.PositionSequence).Select(x => new MonitorEsdView
-                        {
-                            MonitorsEsd = monitoreAll.Find(y => y.ID == x.MonitorEsdId)
 
-                        }).ToList(),
-
-                    }).ToList(),
-                }).OrderBy(j => j.Line.ID));
-
-                result = lineViews.ToArray();
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
-            }
-            catch (Exception exception)
-            {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
-                return (result, statusCode);
-            }
-
-        }
         public async Task<(object? Content, int StatusCode)> Delete(int id)
         {
             try
             {
-                var stationView = await _stationViewRepository.GetByStationViewId(id);
+                var stationView = await _stationViewRepository.GetStationViewByIdAsync(id);
                 if (stationView == null)
                 {
                     return ("Dados incorretos ou inválidos", StatusCodes.Status404NotFound);
@@ -148,17 +106,131 @@ namespace BiometricFaceApi.Services
                     stationView.LinkStationAndLineId
                 };
 
-                await _stationViewRepository.Delete(stationView.ID);
+                await _stationViewRepository.DeleteAsync(stationView.ID);
                 return (content, StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
-
-                return (ex.Message, StatusCodes.Status400BadRequest);
+                return HandleException(ex);
             }
         }
 
+        public async Task<(object? Content, int StatusCode)> FactoryView()
+        {
+            try
+            {
+                var lineViews = await LoadFactoryViewDataAsync();
+                if (lineViews == null || !lineViews.Any())
+                {
+                    return ("Nenhum Post cadastrado.", StatusCodes.Status404NotFound);
+                }
+                return (lineViews, StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
 
+        private async Task<List<StationViewModel>> LoadAllStationViewsAsync()
+        {
+            var monitorEds = await _monitorEsdRepository.GetAllMonitorsAsync();
+            var (linkData, _) = await _linkStationAndLineService.GetAllLinkStationAndLineAsync();
+            var linkStationAndLines = linkData as List<LinkStationAndLineModel> ?? new List<LinkStationAndLineModel>();
+            var stationView = await _stationViewRepository.GetAllStationViewsAsync();
 
+            stationView.ForEach(station =>
+            {
+                station.LinkStationAndLine = linkStationAndLines.Find(link => link.ID == station.LinkStationAndLineId);
+                station.MonitorEsd = monitorEds.Find(monitor => monitor.ID == station.MonitorEsdId);
+            });
+
+            return stationView;
+        }
+
+        private async Task<List<LineView>> LoadFactoryViewDataAsync()
+        {
+            // Carregar todos os dados de uma vez
+            var stationViewsAll = await _stationViewRepository.GetAllStationViewsAsync();
+            var linksAll = await _linkRepository.GetAllLinksAsync();
+            var linesAll = await _lineRepository.GetAllAsync();
+            var stationsAll = await _stationRepository.GetAllAsync();
+            var monitorsAll = await _monitorEsdRepository.GetAllMonitorsAsync();
+            var logMonitorAll = await _logMonitorEsdRepository.GetAllAsync();
+
+            // Converter listas para dicionários
+            var linesById = linesAll.ToDictionary(line => line.ID);
+            var stationsById = stationsAll.ToDictionary(station => station.ID);
+            var monitorsById = monitorsAll.ToDictionary(monitor => monitor.ID);
+
+            // Agrupar logs por tipo de mensagem para otimizar filtragem
+            var latestLogsByMonitor = logMonitorAll
+                .Where(log => log.MessageType.Contains("operador") || log.MessageType.Contains("jig"))
+                .GroupBy(log => new { log.MonitorEsdId, log.MessageType })
+                .Select(group => group.OrderByDescending(log => log.Created).FirstOrDefault())
+                .ToList();
+
+            var logOperatorByMonitor = latestLogsByMonitor
+                .Where(log => log.MessageType.Contains("operador"))
+                .ToDictionary(log => log.MonitorEsdId);
+
+            var logJigByMonitor = latestLogsByMonitor
+                .Where(log => log.MessageType.Contains("jig"))
+                .ToDictionary(log => log.MonitorEsdId);
+
+            // Construir a lista de LineView
+            var lineViews = linksAll
+                .GroupBy(link => link.LineID)
+                .Select(group =>
+                {
+                    var lineId = group.Key;
+
+                    // Criar LineView com suas estações e monitores
+                    return new LineView
+                    {
+                        Line = linesById[lineId],
+                        Stations = group
+                            .OrderBy(link => link.OrdersList)
+                            .Select(link => new StationView
+                            {
+                                LinkStationAndLineID = link.ID,
+                                Station = stationsById[link.StationID],
+                                StationViewID = stationViewsAll.FirstOrDefault(sv => sv.LinkStationAndLineId == link.ID)?.ID ?? 0,
+                                MonitorsEsd = stationViewsAll
+                                    .Where(stationView => stationView.LinkStationAndLineId == link.ID)
+                                    .OrderBy(stationView => stationView.PositionSequence)
+                                    .Select(stationView => new MonitorEsdView
+                                    {
+                                        MonitorsEsd = monitorsById[stationView.MonitorEsdId],
+                                        PositionSequence = stationView.PositionSequence,
+                                        LogOperator = logOperatorByMonitor.GetValueOrDefault(stationView.MonitorEsdId),
+                                        LogJig = logJigByMonitor.GetValueOrDefault(stationView.MonitorEsdId)
+                                    })
+                                    .ToList()
+                            })
+                            .ToList()
+                    };
+                })
+                .OrderBy(lineView => lineView.Line.ID)
+                .ToList();
+
+            return lineViews;
+        }
+        private async Task<bool> IsExistCombination(StationViewModel stationViewModel)
+        {
+            var allStations = await LoadAllStationViewsAsync();
+            return allStations.Any(st =>
+                st.LinkStationAndLineId == stationViewModel.LinkStationAndLineId &&
+                st.MonitorEsdId == stationViewModel.MonitorEsdId);
+        }
+        private (object? Content, int StatusCode) HandleException(Exception ex)
+        {
+            // Log the exception if necessary
+            return (ex.Message ?? "Erro ao processar a solicitação.", StatusCodes.Status400BadRequest);
+        }
+        private (object? Content, int StatusCode) HandleIncludeException(Exception ex)
+        {
+            return (ex.Message ?? "Não foi possível salvar as alterações. Verifique se todos os itens estão cadastrados.", StatusCodes.Status400BadRequest);
+        }
     }
 }

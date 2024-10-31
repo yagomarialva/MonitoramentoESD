@@ -4,15 +4,16 @@ using System.Runtime.Serialization;
 
 namespace BiometricFaceApi.Models
 {
-
+    [Table("PRODUCEACTIVITY")]
     public class ProduceActivityModel
     {
-
+        [Column("ID")]
         public int ID { get; set; }
 
        
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [RegularExpression("^(?!\\s*$)[a-zA-Z0-9]+$", ErrorMessage = "O UserId deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
+        [Column("USERID")]
         public int UserId { get; set; }
         [IgnoreDataMember]
         public virtual UserModel? User { get; set; }
@@ -20,30 +21,40 @@ namespace BiometricFaceApi.Models
       
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [RegularExpression("^(?!\\s*$)[a-zA-Z0-9]+$", ErrorMessage = "O JigId deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
+        [Column("JIGID")]
         public int JigId { get; set; }
         [IgnoreDataMember]
         public virtual JigModel? Jig { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [RegularExpression("^(?!\\s*$)[a-zA-Z0-9]+$", ErrorMessage = "O MonitorEsdId deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
+        [Column("MONITORESDID")]
         public int MonitorEsdId { get; set; }
         [IgnoreDataMember]
         public virtual MonitorEsdModel? MonitorEsd { get; set; }
 
         
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [RegularExpression("^(?!\\s*$)[a-zA-Z0-9]+$", ErrorMessage = "O StationId deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
-        public int LinkStationAnLineID { get; set; }
+        [RegularExpression("^(?!\\s*$)[a-zA-Z0-9]+$", ErrorMessage = "O LinkStationLineId deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
+        [Column("LINKSTATIONANDLINEID")]
+        public int LinkStationAndLineID { get; set; }
         [IgnoreDataMember]
         public virtual LinkStationAndLineModel? LinkStationAndLine { get; set; }
 
-        public bool IsLocked { get; set; }
+        [Column("ISLOCKED")]
+        public int IsLocked { get; set; }
 
 
         [StringLength(250, ErrorMessage = "O Description deve ter no máximo 250 caracteres")]
         [RegularExpression("^(?!\\s*$)[a-zA-Z0-9_\\-\\sáéíóúãõâêîôûçÁÉÍÓÚÃÕÂÊÎÔÛÇ]+$", ErrorMessage = "O Name deve conter apenas letras, números, underscores (_), hífens (-), espaços e caracteres especiais do português (acentos e cedilha), e não pode ser vazio ou conter apenas espaços em branco")]
+        [Column("DESCRIPTION")]
         public string? Description { get; set; }
-        public DateTime? DataTimeMonitorEsdEvent { get; set; }
+
+        [Column("CREATED")]
+        public DateTime? Created { get; set; }
+        [Column("LASTUPDATED")]
+        public DateTime? LastUpdated { get; set; }
+
 
 
     }

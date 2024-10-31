@@ -1,108 +1,98 @@
 ﻿using BiometricFaceApi.Models;
-using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace BiometricFaceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class JigController : Controller
+    public class JigController : ControllerBase
     {
         private readonly JigService _service;
-        public JigController(IJigRepository stationRepository)
+
+        public JigController(JigService service)
         {
-            _service = new JigService(stationRepository);
+            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-
         /// <summary>
-        /// Buscar todos 
+        /// Recupera todos os Jigs.
         /// </summary>
-        /// <param > Buscar todos jigs</param>
-        /// <response code="200">Retorna todos.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,tecnico,developer")]
-        [HttpGet]
-        [Route("todosJigs")]
-        public async Task<ActionResult> BuscarTodosJigs()
+        /// <returns>Uma lista de Jigs.</returns>
+        /// <response code="200">Retorna a lista de Jigs.</response>
+        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet("todosJigs")]
+        public async Task<ActionResult> GetAllJigs()
         {
-            var (result, statusCode) = await _service.GetAllJigs();
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _service.GetAllJigsAsync();
             return StatusCode(statusCode, result);
         }
 
         /// <summary>
-        /// Buscar jig por id
+        /// Recupera um Jig pelo seu ID.
         /// </summary>
-        /// <param name="id"> Buscar jig por id</param>
-        /// <response code="200">Retorna dados de jig.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,tecnico,developer")]
-        [HttpGet]
-        [Route("buscarJig/{id}")]
-        public async Task<ActionResult> BuscarJigId(int id)
+        /// <param name="id">O ID do Jig.</param>
+        /// <returns>O Jig solicitado.</returns>
+        /// <response code="200">Retorna o Jig.</response>
+        /// <response code="404">Se o Jig não for encontrado.</response>
+        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet("buscarJig/{id}")]
+        public async Task<ActionResult> GetJigById(int id)
         {
-            var (result, statusCode) = await _service.GetJigId(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _service.GetJigByIdAsync(id);
             return StatusCode(statusCode, result);
         }
 
         /// <summary>
-        /// Cadastra e Atualiza status.
+        /// Recupera um Jig pelo seu Serial Number.
         /// </summary>
-        /// <remarks>Cadastra jig na base de dados; Para atualizar dados basta usar o id do jig.</remarks>
-        /// <param name="model">Dados de cadastro do operador</param>
-        /// <response code="200">Dados atualizado com sucesso.</response>
-        /// <response code="201">Dados cadastrados com sucesso.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,tecnico,developer")]
-        [HttpPost]
-        [Route("gerenciarJigs")]
-        public async Task<ActionResult> Include(JigModel model)
+        /// <param name="serialNumber">O Serial Number do Jig.</param>
+        /// <returns>O Jig solicitado.</returns>
+        /// <response code="200">Retorna o Jig.</response>
+        /// <response code="404">Se o Jig não for encontrado.</response>
+        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet("buscarJigBySn/{serialNumber}")]
+        public async Task<ActionResult> GetJigBySn(string serialNumber)
         {
-            var (result,statusCode) = await _service.Include(model);
-
+            var (result, statusCode) = await _service.GetJigBySnAsync(serialNumber);
             return StatusCode(statusCode, result);
-
         }
 
+        /// <summary>
+        /// Adiciona ou atualiza um Jig.
+        /// </summary>
+        /// <param name="model">O modelo Jig a ser adicionado ou atualizado.</param>
+        /// <returns>O Jig criado ou atualizado.</returns>
+        /// <response code="201">Retorna o Jig criado.</response>
+        /// <response code="400">Se o modelo fornecido for nulo.</response>
+        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpPost("gerenciarJigs")]
+        public async Task<ActionResult> Include([FromBody] JigModel model)
+        {
+            var (result, statusCode) = await _service.AddOrUpdateJigAsync(model);
+            return StatusCode(statusCode, result);
+        }
 
         /// <summary>
-        /// Deleta jig
+        /// Exclui um Jig pelo seu ID.
         /// </summary>
-        /// <param name="id"> Deleta jig</param>
-        /// <returns></returns>
-        /// <response code="200">Remove dados do banco de dados.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,tecnico,developer")]
-        [HttpDelete]
-        [Route("deleteJigs/{id}")]
+        /// <param name="id">O ID do Jig a ser excluído.</param>
+        /// <returns>Uma confirmação de exclusão.</returns>
+        /// <response code="200">Se o Jig foi excluído com sucesso.</response>
+        /// <response code="404">Se o Jig não for encontrado.</response>
+        /// 
+        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpDelete("deleteJigs/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var (result, statusCode) = await _service.Delete(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            if (!string.IsNullOrEmpty(jsonResponse))
-            {
-                return StatusCode(statusCode, result);
-            }
-            else
-            {
-                return StatusCode(statusCode);
-            }
+            var (result, statusCode) = await _service.DeleteJigAsync(id);
+            return StatusCode(statusCode, result);
         }
     }
 }

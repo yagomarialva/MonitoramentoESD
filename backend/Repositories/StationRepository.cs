@@ -1,66 +1,82 @@
-﻿using BiometricFaceApi.Data;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-
+using BiometricFaceApi.Services;
 
 namespace BiometricFaceApi.Repositories
 {
     public class StationRepository : IStationRepository
     {
-        private readonly IOracleDataAccessRepository oraConnector;
+        private readonly IOracleDataAccessRepository _oraConnector;
+
         public StationRepository(IOracleDataAccessRepository oraConnector)
         {
-            this.oraConnector = oraConnector;
+            _oraConnector = oraConnector;
         }
-        public async Task<List<StationModel>> GetAllStation()
-        {
-            var result = await oraConnector.LoadData<StationModel, dynamic>(SQLScripts.GetAllLStation, new { });
-            return result;
-        }
-        public async Task<StationModel> GetByStationId(int id)
-        {
-            var result = await oraConnector.LoadData<StationModel, dynamic>(SQLScripts.GetStationId, new { id });
-            return result.FirstOrDefault();
-        }
-        public async Task<StationModel> GetByStationName(string name)
-        {
-            var result = await oraConnector.LoadData<StationModel, dynamic>(SQLScripts.GetStationName, new { name });
-            return result.FirstOrDefault();
-        }
-        // Task realiza o include e update, include caso nao haja no banco, update caso ja 
-        // tenha alguma propriedade cadastrada.
-        public async Task<StationModel?> Include(StationModel stationModel)
-        {
-            if (stationModel.ID > 0)
-            {
-                // update 
-                await oraConnector.SaveData(SQLScripts.UpdateStation, stationModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                stationModel = await GetByStationId(stationModel.ID);
-            }
-            else
-            {
-                //insert 
-                await oraConnector.SaveData<StationModel>(SQLScripts.InsertStation, stationModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                stationModel = await GetByStationName(stationModel.Name);
-            }
 
-            return stationModel;
-        }
-        public async Task<StationModel> Delete(int id)
+        public async Task<List<StationModel>> GetAllAsync()
         {
-            StationModel? stationDel = await GetByStationId(id);
-            if (stationDel == null)
+            var result = await _oraConnector.LoadData<StationModel, dynamic>(SQLScripts.GetAllLStation, new { });
+            return result ?? new List<StationModel>();
+        }
+
+        public async Task<StationModel> GetByIdAsync(int id)
+        {
+            var result = await _oraConnector.LoadData<StationModel, dynamic>(SQLScripts.GetStationId, new { id });
+            return result?.FirstOrDefault() ??
+                throw new KeyNotFoundException($"Estação com ID {id} não encontrado.");
+        }
+
+        public async Task<StationModel> GetByNameAsync(string name)
+        {
+            //Tranforma name para letras minusculas, verifica se existe caracters especiais e tira os espçao no final da palavra.
+            var nameLower = name.Normalize().ToLower().TrimEnd();
+
+            var result = await _oraConnector.LoadData<StationModel, dynamic>(SQLScripts.GetStationName, new { nameLower });
+            return result?.FirstOrDefault() ?? 
+                throw new KeyNotFoundException($"Estação com  Name {name} não encontrado.");
+        }
+
+        public async Task<StationModel?> AddOrUpdateAsync(StationModel stationModel)
+        {
+            try
             {
-                throw new Exception($" Estação com ID:{id} não foi encontrado no banco de dados.");
+                //Formata o Name para letras minúsculas
+                stationModel.Name = stationModel.Name.ToLowerInvariant();
+
+                if (stationModel.ID > 0)
+                {
+                    stationModel.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+                    // Update
+                    await _oraConnector.SaveData(SQLScripts.UpdateStation, stationModel);
+                    
+                }
+                else
+                {
+                    stationModel.Created = DateTimeHelperService.GetManausCurrentDateTime();
+                    // Insert
+                    await _oraConnector.SaveData(SQLScripts.InsertStation, stationModel);
+                   
+                }
+
+                if (_oraConnector.Error != null)
+                    throw new Exception($"Erro ao salvar linha: {_oraConnector.Error}");
+
+                return stationModel;
             }
-            await oraConnector.SaveData<dynamic>(SQLScripts.DeleteStation, new { id });
-            return stationDel;
+            catch (Exception )
+            {
+
+                throw new Exception($"Falha ao adicionar ou atualizar POST, nome ja cadastrado. ");
+            }
+            
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var station = await GetByIdAsync(id);
+            await _oraConnector.SaveData(SQLScripts.DeleteStation, new { id });
+            return station != null;
         }
     }
 }

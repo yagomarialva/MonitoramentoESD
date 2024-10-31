@@ -1,23 +1,20 @@
 ﻿using BiometricFaceApi.Models;
-using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace BiometricFaceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StationController : Controller
+    public class StationController : ControllerBase
     {
         private readonly StationService _service;
-       
-        
-        public StationController(IStationRepository stationRepository)
+
+        // Injetando o StationService diretamente
+        public StationController(StationService service)
         {
-            _service = new StationService(stationRepository);
+            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         /// <summary>
@@ -28,16 +25,13 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
         [Route("todosEstacoes")]
-        public async Task<ActionResult> BuscarTodos()
+        public async Task<IActionResult> GetAllStations()
         {
-            var (result, statusCode) = await _service.GetAllStation();
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _service.GetAllStationsAsync();
             return StatusCode(statusCode, result);
-
         }
 
         /// <summary>
@@ -48,14 +42,12 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
         [Route("BuscarEstacao/{id}")]
-        public async Task<ActionResult> BuscarEstacaoId(int id)
+        public async Task<IActionResult> GetStationById(int id)
         {
-            var (result, statusCode) = await _service.GetStationId(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _service.GetStationByIdAsync(id);
             return StatusCode(statusCode, result);
         }
 
@@ -67,14 +59,12 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
         [Route("BuscarNomeEstacao/{name}")]
-        public async Task<ActionResult> BuscarNomeEstacao(string name)
+        public async Task<IActionResult> GetStationByName(string name)
         {
-            var (result, statusCode) = await _service.GetStationName(name);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _service.GetStationByNameAsync(name);
             return StatusCode(statusCode, result);
         }
         /// <summary>
@@ -87,14 +77,13 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpPost]
         [Route("adicionarEstacao")]
-        public async Task<ActionResult> ManagerEstacao(StationModel model)
+        public async Task<IActionResult> AddOrUpdateStation([FromBody] StationModel model)
         {
-            var result = await _service.Include(model);
-
-            return StatusCode(result.Item2, result.Item1);
+            var (result, statusCode) = await _service.AddOrUpdateStationAsync(model);
+            return StatusCode(statusCode, result);
         }
 
         /// <summary>
@@ -105,22 +94,13 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpDelete]
         [Route("deleteEstação")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteStation(int id)
         {
-            var (result, statusCode) = await _service.Delete(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            if (!string.IsNullOrEmpty(jsonResponse))
-            {
-                return StatusCode(statusCode, result);
-            }
-            else
-            {
-                return StatusCode(statusCode);
-            }
+            var (result, statusCode) = await _service.DeleteStationAsync(id);
+            return StatusCode(statusCode, result);
         }
     }
 }

@@ -1,94 +1,122 @@
-﻿using BiometricFaceApi.Data;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-
+using BiometricFaceApi.Services;
 
 namespace BiometricFaceApi.Repositories
 {
     public class ProduceActivityRepository : IProduceActivityRepository
     {
-        private readonly IOracleDataAccessRepository oraConnector;
+        private readonly IOracleDataAccessRepository _oraConnector;
+
         public ProduceActivityRepository(IOracleDataAccessRepository oraConnector)
         {
-            this.oraConnector = oraConnector;
+            _oraConnector = oraConnector;
         }
-        public async Task<List<ProduceActivityModel>> GetAllProduceActivity()
+
+        public async Task<List<ProduceActivityModel>> GetAllAsync()
         {
-            var result = await oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetAllProcuceAct, new { });
-            return result;
+            return await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetAllProcuceAct, new { });
         }
-        public async Task<ProduceActivityModel?> GetByProduceActivityId(int id)
+
+        public async Task<ProduceActivityModel?> GetByIdAsync(int id)
         {
-            var result = await oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetProduceActById, new { id });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetProduceActById, new { id });
             return result.FirstOrDefault();
         }
-        public async Task<ProduceActivityModel?> GetByProduceMonitorId(int monitorProduce)
+
+        public async Task<ProduceActivityModel?> GetByMonitorIdAsync(int monitorProduce)
         {
-            var result = await oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetMonitorActById, new { monitorProduce });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetMonitorActById, new { monitorProduce });
             return result.FirstOrDefault();
         }
-        public async Task<ProduceActivityModel?> GetByProduceJigId(int jigProduce)
+
+        public async Task<ProduceActivityModel?> GetByJigIdAsync(int jigProduce)
         {
-            var result = await oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetJigActById, new { jigProduce });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetJigActById, new { jigProduce });
             return result.FirstOrDefault();
         }
-        public async Task<ProduceActivityModel?> GetByProduceUserId(int usersProduce)
+
+        public async Task<ProduceActivityModel?> GetByUserIdAsync(int userId)
         {
-            var result = await oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetUserActById, new { usersProduce });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetUserActById, new { userId });
             return result.FirstOrDefault();
         }
-        public async Task<ProduceActivityModel?> GetByLinkAndStationId(int LinkStationAndLineId )
+
+        public async Task<ProduceActivityModel?> GetByLinkStationAndLineIdAsync(int linkStationAndLineId)
         {
-            var result = await oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetLinkStationAndLineById, new { LinkStationAndLineId });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetLinkStationAndLineById, new { linkStationAndLineId });
             return result.FirstOrDefault();
         }
-        public async Task<ProduceActivityModel?> Islocked(int id, bool locked)
+        public async Task<ProduceActivityModel?> IsLockedAsync(int id, int locked)
         {
-            var result = await oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetIsLockedId, new { id });
-            if (result != null && result.Any())
+            var result = await GetByIdAsync(id);
+
+            // Converte boolean value para 0 ou 1 
+            int lockdValue = (locked == 1) ? 1 : 0;  // locked = 1 -> true, locked != 1 -> false
+
+            if (result != null)
             {
-                result.FirstOrDefault().IsLocked = locked;
-                oraConnector.SaveData(SQLScripts.UpdateProduceAct, result);
+                result.IsLocked = lockdValue; // Atualiza o status de IsLocked (booleano)
+                result.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+
+                await _oraConnector.SaveData<ProduceActivityModel>(SQLScripts.UpdateProduceAct, result);
+                
             }
             else
-                throw new Exception("Id inválido.");
-            return result.FirstOrDefault();
+                throw new Exception($"Erro ao atualizar atividade de produção: {_oraConnector.Error}");
+            return result;
         }
 
         // Task realiza o include e update
         // include de novos dados
         // update e feito atraves do ProduceActivityID, senso assim possibilitando a alteração de dados.
-        public async Task<ProduceActivityModel?> Include(ProduceActivityModel produceModel)
+        public async Task<ProduceActivityModel?> AddOrUpdateAsync(ProduceActivityModel produceActivity)
         {
-            ProduceActivityModel? produceUp;
-            if (produceModel.ID > 0)
+            if (produceActivity.ID > 0)
             {
-                // update
-                await oraConnector.SaveData(SQLScripts.UpdateProduceAct, produceModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                produceUp = produceModel;
+                // Atualização
+                produceActivity.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+                await _oraConnector.SaveData<ProduceActivityModel>(SQLScripts.UpdateProduceAct, produceActivity);
+
+                if (_oraConnector.Error != null)
+                {
+                    throw new Exception($"Erro ao atualizar atividade de produção: {_oraConnector.Error}");
+                }
             }
-            else 
+            else
             {
-                //include 
-                await oraConnector.SaveData<ProduceActivityModel>(SQLScripts.InsertProduceAct, produceModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                produceUp = await GetByProduceUserId( produceModel.ID );
+                // Inclusão
+                produceActivity.Created = DateTimeHelperService.GetManausCurrentDateTime();
+                produceActivity.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+                await _oraConnector.SaveData<ProduceActivityModel>(SQLScripts.InsertProduceAct, produceActivity);
+
+                if (_oraConnector.Error != null)
+                {
+                    throw new Exception($"Erro ao incluir atividade de produção: {_oraConnector.Error}");
+                }
             }
-            return produceUp;
-   
-        }
-        public async Task<ProduceActivityModel?> Delete(int id)
-        {
-            ProduceActivityModel? produceDel = await GetByProduceActivityId(id);
-            await oraConnector.SaveData<dynamic>(SQLScripts.DeleteProduceAct, new { id });
-            return produceDel;
+
+            return produceActivity;
         }
 
+        public async Task<ProduceActivityModel?> DeleteAsync(int id)
+        {
+            var produceActivity = await GetByIdAsync(id);
+
+            if (produceActivity == null)
+            {
+                throw new ArgumentException("ID de atividade de produção inválido.");
+            }
+
+            await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteProduceAct, new { id });
+
+            if (_oraConnector.Error != null)
+            {
+                throw new Exception($"Erro ao deletar atividade de produção: {_oraConnector.Error}");
+            }
+
+            return produceActivity;
+        }
     }
 }

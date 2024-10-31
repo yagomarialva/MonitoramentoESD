@@ -5,236 +5,139 @@ namespace BiometricFaceApi.Services
 {
     public class LinkStationAndLineService
     {
-        private ILinkStationAndLineRepository _repository;
-        private IStationRepository _stationRepository;
-        private ILineRepository _lineRepository;
-        public LinkStationAndLineService(ILinkStationAndLineRepository linkStationAndLineRepository, IStationRepository stationRepository, ILineRepository lineRepository)
+        private readonly ILinkStationAndLineRepository _repository;
+        private readonly IStationRepository _stationRepository;
+        private readonly ILineRepository _lineRepository;
+
+        public LinkStationAndLineService(ILinkStationAndLineRepository repository, IStationRepository stationRepository, ILineRepository lineRepository)
         {
-            _repository = linkStationAndLineRepository;
+            _repository = repository;
             _stationRepository = stationRepository;
             _lineRepository = lineRepository;
         }
-        public async Task<(object?, int)> GetAllLinkStationAndLine()
+
+        public async Task<(object?, int)> GetAllLinkStationAndLineAsync()
         {
-            object? result;
-            int statusCode;
             try
             {
-                var position = await _repository.GetAllLinks();
-                var linesAll = await _lineRepository.GetAllLine();
-                var stationAll = await _stationRepository.GetAllStation();
-                if (position == null || !position.Any())
-                {
-                    result = "Nenhuma Link cadastrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                }
-                else
-                {
-                    var stations = position.Select(x => x.StationID).Distinct().ToList();
-                    var lines = position.Select(x => x.LineID).Distinct().ToList();
-                    foreach (var station in stations)
-                    {
-                        var stationData = stationAll.Where(x => x.ID == station).FirstOrDefault();
-                        foreach (var item in position.Where(x => x.StationID == station))
-                        {
-                            item.Station = stationData;
-                        }
-                    }
-                    foreach (var line in lines)
-                    {
-                        var lineData = linesAll.Where(x => x.ID == line).FirstOrDefault();
-                        foreach (var item in position.Where(x => x.LineID == line))
-                        {
-                            item.Line = lineData;
-                        }
-                    }
-                }
-
-                result = position;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
-
-            }
-            catch (Exception exception)
-            {
-
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
-            }
-            return (result, statusCode);
-
-        }
-        public async Task<(object?, int)> GetLinkStationAndLineId(int id)
-        {
-            object? result;
-            int statusCode;
-            try
-            {
-                var linkId = await _repository.GetByLinkId(id);
-                if (linkId == null)
-                {
-
-                    result = $"{id} não encontrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                    return (result, statusCode);
-                }
-                result = linkId;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
-            }
-            catch (Exception exception)
-            {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
-            }
-            return (result, statusCode);
-        }
-        public async Task<(object?, int)> GetLineId(int id)
-        {
-            object? result;
-            int statusCode;
-            try
-            {
-                var links = await _repository.GetByLineId(id);
+                var links = await _repository.GetAllLinksAsync();
                 if (links == null || !links.Any())
-                {
+                    return ("Nenhum Link cadastrado.", StatusCodes.Status404NotFound);
 
-                    result = $"ID {id} não encontrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                    return (result, statusCode);
-                }
-                else
-                {
-                    var lineDetails = await _lineRepository.GetLineID(links.FirstOrDefault().LineID);
-                    foreach (var link in links)
-                    {
-                        link.Line = lineDetails;
-                        link.Station = await _stationRepository.GetByStationId(link.StationID);
-                    }
-
-                }
-                result = links;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
+                await PopulateLinkDetailsAsync(links);
+                return (links, StatusCodes.Status200OK);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return (ex.Message, StatusCodes.Status400BadRequest);
             }
-            return (result, statusCode);
         }
-        public async Task<(object?, int)> GetStationId(int id)
+
+        public async Task<(object?, int)> GetLinkStationAndLineIdAsync(int id)
         {
-            object? result;
-            int statusCode;
             try
             {
-                var links = await _repository.GetByStationId(id);
+                var link = await _repository.GetByLinkIdAsync(id);
+                return link == null
+                    ? ($"{id} não encontrado.", StatusCodes.Status404NotFound)
+                    : (link, StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                return (ex.Message, StatusCodes.Status400BadRequest);
+            }
+        }
+
+        public async Task<(object?, int)> GetLineIdAsync(int id)
+        {
+            try
+            {
+                var links = await _repository.GetByLineIdAsync(id);
                 if (links == null || !links.Any())
-                {
+                    return ($"ID {id} não encontrado.", StatusCodes.Status404NotFound);
 
-                    result = $"{id} não encontrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                }
-                else
-                {
-                    var stationDetails = await _stationRepository.GetByStationId(links.FirstOrDefault().StationID);
-                    foreach (var link in links)
-                    {
-                        link.Station = stationDetails;
-                        link.Line = await _lineRepository.GetLineID(link.LineID);
-                    }
-
-                }
-                result = links;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
+                await PopulateLinkDetailsAsync(links);
+                return (links, StatusCodes.Status200OK);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return (ex.Message, StatusCodes.Status400BadRequest);
             }
-            return (result, statusCode);
         }
-        public async Task<(object?, int)> Include(LinkStationAndLineModel model)
+
+        public async Task<(object?, int)> GetStationIdAsync(int id)
         {
-            var statusCode = StatusCodes.Status200OK;
-            object? response;
             try
             {
-                var linkStationLine = await _repository.GetAllLinks();
-                var linesAll = await _lineRepository.GetAllLine();
-                var stationAll = await _stationRepository.GetAllStation();
-                var currentStation = stationAll.Find(station => station.ID == model.StationID);
-                var currentLine = linesAll.Find(line => line.ID == model.LineID);
-                if (currentLine is null || currentStation  is null)
-                    throw new Exception("Referência Id de linha ou estação nao é válido.");
-                else
-                {
-                    var existingCobination = await _repository.GetByLineIdAndStationId(model.LineID, model.StationID);
-                    if (existingCobination is not null)
-                        throw new Exception("Esta combinação já consta na base.");
+                var links = await _repository.GetByStationIdAsync(id);
+                if (links == null || !links.Any())
+                    return ($"{id} não encontrado.", StatusCodes.Status404NotFound);
 
-                    var oldOrdersList = linkStationLine.Find(x => x.OrdersList == model.OrdersList);
-                    var oldReferenceThisModel = linkStationLine.Find(x => x.ID == model.ID);
-
-                    if (oldOrdersList is not null && oldReferenceThisModel is not null && oldOrdersList.ID != oldReferenceThisModel.ID)
-                    {
-                        oldOrdersList.OrdersList = oldReferenceThisModel.OrdersList;
-                        await _repository.Include(oldOrdersList);
-                    }
-
-
-                    model.Station = stationAll.Find(station => station.ID == model.StationID);
-                    model.Line = linesAll.Find(line => line.ID == model.LineID);
-
-                    response = await _repository.Include(model);
-
-                    statusCode = StatusCodes.Status201Created;
-                }
+                await PopulateLinkDetailsAsync(links);
+                return (links, StatusCodes.Status200OK);
             }
-            catch (Exception excepition)
+            catch (Exception ex)
             {
-                response = excepition.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return (ex.Message, StatusCodes.Status400BadRequest);
             }
-
-            return (response, statusCode);
-
         }
-        public async Task<(object?, int)> Delete(int id)
+
+        public async Task<(object?, int)> IncludeAsync(LinkStationAndLineModel model)
         {
-            object? content;
-            int statusCode;
             try
             {
-                var respositoryLink = await _repository.GetByLinkId(id);
-                if (respositoryLink.ID > 0)
-                {
-                    content = new
-                    {
-                        ID = respositoryLink.ID,
-                        LineID = respositoryLink.LineID,
-                        StationID = respositoryLink.StationID,
+                await ValidateModelAsync(model);
 
-                    };
-                    await _repository.Delete(respositoryLink.ID);
-                    statusCode = StatusCodes.Status200OK;
-                }
-                else
+                var existingCombination = await _repository.GetByLineIdAndStationIdAsync(model.LineID, model.StationID);
+                if (existingCombination != null)
+                    throw new Exception("Esta combinação já consta na base.");
+
+                var response = await _repository.IncludeAsync(model);
+                return (response, StatusCodes.Status201Created);
+            }
+            catch (Exception ex)
+            {
+                return (ex.Message, StatusCodes.Status400BadRequest);
+            }
+        }
+
+        public async Task<(object?, int)> DeleteAsync(int id)
+        {
+            try
+            {
+                var link = await _repository.GetByLinkIdAsync(id);
+                if (link?.ID > 0)
                 {
-                    throw new Exception("Dados incorretos ou inválidos.");
+                    await _repository.DeleteAsync(link.ID);
+                    return (new { link.ID, link.LineID, link.StationID }, StatusCodes.Status200OK);
                 }
+
+                throw new Exception("Dados incorretos ou inválidos.");
             }
             catch (Exception)
             {
-
-                content = $"{id} não encontrado.";
-                statusCode = StatusCodes.Status400BadRequest;
+                return ($"{id} não encontrado.", StatusCodes.Status400BadRequest);
             }
-            return (content, statusCode);
+        }
+
+        private async Task ValidateModelAsync(LinkStationAndLineModel model)
+        {
+            var currentStation = await _stationRepository.GetByIdAsync(model.StationID);
+            var currentLine = await _lineRepository.GetByIdAsync(model.LineID);
+            if (currentLine == null || currentStation == null)
+                throw new Exception("Referência Id de linha ou estação não é válida.");
+        }
+
+        private async Task PopulateLinkDetailsAsync(List<LinkStationAndLineModel> links)
+        {
+            var stations = await _stationRepository.GetAllAsync();
+            var lines = await _lineRepository.GetAllAsync();
+
+            foreach (var link in links)
+            {
+                link.Station = stations.FirstOrDefault(s => s.ID == link.StationID);
+                link.Line = lines.FirstOrDefault(l => l.ID == link.LineID);
+            }
         }
     }
 }

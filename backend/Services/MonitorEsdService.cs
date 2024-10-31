@@ -1,136 +1,206 @@
-﻿using AutoMapper.Internal.Mappers;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices.ObjectiveC;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace BiometricFaceApi.Services
 {
     public class MonitorEsdService
     {
-        private IMonitorEsdRepository _repository;
+        private readonly IMonitorEsdRepository _repository;
+        private readonly IStationViewRepository _stationViewRepository;
 
-        public MonitorEsdService(IMonitorEsdRepository repository)
+        public MonitorEsdService(IMonitorEsdRepository repository, IStationViewRepository stationViewRepository)
         {
             _repository = repository;
+            _stationViewRepository = stationViewRepository;
         }
+
         public async Task<(object?, int)> GetAllMonitorEsds()
         {
-            object? result;
-            int statusCode;
             try
             {
-                List<MonitorEsdModel> monitor = await _repository.GetAllMonitor();
-                if (!monitor.Any())
+                var monitors = await _repository.GetAllMonitorsAsync();
+                if (!monitors.Any())
                 {
-                    result = "Nenhum monitor cadastrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                    return (result, statusCode);
+                    return ("Nenhum monitor cadastrado.", StatusCodes.Status404NotFound);
                 }
-                else
-                {
 
-                    result = monitor;
-                    statusCode = StatusCodes.Status200OK;
-                }
-                return (result, statusCode);
-
+                return (monitors, StatusCodes.Status200OK);
             }
             catch (Exception exception)
             {
-
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return (exception.Message, StatusCodes.Status400BadRequest);
             }
-            return (result, statusCode);
-
         }
         public async Task<(object?, int)> GetMonitorId(int id)
         {
-            object? result;
-            int statusCode;
             try
             {
-                var monitor = await _repository.GetByMonitorId(id);
+                var monitor = await _repository.GetMonitorByIdAsync(id);
                 if (monitor == null)
                 {
-
-                    result = "Monitor Id não encontrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                    return (result, statusCode);
+                    return ("Monitor Id não encontrado.", StatusCodes.Status404NotFound);
                 }
-                result = monitor;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
+
+                return (monitor, StatusCodes.Status200OK);
             }
             catch (Exception exception)
             {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return (exception.Message, StatusCodes.Status400BadRequest);
             }
-            return (result, statusCode);
         }
-
-        public async Task<(object?, int)> Include(MonitorEsdModel monitorModel)
+        public async Task<(object?, int)> GetMonitorBySerial(string serial)
         {
-            var statusCode = StatusCodes.Status200OK;
-            object? response;
             try
             {
-                MonitorEsdModel? monitorUp = await _repository.GetByMonitorId(monitorModel.ID);
-                monitorModel.ID = monitorUp?.ID ?? 0;
-                response = await _repository.Include(monitorModel);
-                if (monitorModel.ID > 0)
-                    statusCode = StatusCodes.Status200OK;
-                else
-                    statusCode = StatusCodes.Status201Created;
+                var monitor = await _repository.GetMonitorBySerialAsync(serial);
+                if (monitor == null)
+                {
+                    return ("Monitor com Serial Number não encontrado.", StatusCodes.Status404NotFound);
+                }
+
+                return (monitor, StatusCodes.Status200OK);
+            }
+            catch (Exception exception)
+            {
+                return (exception.Message, StatusCodes.Status400BadRequest);
+            }
+        }
+        //public async Task<(object?, int)> GetMonitorByIp(string ip)
+        //{
+        //    try
+        //    {
+        //        var monitor = await _repository.GetMonitorByIPAsync(ip);
+        //        if (monitor == null)
+        //        {
+        //            return ($"Monitor com IP: {ip} não encontrado.", StatusCodes.Status404NotFound);
+        //        }
+
+        //        return (monitor, StatusCodes.Status200OK);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        return (exception.Message, StatusCodes.Status400BadRequest);
+        //    }
+        //}
+        public async Task<(object?, int)> GetLogs(string logs)
+        {
+            try
+            {
+                var monitor = await _repository.GetLogsAsync(logs);
+                if (monitor == null)
+                {
+                    return ("Nenhum monitor encontrado com os logs fornecidos.", StatusCodes.Status404NotFound);
+                }
+
+                return (monitor, StatusCodes.Status200OK);
+            }
+            catch (Exception exception)
+            {
+                return (exception.Message, StatusCodes.Status400BadRequest);
+            }
+        }
+        public async Task<(object?, int)> GetByStatus(string status)
+        {
+            if (string.IsNullOrWhiteSpace(status))
+                return ("Status não pode ser nulo ou vazio.", StatusCodes.Status400BadRequest);
+
+            try
+            {
+                var monitor = await _repository.GetByStatusAsync(status);
+                if (monitor == null)
+                {
+                    return ("Nenhum monitor encontrado com o status fornecido.", StatusCodes.Status404NotFound);
+                }
+
+                return (monitor, StatusCodes.Status200OK);
+            }
+            catch (Exception exception)
+            {
+                return (exception.Message, StatusCodes.Status400BadRequest);
+            }
+        }
+        public async Task<(object?, int)> GetByOperatorStatus(string statusOperador)
+        {
+            if (string.IsNullOrWhiteSpace(statusOperador))
+                return ("Status do operador não pode ser nulo ou vazio.", StatusCodes.Status400BadRequest);
+
+            try
+            {
+                var monitor = await _repository.GetByOperatorStatusAsync(statusOperador);
+                if (monitor == null)
+                {
+                    return ("Nenhum monitor encontrado com o status do operador fornecido.", StatusCodes.Status404NotFound);
+                }
+
+                return (monitor, StatusCodes.Status200OK);
+            }
+            catch (Exception exception)
+            {
+                return (exception.Message, StatusCodes.Status400BadRequest);
+            }
+        }
+        public async Task<(object?, int)> GetByJigStatus(string statusJig)
+        {
+            if (string.IsNullOrWhiteSpace(statusJig))
+                return ("Status do jig não pode ser nulo ou vazio.", StatusCodes.Status400BadRequest);
+
+            try
+            {
+                var monitor = await _repository.GetByJigStatusAsync(statusJig);
+                if (monitor == null)
+                {
+                    return ("Nenhum monitor encontrado com o status do jig fornecido.", StatusCodes.Status404NotFound);
+                }
+
+                return (monitor, StatusCodes.Status200OK);
+            }
+            catch (Exception exception)
+            {
+                return (exception.Message, StatusCodes.Status400BadRequest);
+            }
+        }
+        public async Task<(object?, int)> Include(MonitorEsdModel monitorModel)
+        {
+            try
+            {
+                MonitorEsdModel? existingMonitor = await _repository.GetMonitorByIdAsync(monitorModel.ID);
+                bool isNew = existingMonitor == null;
+
+                var response = await _repository.AddOrUpdateAsync(monitorModel);
+                int statusCode = isNew ? StatusCodes.Status201Created : StatusCodes.Status200OK;
+
+                return (response, statusCode);
             }
             catch (Exception)
             {
-                response = "Verificar  dados se estão corretos.";
-                statusCode = StatusCodes.Status400BadRequest;
+                return ("Verifique se os dados estão corretos.", StatusCodes.Status400BadRequest);
             }
-            return (response, statusCode);
-
         }
         public async Task<(object?, int)> Delete(int id)
         {
-            object? content;
-            int statusCode;
             try
             {
-                var respositoryMonitor = await _repository.GetByMonitorId(id);
-                if (respositoryMonitor.ID > 0)
+                var monitor = await _repository.GetMonitorByIdAsync(id);
+                if (monitor == null)
                 {
-                    content = new
-                    {
-                        id = respositoryMonitor.ID,
-                        serialNumber = respositoryMonitor.SerialNumber,
-                        status = respositoryMonitor.Status,
-                        statusOperador = respositoryMonitor.StatusOperador,
-                        statusJig = respositoryMonitor.StatusJig,
-                        description = respositoryMonitor.Description
-                    };
-                    await _repository.Delete(respositoryMonitor.ID);
-                    statusCode = StatusCodes.Status200OK;
+                    return ($"{id} não encontrado.", StatusCodes.Status404NotFound);
                 }
-                else
+                await _stationViewRepository.DeleteMonitorEsdByStationView(id);
+                await _repository.DeleteAsync(monitor.ID);
+
+                var content = new
                 {
-                    throw new Exception("Dados incorretos ou inválidos.");
-                }
+                    id = monitor.ID,
+                    serialNumber = monitor.SerialNumber,
+                    description = monitor.Description
+                };
+
+                return (content, StatusCodes.Status200OK);
             }
             catch (Exception)
             {
-
-                content = $"{id} não encontrado.";
-                statusCode = StatusCodes.Status400BadRequest;
+                return ($"{id} não encontrado.", StatusCodes.Status400BadRequest);
             }
-            return (content, statusCode);
         }
-
     }
 }

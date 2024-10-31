@@ -1,125 +1,99 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 
-using System;
-using System.Data;
-
 namespace BiometricFaceApi.Services
 {
     public class RecordStatusService
     {
-        private IRecordStatusRepository _repository;
+        private readonly IRecordStatusRepository _repository;
+
         public RecordStatusService(IRecordStatusRepository repository)
         {
-
-            _repository = repository;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<(object?, int)> GetAllStatus()
+        public async Task<(object?, int)> GetAllStatusAsync()
         {
-            object? result;
-            int statusCode;
             try
             {
-                List<RecordStatusProduceModel> status = await _repository.GetAllRecordStatusProduces();
-                if (!status.Any())
+                var statuses = await _repository.GetAllAsync();
+                if (statuses == null || !statuses.Any())
                 {
-                    result = "Nenhum status encontrado.";
-                    statusCode = StatusCodes.Status404NotFound;
+                    return ("Nenhum status encontrado.", StatusCodes.Status404NotFound);
                 }
-                else
-                {
-                    result = status;
-                    statusCode = StatusCodes.Status200OK;
-                }
-                return (result, statusCode);
+
+                return (statuses, StatusCodes.Status200OK);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                result = "Falha de requisição";
-                statusCode = StatusCodes.Status400BadRequest;
+                // Log the exception here (e.g., using a logging framework)
+                return ($"Falha de requisição: {ex.Message}", StatusCodes.Status400BadRequest);
             }
-            return (result, statusCode);
-
         }
-        public async Task<(object?, int)> GetByRecordStatusId(int id)
+
+        public async Task<(object?, int)> GetByRecordStatusIdAsync(int id)
         {
-            object? result;
-            int statusCode;
+            if (id <= 0)
+            {
+                return ("ID inválido.", StatusCodes.Status400BadRequest);
+            }
+
             try
             {
-                var statusId = await _repository.GetByRecordStatusId(id);
-                if (statusId == null)
+                var status = await _repository.GetByIdAsync(id);
+                if (status == null)
                 {
-
-                    result = "Dados incorretos ou inválidos";
-                    statusCode = StatusCodes.Status404NotFound;
+                    return ("Registro não encontrado.", StatusCodes.Status404NotFound);
                 }
-                result = statusId;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
-            }
-            catch (Exception exeption)
-            {
 
-                result = exeption.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return (status, StatusCodes.Status200OK);
             }
-            return (result, statusCode);
+            catch (Exception ex)
+            {
+                return ($"Erro ao buscar status pelo ID: {ex.Message}", StatusCodes.Status400BadRequest);
+            }
         }
-        public async Task<(object?, int)> Include(RecordStatusProduceModel model)
+
+        public async Task<(object?, int)> AddOrUpdateStatusAsync(RecordStatusProduceModel model)
         {
-            var statusCode = StatusCodes.Status200OK;
-            object? result;
+            if (model == null)
+            {
+                return ("Modelo inválido.", StatusCodes.Status400BadRequest);
+            }
+
             try
             {
-                result = await _repository.Include(model);
+                var result = await _repository.AddOrUpdateAsync(model);
+                return (result, StatusCodes.Status200OK);
             }
-            catch (Exception execption)
+            catch (Exception ex)
             {
-                
-                result = execption.Message;
-                statusCode = StatusCodes.Status400BadRequest;
-                
+                return ($"Erro ao salvar o status: {ex.Message}", StatusCodes.Status400BadRequest);
             }
-            return (result, statusCode);
         }
-        public async Task<(object?, int)> Delete(int id ) 
+
+        public async Task<(object?, int)> DeleteStatusAsync(int id)
         {
-            object? content;
-            int statusCode;
+            if (id <= 0)
+            {
+                return ("ID inválido.", StatusCodes.Status400BadRequest);
+            }
+
             try
             {
-                var repositoryRecordStatus = await _repository.GetByRecordStatusId(id);
-                if (repositoryRecordStatus.ID > 0)
+                var recordStatus = await _repository.GetByIdAsync(id);
+                if (recordStatus == null)
                 {
-                    content = new 
-                    {
-                        id = repositoryRecordStatus.ID,
-                        produceActivityId = repositoryRecordStatus.ProduceActivityId,
-                        userID = repositoryRecordStatus.UserId,
-                        description = repositoryRecordStatus.Description,
-                        
-                    };
+                    return ("Registro não encontrado.", StatusCodes.Status404NotFound);
+                }
 
-                    await _repository.Delete(repositoryRecordStatus.ID);
-                    statusCode = StatusCodes.Status200OK;
-                }
-                else
-                {
-                    content = "Dados incorretos ou inválidos.";
-                    statusCode = StatusCodes.Status400BadRequest;
-                }
+                await _repository.DeleteAsync(id);
+                return ($"Registro ID {id} deletado com sucesso.", StatusCodes.Status200OK);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-
-                content = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return ($"Erro ao deletar o status: {ex.Message}", StatusCodes.Status400BadRequest);
             }
-            return (content, statusCode);
         }
     }
 }
-

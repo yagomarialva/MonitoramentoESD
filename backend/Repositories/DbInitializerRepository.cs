@@ -1,9 +1,10 @@
-﻿using BiometricFaceApi.Models;
-using BiometricFaceApi.OraScripts;
+﻿using BiometricFaceApi.Data;
+using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Security;
-using System;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace BiometricFaceApi.Repositories
 {
@@ -11,49 +12,81 @@ namespace BiometricFaceApi.Repositories
     {
         private readonly IOracleDataAccessRepository _oraConnector;
         private readonly SecurityService _securityService;
+        private readonly IConfiguration _configuration;
+        private readonly BiometricFaceDBContex _dbContex;
 
-        public DbInitializerRepository(IOracleDataAccessRepository oraConnector, SecurityService securityService)
+        public DbInitializerRepository(
+            IOracleDataAccessRepository oraConnector,
+            SecurityService securityService,
+            BiometricFaceDBContex biometricFaceDBContex,
+            IConfiguration configuration)
         {
             _oraConnector = oraConnector;
             _securityService = securityService;
+            _dbContex = biometricFaceDBContex;
+            _configuration = configuration;
         }
 
         public async Task InitializeAsync()
         {
             try
             {
-                const string username = "admin";
-                const string password = "Admcompal123!";
-                const string badge = "compal";
-                const string role = "administrator";
+                var tables = _configuration.GetSection("SqlStructDatabase").Get<IEnumerable<SqlStructModel>>();
 
-                // Criptografar a senha
-                var adminPasswordEncrypted = _securityService.EncryptAES(password);
-
-                // Verificar se o usuário já existe
-                var userCount = await _oraConnector.LoadData<AuthenticationModel, dynamic>(SQLScripts.checkUserQuery, new { username });
-
-
-                if (userCount.FirstOrDefault()?.ID <=0)
+                if (tables != null)
                 {
-                    // Inserir o usuário administrador
-                    await _oraConnector.SaveData<AuthenticationModel>(SQLScripts.insertAdminUserQuery, new AuthenticationModel
-                    {
-                        Username = username,
-                        Password = adminPasswordEncrypted,
-                        Badge = badge,
-                        RolesName = role
-                    });
+                    await CreateDatabaseObjectsAsync(tables);
                 }
             }
             catch (Exception ex)
             {
-                // Log e trate exceções de forma adequada
-                // Exemplo: logger.LogError(ex, "Erro ao inicializar o banco de dados.");
                 throw new InvalidOperationException("Erro ao inicializar o banco de dados.", ex);
             }
         }
 
+        private async Task CreateDatabaseObjectsAsync(IEnumerable<SqlStructModel> tables)
+        {
+            using var command = (OracleCommand)_dbContex.Database.GetDbConnection().CreateCommand();
+            await command.Connection.OpenAsync();
 
+            foreach (var table in tables)
+            {
+                if (await TableExistsAsync(command, table.TableName))
+                {
+                    continue;
+                }
+
+                await ExecuteCommandAsync(command, table.CommandToCreateTable);
+                await ExecuteCommandAsync(command, table.CommandToSequence);
+                await ExecuteCommandAsync(command, table.CommandToTrigger);
+                await ExecuteCommandAsync(command, table.CommandToPopulete);
+            }
+
+            await command.Connection.CloseAsync();
+        }
+
+        private async Task<bool> TableExistsAsync(OracleCommand command, string? tableName)
+        {
+            if (string.IsNullOrEmpty(tableName))
+            {
+                return false;
+            }
+
+            command.CommandText = $@"SELECT COUNT(1) FROM all_tables WHERE table_name = '{tableName.ToUpper()}'";
+            command.CommandType = CommandType.Text;
+
+            // Mantendo a implementação original
+            var result = command.ExecuteScalar();
+            return result?.ToString().Trim() != "0";
+        }
+
+        private async Task ExecuteCommandAsync(OracleCommand command, string? sqlCommand)
+        {
+            if (!string.IsNullOrEmpty(sqlCommand))
+            {
+                command.CommandText = sqlCommand;
+                await Task.Run(() => command.ExecuteNonQuery());
+            }
+        }
     }
 }

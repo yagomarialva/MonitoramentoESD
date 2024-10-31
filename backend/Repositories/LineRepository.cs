@@ -1,65 +1,89 @@
-﻿using BiometricFaceApi.Data;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-
+using BiometricFaceApi.Services;
 
 namespace BiometricFaceApi.Repositories
 {
     public class LineRepository : ILineRepository
     {
-        private readonly IOracleDataAccessRepository oraConnector;
+        private readonly IOracleDataAccessRepository _oraConnector;
 
         public LineRepository(IOracleDataAccessRepository oraConnector)
         {
-            this.oraConnector = oraConnector;
+            _oraConnector = oraConnector;
         }
-        public async Task<List<LineModel>> GetAllLine()
+
+        public async Task<List<LineModel>> GetAllAsync()
         {
-            var result = await oraConnector.LoadData<LineModel, dynamic>(SQLScripts.GetAllLine, new { });
+            var result = await _oraConnector.LoadData<LineModel, dynamic>(SQLScripts.GetAllLine, new { });
             return result;
         }
 
-        public async Task<LineModel> GetLineID(int id)
+        public async Task<LineModel?> GetByIdAsync(int id)
         {
-            var result = await oraConnector.LoadData<LineModel, dynamic>(SQLScripts.GetLineById, new { id });
+            var result = await _oraConnector.LoadData<LineModel, dynamic>(SQLScripts.GetLineById, new { id });
             return result.FirstOrDefault();
         }
 
-        public async Task<LineModel?> GetLineName(string name)
+        public async Task<LineModel?> GetByNameAsync(string name)
         {
-            var result = await oraConnector.LoadData<LineModel, dynamic>(SQLScripts.GetLineByName, new { name });
+            var nameLower = name.Normalize().ToLower().TrimEnd();
+            var result = await _oraConnector.LoadData<LineModel, dynamic>(SQLScripts.GetLineByName, new { nameLower });
             return result.FirstOrDefault();
         }
 
-        public async Task<LineModel?> Include(LineModel lineModel)
+        public async Task<LineModel?> AddOrUpdateAsync(LineModel lineModel)
         {
-
-
-            if (lineModel.ID > 0)
+            try
             {
-                await oraConnector.SaveData(SQLScripts.UpdateLine, lineModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
+                //Formata o Name para letras minúsculas
+                lineModel.Name = lineModel.Name.ToLowerInvariant();
+                if (lineModel.ID > 0)
+                {
+                    // Atualização de linha existente
+                    lineModel.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+                    await _oraConnector.SaveData(SQLScripts.UpdateLine, lineModel);
+                }
+                else
+                {
+                    // Inclusão de nova linha
+                    lineModel.Created = DateTimeHelperService.GetManausCurrentDateTime();
+                    lineModel.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+                    await _oraConnector.SaveData(SQLScripts.InsertLine, lineModel);
+                    lineModel = await GetByNameAsync(lineModel.Name);
+                }
+
+                if (_oraConnector.Error != null)
+                    throw new Exception($"Erro ao salvar linha: {_oraConnector.Error}");
+
+                return lineModel;
             }
-            else
+            catch (Exception ex)
             {
-                //include
-                await oraConnector.SaveData<LineModel>(SQLScripts.InsertLine, lineModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                lineModel = await GetLineID(lineModel.ID);
-
-
+                throw new Exception($"Falha ao adicionar ou atualizar a linha: {ex.Message}", ex);
             }
-            return lineModel;
         }
-        public async Task<LineModel?> Delete(int id)
+
+        public async Task<LineModel?> DeleteAsync(int id)
         {
-            LineModel? line = await GetLineID(id);
-            await oraConnector.SaveData<dynamic>(SQLScripts.DeleteLine, new { id });
-            return line;
+            try
+            {
+                LineModel? line = await GetByIdAsync(id);
+                if (line == null)
+                    throw new Exception("Linha não encontrada.");
+
+                await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteLine, new { id });
+
+                if (_oraConnector.Error != null)
+                    throw new Exception($"Erro ao deletar linha: {_oraConnector.Error}");
+
+                return line;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Falha ao deletar a linha: {ex.Message}", ex);
+            }
         }
     }
 }

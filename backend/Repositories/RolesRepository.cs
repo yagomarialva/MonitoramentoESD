@@ -1,69 +1,81 @@
-﻿using BiometricFaceApi.Data;
-using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using BiometricFaceApi.Services;
+using System.Xml.Linq;
 
 namespace BiometricFaceApi.Repositories
 {
     public class RolesRepository : IRolesRepository
     {
-        private readonly IOracleDataAccessRepository oraConnector;
+        private readonly IOracleDataAccessRepository _oraConnector;
 
         public RolesRepository(IOracleDataAccessRepository oraConnector)
         {
-            this.oraConnector = oraConnector;
+            _oraConnector = oraConnector;
         }
 
-
-        public async Task<List<RolesModel>> GetAllRoles()
+        public async Task<IEnumerable<RolesModel>> GetAllRolesAsync()
         {
-            var result = await oraConnector.LoadData<RolesModel, dynamic>(SQLScripts.GetAllRoles, new { });
-            return result;
+            var result = await _oraConnector.LoadData<RolesModel, dynamic>(SQLScripts.GetAllRoles, new { });
+            return result ??
+                throw new KeyNotFoundException($"Roles não encontrada.");
+        } 
+
+        public async Task<RolesModel?> GetRoleByIdAsync(int id)
+        {
+            var result = await _oraConnector.LoadData<RolesModel, dynamic>(SQLScripts.GetRolesById, new { id });
+            return result.FirstOrDefault() ?? 
+                throw new KeyNotFoundException($"Função com ID {id} não encontrada.");
         }
 
-        public async Task<RolesModel?> GetByRolesId(int id)
+        public async Task<RolesModel?> GetRoleByNameAsync(string roleName)
         {
-            var result = await oraConnector.LoadData<RolesModel, dynamic>(SQLScripts.GetRolesById, new { id });
-            return result.FirstOrDefault();
+            //Tranforma name para letras minusculas, verifica se existe caracters especiais e tira os espçao no final da palavra.
+            var roleLower = roleName.Normalize().ToLower().TrimEnd();
+
+            var result = await _oraConnector.LoadData<RolesModel, dynamic>(SQLScripts.GetRolesByRolesName, new { roleLower });
+            return result.FirstOrDefault() ?? 
+                throw new KeyNotFoundException($"Função com nome {roleName} não encontrada.");
         }
 
-        public async Task<RolesModel?> GetByRolesName(string rolesName)
+        public async Task<RolesModel?> AddOrUpdateRoleAsync(RolesModel roleModel)
         {
-            var result = await oraConnector.LoadData<RolesModel, dynamic>(SQLScripts.GetRolesByRolesName, new { rolesName });
-            return result.FirstOrDefault();
-        }
-
-        public async Task<RolesModel?> Include(RolesModel rolesModel)
-        {
+            
             RolesModel rolesUp;
-            if (rolesModel.ID > 0)
+            //Formata o Name para letras minúsculas
+            roleModel.RolesName = roleModel.RolesName.ToLowerInvariant();
+
+            if (roleModel.ID > 0)
             {
-                //update
-                await oraConnector.SaveData(SQLScripts.UpdateRoles, rolesModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                rolesUp = await GetByRolesName(rolesModel.RolesName);
+                // Atualiza
+                roleModel.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+                await _oraConnector.SaveData(SQLScripts.UpdateRoles, roleModel);
+                rolesUp = roleModel;
             }
             else
             {
-                //include
-                await oraConnector.SaveData<RolesModel>(SQLScripts.InsertRoles, rolesModel);
-                if (oraConnector.Error != null)
-                    throw new Exception($"Error:{oraConnector.Error}");
-                rolesUp = await GetByRolesName(rolesModel.RolesName);
+                // Insere
+                roleModel.Created = DateTimeHelperService.GetManausCurrentDateTime();
+                roleModel.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
+                await _oraConnector.SaveData(SQLScripts.InsertRoles, roleModel);
+                rolesUp = roleModel;
             }
+
+            // Verifica se ocorreu um erro
+            if (_oraConnector.Error != null)
+            {
+                throw new Exception($"Erro: {_oraConnector.Error}");
+            }
+
+            // Retorna o papel atualizado ou recém-criado
             return rolesUp;
-
         }
-
-        public async Task<RolesModel?> Delete(int id)
+        public async Task<RolesModel?> DeleteRoleAsync(int id)
         {
-            RolesModel? rolesDel = await GetByRolesId(id);
-            await oraConnector.SaveData<dynamic>(SQLScripts.DeleteRoles, new { id });
-            return rolesDel;
+            var roleToDelete = await GetRoleByIdAsync(id);
+            await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteRoles, new { id });
+            return roleToDelete;
         }
-
-        
     }
 }

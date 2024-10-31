@@ -1,149 +1,97 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 
+
 namespace BiometricFaceApi.Services
 {
     public class StationService
     {
-        private IStationRepository _stationRepository;
+        private readonly IStationRepository _stationRepository;
 
-        public StationService(IStationRepository lineProductionRepository)
+        public StationService(IStationRepository stationRepository)
         {
-            _stationRepository = lineProductionRepository;
-
+            _stationRepository = stationRepository;
         }
-        public async Task<(object?, int)> GetAllStation()
+
+        public async Task<(object?, int)> GetAllStationsAsync()
         {
-            object? result;
-            int statusCode;
             try
             {
-                List<StationModel> stationProdution = await _stationRepository.GetAllStation();
-                if (!stationProdution.Any())
-                {
-                    result = "Nenhuma Estação cadastrada.";
-                    statusCode = StatusCodes.Status404NotFound;
-                }
-                else
-                {
-                    result = stationProdution;
-                    statusCode = StatusCodes.Status200OK;
-                }
-                return (result, statusCode);
-
+                var stations = await _stationRepository.GetAllAsync();
+                return stations.Any()
+                    ? (stations, StatusCodes.Status200OK)
+                    : ("Estação não encontrada.", StatusCodes.Status404NotFound);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-
-                result = exception.Message;
-                statusCode = StatusCodes.Status500InternalServerError;
+                return (ex.Message, StatusCodes.Status400BadRequest);
             }
-            return (result, statusCode);
-
         }
-        public async Task<(object?, int)> GetStationId(int id)
+
+        public async Task<(object?, int)> GetStationByIdAsync(int id)
         {
-            object? result;
-            int statusCode;
             try
             {
-                var monitor = await _stationRepository.GetByStationId(id);
-                if (monitor == null)
-                {
-
-                    result = "Linha de produção não encontrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                }
-                result = monitor;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
+                var station = await _stationRepository.GetByIdAsync(id);
+                return (station, StatusCodes.Status200OK);
             }
-            catch (Exception exception)
+            catch (KeyNotFoundException ex)
             {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return (ex.Message, StatusCodes.Status404NotFound);
             }
-            return (result, statusCode);
+            catch (Exception ex)
+            {
+                return (ex.Message, StatusCodes.Status400BadRequest);
+            }
         }
 
-        public async Task<(object?, int)> GetStationName(string name)
+        public async Task<(object?, int)> GetStationByNameAsync(string name)
         {
-            object? result;
-            int statusCode;
             try
             {
-                var monitor = await _stationRepository.GetByStationName(name);
-                if (monitor == null)
-                {
-
-                    result = "Nome não encontrado.";
-                    statusCode = StatusCodes.Status404NotFound;
-                }
-                result = monitor;
-                statusCode = StatusCodes.Status200OK;
-                return (result, statusCode);
+                var station = await _stationRepository.GetByNameAsync(name);
+                return (station, StatusCodes.Status200OK);
             }
-            catch (Exception exception)
+            catch (KeyNotFoundException ex)
             {
-                result = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return (ex.Message, StatusCodes.Status404NotFound);
             }
-            return (result, statusCode);
+            catch (Exception ex)
+            {
+                return (ex.Message, StatusCodes.Status400BadRequest);
+            }
         }
 
-        public async Task<(object?, int)> Include(StationModel stationModel)
+        public async Task<(object?, int)> AddOrUpdateStationAsync(StationModel stationModel)
         {
-            var statusCode = StatusCodes.Status200OK;
-            object? response;
             try
             {
-                StationModel? stationUp = await _stationRepository.GetByStationId(stationModel.ID);
-                stationModel.ID = stationUp != null ? stationUp.ID : stationModel.ID;
-                response = await _stationRepository.Include(stationModel);
-                if (stationModel.ID > 0)
-                    statusCode = StatusCodes.Status200OK;
-                else
-                    statusCode = StatusCodes.Status201Created;
+                var station = await _stationRepository.AddOrUpdateAsync(stationModel);
+                return (station, stationModel.ID > 0 ? StatusCodes.Status200OK : StatusCodes.Status201Created);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                response = "Verificar  dados se estão corretos.";
-                statusCode = StatusCodes.Status400BadRequest;
+                return (ex.Message, StatusCodes.Status400BadRequest);
             }
-            return (response, statusCode);
-
         }
-        public async Task<(object?, int)> Delete(int id)
+
+        public async Task<(object? result , int statusCode)> DeleteStationAsync(int id)
         {
-            object? content;
-            int statusCode;
             try
             {
-                var respositoryLinewProd = await _stationRepository.GetByStationId(id);
-                if (respositoryLinewProd.ID > 0)
+                var deleted = await _stationRepository.GetByIdAsync(id);
+                if (deleted == null) 
                 {
-                    content = new
-                    {
-                        Id = respositoryLinewProd.ID,
-                        Nmae = respositoryLinewProd.Name,
-
-
-                    };
-                    await _stationRepository.Delete(respositoryLinewProd.ID);
-                    statusCode = StatusCodes.Status200OK;
+                    return ("Estação não encontrada ou já excluido.", StatusCodes.Status404NotFound);
                 }
-                else
-                {
-                    throw new Exception("Dados incorretos ou inválidos.");
-                }
+                await _stationRepository.DeleteAsync(id);
+                return (deleted, StatusCodes.Status200OK);
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-
-                content = exception.Message;
-                statusCode = StatusCodes.Status400BadRequest;
+                return (ex.Message, StatusCodes.Status400BadRequest);
             }
-            return (content, statusCode);
         }
+        
     }
 }

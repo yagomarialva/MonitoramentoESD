@@ -11,6 +11,7 @@ RUN npm cache clean --force
 # Instala as dependências e remove o cache para reduzir o tamanho da imagem
 RUN npm config set strict-ssl false
 RUN npm install --force && npm cache clean --force
+RUN npm install @microsoft/signalr --force
 
 
 # Copia todos os arquivos do projeto para o contêiner

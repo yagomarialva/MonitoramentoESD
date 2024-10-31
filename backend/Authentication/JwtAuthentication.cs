@@ -24,7 +24,7 @@ namespace BiometricFaceApi.Auth
                   new Claim(ClaimTypes.Name,user.Username),
                   new Claim(ClaimTypes.Role, user.RolesName)
               },
-              expires: DateTime.Now.AddMinutes(120),
+              expires: DateTime.Now.AddMinutes(60),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

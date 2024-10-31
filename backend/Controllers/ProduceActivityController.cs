@@ -2,10 +2,8 @@
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-using Microsoft.VisualBasic;
 using System.Text.Json;
 
 namespace BiometricFaceApi.Controllers
@@ -14,138 +12,85 @@ namespace BiometricFaceApi.Controllers
     [ApiController]
     public class ProduceActivityController : Controller
     {
-        private readonly ProduceActivityService _service;
-        private readonly RecordStatusService _recordStatus;
-        private readonly UserService _user;
-        private readonly JigService _jig;
-        private readonly MonitorEsdService _monitorEsd;
-        private readonly StationService _station;
-        private readonly LineService _line;
-        private readonly LinkStationAndLineService _link;
+        private readonly ProduceActivityService _produceActivityService;
+        private readonly RecordStatusService _recordStatusService;
+        private readonly UserService _userService;
+        private readonly JigService _jigService;
+        private readonly MonitorEsdService _monitorEsdService;
+        private readonly StationService _stationService;
+        private readonly LineService _lineService;
+        private readonly LinkStationAndLineService _linkStationAndLineService;
+        private readonly StationViewService _stationViewService;
         public ProduceActivityController(IProduceActivityRepository produceActivityRepository, 
             IRecordStatusRepository recordStatusRepository, IUsersRepository usersRepository, 
             IAuthenticationRepository authenticationRepository, IJigRepository jigRepository, 
-            ILinkStationAndLineRepository linkStationAndLineRepository, 
+            ILinkStationAndLineRepository linkStationAndLineRepository,
+            IStationViewRepository stationViewRepository,
             IMonitorEsdRepository monitorEsdRepository,
             IStationRepository stationRepository, 
             ILineRepository lineRepository)
         {
-            _recordStatus = new RecordStatusService(recordStatusRepository);
-            _user = new UserService (usersRepository);
-            _jig = new JigService (jigRepository);
-            _link = new LinkStationAndLineService(linkStationAndLineRepository, stationRepository, lineRepository);
-            _monitorEsd = new MonitorEsdService (monitorEsdRepository);
-            _service = new ProduceActivityService(produceActivityRepository, recordStatusRepository, authenticationRepository,usersRepository, jigRepository, linkStationAndLineRepository, monitorEsdRepository);
+            _recordStatusService = new RecordStatusService(recordStatusRepository);
+            _userService = new UserService (usersRepository);
+            _jigService = new JigService (jigRepository);
+            _linkStationAndLineService = new LinkStationAndLineService(linkStationAndLineRepository, stationRepository, lineRepository);
+            _monitorEsdService = new MonitorEsdService (monitorEsdRepository,stationViewRepository );
+            _produceActivityService = new ProduceActivityService(produceActivityRepository, recordStatusRepository, authenticationRepository,usersRepository, jigRepository, linkStationAndLineRepository, monitorEsdRepository);
         }
-
         /// <summary>
-        /// Busca todos
+        /// Retorna todos os registros de produção.
         /// </summary>
-        /// <response code="200">Retorna dados de produção.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpGet]
-        [Route("TodaProducao")]
-        public async Task<ActionResult> BuscarTodaProducao()
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet("TodaProducao")]
+        public async Task<IActionResult> GetAllProduction()
         {
-            var(result, statusCode) = await _service.GetAllProduceAct();
-        var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            return StatusCode(statusCode, result);
-
-        }
-
-        /// <summary>
-        /// Buscar dados de produção
-        /// </summary>
-        /// <param name="id"> Buscar produção por id</param>
-        /// <response code="200">Retorna dados de produção.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpGet]
-        [Route("BuscarProducao/{id}")]
-        public async Task<ActionResult> BuscarTodaProducao(int id)
-        {
-            var (result, statusCode) = await _service.GetProduceId(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            return StatusCode(statusCode, result);
-
-        }
-
-        /// <summary>
-        /// Cadastra e Atualiza de dados de produçao.
-        /// </summary>
-        /// <remarks>Cadastra produção na base de dados; Para atualizar dados basta usar o id .</remarks>
-        /// <param name="model">Dados de cadastro do operador</param>
-        /// <response code="200">Dados atualizado com sucesso.</response>
-        /// <response code="201">Dados cadastrados com sucesso.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpPost]
-        [Route("adicionarProducao")]
-        public async Task<ActionResult> Include([FromBody] ProduceActivityModel model)
-        {
-
-            var (result, statusCode) = await _service.Include(model);
+            var (result, statusCode) = await _produceActivityService.GetAllProduceActivitiesAsync();
             return StatusCode(statusCode, result);
         }
 
         /// <summary>
-        /// Muda status da produção.
+        /// Busca dados de produção pelo ID.
         /// </summary>
-        /// <remarks>Cadastra o operador na base de dados; Para atualizar dados basta usar a matricula do operador.</remarks>
-        /// <param>Altera status para true ou false</param>
-        /// <response code="200">Dados atualizado com sucesso.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpPost]
-        [Route("ChangeStatus")]
-        public async Task<ActionResult> ChangeStatus(int id, bool status, string? description)
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet("BuscarProducao/{id}")]
+        public async Task<IActionResult> GetProductionById(int id)
         {
-            var accessToken = Request.Headers[HeaderNames.Authorization];
-            var token = accessToken.ToString().Split(" ").LastOrDefault();
-            var (result, statusCode) = await _service.ChangeStatus(id, status, description, token);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
+            var (result, statusCode) = await _produceActivityService.GetProduceActivityByIdAsync(id);
             return StatusCode(statusCode, result);
-
         }
 
         /// <summary>
-        /// Deletar produção
+        /// Cadastra ou atualiza dados de produção.
         /// </summary>
-        /// <param name="id"> Deleta produção</param>
-        /// <returns></returns>
-        /// <response code="200">Remove dados do banco de dados.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrator,operator,developer, tecnico")]
-        [HttpDelete]
-        [Route("DeleteProducao/{id}")]
-        public async Task<ActionResult> Delete(int id)
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpPost("AdicionarProducao")]
+        public async Task<IActionResult> AddOrUpdateProduction([FromBody] ProduceActivityModel model)
         {
-            var (result, statusCode) = await _service.Delete(id);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonResponse = JsonSerializer.Serialize(result, options);
-            if (!string.IsNullOrEmpty(jsonResponse))
-            {
-                return StatusCode(statusCode, result);
-            }
-            else
-            {
-                return StatusCode(statusCode);
-            }
+            var (result, statusCode) = await _produceActivityService.AddOrUpdateProduceActivityAsync(model);
+            return StatusCode(statusCode, result);
         }
 
+        /// <summary>
+        /// Altera o status de produção.
+        /// </summary>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpPost("ChangeStatus")]
+        public async Task<IActionResult> ChangeProductionStatus(int id, bool status, string? description)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Split(" ").LastOrDefault();
+            var (result, statusCode) = await _produceActivityService.ChangeProduceActivityStatusAsync(id, status, description, token);
+            return StatusCode(statusCode, result);
+        }
 
-
+        /// <summary>
+        /// Deleta um registro de produção pelo ID.
+        /// </summary>
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpDelete("DeleteProducao/{id}")]
+        public async Task<IActionResult> DeleteProduction(int id)
+        {
+            var (result, statusCode) = await _produceActivityService.DeleteProduceActivityAsync(id);
+            return StatusCode(statusCode, result);
+        }
     }
 }
