@@ -18,13 +18,23 @@
 
 .dut-icon{
   margin-left: 13px;
+  margin-top: 13px;
   color: #389E0D;
+}
+
+.cell-icon {
+  margin-top: 14px;
+}
+
+.ant-btn-icon {
+  margin-right: -13px;
 }
 
 .computer-icon,
 .add-icon {
   font-size: 5px !important;
   color: #BFBFBF;
+  margin-top: 13px;
   width: 50px !important;
   height: 50px !important;
   background-color: white;

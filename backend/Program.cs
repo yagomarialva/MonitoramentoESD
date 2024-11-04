@@ -30,6 +30,27 @@ namespace BiometricFaceApi
             var secretKey = configuration["jwt:secretKey"] ?? "";
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
+
+            var root = Directory.GetCurrentDirectory();
+            var dotenv = Path.Combine(root, ".env");
+            DotEnv.Load(dotenv);
+
+            var config =
+            new ConfigurationBuilder()
+            .AddEnvironmentVariables()
+            .Build();
+
+            // Carrega as variáveis de ambiente do arquivo .env
+            DotEnv.Load(dotenv);  // Certifique-se de que este método está disponível
+
+            // Pega o valor das variáveis de ambiente e exibe no console
+            var oracleHost = Environment.GetEnvironmentVariable("DB_HOST");
+            // var oraclePort = Environment.GetEnvironmentVariable("ORACLE_PORT");
+            // var oracleService = Environment.GetEnvironmentVariable("ORACLE_SERVICE");
+
+            Console.WriteLine($"ORACLE_HOST: {oracleHost}");
+            // Console.WriteLine($"ORACLE_PORT: {oraclePort}");
+            // Console.WriteLine($"ORACLE_SERVICE: {oracleService}");
             // Configura��o do AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
 
