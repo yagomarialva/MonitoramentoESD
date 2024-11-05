@@ -22,7 +22,8 @@ def get_wifi_ip_address():
 def write_env_file(ip_address):
     with open('.env', 'w') as f:
         f.write(f"REACT_APP_API_URL_FCT=http://{ip_address}:7080/\n")
-
+        f.write(f"REACT_APP_HOST={ip_address}\n")  # Nova linha adicionada com o IP
+        
 if __name__ == "__main__":
     ip_address = get_wifi_ip_address()
     if ip_address:

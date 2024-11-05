@@ -16,8 +16,8 @@ export const getAllMonitors = async () => {
 // Obtém um monitor específico por ID
 export const getMonitorLogs = async (id) => {
   try {
-    const { data } = await TokenApi.get(`${url_logs}/ListMonitorEsd?id=${id}&page=1&pageSize=50`);
-    console.log('data', data)
+    const { data } = await TokenApi.get(`${url_logs}/ListMonitorEsdBySerialNumber?seriaNumber=${id}&limit=10`);
+    console.log('data log', data)
     return data;
   } catch (error) {
     console.error(`Error fetching monitor with ID ${id}:`, error);
@@ -31,6 +31,18 @@ export const getMonitorLogs = async (id) => {
 export const getMonitor = async (serialNumber) => {
   try {
     const { data } = await TokenApi.get(`${url}/Pesquisa${serialNumber}`);
+    console.log('data', data)
+    return data;
+  } catch (error) {
+    console.error(`Error fetching monitor with ID ${serialNumber}:`, error);
+    throw error;
+  }
+};
+
+// Obtém um monitor específico por ID
+export const getMonitorSN = async (serialNumber) => {
+  try {
+    const { data } = await TokenApi.get(`${url}/ListMonitorEsdBySerialNumber?seriaNumber=${serialNumber}&limit=10`);
     console.log('data', data)
     return data;
   } catch (error) {

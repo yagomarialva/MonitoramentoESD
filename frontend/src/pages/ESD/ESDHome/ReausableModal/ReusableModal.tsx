@@ -13,8 +13,10 @@ import {
   deleteMonitor,
   getMonitor,
   getMonitorLogs,
+  getMonitorSN,
 } from "../../../../api/monitorApi";
 import { useNavigate } from "react-router-dom";
+import * as signalR from "@microsoft/signalr"; // Importa o SignalR
 
 const { TabPane } = Tabs;
 
@@ -75,7 +77,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   monitor,
   onUpdate,
 }) => {
-  console.log("monitor", monitor);
   const [isFooterVisible, setFooterVisible] = useState(false);
   const [actionType, setActionType] = useState<"editar" | "excluir" | null>(
     null
@@ -125,6 +126,11 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     monitor.monitorsESD
   );
 
+    // SignalR
+    const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
+    const [logs, setLogs] = useState<LogData[]>([]);
+    
+
   const operatorFailures = [
     "Erro de configuração",
     "Falha na inicialização",
@@ -139,8 +145,60 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     "Sinal fora da faixa",
   ];
 
+  // useEffect(() => {
+  //   // Configura a conexão com o SignalR Hub
+  //   const newConnection = new signalR.HubConnectionBuilder()
+  //     .withUrl("http://localhost:5000/hub") // Atualize para o URL do seu servidor SignalR
+  //     .withAutomaticReconnect()
+  //     .build();
+
+  //   setConnection(newConnection);
+
+  //   // Ao montar o componente, inicie a conexão
+  //   newConnection
+  //     .start()
+  //     .then(() => {
+  //       console.log("Conectado ao SignalR!");
+
+  //       // Inscreva-se para escutar mensagens do servidor
+  //       newConnection.on("ReceiveLogUpdate", (log: LogData) => {
+  //         setLogs((prevLogs) => [...prevLogs, log]); // Atualiza a lista de logs
+  //       });
+  //     })
+  //     .catch((err) => console.log("Erro ao conectar ao SignalR: ", err));
+
+  //   return () => {
+  //     // Encerra a conexão quando o componente for desmontado
+  //     if (newConnection) {
+  //       newConnection.stop();
+  //     }
+  //   }; http://192.168.128.47:7080/api/LogMonitorEsd/ListMonitorEsd?id=21&page=1&pageSize=50
+  // }, []);
+
   // Resetar o estado sempre que o modal abrir
   useEffect(() => {
+        // Configura a conexão com o SignalR Hub
+        const newConnection = new signalR.HubConnectionBuilder()
+        .withUrl("http://192.168.128.47:7080/hub") // Atualize para o URL do seu servidor SignalR
+        .withAutomaticReconnect()
+        .build();
+  
+      setConnection(newConnection);
+  
+      // Ao montar o componente, inicie a conexão
+      newConnection
+        .start()
+        .then(() => {
+          console.log("Conectado ao SignalR!");
+  
+          // Inscreva-se para escutar mensagens do servidor
+          newConnection.on("ReceiveLogUpdate", (log: LogData) => {
+            setLogs((prevLogs) => [...prevLogs, log]); // Atualiza a lista de logs
+          });
+        })
+        .catch((err) => console.log("Erro ao conectar ao SignalR: ", err));
+  
+
     if (visible) {
       setFooterVisible(false);
       setActiveKey("1");
@@ -159,6 +217,12 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         description: "",
       });
     }
+    return () => {
+      // Encerra a conexão quando o componente for desmontado
+      if (newConnection) {
+        newConnection.stop();
+      }
+    };
   }, [visible]);
 
   const showMessage = (content: string, type: "success" | "error") => {
@@ -167,8 +231,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   // Garante que a lista de falhas seja exibida corretamente ao ativar o modo de edição
   useEffect(() => {
-    console.log('operatorLogData', operatorLogData)
-    console.log('jigLogData', jigLogData)
     setEditableData(monitor.monitorsESD);
 
     if (isFooterVisible && actionType === "editar") {
@@ -176,28 +238,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     }
   }, [isFooterVisible, actionType]);
 
-  const handleFailureSelect = (
-    checked: boolean,
-    failure: string,
-    type: "operator" | "monitor"
-  ) => {
-    const setter =
-      type === "operator"
-        ? setSelectedOperatorFailures
-        : setSelectedMonitorFailures;
-
-    setter((prev) =>
-      checked ? [...prev, failure] : prev.filter((item) => item !== failure)
-    );
-
-    if (failure === "Outros") {
-      if (type === "operator") {
-        setShowOperatorInput(checked);
-      } else {
-        setShowMonitorInput(checked);
-      }
-    }
-  };
 
   const showSnackbar = (
     message: string,
@@ -248,21 +288,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     }
   };
 
-  const handleGetLogMonitor = async () => {
-    try {
-      const monitorToDelete = await getMonitor(
-        monitor.monitorsESD.serialNumber
-      );
-      console.log("monitorToDelete", monitorToDelete);
-    } catch (error: any) {
-      showMessage("Erro ao excluir a linha:", error);
-      if (error.message === "Request failed with status code 401") {
-        showMessage("Sessão Expirada.", "error");
-        localStorage.removeItem("token");
-        navigate("/");
-      }
-    }
-  };
+
 
   const handleConfirmDelete = () => {
     confirm({
@@ -384,11 +410,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const handleTabChange = async (key: React.SetStateAction<string>) => {
     setActiveKey(key);
     if (key === "2") {
-      console.log("here");
       try {
         const monitorToDelete = await getMonitor(monitor.monitorsESD.serialNumber);
-        const allLogs = await getMonitorLogs(monitorToDelete.id);
-
+        const allLogs = await getMonitorLogs(monitor.monitorsESD.serialNumber);
         // Filtrando logs em categorias de "Operador" e "Jig"
         const filteredOperatorLogs = allLogs.filter((log: { messageType: string; }) => log.messageType === "operador");
         const filteredJigLogs = allLogs.filter((log: { messageType: string; }) => log.messageType === "jig");
@@ -396,7 +420,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         // Atualizando os estados
         setOperatorLogData(filteredOperatorLogs);
         setJigLogData(filteredJigLogs);
-        console.log('filteredOperatorLogs', filteredOperatorLogs)
       } catch (error: any) {
         if (error.message === "Request failed with status code 401") {
           showMessage("Sessão Expirada.", "error");
@@ -404,7 +427,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
           navigate("/");
         }
         if (error.message === "Request failed with status code 404") {
-          console.log("here");
+          showMessage("Dados não encontrados.", "error");
         }
       }
     }

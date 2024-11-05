@@ -8,6 +8,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fortawesome/fontawesome-free": "^6.5.2",
+    "@microsoft/signalr": "^8.0.7",
     "@mui/icons-material": "^5.16.6",
     "@mui/lab": "^5.0.0-alpha.171",
     "@mui/material": "^5.16.6",
@@ -36,7 +37,7 @@
     "typescript": "^5.6.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env HOST=$REACT_APP_HOST PORT=3000 react-scripts start",
     "build-craco": "craco build",
     "build": "react-scripts build",
     "test": "react-scripts test",
