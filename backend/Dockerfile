@@ -8,20 +8,20 @@ EXPOSE 7080
 # Use outra imagem para compilar a aplicação
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-
+ 
 # Copia o arquivo de projeto e restaura dependências
 COPY ["BiometricFaceApi.csproj", "./"]
 RUN dotnet restore
-
+ 
 # Copia todo o código fonte e compila o projeto
 COPY . .
 WORKDIR "/src/."
 RUN dotnet build -c Release -o /app/build
-
+ 
 # Publica a aplicação
 FROM build AS publish
 RUN dotnet publish -c Release -o /app/publish
-
+ 
 # Configura o ambiente de execução
 FROM base AS final
 WORKDIR /app

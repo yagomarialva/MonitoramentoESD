@@ -34,6 +34,15 @@ namespace BiometricFaceApi.Controllers
             return StatusCode(statusCode, result);
         }
 
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet]
+        [Route("ListMonitorEsdBySerialNumber")]
+        public async Task<ActionResult> BuscarListaMonitorEsdBySerialNumber([FromQuery] string seriaNumber, [FromQuery] int limit = 10)
+        {
+            var (result, statusCode) = await _logMonitorEsdService.GetMonitorEsdBySerialNumberAsync(seriaNumber, limit);
+            return StatusCode(statusCode, result);
+        }
+
         /// <summary>
         /// Busca um log monitor ESD por ID.
         /// </summary>
@@ -45,7 +54,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
-        [Route("logbyid{id}")]
+        [Route("LOGBYID/{id}")]
         public async Task<ActionResult> BuscarLogMonitorById(int id)
         {
             var (result, statusCode) = await _logMonitorEsdService.GetByIdAsync(id);
@@ -64,7 +73,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
-        [Route("type/{type}")]
+        [Route("TYPE/{type}")]
         public async Task<ActionResult> BuscarMessageType(string type)
         {
             var (result, statusCode) = await _logMonitorEsdService.GetMessageTypeAsync(type);
@@ -83,7 +92,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
-        [Route("/{content}")]
+        [Route("CONTENT/{content}")]
         public async Task<ActionResult> BuscarMessageContent(string content)
         {
             var (result, statusCode) = await _logMonitorEsdService.GetMessageContentAsync(content);
@@ -101,7 +110,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
-        [Route("{id}")]
+        [Route("ID/{id}")]
         public async Task<ActionResult> BuscarMonitorEsdById(int id)
         {
             var (result, statusCode) = await _logMonitorEsdService.GetMonitorEsdByIdAsync(id);
@@ -118,7 +127,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
-        [Route("ip{ip}")]
+        [Route("IP/{ip}")]
         public async Task<ActionResult> BuscarMonitorEsdByIP(string ip)
         {
             var (result, statusCode) = await _logMonitorEsdService.GetMonitorEsdByIPAsync(ip);
@@ -136,8 +145,8 @@ namespace BiometricFaceApi.Controllers
         /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
-        [Route("sn{serialNumber}")]
-        public async Task<ActionResult> BuscarMonitorEsdById(string serialNumber)
+        [Route("SN/{serialNumber}")]
+        public async Task<ActionResult> BuscarMonitorEsdBySn(string serialNumber)
         {
             var (result, statusCode) = await _logMonitorEsdService.GetMonitorEsdBySnAsync(serialNumber);
             return StatusCode(statusCode, result);
@@ -153,7 +162,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico,esp32")]
+        //[Authorize(Roles = "administrador,desenvolvedor,tecnico,esp32")]
         [HttpPost]
         [Route("ManagerLogs")]
         public async Task<ActionResult> ManagerLogsMonitorEsd([FromBody] LogMonitorEsdModel model)

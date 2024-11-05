@@ -40,10 +40,10 @@ namespace BiometricFaceApi
             .AddEnvironmentVariables()
             .Build();
 
-            // Carrega as variÃ¡veis de ambiente do arquivo .env
-            DotEnv.Load(dotenv);  // Certifique-se de que este mÃ©todo estÃ¡ disponÃ­vel
+            // Carrega as variáveis de ambiente do arquivo .env
+            DotEnv.Load(dotenv);  // Certifique-se de que este método está disponível
 
-            // Pega o valor das variÃ¡veis de ambiente e exibe no console
+            // Pega o valor das variáveis de ambiente e exibe no console
             var oracleHost = Environment.GetEnvironmentVariable("DB_HOST");
             // var oraclePort = Environment.GetEnvironmentVariable("ORACLE_PORT");
             // var oracleService = Environment.GetEnvironmentVariable("ORACLE_SERVICE");
@@ -51,7 +51,7 @@ namespace BiometricFaceApi
             Console.WriteLine($"ORACLE_HOST: {oracleHost}");
             // Console.WriteLine($"ORACLE_PORT: {oraclePort}");
             // Console.WriteLine($"ORACLE_SERVICE: {oracleService}");
-            // Configuraï¿½ï¿½o do AutoMapper
+            // Configura??o do AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
 
             // Add services to the container.
@@ -63,10 +63,10 @@ namespace BiometricFaceApi
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("*")
+                                      policy.AllowAnyOrigin()
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
-                                            //.AllowCredentials();
+                                      //.AllowCredentials();
                                   });
             });
 
@@ -100,7 +100,7 @@ namespace BiometricFaceApi
                 //remove virtual properties
                 c.SchemaFilter<SwaggerSchemaFilter>();
 
-                // Jwt Authorization settings 
+                // Jwt Authorization settings
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description =
@@ -207,7 +207,7 @@ namespace BiometricFaceApi
             // Mapeie o hub
             app.MapHub<CommunicationHub>("/loghub");
 
-            // Criaï¿½ï¿½o do usuï¿½rio administrador padrï¿½o
+            // Cria??o do usu?rio administrador padr?o
             using (var scope = app.Services.CreateScope()) // Cria um escopo
             {
                 var scopedServices = scope.ServiceProvider;

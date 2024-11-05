@@ -39,8 +39,9 @@ namespace BiometricFaceApi.Models
         [Column("Status")]
         public int? Status { get; set; }
 
-        [StringLength(20, ErrorMessage = "O conteudo da mensagem deve ter no máximo 20 caracteres")]
-        [RegularExpression("^(?=.*\\S)[a-zA-Z0-9_\\-\\sáéíóúãõâêîôûçÁÉÍÓÚÃÕÂÊÎÔÛÇ/]+$", ErrorMessage = "O campo deve conter pelo menos um caractere válido e não pode ser vazio ou apenas espaços.")]
+        [StringLength(20, ErrorMessage = "O conteúdo da mensagem deve ter no máximo 20 caracteres")]
+        [RegularExpression("^(?=.*\\S)[a-zA-Z0-9_\\-\\sáéíóúãõâêîôûçÁÉÍÓÚÃÕÂÊÎÔÛÇ/.,…]+$", ErrorMessage = "O campo deve conter pelo menos um caractere válido e não pode ser vazio ou apenas espaços.")]
+
         [Column("MESSAGECONTENT")]
         public string? MessageContent { get; set; }
 

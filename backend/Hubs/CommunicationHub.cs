@@ -64,8 +64,8 @@ namespace BiometricFaceApi.Hubs
                 {
                     if (_serverIsOnline)
                     {
-                         //Armazena o log no banco e transmite ao front-end
-                         await SaveLogData(logObject);
+                        // Armazena o log no banco e transmite ao front-end
+                        await SaveLogData(logObject);
                         await Clients.All.SendAsync("ReceiveLog", logObject);
                     }
                     else
@@ -74,23 +74,22 @@ namespace BiometricFaceApi.Hubs
                         _logQueue.Enqueue(logObject);
                         _logger.LogInformation("Servidor offline. Log armazenado na fila.");
                     }
-                    //await SaveLogData(logObject);
-                    //await Clients.All.SendAsync("ReceiveLog", logObject);
                 }
                 else
                 {
-                    await Clients.Caller.SendAsync("ReceiveLog", "Dados inválidos!");
+                    // Enviar status 400 ao cliente (via mensagem customizada)
+                    await Clients.Caller.SendAsync("ReceiveLogError", "400 Bad Request: Dados inválidos!");
                 }
             }
             catch (JsonException ex)
             {
                 _logger.LogError($"Erro ao deserializar logData: {ex.Message}", ex);
-                await Clients.Caller.SendAsync("ReceiveLog", "Erro ao processar os dados recebidos.");
+                await Clients.Caller.SendAsync("ReceiveLogError", "400 Bad Request: Erro ao processar os dados recebidos.");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Erro ao salvar os dados: {ex.Message}", ex);
-                await Clients.Caller.SendAsync("ReceiveLog", "Erro ao salvar os dados no servidor.");
+                await Clients.Caller.SendAsync("ReceiveLogError", "Erro ao salvar os dados no servidor.");
             }
         }
 

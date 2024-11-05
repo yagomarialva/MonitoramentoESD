@@ -120,7 +120,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response code="500">Erro do servidor interno!</response>
         [HttpPost("adicionar")]
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        //[Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         public async Task<IActionResult> InsertBiometric([FromForm] BiometricModel biometric)
         {
             var (result, statusCode) = await _biometricService.ManageOperatorAsync(biometric);

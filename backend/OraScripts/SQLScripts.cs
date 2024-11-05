@@ -522,7 +522,7 @@ namespace BiometricFaceApi.OraScripts
         // pesquisa ID monitorEsd na tabela logMonitor
         public const string GetMonitorEsdInLogByIP = @"SELECT * FROM logmonitorEsd WHERE IP = :ip";
         //pesquisa SERIAL NUMBER de monitorEsd na tabela
-        public const string GetMonitorEsdInLogBySn = @"SELECT * FROM logmonitoresd WHERE serialnumber = :serialNumber";
+        public const string GetMonitorEsdInLogBySerialNumber = @"SELECT * FROM logmonitoresd WHERE SERIALNUMBER = :serialNumber";
         //tras uma lista paginada de informações do monitor esd 
         public const string GetListMonitorByIdWithPagination = @"SELECT *
                                                             FROM (
@@ -536,6 +536,16 @@ namespace BiometricFaceApi.OraScripts
                                                                 WHERE ROWNUM <= :limit + :offset
                                                             )
                                                             WHERE rnum > :offset";
+        //tras uma lista paginada de informações do monitor esd atravez do SerialNumber
+        public const string GetListMonitorBySerialNumberWithLimit = @"SELECT *
+                                                                            FROM (
+                                                                                SELECT t.*, ROWNUM rnum
+                                                                                FROM LogMonitorEsd t
+                                                                                WHERE SerialNumber = :serialNumber
+                                                                                AND ROWNUM <= :limit
+                                                                                ORDER BY Created DESC
+                                                                            )
+                                                                            WHERE rnum > 0";
         // retorna MenssageContent
         public const string GetMessageContent = @"SELECT * FROM logmonitorEsd WHERE MESSAGECONTENT = :messageContentLower";
         // retorna MenssageType

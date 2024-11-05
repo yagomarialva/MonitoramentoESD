@@ -297,7 +297,7 @@
             <response code="401">Acesso negado devido a credenciais inválidas.</response>
             <response code="500">Erro do servidor interno.</response>
         </member>
-        <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.BuscarMonitorEsdById(System.String)">
+        <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.BuscarMonitorEsdBySn(System.String)">
             <summary>
             Busca um monitor ESD por Serial Number.
             </summary>

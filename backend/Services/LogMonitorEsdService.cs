@@ -113,6 +113,23 @@ namespace BiometricFaceApi.Services
                 return (exception.Message, StatusCodes.Status400BadRequest);
             }
         }
+        public async Task<(object?, int)> GetMonitorEsdBySerialNumberAsync(string serialNumber, int limit)
+        {
+            try
+            {
+                var logMonitor = await _logMonitorEsd.GetMonitorEsdBySerialNumberWithLimitAsync(serialNumber, limit);
+                if (logMonitor.Count() == 0)
+                {
+                    return ($"Monitor Esd com {serialNumber} não encontrado.", StatusCodes.Status404NotFound);
+                }
+
+                return (logMonitor, StatusCodes.Status200OK);
+            }
+            catch (Exception exception)
+            {
+                return (exception.Message, StatusCodes.Status400BadRequest);
+            }
+        }
         public async Task<(object?, int)> GetMessageContentAsync(string messageContent)
         {
             try

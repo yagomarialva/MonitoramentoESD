@@ -2,6 +2,7 @@
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
+using System.Threading;
 
 namespace BiometricFaceApi.Repositories
 {
@@ -28,8 +29,8 @@ namespace BiometricFaceApi.Repositories
         public async Task<LogMonitorEsdModel?> GetMessageContentAsync(string messageContent)
         {
             //Tranforma name para letras minusculas, verifica se existe caracters especiais e tira os espçao no final da palavra.
-            var messageContentLower = messageContent.Normalize().ToLower().TrimEnd();
-            var result = await _oraConnector.LoadData<LogMonitorEsdModel, dynamic>(SQLScripts.GetMessageContent, new { messageContentLower });
+            //var messageContentLower = messageContent.Normalize().ToLower().TrimEnd();
+            var result = await _oraConnector.LoadData<LogMonitorEsdModel, dynamic>(SQLScripts.GetMessageContent, new { messageContent });
             return result.FirstOrDefault();
         }
         public async Task<LogMonitorEsdModel?> GetMessageTypeAsync(string messageType)
@@ -51,7 +52,7 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<LogMonitorEsdModel?> GetMonitorEsdBySnAsync(string serialNumber)
         {
-            var result = await _oraConnector.LoadData<LogMonitorEsdModel, dynamic>(SQLScripts.GetMonitorEsdInLogBySn, new { serialNumber });
+            var result = await _oraConnector.LoadData<LogMonitorEsdModel, dynamic>(SQLScripts.GetMonitorEsdInLogBySerialNumber, new { serialNumber });
             return result.FirstOrDefault();
         }
         public async Task<List<LogMonitorEsdModel>> GetListMonitorEsdByIdAsync(int monitorId, int page, int pageSize)
@@ -59,8 +60,14 @@ namespace BiometricFaceApi.Repositories
             var offset = (page - 1) * pageSize;
             var result = await _oraConnector.LoadData<LogMonitorEsdModel, dynamic>(SQLScripts.GetListMonitorByIdWithPagination,
                 new { monitorId, Offset = offset, Limit = pageSize });
-            return result ??
-               throw new KeyNotFoundException($"Nenhum Log de monitor esd cadastrado.");
+            return result.ToList();
+        }
+        public async Task<List<LogMonitorEsdModel>> GetMonitorEsdBySerialNumberWithLimitAsync(string serialNumber, int limit)
+        {
+            var result = await _oraConnector.LoadData<LogMonitorEsdModel, dynamic>(SQLScripts.GetListMonitorBySerialNumberWithLimit,
+                new { serialNumber, limit });
+            return result.ToList();
+
         }
         public async Task<LogMonitorEsdModel?> AddOrUpdateAsync(LogMonitorEsdModel model)
         {
@@ -133,7 +140,6 @@ namespace BiometricFaceApi.Repositories
             HandleOraConnectorError();
             return LogmonitorDel;
         }
-
         public async Task<LogMonitorEsdModel?> DeleteMonitorEsdByLogIdAsync(int id)
         {
             LogMonitorEsdModel? monitor = await GetMonitorEsdByIdAsync(id);
@@ -156,10 +162,13 @@ namespace BiometricFaceApi.Repositories
             HandleOraConnectorError();
             return await GetByIdAsync(model.ID);
         }
+
         private void HandleOraConnectorError()
         {
             if (_oraConnector.Error != null)
                 throw new Exception($"Database Error: {_oraConnector.Error}");
         }
+
+       
     }
 }
