@@ -18,17 +18,16 @@
 
 .dut-icon{
   margin-left: 13px;
-  margin-top: 13px;
   color: #389E0D;
 }
 
-.cell-icon {
+/* .cell-icon {
   margin-top: 14px;
 }
 
 .ant-btn-icon {
   margin-right: -13px;
-}
+} */
 
 .computer-icon,
 .add-icon {
@@ -47,7 +46,7 @@
 }
 
 .icon-container:nth-child(6) {
-  margin-right: 40px; /* Corredor extra após a 6ª célula */
+  margin-right: 40px;
 }
 
 .cell-icon {

@@ -31,7 +31,7 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<SignUpPage />} />
+        <Route path="/register" element={<Operators />} />
         {/* Se quiser proteger a rota de registro */}
         {/* <Route
           path="/register"

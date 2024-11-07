@@ -66,6 +66,8 @@ const ESDDashboardPage: React.FC = () => {
       setStationsData(factoryMap); // Atualiza o estado com os dados das estações
     } catch (error: any) {
       console.error("Erro ao buscar dados:", error);
+      // localStorage.removeItem("token");
+      //   navigate("/");
       if (error.message === "Request failed with status code 401") {
         localStorage.removeItem("token");
         navigate("/");

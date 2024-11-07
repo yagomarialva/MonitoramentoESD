@@ -2,7 +2,6 @@
 using BiometricFaceApi.OraScripts;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
-using System.Threading;
 
 namespace BiometricFaceApi.Repositories
 {
@@ -62,12 +61,18 @@ namespace BiometricFaceApi.Repositories
                 new { monitorId, Offset = offset, Limit = pageSize });
             return result.ToList();
         }
-        public async Task<List<LogMonitorEsdModel>> GetMonitorEsdBySerialNumberWithLimitAsync(string serialNumber, int limit)
+        public async Task<List<LogMonitorEsdModel>> GetLogIncreasingAsync(string serialNumber, int limit)
         {
-            var result = await _oraConnector.LoadData<LogMonitorEsdModel, dynamic>(SQLScripts.GetListMonitorBySerialNumberWithLimit,
+            var result = await _oraConnector.LoadData<LogMonitorEsdModel, dynamic>(SQLScripts.GetListLogBySerialNumberIncreWithLimit,
                 new { serialNumber, limit });
             return result.ToList();
 
+        }
+        public async Task<List<LogMonitorEsdModel>> GetLogDecreasing(string serialNumber, int limit)
+        {
+             var result = await _oraConnector.LoadData<LogMonitorEsdModel, dynamic>(SQLScripts.GetListLogBySerialNumberDescWithLimit,
+                new { serialNumber, limit });
+            return result.ToList();
         }
         public async Task<LogMonitorEsdModel?> AddOrUpdateAsync(LogMonitorEsdModel model)
         {
@@ -169,6 +174,6 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception($"Database Error: {_oraConnector.Error}");
         }
 
-       
+        
     }
 }

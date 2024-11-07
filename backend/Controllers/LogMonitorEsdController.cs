@@ -1,8 +1,10 @@
-﻿using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Hubs;
+using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
 using BiometricFaceApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BiometricFaceApi.Controllers
 {
@@ -11,11 +13,19 @@ namespace BiometricFaceApi.Controllers
     public class LogMonitorEsdController : ControllerBase
     {
         private readonly LogMonitorEsdService _logMonitorEsdService;
-        public LogMonitorEsdController(ILogMonitorEsdRepository logMonitorEsdRepository)
+        public LogMonitorEsdController(ILogMonitorEsdRepository logMonitorEsdRepository, IHubContext<CommunicationHub> _hubContext)
         {
-            _logMonitorEsdService = new LogMonitorEsdService(logMonitorEsdRepository);
+            _logMonitorEsdService = new LogMonitorEsdService(logMonitorEsdRepository, _hubContext);
+
         }
 
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet("LogsDeTodosMonitores")]
+        public async Task<ActionResult> GetAllLogs()
+        {
+            var (result, statusCode) = await _logMonitorEsdService.GetAllAsync();
+            return StatusCode(statusCode, result);
+        }
         /// <summary>
         /// Busca um monitor ESD por ID.
         /// </summary>
@@ -36,10 +46,19 @@ namespace BiometricFaceApi.Controllers
 
         [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
         [HttpGet]
-        [Route("ListMonitorEsdBySerialNumber")]
-        public async Task<ActionResult> BuscarListaMonitorEsdBySerialNumber([FromQuery] string seriaNumber, [FromQuery] int limit = 10)
+        [Route("ListLogsOrdemCrescente")]
+        public async Task<ActionResult> ListaLogOrdemCrescente([FromQuery] string seriaNumber, [FromQuery] int limit = 10)
         {
-            var (result, statusCode) = await _logMonitorEsdService.GetMonitorEsdBySerialNumberAsync(seriaNumber, limit);
+            var (result, statusCode) = await _logMonitorEsdService.GetLogIncreAsync(seriaNumber, limit);
+            return StatusCode(statusCode, result);
+        }
+
+        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [HttpGet]
+        [Route("ListLogsOrdemDecrescente")]
+        public async Task<ActionResult> ListaLogOrdemDecrescente([FromQuery] string seriaNumber, [FromQuery] int limit = 10)
+        {
+            var (result, statusCode) = await _logMonitorEsdService.GetLogDecreAsync(seriaNumber, limit);
             return StatusCode(statusCode, result);
         }
 

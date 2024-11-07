@@ -3,7 +3,7 @@ const url = 'api/Biometric'
 // Fetch all operators
 export const getAllOperators = async () => {
   try {
-    const response = await TokenApi.get(`${url}/todosUsers`);
+    const response = await TokenApi.get(`${url}/ListUsersPaginated?page=1&pageSize=50`);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch all operators", error);

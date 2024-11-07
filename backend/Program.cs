@@ -1,4 +1,4 @@
-using BiometricFaceApi.Auth;
+ï»¿using BiometricFaceApi.Auth;
 using BiometricFaceApi.Data;
 using BiometricFaceApi.Hubs;
 using BiometricFaceApi.Middleware;
@@ -17,7 +17,6 @@ using System.Text;
 
 
 
-
 namespace BiometricFaceApi
 {
     public class Program
@@ -28,23 +27,24 @@ namespace BiometricFaceApi
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
             var secretKey = configuration["jwt:secretKey"] ?? "";
-            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 
             var root = Directory.GetCurrentDirectory();
             var dotenv = Path.Combine(root, ".env");
             DotEnv.Load(dotenv);
 
+            // Carrega o valor de DB_HOST
+            var oracleHost = Environment.GetEnvironmentVariable("DB_HOST");
+
             var config =
             new ConfigurationBuilder()
             .AddEnvironmentVariables()
             .Build();
 
-            // Carrega as variáveis de ambiente do arquivo .env
-            DotEnv.Load(dotenv);  // Certifique-se de que este método está disponível
+            // Carrega as variï¿½veis de ambiente do arquivo .env
+            DotEnv.Load(dotenv);  // Certifique-se de que este mï¿½todo estï¿½ disponï¿½vel
 
-            // Pega o valor das variáveis de ambiente e exibe no console
-            var oracleHost = Environment.GetEnvironmentVariable("DB_HOST");
+            // Pega o valor das variï¿½veis de ambiente e exibe no console
             // var oraclePort = Environment.GetEnvironmentVariable("ORACLE_PORT");
             // var oracleService = Environment.GetEnvironmentVariable("ORACLE_SERVICE");
 
@@ -60,14 +60,12 @@ namespace BiometricFaceApi
             // Adicionar e configurar CORS
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  policy =>
-                                  {
-                                      policy.AllowAnyOrigin()
-                                            .AllowAnyHeader()
-                                            .AllowAnyMethod();
-                                      //.AllowCredentials();
-                                  });
+                options.AddPolicy("AllowSpecificOrigins", policy =>
+                     policy
+                         .WithOrigins("http://localhost:3000", "http://${oracleHost}:3000", "http://*:3000") // adicione quantas origens precisar
+                         .AllowAnyHeader()
+                         .AllowAnyMethod()
+                         .AllowCredentials());
             });
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -199,7 +197,7 @@ namespace BiometricFaceApi
 
             app.UseMiddleware(typeof(GlobalErrorHandlingMiddleware));
             app.UseHttpsRedirection();
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors("AllowSpecificOrigins");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

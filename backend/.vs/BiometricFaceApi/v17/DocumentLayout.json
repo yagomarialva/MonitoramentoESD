@@ -1,34 +1,34 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\",
+  "WorkspaceRootPath": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\dotenv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:dotenv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\.env||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:.env||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\services\\logmonitoresdservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\logmonitoresdservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\repositories\\logmonitoresdrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\logmonitoresdrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\controllers\\logmonitoresdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\controllers\\logmonitoresdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\logmonitoresdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\repositories\\interfaces\\ilogmonitoresdrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\interfaces\\ilogmonitoresdrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\services\\logmonitoresdservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\logmonitoresdservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9992\\documents\\fct_auto_test\\backend\\hubs\\communicationhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:hubs\\communicationhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,92 +38,98 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "DotEnv.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\DotEnv.cs",
-              "RelativeDocumentMoniker": "DotEnv.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\DotEnv.cs",
-              "RelativeToolTip": "DotEnv.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T15:21:32.583Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAAEAAAAAAAAAAAAUwBMAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T15:20:23.146Z",
+              "Title": ".env",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\.env",
+              "RelativeDocumentMoniker": ".env",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\.env",
+              "RelativeToolTip": ".env",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-11-07T19:23:12.379Z",
               "EditorCaption": ""
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AQIAADwAAAAAAAAAAAAqwFQAAAAdAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-11-05T15:07:34.366Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ILogMonitorEsdRepository.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Repositories\\Interfaces\\ILogMonitorEsdRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\Interfaces\\ILogMonitorEsdRepository.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Repositories\\Interfaces\\ILogMonitorEsdRepository.cs",
-              "RelativeToolTip": "Repositories\\Interfaces\\ILogMonitorEsdRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAABQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T14:47:41.095Z"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "LogMonitorEsdController.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Controllers\\LogMonitorEsdController.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\LogMonitorEsdController.cs",
               "RelativeDocumentMoniker": "Controllers\\LogMonitorEsdController.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Controllers\\LogMonitorEsdController.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Controllers\\LogMonitorEsdController.cs",
               "RelativeToolTip": "Controllers\\LogMonitorEsdController.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAowCkAAABjAAAA",
+              "ViewState": "AQIAAIsAAAAAAAAAAAAYwBEAAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T13:33:40.535Z"
+              "WhenOpened": "2024-11-07T18:53:05.834Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "LogMonitorEsdService.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Services\\LogMonitorEsdService.cs",
+              "RelativeDocumentMoniker": "Services\\LogMonitorEsdService.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Services\\LogMonitorEsdService.cs",
+              "RelativeToolTip": "Services\\LogMonitorEsdService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAABCAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-07T18:30:22.233Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "LogMonitorEsdRepository.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Repositories\\LogMonitorEsdRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\LogMonitorEsdRepository.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Repositories\\LogMonitorEsdRepository.cs",
-              "RelativeToolTip": "Repositories\\LogMonitorEsdRepository.cs",
-              "ViewState": "AQIAABUAAAAAAAAAAADwv0QAAAAjAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T13:20:25.756Z"
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Properties\\launchSettings.json",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABwAAAAeAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-11-07T13:34:42.375Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "LogMonitorEsdService.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Services\\LogMonitorEsdService.cs",
-              "RelativeDocumentMoniker": "Services\\LogMonitorEsdService.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Services\\LogMonitorEsdService.cs",
-              "RelativeToolTip": "Services\\LogMonitorEsdService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAHMAAABKAAAA",
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAABMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-11-07T13:25:43.582Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CommunicationHub.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Hubs\\CommunicationHub.cs",
+              "RelativeDocumentMoniker": "Hubs\\CommunicationHub.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Hubs\\CommunicationHub.cs",
+              "RelativeToolTip": "Hubs\\CommunicationHub.cs",
+              "ViewState": "AQIAAGAAAAAAAAAAAAAEwHIAAAAzAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-05T13:20:35.951Z"
+              "WhenOpened": "2024-11-06T17:49:22.961Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\BC4G9992\\Documents\\fct_auto_test\\backend\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAC4AAAAAAAAAAAAmwEcAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-06T15:11:18.283Z",
+              "EditorCaption": ""
             }
           ]
         }

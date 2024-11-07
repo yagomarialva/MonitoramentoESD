@@ -1,15 +1,18 @@
-﻿using BiometricFaceApi.Models;
+﻿using BiometricFaceApi.Hubs;
+using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BiometricFaceApi.Services
 {
     public class LogMonitorEsdService
     {
         private readonly ILogMonitorEsdRepository _logMonitorEsd;
-
-        public LogMonitorEsdService(ILogMonitorEsdRepository logMonitorEsdRepository)
+        private readonly IHubContext<CommunicationHub> _hubContext;
+        public LogMonitorEsdService(ILogMonitorEsdRepository logMonitorEsdRepository, IHubContext<CommunicationHub> hubContext)
         {
             _logMonitorEsd = logMonitorEsdRepository;
+            _hubContext = hubContext;
         }
         public async Task<(object?, int)> GetAllAsync()
         {
@@ -113,11 +116,28 @@ namespace BiometricFaceApi.Services
                 return (exception.Message, StatusCodes.Status400BadRequest);
             }
         }
-        public async Task<(object?, int)> GetMonitorEsdBySerialNumberAsync(string serialNumber, int limit)
+        public async Task<(object?, int)> GetLogIncreAsync(string serialNumber, int limit)
         {
             try
             {
-                var logMonitor = await _logMonitorEsd.GetMonitorEsdBySerialNumberWithLimitAsync(serialNumber, limit);
+                var logMonitor = await _logMonitorEsd.GetLogIncreasingAsync(serialNumber, limit);
+                if (logMonitor.Count() == 0)
+                {
+                    return ($"Monitor Esd com {serialNumber} não encontrado.", StatusCodes.Status404NotFound);
+                }
+
+                return (logMonitor, StatusCodes.Status200OK);
+            }
+            catch (Exception exception)
+            {
+                return (exception.Message, StatusCodes.Status400BadRequest);
+            }
+        }
+        public async Task<(object?, int)> GetLogDecreAsync(string serialNumber, int limit)
+        {
+            try
+            {
+                var logMonitor = await _logMonitorEsd.GetLogDecreasing(serialNumber, limit);
                 if (logMonitor.Count() == 0)
                 {
                     return ($"Monitor Esd com {serialNumber} não encontrado.", StatusCodes.Status404NotFound);
@@ -193,6 +213,7 @@ namespace BiometricFaceApi.Services
                     Description = description
                 };
                 await _logMonitorEsd.AddOrUpdateAsync(logMonitorModel);
+                await _hubContext.Clients.All.SendAsync("ReceiveAlert", logMonitor);
                 var updateLog = await _logMonitorEsd.ChangeLogAsync(id, changeLog ? 1 : 0, description);
                 return (logMonitorModel, StatusCodes.Status200OK);
             }
@@ -210,6 +231,7 @@ namespace BiometricFaceApi.Services
                 bool isNew = existingLogMonitor == null;
 
                 var response = await _logMonitorEsd.AddOrUpdateAsync(logMonitorModel);
+                await _hubContext.Clients.All.SendAsync("ReceiveAlert", logMonitorModel);
                 int statusCode = isNew ? StatusCodes.Status201Created : StatusCodes.Status200OK;
 
                 return (response, statusCode);

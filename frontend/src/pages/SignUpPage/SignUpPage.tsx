@@ -15,10 +15,9 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
-import TokenApi from "../../api/TokenApi";
+import { createUser, UserData } from "../../api/userApi";
 import Logo from "./logo.png";
 
-// Tipos para as variáveis de estado
 interface SnackbarState {
   open: boolean;
   message: string;
@@ -43,11 +42,7 @@ const SignUpPage: React.FC = () => {
   });
 
   const handleSnackbarOpen = (message: string, severity: SnackbarState["severity"]) => {
-    setSnackbar({
-      open: true,
-      message,
-      severity,
-    });
+    setSnackbar({ open: true, message, severity });
   };
 
   const handleSnackbarClose = () => {
@@ -79,69 +74,39 @@ const SignUpPage: React.FC = () => {
     }
 
     setLoading(true);
-    try {
-      await TokenApi.post("/api/Authentication/criacao", {
-        username,
-        password,
-        rolesName,
-        badge,
-      });
+    const userData: UserData = { username, password, rolesName, badge };
+    const result = await createUser(userData);
+    setLoading(false);
+
+    if (result.success) {
       setUsername("");
       setPassword("");
       setConfirmPassword("");
       setRolesName("");
       setBadge("");
       handleSnackbarOpen("Usuário criado com sucesso!", "success");
-    } catch (error: any) {
-      handleSnackbarOpen(error.response.data.errors.Password, "error");
-    } finally {
-      setLoading(false);
+    } else {
+      handleSnackbarOpen(result.message || "Erro ao criar usuário.", "error");
     }
   };
 
   return (
-    <Container
-      maxWidth="xs"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        mt: 8,
-      }}
-    >
+    <Container maxWidth="xs" sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 8 }}>
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
-        >
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: "100%" }}>
           {snackbar.message}
         </Alert>
       </Snackbar>
 
-      <Card
-        sx={{
-          p: 4,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h4" component="h1" gutterBottom>
-          Cadastro
-        </Typography>
-        <img
-          src={Logo}
-          alt="Logo"
-          width="150px"
-          style={{ marginBottom: "20px" }}
-        />
+      <Card sx={{ p: 4, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Typography variant="h4" component="h1" gutterBottom>Cadastro</Typography>
+        <img src={Logo} alt="Logo" width="150px" style={{ marginBottom: "20px" }} />
+        
         <TextField
           label="Nome"
           variant="outlined"
@@ -152,6 +117,7 @@ const SignUpPage: React.FC = () => {
           helperText={username && !nonEmptyRegex.test(username) ? "Nome não pode estar vazio." : ""}
           onChange={(e) => setUsername(e.target.value)}
         />
+        
         <TextField
           label="Matricula"
           variant="outlined"
@@ -162,6 +128,7 @@ const SignUpPage: React.FC = () => {
           helperText={badge && !nonEmptyRegex.test(badge) ? "Matricula não pode estar vazia." : ""}
           onChange={(e) => setBadge(e.target.value)}
         />
+        
         <TextField
           label="Senha"
           type="password"
@@ -170,13 +137,10 @@ const SignUpPage: React.FC = () => {
           margin="normal"
           value={password}
           error={!!password && !passwordRegex.test(password)}
-          helperText={
-            password && !passwordRegex.test(password)
-              ? "A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número."
-              : ""
-          }
+          helperText={password && !passwordRegex.test(password) ? "A senha deve ter entre 6 e 12 caracteres, incluindo pelo menos uma letra e um número." : ""}
           onChange={(e) => setPassword(e.target.value)}
         />
+        
         <TextField
           label="Confirmar Senha"
           type="password"
@@ -188,6 +152,7 @@ const SignUpPage: React.FC = () => {
           helperText={confirmPassword && password !== confirmPassword ? "As senhas não coincidem." : ""}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
+        
         <FormControl fullWidth variant="outlined" margin="normal" error={!nonEmptyRegex.test(rolesName)}>
           <InputLabel id="role-select-label">Função</InputLabel>
           <Select
@@ -199,11 +164,12 @@ const SignUpPage: React.FC = () => {
             <MenuItem value="">
               <em>Selecione uma Função</em>
             </MenuItem>
-            <MenuItem value="administrator">Administrador</MenuItem>
-            <MenuItem value="operator">Colaborador</MenuItem>
-            <MenuItem value="developer">Desenvolvedor</MenuItem>
+            <MenuItem value="administrador">Administrador</MenuItem>
+            <MenuItem value="desenvolvedor">Desenvolvedor</MenuItem>
+            <MenuItem value="tecnico">Técnico</MenuItem>
           </Select>
         </FormControl>
+
         <LoadingButton
           loading={loading}
           variant="contained"
@@ -214,6 +180,7 @@ const SignUpPage: React.FC = () => {
         >
           Cadastrar
         </LoadingButton>
+        
         <Button
           sx={{ mt: 2 }}
           fullWidth

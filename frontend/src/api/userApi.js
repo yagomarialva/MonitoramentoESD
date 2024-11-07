@@ -1,17 +1,17 @@
 import axios from 'axios';
 import TokenApi from "./TokenApi";
 
-
+const url = 'api/Biometric/'
 const API_URL = process.env.REACT_APP_API_URL;
 const API_URL_USERS = process.env.REACT_APP_API_URL;
 
 export const getUsers = async () => {
-    const response = await TokenApi.get('/todosUsers');
+    const response = await TokenApi.get('api/Biometric/ListUsersPaginated?page=1&pageSize=50');
     return response.data;
 };
 
 export const getAllUsers = async () => {
-    const response = await TokenApi.get('/todosUsers');
+    const response = await TokenApi.get(`api/Biometric/ListUsersPaginated?page=1&pageSize=50`);
     return response.data.value;
 };
 

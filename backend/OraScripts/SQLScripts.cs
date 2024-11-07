@@ -536,16 +536,52 @@ namespace BiometricFaceApi.OraScripts
                                                                 WHERE ROWNUM <= :limit + :offset
                                                             )
                                                             WHERE rnum > :offset";
-        //tras uma lista paginada de informações do monitor esd atravez do SerialNumber
-        public const string GetListMonitorBySerialNumberWithLimit = @"SELECT *
+        //tras uma lista logs em ordem crescente
+        public const string GetListLogBySerialNumberIncreWithLimit = @"SELECT  ID, 
+                                                                               SerialNumber, 
+                                                                               MessageType, 
+                                                                               MonitorEsdID, 
+                                                                               IP, 
+                                                                               Status, 
+                                                                               MessageContent, 
+                                                                               Description, 
+                                                                               TO_CHAR(Created, 'YYYY-MM-DD HH24:MI:SS') AS Created, 
+                                                                               TO_CHAR(LastUpdated, 'YYYY-MM-DD HH24:MI:SS') AS LastUpdated
+                                                                        FROM (
+                                                                            SELECT t.*, ROWNUM rnum
                                                                             FROM (
-                                                                                SELECT t.*, ROWNUM rnum
-                                                                                FROM LogMonitorEsd t
+                                                                                SELECT * 
+                                                                                FROM LogMonitorEsd
                                                                                 WHERE SerialNumber = :serialNumber
-                                                                                AND ROWNUM <= :limit
+                                                                                ORDER BY Created ASC
+                                                                            ) t
+                                                                            WHERE ROWNUM <= :limit
+                                                                        )
+                                                                        WHERE rnum > 0
+                                                                        ORDER BY Created ASC";
+        //tras uma lista logs em ordem decrescente
+        public const string GetListLogBySerialNumberDescWithLimit = @"SELECT   ID, 
+                                                                               SerialNumber, 
+                                                                               MessageType, 
+                                                                               MonitorEsdID, 
+                                                                               IP, 
+                                                                               Status, 
+                                                                               MessageContent, 
+                                                                               Description, 
+                                                                               TO_CHAR(Created, 'YYYY-MM-DD HH24:MI:SS') AS Created, 
+                                                                               TO_CHAR(LastUpdated, 'YYYY-MM-DD HH24:MI:SS') AS LastUpdated
+                                                                        FROM (
+                                                                            SELECT t.*, ROWNUM rnum
+                                                                            FROM (
+                                                                                SELECT * 
+                                                                                FROM LogMonitorEsd
+                                                                                WHERE SerialNumber = :serialNumber
                                                                                 ORDER BY Created DESC
-                                                                            )
-                                                                            WHERE rnum > 0";
+                                                                            ) t
+                                                                            WHERE ROWNUM <= :limit
+                                                                        )
+                                                                        WHERE rnum > 0
+                                                                        ORDER BY Created DESC";
         // retorna MenssageContent
         public const string GetMessageContent = @"SELECT * FROM logmonitorEsd WHERE MESSAGECONTENT = :messageContentLower";
         // retorna MenssageType

@@ -17,6 +17,9 @@ import {
 } from "../../../../api/monitorApi";
 import { useNavigate } from "react-router-dom";
 import * as signalR from "@microsoft/signalr"; // Importa o SignalR
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import signalRService from "../../../../api/signalRService";
+import RealTimeLogTable from "./RealTimeLogTable";
 
 const { TabPane } = Tabs;
 
@@ -30,6 +33,13 @@ interface Monitor {
     statusJig: string;
   };
 }
+
+interface LogData {
+  serialNumber: string;
+  status: number;
+  description: string;
+  // Adicione outros campos conforme necessário
+}
 interface monitorsESD {
   id: number;
   serialNumber: string;
@@ -40,7 +50,7 @@ interface LogData {
   key: string;
   message: string;
   date: string;
-  hour:string;
+  hour: string;
 }
 
 interface DataType {
@@ -66,6 +76,8 @@ const { confirm } = Modal; // Modal de confirmação do Ant Design
 type SnackbarSeverity = "success" | "error";
 const truncateText = (text: string, maxLength: number) =>
   text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
+const API_URL = process.env.REACT_APP_HOST;
 
 const ReusableModal: React.FC<ReusableModalProps> = ({
   visible,
@@ -101,6 +113,13 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const [operatorLogData, setOperatorLogData] = useState([]); // Renomeado para evitar conflitos
   const [jigLogData, setJigLogData] = useState([]);
 
+  // SignalR
+  const [connection, setConnection] = useState<signalR.HubConnection | null>(
+    null
+  );
+  const [logs, setLogs] = useState<any[]>([]);
+  const [filteredLogs, setFilteredLogs] = useState<LogData[]>([]);
+
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [state, setState] = useState({
@@ -126,102 +145,44 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     monitor.monitorsESD
   );
 
-    // SignalR
-    const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
-    const [logs, setLogs] = useState<LogData[]>([]);
-    
-
-  const operatorFailures = [
-    "Erro de configuração",
-    "Falha na inicialização",
-    "Problema de comunicação",
-    "Erro de leitura do monitor",
-  ];
-
-  const monitorFailures = [
-    "Monitor não responde",
-    "Erro de calibração",
-    "Falha de firmware",
-    "Sinal fora da faixa",
-  ];
-
-  // useEffect(() => {
-  //   // Configura a conexão com o SignalR Hub
-  //   const newConnection = new signalR.HubConnectionBuilder()
-  //     .withUrl("http://localhost:5000/hub") // Atualize para o URL do seu servidor SignalR
-  //     .withAutomaticReconnect()
-  //     .build();
-
-  //   setConnection(newConnection);
-
-  //   // Ao montar o componente, inicie a conexão
-  //   newConnection
-  //     .start()
-  //     .then(() => {
-  //       console.log("Conectado ao SignalR!");
-
-  //       // Inscreva-se para escutar mensagens do servidor
-  //       newConnection.on("ReceiveLogUpdate", (log: LogData) => {
-  //         setLogs((prevLogs) => [...prevLogs, log]); // Atualiza a lista de logs
-  //       });
-  //     })
-  //     .catch((err) => console.log("Erro ao conectar ao SignalR: ", err));
-
-  //   return () => {
-  //     // Encerra a conexão quando o componente for desmontado
-  //     if (newConnection) {
-  //       newConnection.stop();
-  //     }
-  //   }; http://192.168.128.47:7080/api/LogMonitorEsd/ListMonitorEsd?id=21&page=1&pageSize=50
-  // }, []);
-
-  // Resetar o estado sempre que o modal abrir
   useEffect(() => {
-        // Configura a conexão com o SignalR Hub
-        const newConnection = new signalR.HubConnectionBuilder()
-        .withUrl("http://192.168.128.47:7080/hub") // Atualize para o URL do seu servidor SignalR
-        .withAutomaticReconnect()
-        .build();
-  
-      setConnection(newConnection);
-  
-      // Ao montar o componente, inicie a conexão
-      newConnection
-        .start()
-        .then(() => {
-          console.log("Conectado ao SignalR!");
-  
-          // Inscreva-se para escutar mensagens do servidor
-          newConnection.on("ReceiveLogUpdate", (log: LogData) => {
-            setLogs((prevLogs) => [...prevLogs, log]); // Atualiza a lista de logs
-          });
-        })
-        .catch((err) => console.log("Erro ao conectar ao SignalR: ", err));
-  
-
-    if (visible) {
-      setFooterVisible(false);
-      setActiveKey("1");
-      setActionType(null);
-      setSelectedOperatorFailures([]);
-      setSelectedMonitorFailures([]);
-      setShowOperatorInput(false);
-      setShowMonitorInput(false);
-      setOperatorOtherFailure(null);
-      setMonitorOtherFailure(null);
-      setMonitorOtherFailure(null);
-      setIsEditing(false); // Reseta o estado de edição
-      setEditableData({
-        id: 0, // Valores iniciais para limpar o formulário
-        serialNumber: "",
-        description: "",
-      });
-    }
-    return () => {
-      // Encerra a conexão quando o componente for desmontado
-      if (newConnection) {
-        newConnection.stop();
+    try {
+      const connectToSignalR = async () => {
+        signalRService.onReceiveAlert((message) => {
+          setLogs(message);
+          const newFilteredLogs = message.filter(
+            (log: LogData) => log.status !== 1
+          );
+          setFilteredLogs((prevLogs) => [...prevLogs, ...newFilteredLogs]);
+        });
+        await signalRService.startConnection();
+      };
+      connectToSignalR();
+      console.log("filteredLogs", logs);
+      if (visible) {
+        setFooterVisible(false);
+        setActiveKey("1");
+        setActionType(null);
+        setSelectedOperatorFailures([]);
+        setSelectedMonitorFailures([]);
+        setShowOperatorInput(false);
+        setShowMonitorInput(false);
+        setOperatorOtherFailure(null);
+        setMonitorOtherFailure(null);
+        setMonitorOtherFailure(null);
+        setIsEditing(false); // Reseta o estado de edição
+        setEditableData({
+          id: 0, // Valores iniciais para limpar o formulário
+          serialNumber: "",
+          description: "",
+        });
       }
+    } catch (error) {
+      console.log(error);
+    }
+
+    return () => {
+      signalRService.stopConnection();
     };
   }, [visible]);
 
@@ -237,7 +198,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       setMonitorTabActive(true);
     }
   }, [isFooterVisible, actionType]);
-
 
   const showSnackbar = (
     message: string,
@@ -273,7 +233,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
+    if (!visible) return;
     const updatedMonitorESD = {
       id: editableData.id,
       serialNumber: editableData.serialNumber,
@@ -287,8 +247,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       console.error("Erro ao salvar monitor:", error);
     }
   };
-
-
 
   const handleConfirmDelete = () => {
     confirm({
@@ -387,9 +345,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   const logColumns: ColumnsType<any> = [
     {
-      title: "messageContent",
-      dataIndex: "messageContent",
-      key: "messageContent",
+      title: "description",
+      dataIndex: "description",
+      key: "description",
       render: (text: string) => (
         <Tooltip title={text}>
           <span className="ellipsis-text">{truncateText(text, 15)}</span>
@@ -409,26 +367,37 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   const handleTabChange = async (key: React.SetStateAction<string>) => {
     setActiveKey(key);
-    if (key === "2") {
-      try {
-        const monitorToDelete = await getMonitor(monitor.monitorsESD.serialNumber);
-        const allLogs = await getMonitorLogs(monitor.monitorsESD.serialNumber);
-        // Filtrando logs em categorias de "Operador" e "Jig"
-        const filteredOperatorLogs = allLogs.filter((log: { messageType: string; }) => log.messageType === "operador");
-        const filteredJigLogs = allLogs.filter((log: { messageType: string; }) => log.messageType === "jig");
+    console.log("key", key);
 
-        // Atualizando os estados
-        setOperatorLogData(filteredOperatorLogs);
-        setJigLogData(filteredJigLogs);
-      } catch (error: any) {
-        if (error.message === "Request failed with status code 401") {
-          showMessage("Sessão Expirada.", "error");
-          localStorage.removeItem("token");
-          navigate("/");
-        }
-        if (error.message === "Request failed with status code 404") {
-          showMessage("Dados não encontrados.", "error");
-        }
+    if (key !== "2") return; // Caso o key não seja "2", retorna imediatamente
+
+    try {
+      // Configura o SignalR
+      const monitorToDelete = await getMonitor(
+        monitor.monitorsESD.serialNumber
+      );
+      const allLogs = await getMonitorLogs(monitor.monitorsESD.serialNumber);
+      // Filtrando logs em categorias de "Operador" e "Jig"
+      const filteredOperatorLogs = allLogs.filter(
+        (log: { messageType: string }) => log.messageType === "operador"
+      );
+      const filteredJigLogs = allLogs.filter(
+        (log: { messageType: string }) => log.messageType === "jig"
+      );
+
+      // Atualizando os estados
+      setOperatorLogData(filteredOperatorLogs);
+      setJigLogData(filteredJigLogs);
+    } catch (error: any) {
+      // Tratamento de erro (código de status HTTP 401 ou 404)
+      if (error?.response?.status === 401) {
+        showMessage("Sessão Expirada.", "error");
+        localStorage.removeItem("token");
+        navigate("/");
+      } else if (error?.response?.status === 404) {
+        showMessage("Dados não encontrados.", "error");
+      } else {
+        showMessage("Ocorreu um erro inesperado.", "error");
       }
     }
   };
@@ -490,29 +459,48 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         <div>
           <Tabs activeKey={activeKey} onChange={handleTabChange}>
             <TabPane tab="Monitor" key="1">
-              <Table
-                columns={monitorColumns}
-                dataSource={monitorData}
-                pagination={false}
-              />
-            </TabPane>
-            <TabPane tab="Log" key="2">
-              <div style={{ display: "flex", gap: "16px" }}>
+              <div
+                style={{
+                  maxWidth: "400px",
+                  maxHeight: "400px",
+                }}
+              >
+                {" "}
+                {/* Definindo altura fixa com rolagem */}
                 <Table
-                  title={() => "Logs de Operador"}
-                  columns={logColumns}
-                  dataSource={operatorLogs}
+                  columns={monitorColumns}
+                  dataSource={monitorData}
                   pagination={false}
-                  style={{ width: "50%" }}
-                />
-                <Table
-                  title={() => "Logs de Jigs"}
-                  columns={logColumns}
-                  dataSource={jigLogs}
-                  pagination={false}
-                  style={{ width: "50%" }}
                 />
               </div>
+            </TabPane>
+            <TabPane  tab="Log" key="2">
+              {/* <div
+                style={{
+                  display: "flex",
+                  gap: "16px",
+                  maxHeight: "400px",
+                  overflow: "auto",
+                }}
+              >
+                <div style={{ width: "50%" }}>
+                  <Table
+                    title={() => "Logs de Operador"}
+                    columns={logColumns}
+                    dataSource={operatorLogs}
+                    pagination={false}
+                  />
+                </div>
+                <div style={{ width: "50%" }}>
+                  <Table
+                    title={() => "Logs de Jigs"}
+                    columns={logColumns}
+                    dataSource={jigLogs}
+                    pagination={false}
+                  />
+                </div>
+              </div> */}
+              <RealTimeLogTable />
             </TabPane>
           </Tabs>
         </div>

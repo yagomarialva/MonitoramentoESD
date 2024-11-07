@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Line from "../ESDLine/Line";
-import "./FactoryMap.css"; // Importando o CSS
+import "./FactoryMap.css";
 import {
   createLine,
   deleteLine,
@@ -15,8 +15,9 @@ import {
 import { useTranslation } from "react-i18next";
 import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
-import { Button, Modal, message, Radio, Checkbox } from "antd"; // Elementos do Ant Design
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons"; // Ant Design Icons
+import { Button, Modal, message, Radio, Checkbox } from "antd";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import signalRService from "../../../../../api/signalRService";
 
 interface Station {
   id: number;
@@ -25,6 +26,13 @@ interface Station {
   sizeX: number;
   sizeY: number;
 }
+
+interface LogData {
+  serialNumber: string;
+  status: number;
+  // Adicione outros campos conforme necessário
+}
+
 
 interface MonitorDetails {
   id: number;
@@ -62,30 +70,45 @@ interface FactoryMapProps {
   onUpdate: () => void;
 }
 
-const { confirm } = Modal; // Modal de confirmação do Ant Design
+const { confirm } = Modal;
 
 const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [selectedLineId, setSelectedLineId] = useState<number | null>(null);
   const [selectedLinkId, setSelectedLinkId] = useState<number | null>(null);
-  const [selectedStationsId, setSelectedStationsId] = useState<number | null>(
-    null
-  );
+  const [selectedStationsId, setSelectedStationsId] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<LogData | null>(null);
+  const [logs, setLogs] = useState<any[]>([]);
 
   const showMessage = (content: string, type: "success" | "error") => {
-    message[type](content); // Exibe uma mensagem de sucesso ou erro
+    message[type](content);
   };
 
-  // t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
-  //   appName: "App for Translations",
-  // })
+  useEffect(() => {
+    try {
+      const connectToSignalR = async () => {
+        signalRService.onReceiveAlert((message) => {
+          setAlertMessage(message);
+          // console.log("Alert received from SignalR:", alertMessage);
+        });
+        await signalRService.startConnection();
+      };
+      connectToSignalR();
+    } catch (error) {
+      console.log(error)
+    }
+
+    // Cleanup when the component is unmounted
+    return () => {
+      signalRService.stopConnection();
+    };
+  }, []);
 
   const handleError = (error: any) => {
     console.error("Erro:", error);
     if (error.message === "Request failed with status code 401") {
-      // showMessage("Sessão Expirada.", "error");
       showMessage(
         t("ESD_MONITOR.MAP_FACTORY.TOAST.EXPIRED_SESSION", {
           appName: "App for Translations",
@@ -106,20 +129,17 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
 
   const handleCreateLine = async () => {
     const randomLineName = `Linha ${Math.floor(Math.random() * 1000000)}`;
-
     try {
       const createdLine = await createLine({ name: randomLineName });
-
       const station = { name: createdLine.name, sizeX: 6, sizeY: 6 };
       const stationCreated = await createStation(station);
-
       const stationName = await getStationByName(stationCreated.name);
+
       const link = {
         ordersList: createdLine.id,
         lineID: createdLine.id,
         stationID: stationName.id,
       };
-
       await createLink(link);
       onUpdate();
       showMessage(
@@ -136,7 +156,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
       title: "Confirmação de Exclusão",
       icon: <DeleteOutlined />,
       content: "Tem certeza de que deseja excluir esta linha?",
-      className: "custom-modal", // Adiciona a classe personalizada ao modal
+      className: "custom-modal",
       onOk: async () => {
         try {
           await deleteLink(selectedLinkId);
@@ -151,10 +171,10 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
         }
       },
       okButtonProps: {
-        className: "custom-button", // Adiciona a classe personalizada ao botão OK
+        className: "custom-button",
       },
       cancelButtonProps: {
-        className: "custom-cancel-button", // Adiciona a classe personalizada ao botão Cancelar
+        className: "custom-cancel-button",
       },
     });
   };
@@ -166,66 +186,68 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   };
 
   return (
-    <div className="app-container">
-      <header className="container-title">
-        <h1>{t("LINE.TABLE_HEADER")}</h1>
-        <div className="header-buttons">
-          {isEditing && (
-            <>
-              <Button
-                type="link"
-                icon={<DeleteOutlined />}
-                disabled={!selectedLineId}
-                onClick={handleConfirmDelete}
-                className="white-background-button no-border remove-button-container"
-              >
-                {t("LINE.CONFIRM_DIALOG.DELETE_LINE", {
-                  appName: "App for Translations",
-                })}
-              </Button>
-              <Button
-                type="link"
-                icon={<PlusOutlined />}
-                onClick={handleCreateLine}
-                className="white-background-button no-border add-button-container"
-              >
-                {t("LINE.ADD_LINE", { appName: "App for Translations" })}
-              </Button>
-            </>
-          )}
-          <Button
-            type="primary"
-            onClick={() => setIsEditing(!isEditing)}
-            className="white-background-button no-border enable-button-container"
-          >
-            {isEditing ? "Finalizar Edição" : "Editar Linhas"}
-          </Button>
-        </div>
-      </header>
-
-      <div className="body">
-        {lines.map((line) => (
-          <div className="card" key={line.id}>
-            <div className="card-header">
-              {isEditing && (
-                <Checkbox
-                  checked={selectedLineId === line.line.id}
-                  onChange={() => handleLineChange(line)}
-                  className="green-checkbox"
-                />
-              )}
-            </div>
-            <div className="card-body">
-              <Line lineData={line} onUpdate={onUpdate} />
-            </div>
+    <>
+      <div className="app-container">
+        <header className="container-title">
+          <h1>{t("LINE.TABLE_HEADER")}</h1>
+          <div className="header-buttons">
+            {isEditing && (
+              <>
+                <Button
+                  type="link"
+                  icon={<DeleteOutlined />}
+                  disabled={!selectedLineId}
+                  onClick={handleConfirmDelete}
+                  className="white-background-button no-border remove-button-container"
+                >
+                  {t("LINE.CONFIRM_DIALOG.DELETE_LINE", {
+                    appName: "App for Translations",
+                  })}
+                </Button>
+                <Button
+                  type="link"
+                  icon={<PlusOutlined />}
+                  onClick={handleCreateLine}
+                  className="white-background-button no-border add-button-container"
+                >
+                  {t("LINE.ADD_LINE", { appName: "App for Translations" })}
+                </Button>
+              </>
+            )}
+            <Button
+              type="primary"
+              onClick={() => setIsEditing(!isEditing)}
+              className="white-background-button no-border enable-button-container"
+            >
+              {isEditing ? "Finalizar Edição" : "Editar Linhas"}
+            </Button>
           </div>
-        ))}
-      </div>
+        </header>
 
-      <footer className="app-footer">
-        <p>&copy; 2024 Compal. Todos os direitos reservados.</p>
-      </footer>
-    </div>
+        <div className="body">
+          {lines.map((line) => (
+            <div className="card" key={line.id}>
+              <div className="card-header">
+                {isEditing && (
+                  <Checkbox
+                    checked={selectedLineId === line.line.id}
+                    onChange={() => handleLineChange(line)}
+                    className="green-checkbox"
+                  />
+                )}
+              </div>
+              <div className="card-body">
+                <Line lineData={line} onUpdate={onUpdate} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <footer className="app-footer">
+          <p>&copy; 2024 Compal. Todos os direitos reservados.</p>
+        </footer>
+      </div>
+    </>
   );
 };
 

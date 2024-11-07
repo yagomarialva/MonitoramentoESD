@@ -2,7 +2,7 @@
 using BiometricFaceApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
-using System;
+using System.Collections.Concurrent;
 
 namespace BiometricFaceApi.Hubs
 {
@@ -12,6 +12,9 @@ namespace BiometricFaceApi.Hubs
         private readonly ILogger<CommunicationHub> _logger;
         private static Queue<LogMonitorEsdModel> _logQueue = new Queue<LogMonitorEsdModel>();
         private static bool _serverIsOnline = false;
+
+        // Armazenar o status dos monitores e o tempo de envio do último log.
+        private static ConcurrentDictionary<string, DateTime> _monitorStatusTimes = new ConcurrentDictionary<string, DateTime>();
 
         public CommunicationHub(IMonitorEsdRepository monitorEsdRepository, ILogMonitorEsdRepository logMonitorEsdRepository, ILogger<CommunicationHub> logger)
         {
@@ -36,22 +39,14 @@ namespace BiometricFaceApi.Hubs
         {
             _logger.LogInformation($"Cliente desconectado: {Context.ConnectionId}");
 
-            //Servidor está offline
+            // Servidor está offline
             _serverIsOnline = false;
-
-            //await base.OnConnectedAsync();
 
             if (exception != null)
             {
                 _logger.LogError($"Erro de desconexão: {exception.Message}");
             }
             await base.OnDisconnectedAsync(exception);
-        }
-
-        // Envia mensagem para um cliente específico
-        public async Task SendMessageToUser(string connectionId, string message)
-        {
-            await Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
         }
 
         // Recebe logs de um monitor ESD
@@ -67,6 +62,16 @@ namespace BiometricFaceApi.Hubs
                         // Armazena o log no banco e transmite ao front-end
                         await SaveLogData(logObject);
                         await Clients.All.SendAsync("ReceiveLog", logObject);
+
+                        // Atualiza o tempo do monitor
+                        _monitorStatusTimes[logObject.SerialNumber] = DateTime.Now;
+
+                        // Verifica o status do monitor, se for 0 e passou 1 segundo, envia alerta
+                        if (logObject.Status == 0)
+                        {
+                            _logger.LogInformation($"Monitor {logObject.SerialNumber} está com status 0.");
+                            Parallel.Invoke(async () => await CheckMonitorStatus(logObject.SerialNumber,logData));
+                        }
                     }
                     else
                     {
@@ -77,7 +82,6 @@ namespace BiometricFaceApi.Hubs
                 }
                 else
                 {
-                    // Enviar status 400 ao cliente (via mensagem customizada)
                     await Clients.Caller.SendAsync("ReceiveLogError", "400 Bad Request: Dados inválidos!");
                 }
             }
@@ -119,7 +123,24 @@ namespace BiometricFaceApi.Hubs
                 await SaveLogData(log);
                 await Clients.All.SendAsync("ReceiveLog", log);
             }
+        }
 
+        // Verifica se o monitor não atualizou o status para 1 após 1 segundo
+        private async Task CheckMonitorStatus(string serialNumber,object payload)
+        {
+            // Verifica o tempo que passou desde a última atualização
+            var currentTime = DateTime.Now;
+            if (_monitorStatusTimes.ContainsKey(serialNumber))
+            {
+                var lastUpdate = _monitorStatusTimes[serialNumber];
+                var elapsed = currentTime - lastUpdate;
+
+                if (elapsed.TotalSeconds > 1)
+                {
+                    // Se passaram mais de 1 segundo e o status é 0, envia uma notificação de erro para o cliente
+                    await Clients.All.SendAsync("ReceiveAlert",payload);
+                }
+            }
         }
     }
 }
