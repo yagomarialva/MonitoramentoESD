@@ -206,6 +206,13 @@ body {
 
 .card-body {
   border-bottom: #f0f0f0  15px solid !important;
+  margin-bottom: 25px;
+  height: 650px;
+}
+
+.no-lines-message{
+  align-items: center;
+  padding: 28%;
 }
 
 input[type=radio]#Red {

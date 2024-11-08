@@ -61,6 +61,7 @@ const ESDDashboardPage: React.FC = () => {
 
   // Função para buscar os dados da API e atualizar o estado
   const fetchStations = async () => {
+    console.log('stationsData', stationsData)
     try {
       const factoryMap = await getAllStationMapper();
       setStationsData(factoryMap); // Atualiza o estado com os dados das estações

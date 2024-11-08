@@ -6,7 +6,11 @@ import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRou
 import "./Station.css"; // Importando o CSS
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { createMonitor, getMonitor, updateMonitor } from "../../../../../api/monitorApi";
+import {
+  createMonitor,
+  getMonitor,
+  updateMonitor,
+} from "../../../../../api/monitorApi";
 import {
   createStationMapper,
   getAllStationMapper,
@@ -18,6 +22,7 @@ import MonitorForm from "../../MonitorForm/MonitorForm";
 import { deleteStation } from "../../../../../api/stationApi";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Description } from "@mui/icons-material";
+import signalRService from "../../../../../api/signalRService";
 // import MonitorEditForm from "../../MonitorEditForm/MonitorEditForm";
 
 interface Station {
@@ -26,6 +31,15 @@ interface Station {
   name: string;
   sizeX: number;
   sizeY: number;
+}
+
+interface LogData {
+  serialNumber: string;
+  status: number;
+  description: string;
+  messageType: string;
+  timestamp: string;
+  lastUpdated: string;
 }
 
 interface MonitorDetails {
@@ -53,9 +67,6 @@ interface StationProps {
   onUpdate: () => void; // Prop para disparar a atualização
 }
 
-const truncateText = (text: string, maxLength: number) =>
-  text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
-
 type SnackbarSeverity = "success" | "error";
 
 const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
@@ -73,10 +84,12 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const [selectedMonitor, setSelectedMonitor] = useState<any | null>(null);
 
   const [socketUrl, setSocketUrl] = useState("wss://echo.websocket.org");
-  const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
-
+  const [error, setError] = useState<string | null>(null);
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
-
+  const [loading, setLoading] = useState(true);
+  const [logs, setLogs] = useState<LogData[]>([]);
+  const [cellStatus, setCellStatus] = useState<any | null>();
+  const [cellSerialNumber, setCellSerialNumber] = useState<any | null>();
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const handleModalClose = () => {
@@ -133,45 +146,53 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     }
   };
 
-  const fetchStations = async () => {
-    try {
-      await getAllStationView();
-      await getAllStationMapper();
-    } catch (error: any) {
-      console.error("Erro ao buscar estações:", error);
-      if (error.message === "Request failed with status code 401") {
-        localStorage.removeItem("token");
-        navigate("/");
-      }
-    }
-  };
-
   const showMessage = (content: string, type: "success" | "error") => {
     message[type](content); // Exibe uma mensagem de sucesso ou erro
   };
 
   useEffect(() => {
-    fetchStations();
+    const connectToSignalR = async () => {
+      try {
+        await signalRService.startConnection();
+        setError(null);
+      } catch (err) {
+        setError("Falha ao conectar ao SignalR");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    if (lastMessage !== null) {
-      setMessageHistory((prev) => prev.concat(lastMessage));
-    }
-  }, [lastMessage]);
+    connectToSignalR();
 
-  const handleClickChangeSocketUrl = useCallback(
-    () => setSocketUrl("wss://demos.kaazing.com/echo"),
-    []
-  );
+    signalRService.onReceiveAlert((log: LogData) => {
+      setCellStatus(log.status);
+      setCellSerialNumber(log.serialNumber);
+      if (![0, 1].includes(log.status)) {
+        const updatedLog = {
+          ...log,
+          status: -1,
+          description: "Monitor desconectado",
+          lastUpdated: new Date().toISOString(),
+        };
+        setLogs((prevLogs) => [updatedLog, ...prevLogs].slice(0, 100));
+      } else {
+        setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100));
+      }
+      // Mostra o Snackbar caso o status seja 0 (indicando erro)
+      if (log.status === 0) {
+        showSnackbar(
+          `Erro no monitor ${log.serialNumber}: ${log.description}`,
+          "error"
+        );
+      }
+    });
+
+    return () => {
+      signalRService.stopConnection();
+    };
+  }, []);
+
   const cells = new Array(12).fill(null);
-  const handleClickSendMessage = useCallback(() => sendMessage("Hello"), []);
-
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
 
   monitorsEsd.forEach((monitor) => {
     cells[monitor.positionSequence] = monitor;
@@ -183,9 +204,9 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       const updatedResult = {
         id: monitorView.id,
         serialNumber: params.serialNumber,
-        description: params.description
-      }
-      const result = await updateMonitor(updatedResult)
+        description: params.description,
+      };
+      const result = await updateMonitor(updatedResult);
       showSnackbar(
         t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
           appName: "App for Translations",
@@ -237,6 +258,17 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     );
   };
 
+  const getStatusColor = (status: number) => {
+    switch (status) {
+      case 1:
+        return "green"; // Ativo (exemplo)
+      case 0:
+        return "red"; // Erro (exemplo)
+      default:
+        return "black"; // Cor padrão
+    }
+  };
+
   return (
     <>
       <div className="card-grid">
@@ -250,7 +282,19 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
               <Tooltip title={cell.monitorsEsd.serialNumber}>
                 <div className="computer-icon">
                   <ComputerIcon
-                    className="dut-icon"
+                    className={
+                      cell.monitorsEsd.serialNumber === cellSerialNumber
+                        ? cellStatus === 1
+                          ? "dut-icon-success"
+                          : "dut-icon-error"
+                        : "dut-icon-default" // Classe vazia se serialNumber não corresponder
+                    }
+                    style={{
+                      color:
+                        cell.monitorsEsd.serialNumber === cellSerialNumber
+                          ? getStatusColor(cellStatus)
+                          : "inherit", // Cor padrão se serialNumber não corresponder
+                    }}
                     onClick={() => setModalVisible(true)}
                   />
                 </div>

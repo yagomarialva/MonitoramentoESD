@@ -16,18 +16,23 @@
   margin-bottom: -12px;
 }
 
-.dut-icon{
+.dut-icon-success{
+  margin-top: 10px;
   margin-left: 13px;
   color: #389E0D;
 }
 
-/* .cell-icon {
-  margin-top: 14px;
+.dut-icon-error{
+  margin-top: 10px;
+  margin-left: 13px;
+  color: purple;
 }
 
-.ant-btn-icon {
-  margin-right: -13px;
-} */
+.dut-icon-default{
+  margin-top: 10px;
+  margin-left: 13px;
+  color: grey;
+}
 
 .computer-icon,
 .add-icon {
@@ -50,6 +55,7 @@
 }
 
 .cell-icon {
+  margin-top: 13px;
   margin-left: 14px;
 }
 
