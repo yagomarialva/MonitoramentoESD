@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Card, Badge, Alert, Spin } from 'antd';
-import { CheckCircleOutlined, WarningOutlined, CloseCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import signalRService from '../../../../api/signalRService'; // Ajuste o caminho de importação conforme necessário
+import React, { useState, useEffect } from "react";
+import { Table, Card, Badge, Alert, Spin, Tooltip } from "antd";
+import {
+  CheckCircleOutlined,
+  WarningOutlined,
+  CloseCircleOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
+import signalRService from "../../../../api/signalRService"; // Ajuste o caminho de importação conforme necessário
+import './RealTimeLogTable.css'; // Importando o CSS
 
 interface LogData {
   serialNumber: string;
@@ -9,11 +15,21 @@ interface LogData {
   description: string;
   messageType: string;
   timestamp: string;
+  lastUpdated: string;
 }
 
-export default function RealTimeLogTable() {
+interface RealTimeLogTableProps {
+  serialNumberFilter?: string;
+  statusFilter?: number;
+  tipo?: "jig" | "operador";
+}
+
+export default function RealTimeLogTable({
+  serialNumberFilter,
+  statusFilter,
+  tipo,
+}: RealTimeLogTableProps) {
   const [logs, setLogs] = useState<LogData[]>([]);
-  const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,11 +37,9 @@ export default function RealTimeLogTable() {
     const connectToSignalR = async () => {
       try {
         await signalRService.startConnection();
-        setIsConnected(true);
         setError(null);
       } catch (err) {
-        setError('Falha ao conectar ao SignalR');
-        setIsConnected(false);
+        setError("Falha ao conectar ao SignalR");
       } finally {
         setLoading(false);
       }
@@ -34,7 +48,17 @@ export default function RealTimeLogTable() {
     connectToSignalR();
 
     signalRService.onReceiveAlert((log: LogData) => {
-      setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100)); // Mantém os 100 logs mais recentes
+      if (![0, 1].includes(log.status)) {
+        const updatedLog = {
+          ...log,
+          status: -1,
+          description: "Monitor desconectado",
+          lastUpdated: new Date().toISOString(),
+        };
+        setLogs((prevLogs) => [updatedLog, ...prevLogs].slice(0, 100));
+      } else {
+        setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100));
+      }
     });
 
     return () => {
@@ -45,48 +69,113 @@ export default function RealTimeLogTable() {
   const getStatusBadge = (status: number) => {
     switch (status) {
       case 0:
-        return <InfoCircleOutlined />;
+        return <CloseCircleOutlined style={{ color: "red" }} />;
       case 1:
-        return <CheckCircleOutlined />;
+        return <CheckCircleOutlined style={{ color: "green" }} />;
+      case -1:
+        return <WarningOutlined style={{ color: "gray" }} />;
       case 2:
         return <WarningOutlined />;
       case 3:
-        return <CloseCircleOutlined />;
+        return <InfoCircleOutlined />;
       default:
         return <Badge status="processing" text="Unknown" />;
     }
   };
 
+  const getStatusHeaderBadge = (status: number) => {
+    switch (status) {
+      case 0:
+        return (
+          <Badge status="error" style={{ color: "red", marginLeft: "20px" }} />
+        );
+      case 1:
+        return (
+          <Badge
+            status="success"
+            style={{ color: "green", marginLeft: "20px" }}
+          />
+        );
+      case -1:
+        return <Badge status="warning" style={{ marginLeft: "20px" }} />;
+      default:
+        return <Badge status="processing" text="Unknown" />;
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  };
+
   const columns = [
     {
-      title: 'messageType',
-      dataIndex: 'messageType',
-      key: 'messageType',
+      title: "Data",
+      dataIndex: "lastUpdated",
+      key: "lastUpdated",
+      width: 5,
+      render: (lastUpdated: string) => (
+        <Tooltip title={formatDate(lastUpdated)}>
+          <span>{formatDate(lastUpdated)}</span>
+        </Tooltip>
+      ),
+      sorter: (a: LogData, b: LogData) =>
+        new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime(),
     },
     {
-      title: 'Serial Number',
-      dataIndex: 'serialNumber',
-      key: 'serialNumber',
+      title: "Descrição",
+      dataIndex: "description",
+      key: "description",
+      width: 5,
+      render: (description: string) => (
+        <Tooltip title={description}>
+          <span>{description}</span>
+        </Tooltip>
+      ),
+      sorter: (a: LogData, b: LogData) =>
+        a.description.localeCompare(b.description),
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: number) => getStatusBadge(status),
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: 5,
+      render: (status: number) => (
+        <Tooltip title={status === 1 ? "Sucesso" : "Falha"}>
+          <span>{getStatusBadge(status)}</span>
+        </Tooltip>
+      ),
+      sorter: (a: LogData, b: LogData) => a.status - b.status,
     },
   ];
 
-  // Filtrando os logs para exibir apenas aqueles com status igual a 0
-  const filteredLogs = logs.filter(log => log.status === 1);
+  const filteredLogs = logs.filter(
+    (log) =>
+      (serialNumberFilter
+        ? log.serialNumber.includes(serialNumberFilter)
+        : true) &&
+      (statusFilter !== undefined ? log.status === statusFilter : true) &&
+      (tipo ? log.messageType === tipo : true)
+  );
+
+  const getLastLogStatus = () => {
+    const filteredLogsByType = logs.filter((log) => log.messageType === tipo); 
+    const lastLog = filteredLogsByType[0];
+    if (lastLog) {
+      return getStatusHeaderBadge(lastLog.status);
+    }
+    return <Badge status="processing" style={{ marginLeft: "20px" }} />;
+  };
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div className="loading-container">
         <Spin size="large" />
       </div>
     );
@@ -94,21 +183,13 @@ export default function RealTimeLogTable() {
 
   return (
     <Card
-      
       title={
-        <div  >
-          <span>Real-time Logs</span>
-          <Badge
-            status={isConnected ? 'success' : 'error'}
-            text={isConnected ? 'Connected' : 'Disconnected'}
-          />
+        <div className="card-title-container">
+          <span>{tipo === "operador" ? "Operador" : "Jig"}</span>
+          {getLastLogStatus()}
         </div>
       }
-      style={{
-        maxWidth: "100%",
-        maxHeight: "400px",
-        overflow: "auto",
-      }}
+      className="card-container"
     >
       {error && (
         <Alert
@@ -116,15 +197,18 @@ export default function RealTimeLogTable() {
           description={error}
           type="error"
           showIcon
-          style={{ marginBottom: '16px' }}
+          className="error-alert"
         />
       )}
       <Table
-                     
         columns={columns}
-        dataSource={filteredLogs} // Passando apenas os logs filtrados
+        dataSource={filteredLogs}
         rowKey={(record, index) => index!.toString()}
-        pagination={false}
+        pagination={{
+          pageSize: 5,
+          showSizeChanger: false,
+          pageSizeOptions: [],
+        }}
         scroll={{ y: 600 }}
       />
     </Card>

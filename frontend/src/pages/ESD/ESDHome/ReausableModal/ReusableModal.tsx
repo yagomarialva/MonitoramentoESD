@@ -113,13 +113,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const [operatorLogData, setOperatorLogData] = useState([]); // Renomeado para evitar conflitos
   const [jigLogData, setJigLogData] = useState([]);
 
-  // SignalR
-  const [connection, setConnection] = useState<signalR.HubConnection | null>(
-    null
-  );
-  const [logs, setLogs] = useState<any[]>([]);
-  const [filteredLogs, setFilteredLogs] = useState<LogData[]>([]);
-
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [state, setState] = useState({
@@ -146,44 +139,24 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   );
 
   useEffect(() => {
-    try {
-      const connectToSignalR = async () => {
-        signalRService.onReceiveAlert((message) => {
-          setLogs(message);
-          const newFilteredLogs = message.filter(
-            (log: LogData) => log.status !== 1
-          );
-          setFilteredLogs((prevLogs) => [...prevLogs, ...newFilteredLogs]);
-        });
-        await signalRService.startConnection();
-      };
-      connectToSignalR();
-      console.log("filteredLogs", logs);
-      if (visible) {
-        setFooterVisible(false);
-        setActiveKey("1");
-        setActionType(null);
-        setSelectedOperatorFailures([]);
-        setSelectedMonitorFailures([]);
-        setShowOperatorInput(false);
-        setShowMonitorInput(false);
-        setOperatorOtherFailure(null);
-        setMonitorOtherFailure(null);
-        setMonitorOtherFailure(null);
-        setIsEditing(false); // Reseta o estado de edição
-        setEditableData({
-          id: 0, // Valores iniciais para limpar o formulário
-          serialNumber: "",
-          description: "",
-        });
-      }
-    } catch (error) {
-      console.log(error);
+    if (visible) {
+      setFooterVisible(false);
+      setActiveKey("1");
+      setActionType(null);
+      setSelectedOperatorFailures([]);
+      setSelectedMonitorFailures([]);
+      setShowOperatorInput(false);
+      setShowMonitorInput(false);
+      setOperatorOtherFailure(null);
+      setMonitorOtherFailure(null);
+      setMonitorOtherFailure(null);
+      setIsEditing(false); // Reseta o estado de edição
+      setEditableData({
+        id: 0, // Valores iniciais para limpar o formulário
+        serialNumber: "",
+        description: "",
+      });
     }
-
-    return () => {
-      signalRService.stopConnection();
-    };
   }, [visible]);
 
   const showMessage = (content: string, type: "success" | "error") => {
@@ -333,6 +306,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     },
   ];
 
+
   const monitorData: DataType[] = [
     {
       key: monitor.monitorsESD?.id?.toString() || "N/A",
@@ -342,28 +316,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       statusOperador: monitor.monitorsESD.statusOperador,
     },
   ];
-
-  const logColumns: ColumnsType<any> = [
-    {
-      title: "description",
-      dataIndex: "description",
-      key: "description",
-      render: (text: string) => (
-        <Tooltip title={text}>
-          <span className="ellipsis-text">{truncateText(text, 15)}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      title: "created",
-      dataIndex: "created",
-      key: "created",
-    },
-  ];
-
-  const operatorLogs: LogData[] = operatorLogData;
-
-  const jigLogs: LogData[] = jigLogData;
 
   const handleTabChange = async (key: React.SetStateAction<string>) => {
     setActiveKey(key);
@@ -410,7 +362,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
           <div className="modal-title-container">
             <div className="title-content">
               <LaptopOutlined
-                style={{ marginRight: "8px", fontSize: "18px" }}
+              className="dut-reausable-modal"
               />
               <Tooltip title={title}>
                 <span className="ellipsis-text">
@@ -418,25 +370,29 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
                 </span>
               </Tooltip>
             </div>
-            <div className="title-icons">
-              <Tooltip title="Editar">
-                <EditOutlined className="icon-action" onClick={handleEdit} />
-              </Tooltip>
-              {/* Renderiza o ícone de deletar apenas se isEditing for falso */}
-              {!isEditing && (
-                <Tooltip title="Excluir">
-                  <DeleteOutlined
-                    className="icon-action"
-                    onClick={handleConfirmDelete}
-                  />
+            {activeKey === "1" && (
+              <div className="title-icons">
+                <Tooltip title="Editar">
+                  <EditOutlined className="icon-action" onClick={handleEdit} />
                 </Tooltip>
-              )}
-            </div>
+                {!isEditing && (
+                  <Tooltip title="Excluir">
+                    <DeleteOutlined
+                      className="icon-action"
+                      onClick={handleConfirmDelete}
+                    />
+                  </Tooltip>
+                )}
+              </div>
+            )}
           </div>
         }
         visible={visible}
         onCancel={handleClose}
-        style={{ border: "none" }} // Remove bordas do modal
+        // style={{ border: "none" }}
+        closable={false}
+        width={activeKey === "2" ? 1150 : 500}
+        // Remove bordas do mod
         footer={
           isFooterVisible && (
             <div className="modal-footer">
@@ -460,13 +416,8 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
           <Tabs activeKey={activeKey} onChange={handleTabChange}>
             <TabPane tab="Monitor" key="1">
               <div
-                style={{
-                  maxWidth: "400px",
-                  maxHeight: "400px",
-                }}
+               className="monitor-table-container"
               >
-                {" "}
-                {/* Definindo altura fixa com rolagem */}
                 <Table
                   columns={monitorColumns}
                   dataSource={monitorData}
@@ -474,33 +425,19 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
                 />
               </div>
             </TabPane>
-            <TabPane  tab="Log" key="2">
-              {/* <div
-                style={{
-                  display: "flex",
-                  gap: "16px",
-                  maxHeight: "400px",
-                  overflow: "auto",
-                }}
-              >
-                <div style={{ width: "50%" }}>
-                  <Table
-                    title={() => "Logs de Operador"}
-                    columns={logColumns}
-                    dataSource={operatorLogs}
-                    pagination={false}
-                  />
-                </div>
-                <div style={{ width: "50%" }}>
-                  <Table
-                    title={() => "Logs de Jigs"}
-                    columns={logColumns}
-                    dataSource={jigLogs}
-                    pagination={false}
-                  />
-                </div>
-              </div> */}
-              <RealTimeLogTable />
+            <TabPane tab="Log" key="2">
+              <div className="modal-table-container flex-gap">
+                <RealTimeLogTable
+                  serialNumberFilter={title}
+                  // statusFilter={1}
+                  tipo="operador"
+                />
+                <RealTimeLogTable
+                  serialNumberFilter={title}
+                  // statusFilter={1}
+                  tipo="jig"
+                />
+              </div>
             </TabPane>
           </Tabs>
         </div>

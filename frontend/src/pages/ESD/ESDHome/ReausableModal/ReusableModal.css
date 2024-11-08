@@ -2,12 +2,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 600px; /* Largura máxima do modal */
+  max-width: 600px;
+  position: relative; 
 }
 
 .title-content {
   display: flex;
   align-items: center;
+  width: 128px;
 }
 
 .icon-action {
@@ -15,13 +17,18 @@
   margin-left: 8px;
 }
 
-.title-icons {
-  display: flex;
-  gap: 16px;
-  margin-right: 32px;
+.modal-table-container {
+  max-height: calc(190vh - 100px);
+  max-width: calc(300vh - 200px);
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
-/* Footer personalizado do Modal */
+.ellipsis-modal .ant-table {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .modal-footer {
   display: flex !important;
   justify-content: center !important;
@@ -29,7 +36,6 @@
   margin-top: 32px !important;
 }
 
-/* Botões do Modal */
 .modal-button {
   padding: 8px 16px;
   font-size: 16px;
@@ -53,31 +59,26 @@
   background-color: #ff4d4f;
 }
 
-/* Layout geral: Flexbox horizontal para as colunas */
 .failure-lists {
   display: flex;
   justify-content: space-between;
-  gap: 24px; /* Espaço entre as duas colunas */
+  gap: 24px;
   margin-top: 16px;
   padding: 16px;
   background-color: #fafafa;
   border: 1px solid #f0f0f0;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  max-height: 300px; /* Altura máxima para permitir rolagem */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
 }
 
-/* Colunas individuais (Operador e Monitor) */
 .failure-column {
   display: flex;
-  flex-direction: column; /* Organiza título e lista verticalmente */
-  flex: 1; /* Ambas as colunas ocupam o mesmo espaço */
+  flex-direction: column;
+  flex: 1;
   min-width: 220px;
 }
 
-/* Estilo do cabeçalho de cada coluna */
 .failure-column-header {
   text-align: center;
   font-size: 18px;
@@ -88,32 +89,28 @@
   margin-bottom: 12px;
 }
 
-/* Lista de falhas */
 .failure-column ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-/* Estilo das linhas (itens) */
 .failure-column li {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Espaço entre checkbox e input */
+  justify-content: space-between;
   padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0; /* Linha divisória */
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .failure-column li:last-child {
-  border-bottom: none; /* Remove a linha divisória do último item */
+  border-bottom: none;
 }
 
-/* Checkbox estilo */
 .failure-column input[type="checkbox"] {
   margin-right: 8px;
 }
 
-/* Input de texto para "Outros" */
 .failure-column input[type="text"] {
   width: 70%;
   padding: 6px 8px;
@@ -122,7 +119,6 @@
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-
 .custom-modal .ant-modal-content {
   width: 299px !important;
   height: 161px !important;
@@ -130,10 +126,9 @@
   border-radius: 2px 0px 0px 0px;
   top: 162px;
   right: -111px;
-  opacity: 1; 
+  opacity: 1;
 }
 
-/* Container dos botões */
 .button-container {
   margin-top: 24px;
   display: flex;
@@ -141,7 +136,6 @@
   gap: 18px;
 }
 
-/* Estilos dos botões personalizados */
 .custom-button {
   text-transform: none !important;
   height: 25px;
@@ -149,21 +143,18 @@
   border-radius: 0 !important;
 }
 
-/* Container do ícone do usuário */
 .user-icon-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Estilos para o ícone de exclusão */
 .user-icon-delete {
   margin-right: 108px !important;
   padding-bottom: 13px;
   color: #F59E0B;
 }
 
-/* Estilos para o cabeçalho do modal */
 .modal-header {
   display: flex;
   justify-content: center;
@@ -171,7 +162,6 @@
   margin-bottom: 16px;
 }
 
-/* Fonte personalizada para o texto de exclusão */
 .custom-font-delete {
   font-family: 'Selawik', sans-serif !important;
   font-size: 13px !important;
@@ -179,7 +169,6 @@
   color: white !important;
 }
 
-/* Fonte personalizada para o texto de edição */
 .custom-font-edit {
   height: 26px;
   border-radius: 0;
@@ -191,7 +180,7 @@
   background-color: #009B2D;
   display: flex;
   align-items: center;
-  justify-content: center; /* Alinha o conteúdo no centro horizontalmente */
+  justify-content: center;
   height: 22px;
   width: 93px;
 }
@@ -199,53 +188,50 @@
 .modal-button-monitor-cancel {
   display: flex;
   align-items: center;
-  justify-content: center; /* Alinha o conteúdo no centro horizontalmente */
+  justify-content: center;
   background-color: white;
   border-style: solid;
   border-color: #009B2D;
-  color: black; /* Define a cor do texto como preto */
+  color: black;
   height: 22px;
   width: 93px;
   border-radius: 0;
 }
 
-/* Remove o efeito de hover */
 .modal-button-monitor-cancel:hover {
-  background-color: white; /* Garante que o fundo não mude */
-  color: black; /* Garante que o texto continue preto */
-  border-color: #009B2D; /* Mantém a borda original */
+  background-color: white;
+  color: black;
+  border-color: #009B2D;
 }
 
-
+.dut-reausable-modal {
+  color: #009B2D !important;
+  margin-right: 5px;
+}
 :where(.css-dev-only-do-not-override-qnu6hi).ant-modal-confirm .ant-modal-confirm-btns .ant-btn+.ant-btn {
   background-color: #389e0d !important;
 }
 
-/* Botão de cancelamento personalizado */
 .custom-cancel-button {
   height: 26px;
   border-radius: 0;
   width: 100px;
 }
 
-/* Formulário do modal */
 .modal-form {
   margin-bottom: 16px;
 }
 
-/* Estilo do ícone de input (exemplo de cadeado) */
 .modal-form .ant-input-suffix {
   color: rgba(0, 0, 0, 0.45);
 }
 
-/* Container para os botões dentro do modal */
 .modal-buttons {
   display: flex;
   justify-content: center;
   gap: 24px;
 }
 
-/* Botões de edição e fechamento do modal */
 .modal-edit-button,
 .modal-close-button {
   width: 105px;
@@ -253,7 +239,6 @@
   margin-right: 20px;
 }
 
-/* Estilo para inputs como labels */
 .textfield-as-label {
   border: none;
   background: transparent;
@@ -266,7 +251,6 @@
   align-items: center;
 }
 
-/* Remoção de bordas e sombra do input */
 .textfield-as-label .MuiInputBase-input {
   border: none;
   background: transparent;
@@ -275,7 +259,24 @@
   margin: 0;
 }
 
-/* Margem ajustada para tipografia */
 .css-cij06z-MuiTypography-root {
   margin-left: 33px !important;
+}
+
+.modal-table-container {
+  max-height: calc(190vh - 100px); /* Ajuste conforme necessário */
+  max-width: calc(300vh - 200px); /* Ajuste conforme necessário */
+  overflow-y: auto; /* Habilita rolagem vertical */
+  overflow-x: auto;
+}
+
+.flex-gap {
+  display: flex;
+  gap: 12px;
+  min-width: 1000px;
+}
+
+.monitor-table-container {
+  max-width: 400px;
+  max-height: 400px;
 }
