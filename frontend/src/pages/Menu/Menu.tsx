@@ -222,6 +222,10 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
               componentToShow
             )}
           </Card>
+          
+        <footer className="app-footer">
+          <p>&copy; 2024 Compal. Todos os direitos reservados.</p>
+        </footer>
         </Content>
       </Layout>
     </Layout>

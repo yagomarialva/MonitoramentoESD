@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
   getAllOperators,
@@ -6,34 +6,33 @@ import {
   deleteOperators,
   updateOperators,
 } from "../../../../api/operatorsAPI";
-import {
-  IconButton,
-  Box,
-  Snackbar,
-  Alert,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  Container,
-  TablePagination,
-  TextField,
-  CircularProgress,
-  Tooltip,
-} from "@mui/material";
-import { Delete, Info, Edit as EditIcon } from "@mui/icons-material";
-import OperatorModal from "../OperatorModal/OperatorModal";
-import OperatorForm from "../OperatorForm/OperatorForm";
-import OperatorEditForm from "../OperatorEditForm/OperatorEditForm";
-import OperatorConfirmModal from "../OperatorConfirmModal/OperatorConfirmModal";
-import "./SnackbarStyles.css";
-import "./OperatorTable.css";
 import { useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
-import InputAdornment from "@mui/material/InputAdornment";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import {
+  Table,
+  Input,
+  Button,
+  Space,
+  Popconfirm,
+  message,
+  Tooltip,
+  Modal,
+  Form,
+  Spin,
+} from "antd";
+import {
+  CameraOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Layout, Typography } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { UserOutlined } from "@ant-design/icons";
+import Webcam from "react-webcam";
+
+const { Content } = Layout;
+const { Title } = Typography;
 
 interface Operator {
   id: number;
@@ -41,286 +40,355 @@ interface Operator {
   badge: string;
 }
 
-interface State {
-  allOperators: Operator[];
-  operator: Operator | null;
-  open: boolean;
-  openModal: boolean;
-  openEditModal: boolean;
-  editCell: any;
-  editData: Operator | null;
-  deleteConfirmOpen: boolean;
-  operatorToDelete: Operator | null;
-  snackbarOpen: boolean;
-  snackbarMessage: string;
-  snackbarSeverity: "success" | "error" | "info" | "warning";
-  loading: boolean;
-}
-
 const OperatorTable: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [state, setState] = useState<State>({
-    allOperators: [],
-    operator: null,
-    open: false,
-    openModal: false,
-    openEditModal: false,
-    editCell: null,
-    editData: null,
-    deleteConfirmOpen: false,
-    operatorToDelete: null,
-    snackbarOpen: false,
-    snackbarMessage: "",
-    snackbarSeverity: "success",
-    loading: true,
-  });
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [operators, setOperators] = useState<Operator[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchName, setSearchName] = useState("");
   const [searchBadge, setSearchBadge] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingOperator, setEditingOperator] = useState<Operator | null>(null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const [form] = Form.useForm();
+  const webcamRef = useRef<Webcam>(null); // Alteração aqui para tipar corretamente
 
-  const handleStateChange = (changes: Partial<State>) => {
-    setState((prevState) => ({ ...prevState, ...changes }));
+  const videoConstraints = {
+    width: 1280,
+    height: 720,
+    facingMode: "user",
   };
 
-  const showSnackbar = useCallback((message: string, severity: "success" | "error" | "info" | "warning" = "success") => {
-    handleStateChange({
-      snackbarMessage: message,
-      snackbarSeverity: severity,
-      snackbarOpen: true,
-    });
-  }, []);
-
-  const handleOpen = (operator: Operator) => handleStateChange({ operator, open: true });
-  const handleClose = () => handleStateChange({ open: false });
-  const handleEditClose = () => handleStateChange({ openEditModal: false, editData: null });
-  const handleOpenModal = () => handleStateChange({ openModal: true });
-  const handleCloseModal = () => handleStateChange({ openModal: false });
-  const handleDeleteOpen = (operator: Operator) => handleStateChange({
-    operator,
-    operatorToDelete: operator,
-    deleteConfirmOpen: true,
-  });
-  const handleDeleteClose = () => handleStateChange({ deleteConfirmOpen: false, operatorToDelete: null });
-
-  const handleEditOpen = (operator: Operator) => {
-    handleStateChange({ editData: operator, openEditModal: true });
+  const captureImage = () => {
+    if (webcamRef.current) {
+      const image = webcamRef.current.getScreenshot();
+      setImageSrc(image || null);
+      setIsCapturing(false);
+    }
   };
 
-  const handleCreateOperator = async (operator: Operator) => {
+  const showSnackbar = useCallback(
+    (
+      content: string,
+      type: "success" | "error" | "info" | "warning" = "success"
+    ) => {
+      message[type](content);
+    },
+    []
+  );
+
+  const fetchOperators = async () => {
     try {
-      const alreadyExists = checkIfExists(state.allOperators, operator);
+      const result = await getAllOperators();
+      setOperators(result.users.value || result.users);
+      setLoading(false);
+    } catch (error: any) {
+      if (error.message === "Request failed with status code 401") {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
+      showSnackbar(t(error.message), "error");
+    }
+  };
+
+  useEffect(() => {
+    fetchOperators();
+  }, [navigate, showSnackbar, t]);
+
+  const handleCreateOperator = async (values: Operator) => {
+    try {
+      const alreadyExists = operators.some((op) => op.badge === values.badge);
 
       if (alreadyExists) {
-        showSnackbar('Operador já existe no sistema.', "error");
+        showSnackbar("Operador já existe no sistema.", "error");
         return;
       }
 
-      const response = await createOperators(operator);
-      const result = await getAllOperators();
-      handleStateChange({ allOperators: result.value || result });
-      showSnackbar(t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", { appName: "App for Translations" }));
-      
-      return response.data;
+      await createOperators(values);
+      await fetchOperators();
+      showSnackbar(
+        t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", {
+          appName: "App for Translations",
+        })
+      );
+      setIsModalVisible(false);
+      form.resetFields();
     } catch (error: any) {
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
+          appName: "App for Translations",
+        }),
         "error"
       );
     }
   };
 
-  const checkIfExists = (result: Operator[], response: Operator) => {
-    return result.some((operator) => operator.badge === response.badge);
-  };
-
-  const handleDelete = async (id: number) => {
+  const handleUpdateOperator = async (values: Operator) => {
     try {
-      await deleteOperators(id);
-      handleStateChange({
-        allOperators: state.allOperators.filter((operator) => operator.id !== id),
-      });
-      showSnackbar(t("ESD_OPERATOR.TOAST.DELETE_SUCCESS", { appName: "App for Translations" }));
-    } catch (error: any) {
-      showSnackbar(error.response.data, "error");
-    }
-  };
-
-  const handleEditCellChange = async (params: any) => {
-    try {
-      const response = await updateOperators(params);
-      const result = await getAllOperators();
-      handleStateChange({ allOperators: result.value || result });
+      await updateOperators(values);
+      await fetchOperators();
       showSnackbar(
-        t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" })
+        t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {
+          appName: "App for Translations",
+        })
       );
-      return response.data;
+      setIsModalVisible(false);
+      setEditingOperator(null);
     } catch (error: any) {
       showSnackbar(error.response.data.errors.Name, "error");
     }
   };
 
-  useEffect(() => {
-    const fetchDataAllOperators = async () => {
-      try {
-        const result = await getAllOperators();
-        handleStateChange({ allOperators: result.users.value || result.users });
-        const timer = setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-
-        return () => clearTimeout(timer);
-      } catch (error: any) {
-        if (error.message === "Request failed with status code 401") {
-          localStorage.removeItem("token");
-          navigate("/");
-        }
-        showSnackbar(t(error.message));
-      }
-    };
-
-    fetchDataAllOperators();
-  }, [navigate, showSnackbar, t]);
-
-  const handleConfirmDelete = async () => {
-    if (state.operatorToDelete) {
-      await handleDelete(state.operatorToDelete.id);
-      handleDeleteClose();
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteOperators(id);
+      setOperators(operators.filter((operator) => operator.id !== id));
+      showSnackbar(
+        t("ESD_OPERATOR.TOAST.DELETE_SUCCESS", {
+          appName: "App for Translations",
+        })
+      );
+    } catch (error: any) {
+      showSnackbar(error.response.data, "error");
     }
   };
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage(newPage);
-  };
+  const columns: ColumnsType<Operator> = [
+    {
+      title: t("ESD_OPERATOR.TABLE.NAME", { appName: "App for Translations" }),
+      dataIndex: "name",
+      key: "name",
+      filteredValue: [searchName],
+      onFilter: (value, record) =>
+        record.name.toLowerCase().includes(String(value).toLowerCase()),
+    },
+    {
+      title: t("ESD_OPERATOR.TABLE.USER_ID", {
+        appName: "App for Translations",
+      }),
+      dataIndex: "badge",
+      key: "badge",
+      filteredValue: [searchBadge],
+      onFilter: (value, record) =>
+        record.badge.toLowerCase().includes(String(value).toLowerCase()),
+    },
+    {
+      title: t("ESD_OPERATOR.TABLE.ACTIONS"),
+      key: "actions",
+      render: (_, record) => (
+        <Space size="middle">
+          <Tooltip title={t("ESD_OPERATOR.TABLE.EDIT")}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => handleEdit(record)}
+            />
+          </Tooltip>
+          <Tooltip title={t("ESD_OPERATOR.TABLE.DELETE")}>
+            <Popconfirm
+              title={t("ESD_OPERATOR.CONFIRM_DELETE")}
+              onConfirm={() => handleDelete(record.id)}
+              okText={t("ESD_OPERATOR.YES")}
+              cancelText={t("ESD_OPERATOR.NO")}
+            >
+              <Button icon={<DeleteOutlined />} danger />
+            </Popconfirm>
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+  const handleEdit = (operator: Operator) => {
+    setEditingOperator(operator);
+    form.setFieldsValue(operator);
+    setIsModalVisible(true);
   };
-
-  const handleSearchNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchName(event.target.value);
-  };
-
-  const handleSearchBadgeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchBadge(event.target.value);
-  };
-
-  const filterOperators = () => {
-    const operators = state.allOperators ?? [];
-    return operators.filter((operator) => {
-      return (
-        operator.name?.toLowerCase().includes(searchName.toLowerCase()) &&
-        operator.badge?.toLowerCase().includes(searchBadge.toLowerCase())
-      );
-    });
-  };
-
-  const displayOperators = filterOperators().slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
 
   return (
-    <>
-      <Container>
-        <Row>
-          <Col sm={10}>
-            <TextField
-              name="filterName"
-              label={t("ESD_OPERATOR.TABLE.NAME", { appName: "App for Translations" })}
-              variant="outlined"
-              value={searchName}
-              onChange={handleSearchNameChange}
-              sx={{ mb: 2, mr: 2 }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <TextField
-              name="filterBadge"
-              label={t("ESD_OPERATOR.TABLE.USER_ID", { appName: "App for Translations" })}
-              variant="outlined"
-              value={searchBadge}
-              onChange={handleSearchBadgeChange}
-              sx={{ mb: 2 }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Col>
-          <Col sm={2}>
-            <Button
-              id="add-button"
-              variant="contained"
-              color="success"
-              onClick={handleOpenModal}
-              sx={{ mb: 2, ml: 2 }}
-            >
-              {t("ESD_OPERATOR.ADD_OPERATOR", { appName: "App for Translations" })}
-            </Button>
-          </Col>
-        </Row>
-        <Box>
-          {loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "500px" }}>
-              <CircularProgress />
-            </Box>
-          ) : (
-            <List>
-              {displayOperators.map((operator) => (
-                <ListItem key={operator.id} divider sx={{ display: "flex", alignItems: "center" }}>
-                  <ListItemText primary={operator.name} secondary={operator.badge} />
-                  <ListItemSecondaryAction>
-                    <Tooltip title={t("ESD_OPERATOR.TABLE.EDIT")}>
-                      <IconButton onClick={() => handleEditOpen(operator)}>
-                        <EditIcon color="info" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t("ESD_OPERATOR.TABLE.DELETE")}>
-                      <IconButton onClick={() => handleDeleteOpen(operator)}>
-                        <Delete color="error" />
-                      </IconButton>
-                    </Tooltip>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </Box>
-        <TablePagination
-          component="div"
-          count={filterOperators().length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Container>
-      {/* <OperatorModal open={state.openModal} handleClose={handleCloseModal} handleCreateOperator={handleCreateOperator} />
-      <OperatorEditForm open={state.openEditModal} handleClose={handleEditClose} editData={state.editData} handleEditCellChange={handleEditCellChange} />
-      <OperatorConfirmModal open={state.deleteConfirmOpen} handleClose={handleDeleteClose} handleConfirmDelete={handleConfirmDelete} /> */}
-      <Snackbar
-        open={state.snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => handleStateChange({ snackbarOpen: false })}
+    <Layout className="site-layout">
+      <Content
+        style={{
+          margin: "24px 16px",
+          padding: 24,
+          minHeight: 280,
+          position: "relative",
+        }}
       >
-        <Alert onClose={() => handleStateChange({ snackbarOpen: false })} severity={state.snackbarSeverity} sx={{ width: "100%" }}>
-          {state.snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </>
+        <Title level={2}>
+          {t("ESD_OPERATOR.TITLE", { appName: "App for Translations" })}
+        </Title>
+        <Space style={{ marginBottom: 16, width: "100%" }}>
+          <Input
+            placeholder={t("ESD_OPERATOR.TABLE.NAME", {
+              appName: "App for Translations",
+            })}
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+            prefix={<SearchOutlined />}
+          />
+          <Input
+            placeholder={t("ESD_OPERATOR.TABLE.USER_ID", {
+              appName: "App for Translations",
+            })}
+            value={searchBadge}
+            onChange={(e) => setSearchBadge(e.target.value)}
+            prefix={<SearchOutlined />}
+          />
+        </Space>
+        {/* Button positioned at the top-right corner */}
+        <div style={{ position: "absolute", top: 0, right: 0 }}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditingOperator(null);
+              form.resetFields();
+              setIsModalVisible(true);
+            }}
+          >
+            {t("ESD_OPERATOR.ADD_OPERATOR", {
+              appName: "App for Translations",
+            })}
+          </Button>
+        </div>
+        <Spin spinning={loading}>
+          <Table
+            dataSource={operators}
+            columns={columns}
+            rowKey="id"
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
+            }}
+          />
+        </Spin>
+      </Content>
+      <Modal
+        title={
+          editingOperator
+            ? t("ESD_OPERATOR.EDIT_OPERATOR")
+            : t("ESD_OPERATOR.ADD_OPERATOR")
+        }
+        visible={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null}
+      >
+        <div style={{ textAlign: "center", marginBottom: "16px" }}>
+          <UserOutlined style={{ fontSize: "32px", color: "#1890ff" }} />
+        </div>
+
+        <Form
+          form={form}
+          onFinish={
+            editingOperator ? handleUpdateOperator : handleCreateOperator
+          }
+          layout="vertical"
+        >
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Form.Item
+              name="name"
+              label={t("ESD_OPERATOR.TABLE.NAME")}
+              rules={[
+                { required: true, message: t("ESD_OPERATOR.NAME_REQUIRED") },
+              ]}
+              style={{ flex: 1, marginRight: "16px" }}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              name="badge"
+              label={t("ESD_OPERATOR.TABLE.USER_ID")}
+              rules={[
+                { required: true, message: t("ESD_OPERATOR.BADGE_REQUIRED") },
+              ]}
+              style={{ flex: 1 }}
+            >
+              <Input />
+            </Form.Item>
+          </div>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              {editingOperator
+                ? t("ESD_OPERATOR.UPDATE")
+                : t("ESD_OPERATOR.CREATE")}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+      {/* <Modal
+        title={editingOperator ? "Edit Operator" : "Add Operator"}
+        visible={isModalVisible}
+        onCancel={() => {
+          setIsModalVisible(false);
+          setImageSrc(null);
+        }}
+        footer={null}
+      >
+        <Form
+          form={form}
+          onFinish={
+            editingOperator ? handleUpdateOperator : handleCreateOperator
+          }
+        >
+          <Form.Item
+            name="name"
+            label={t("ESD_OPERATOR.TABLE.NAME", {
+              appName: "App for Translations",
+            })}
+            rules={[{ required: true, message: "Please input the name!" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="badge"
+            label={t("ESD_OPERATOR.TABLE.USER_ID", {
+              appName: "App for Translations",
+            })}
+            rules={[{ required: true, message: "Please input the badge!" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="Operator Photo">
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Webcam
+                audio={false}
+                ref={webcamRef}
+                videoConstraints={videoConstraints}
+                screenshotFormat="image/jpeg"
+                width="100%"
+                height="100%"
+                screenshotQuality={1}
+                onUserMediaError={() => setImageSrc(null)}
+              />
+              <div>
+                {imageSrc && <img src={imageSrc} alt="Captured" />}
+                {!isCapturing && (
+                  <Button
+                    onClick={() => {
+                      setIsCapturing(true);
+                      captureImage();
+                    }}
+                    icon={<CameraOutlined />}
+                  >
+                    Capture
+                  </Button>
+                )}
+              </div>
+            </div>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              {editingOperator ? "Save Changes" : "Add Operator"}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal> */}
+    </Layout>
   );
 };
 

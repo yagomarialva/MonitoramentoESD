@@ -104,6 +104,13 @@
   background-color: var(--background-paper, #fff);
 }
 
+.app-footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
 @media (min-width: 1400px) {
   .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
       max-width: 100% !important;

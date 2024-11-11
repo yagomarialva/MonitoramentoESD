@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import {
   Typography,
   Box,
@@ -8,9 +8,15 @@ import {
   Button,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import "./OperatorForm.css"; // Importe o arquivo CSS
+import "./OperatorForm.css"; // Import the CSS file
 
-const OperatorForm = ({ open, handleClose, onSubmit }) => {
+interface OperatorFormProps {
+  open: boolean;
+  handleClose: () => void;
+  onSubmit: (station: { name: string; badge: string }) => Promise<void>;
+}
+
+const OperatorForm: React.FC<OperatorFormProps> = ({ open, handleClose, onSubmit }) => {
   const { t } = useTranslation();
 
   const [station, setStation] = useState({
@@ -18,10 +24,10 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
     badge: "",
   });
 
-  const [errorName, setErrorName] = useState("");
-  const [errorBadge, setErrorBadge] = useState("");
+  const [errorName, setErrorName] = useState<string>("");
+  const [errorBadge, setErrorBadge] = useState<string>("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setStation((prev) => ({
       ...prev,
@@ -36,7 +42,7 @@ const OperatorForm = ({ open, handleClose, onSubmit }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const nameRegex = /^(?![\s-]+$)[\w\s-]{1,50}$/;
     const badgeRegex = /^[\w\s-]{1,50}$/;

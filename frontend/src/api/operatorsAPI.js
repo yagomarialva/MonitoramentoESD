@@ -15,6 +15,7 @@ export const getAllOperators = async () => {
 export const getOperators = async (id) => {
   try {
     const response = await TokenApi.get(`${url}/BuscarOperatores/${id}`);
+    console.log(response)
     return response.data;
   } catch (error) {
     console.error(`Failed to fetch operator with ID ${id}`, error);

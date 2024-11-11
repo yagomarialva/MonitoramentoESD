@@ -188,12 +188,6 @@ body {
   justify-content: space-between;
 }
 
-.app-footer {
-  background-color: #333;
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-}
 
 .body .card, 
 .body .card-header, 
@@ -207,7 +201,7 @@ body {
 .card-body {
   border-bottom: #f0f0f0  15px solid !important;
   margin-bottom: 25px;
-  height: 650px;
+  /* height: 650px; */
 }
 
 .no-lines-message{

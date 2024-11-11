@@ -142,7 +142,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
       navigate("/");
     } else {
       showMessage(
-        t("ESD_MONITOR.MAP_FACTORY.TOAST.ERROR", {
+        t("Erro ao criar estação", {
           appName: "App for Translations",
         }),
         "error"
@@ -283,10 +283,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
             ))
           )}
         </div>
-
-        <footer className="app-footer">
-          <p>&copy; 2024 Compal. Todos os direitos reservados.</p>
-        </footer>
       </div>
     </>
   );
