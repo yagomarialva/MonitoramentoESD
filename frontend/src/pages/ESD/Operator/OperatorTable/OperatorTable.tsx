@@ -178,18 +178,18 @@ const OperatorTable: React.FC = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Tooltip title={t("ESD_OPERATOR.TABLE.EDIT")}>
+          <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
             <Button
               icon={<EditOutlined />}
               onClick={() => handleEdit(record)}
             />
           </Tooltip>
-          <Tooltip title={t("ESD_OPERATOR.TABLE.DELETE")}>
+          <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
             <Popconfirm
-              title={t("ESD_OPERATOR.CONFIRM_DELETE")}
+              title={t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM_TEXT")}
               onConfirm={() => handleDelete(record.id)}
-              okText={t("ESD_OPERATOR.YES")}
-              cancelText={t("ESD_OPERATOR.NO")}
+              okText={t("ESD_OPERATOR.CONFIRM_DIALOG.SAVE")}
+              cancelText={t("ESD_OPERATOR.CONFIRM_DIALOG.CLOSE")}
             >
               <Button icon={<DeleteOutlined />} danger />
             </Popconfirm>
@@ -216,7 +216,7 @@ const OperatorTable: React.FC = () => {
         }}
       >
         <Title level={2}>
-          {t("ESD_OPERATOR.TITLE", { appName: "App for Translations" })}
+          {t("ESD_OPERATOR.TABLE_HEADER", { appName: "App for Translations" })}
         </Title>
         <Space style={{ marginBottom: 16, width: "100%" }}>
           <Input
@@ -314,8 +314,8 @@ const OperatorTable: React.FC = () => {
           <Form.Item>
             <Button type="primary" htmlType="submit">
               {editingOperator
-                ? t("ESD_OPERATOR.UPDATE")
-                : t("ESD_OPERATOR.CREATE")}
+                ? t("ESD_OPERATOR.DIALOG.SAVE")
+                : t("ESD_OPERATOR.DIALOG.CREATE_OPERATOR")}
             </Button>
           </Form.Item>
         </Form>

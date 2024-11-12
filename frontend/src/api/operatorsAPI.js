@@ -71,3 +71,8 @@ export const deleteOperators = async (id) => {
     throw error;
   }
 };
+
+
+// REACT_APP_API_URL_FCT=http://localhost:5051/
+// REACT_APP_HOST=localhost
+
