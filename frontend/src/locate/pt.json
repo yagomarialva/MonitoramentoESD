@@ -36,6 +36,7 @@
       }
     },
     "ESD_OPERATOR": {
+      "FACIAL_RECOGNITION":"Reconhecimento Facial",
       "TABLE_HEADER": "Operadores ESD",
       "ADD_OPERATOR": "Adicionar Operador",
       "EDIT_OPERATOR": "Editar Operador",

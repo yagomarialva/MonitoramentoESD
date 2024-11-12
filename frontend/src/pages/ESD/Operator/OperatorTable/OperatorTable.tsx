@@ -38,6 +38,7 @@ interface Operator {
   id: number;
   name: string;
   badge: string;
+  photo?: string;
 }
 
 const OperatorTable: React.FC = () => {
@@ -48,24 +49,16 @@ const OperatorTable: React.FC = () => {
   const [searchName, setSearchName] = useState("");
   const [searchBadge, setSearchBadge] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isFacialRecognitionModalVisible, setIsFacialRecognitionModalVisible] = useState(false);
   const [editingOperator, setEditingOperator] = useState<Operator | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [isCapturing, setIsCapturing] = useState(false);
   const [form] = Form.useForm();
-  const webcamRef = useRef<Webcam>(null); // Alteração aqui para tipar corretamente
+  const webcamRef = useRef<Webcam>(null);
 
   const videoConstraints = {
-    width: 1280,
-    height: 720,
+    width: 720,
+    height: 480,
     facingMode: "user",
-  };
-
-  const captureImage = () => {
-    if (webcamRef.current) {
-      const image = webcamRef.current.getScreenshot();
-      setImageSrc(image || null);
-      setIsCapturing(false);
-    }
   };
 
   const showSnackbar = useCallback(
@@ -105,6 +98,10 @@ const OperatorTable: React.FC = () => {
         return;
       }
 
+      if (imageSrc) {
+        values.photo = imageSrc;
+      }
+
       await createOperators(values);
       await fetchOperators();
       showSnackbar(
@@ -114,6 +111,7 @@ const OperatorTable: React.FC = () => {
       );
       setIsModalVisible(false);
       form.resetFields();
+      setImageSrc(null);
     } catch (error: any) {
       showSnackbar(
         t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
@@ -126,6 +124,10 @@ const OperatorTable: React.FC = () => {
 
   const handleUpdateOperator = async (values: Operator) => {
     try {
+      if (imageSrc) {
+        values.photo = imageSrc;
+      }
+
       await updateOperators(values);
       await fetchOperators();
       showSnackbar(
@@ -135,6 +137,7 @@ const OperatorTable: React.FC = () => {
       );
       setIsModalVisible(false);
       setEditingOperator(null);
+      setImageSrc(null);
     } catch (error: any) {
       showSnackbar(error.response.data.errors.Name, "error");
     }
@@ -202,7 +205,17 @@ const OperatorTable: React.FC = () => {
   const handleEdit = (operator: Operator) => {
     setEditingOperator(operator);
     form.setFieldsValue(operator);
+    setImageSrc(operator.photo || null);
     setIsModalVisible(true);
+  };
+
+  const captureImage = useCallback(() => {
+    const imageSrc = webcamRef.current?.getScreenshot();
+    setImageSrc(imageSrc || null);
+  }, []);
+
+  const handleFacialRecognition = () => {
+    setIsFacialRecognitionModalVisible(true);
   };
 
   return (
@@ -236,7 +249,6 @@ const OperatorTable: React.FC = () => {
             prefix={<SearchOutlined />}
           />
         </Space>
-        {/* Button positioned at the top-right corner */}
         <div style={{ position: "absolute", top: 0, right: 0 }}>
           <Button
             type="primary"
@@ -246,10 +258,17 @@ const OperatorTable: React.FC = () => {
               form.resetFields();
               setIsModalVisible(true);
             }}
+            style={{ marginRight: '8px' }}
           >
             {t("ESD_OPERATOR.ADD_OPERATOR", {
               appName: "App for Translations",
             })}
+          </Button>
+          <Button
+            icon={<CameraOutlined />}
+            onClick={handleFacialRecognition}
+          >
+            {t("ESD_OPERATOR.FACIAL_RECOGNITION", { appName: "App for Translations" })}
           </Button>
         </div>
         <Spin spinning={loading}>
@@ -273,18 +292,23 @@ const OperatorTable: React.FC = () => {
             : t("ESD_OPERATOR.ADD_OPERATOR")
         }
         visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={() => {
+          setIsModalVisible(false);
+          setImageSrc(null);
+        }}
         footer={null}
       >
         <div style={{ textAlign: "center", marginBottom: "16px" }}>
-          <UserOutlined style={{ fontSize: "32px", color: "#1890ff" }} />
+          {imageSrc ? (
+            <img src={imageSrc} alt="Operator" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '50%' }} />
+          ) : (
+            <UserOutlined style={{ fontSize: "64px", color: "#1890ff" }} />
+          )}
         </div>
 
         <Form
           form={form}
-          onFinish={
-            editingOperator ? handleUpdateOperator : handleCreateOperator
-          }
+          onFinish={editingOperator ? handleUpdateOperator : handleCreateOperator}
           layout="vertical"
         >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -317,77 +341,32 @@ const OperatorTable: React.FC = () => {
                 ? t("ESD_OPERATOR.DIALOG.SAVE")
                 : t("ESD_OPERATOR.DIALOG.CREATE_OPERATOR")}
             </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-      {/* <Modal
-        title={editingOperator ? "Edit Operator" : "Add Operator"}
-        visible={isModalVisible}
-        onCancel={() => {
-          setIsModalVisible(false);
-          setImageSrc(null);
-        }}
-        footer={null}
-      >
-        <Form
-          form={form}
-          onFinish={
-            editingOperator ? handleUpdateOperator : handleCreateOperator
-          }
-        >
-          <Form.Item
-            name="name"
-            label={t("ESD_OPERATOR.TABLE.NAME", {
-              appName: "App for Translations",
-            })}
-            rules={[{ required: true, message: "Please input the name!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="badge"
-            label={t("ESD_OPERATOR.TABLE.USER_ID", {
-              appName: "App for Translations",
-            })}
-            rules={[{ required: true, message: "Please input the badge!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Operator Photo">
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Webcam
-                audio={false}
-                ref={webcamRef}
-                videoConstraints={videoConstraints}
-                screenshotFormat="image/jpeg"
-                width="100%"
-                height="100%"
-                screenshotQuality={1}
-                onUserMediaError={() => setImageSrc(null)}
-              />
-              <div>
-                {imageSrc && <img src={imageSrc} alt="Captured" />}
-                {!isCapturing && (
-                  <Button
-                    onClick={() => {
-                      setIsCapturing(true);
-                      captureImage();
-                    }}
-                    icon={<CameraOutlined />}
-                  >
-                    Capture
-                  </Button>
-                )}
-              </div>
-            </div>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              {editingOperator ? "Save Changes" : "Add Operator"}
+            <Button onClick={captureImage} icon={<CameraOutlined />} style={{ marginLeft: '8px' }}>
+              {t("ESD_OPERATOR.CAPTURE_PHOTO")}
             </Button>
           </Form.Item>
         </Form>
-      </Modal> */}
+      </Modal>
+      <Modal
+        title={t("ESD_OPERATOR.FACIAL_RECOGNITION")}
+        visible={isFacialRecognitionModalVisible}
+        onCancel={() => setIsFacialRecognitionModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setIsFacialRecognitionModalVisible(false)}>
+            {t("ESD_OPERATOR.CANCEL")}
+          </Button>,
+          <Button key="capture" type="primary" onClick={captureImage}>
+            {t("ESD_OPERATOR.CAPTURE")}
+          </Button>,
+        ]}
+      >
+        <Webcam
+          audio={false}
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+          videoConstraints={videoConstraints}
+        />
+      </Modal>
     </Layout>
   );
 };

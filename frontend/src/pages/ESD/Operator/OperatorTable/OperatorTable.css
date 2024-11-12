@@ -15,6 +15,10 @@
   width: 1050;
 }
 
+.operator-webcam{
+  margin-right: 20px !important;
+}
+
 .textOverflow {
   max-width: 60%;
   /* font-size: 20dp; */
@@ -23,4 +27,9 @@
   text-overflow:    ellipsis;
   /* border: 1px solid #ccc; */
   margin-right: 20%;
+}
+
+
+.ant-modal-content {
+  padding: 20px 15px !important;
 }
