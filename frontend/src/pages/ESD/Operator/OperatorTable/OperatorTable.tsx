@@ -61,8 +61,10 @@ const OperatorTable: React.FC = () => {
   const webcamRef = useRef<Webcam>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [operatorToDelete, setOperatorToDelete] = useState<number | null>(null);
-  const [capturedImageIcon, setCapturedImageIcon] = useState<string | null>(null);
-  const [imageData,setImageData] = useState(null);
+  const [capturedImageIcon, setCapturedImageIcon] = useState<string | null>(
+    null
+  );
+  const [imageData, setImageData] = useState(null);
 
   const videoConstraints = {
     width: 480,
@@ -83,9 +85,6 @@ const OperatorTable: React.FC = () => {
   const fetchOperators = async () => {
     try {
       const result = await getAllOperators();
-      console.log("API response:", result);
-      // const blob = await result.users.blob();
-      // const url = URL.createObjectURL(blob)
       if (Array.isArray(result)) {
         setOperators(result);
       } else if (
@@ -113,38 +112,6 @@ const OperatorTable: React.FC = () => {
   useEffect(() => {
     fetchOperators();
   }, [navigate, showSnackbar, t]);
-
-  // const handleCreateOperator = async (values: Operator) => {
-  //   try {
-  //     const alreadyExists = operators.some((op) => op.badge === values.badge);
-
-  //     if (alreadyExists) {
-  //       showSnackbar("Operador já existe no sistema.", "error");
-  //       return;
-  //     }
-
-  //     if (capturedImage) {
-  //       values.stream = capturedImage;
-  //     }
-  //     await createOperators(values);
-  //     await fetchOperators();
-  //     showSnackbar(
-  //       t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", {
-  //         appName: "App for Translations",
-  //       })
-  //     );
-  //     setIsModalVisible(false);
-  //     form.resetFields();
-  //     setCapturedImage(null);
-  //   } catch (error: any) {
-  //     showSnackbar(
-  //       t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
-  //         appName: "App for Translations",
-  //       }),
-  //       "error"
-  //     );
-  //   }
-  // };
 
   const handleCreateOperator = async (values: Operator) => {
     try {
@@ -243,7 +210,7 @@ const OperatorTable: React.FC = () => {
       key: "photo",
       render: (text, record) => {
         let imageSrc = record.stream;
-      
+
         // Verifica se o stream é uma string, e tenta convertê-la para base64
         if (typeof imageSrc === "string") {
           try {
@@ -258,7 +225,7 @@ const OperatorTable: React.FC = () => {
           // Caso o stream seja um Blob, converte para URL temporária
           imageSrc = URL.createObjectURL(record.stream);
         }
-      
+
         // Condição para mostrar a imagem ou um avatar de ícone padrão
         return imageSrc ? (
           <Image
@@ -319,62 +286,6 @@ const OperatorTable: React.FC = () => {
     },
   ];
 
-  // const columns: ColumnsType<Operator> = [
-  //   {
-  //     title: t("ESD_OPERATOR.TABLE.PHOTO"),
-  //     dataIndex: "stream",
-  //     key: "stream",
-  //     render: (text, record) => {
-  //       // Check if the operator has a photo or a captured stream
-  //       const photo = record.photo || record.stream; // Use the photo if available, fallback to stream
-  //       return photo ? (
-  //         <Avatar src={photo} />
-  //       ) : (
-  //         <Avatar icon={<UserOutlined />} />
-  //       );
-  //     },
-  //   },
-  //   {
-  //     title: t("ESD_OPERATOR.TABLE.NAME", { appName: "App for Translations" }),
-  //     dataIndex: "name",
-  //     key: "name",
-  //     filteredValue: [searchName],
-  //     onFilter: (value, record) =>
-  //       record.name.toLowerCase().includes(String(value).toLowerCase()),
-  //   },
-  //   {
-  //     title: t("ESD_OPERATOR.TABLE.USER_ID", {
-  //       appName: "App for Translations",
-  //     }),
-  //     dataIndex: "badge",
-  //     key: "badge",
-  //     filteredValue: [searchBadge],
-  //     onFilter: (value, record) =>
-  //       record.badge.toLowerCase().includes(String(value).toLowerCase()),
-  //   },
-  //   {
-  //     title: t("ESD_OPERATOR.TABLE.ACTIONS"),
-  //     key: "actions",
-  //     render: (_, record) => (
-  //       <Space size="middle">
-  //         <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
-  //           <Button
-  //             icon={<EditOutlined />}
-  //             onClick={() => handleEdit(record)}
-  //           />
-  //         </Tooltip>
-  //         <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
-  //           <Button
-  //             icon={<DeleteOutlined />}
-  //             danger
-  //             onClick={() => showDeleteConfirmation(record.id)}
-  //           />
-  //         </Tooltip>
-  //       </Space>
-  //     ),
-  //   },
-  // ];
-
   const handleEdit = (operator: Operator) => {
     setEditingOperator(operator);
     form.setFieldsValue(operator);
@@ -387,7 +298,7 @@ const OperatorTable: React.FC = () => {
     if (imageSrc) {
       setCapturedImage(imageSrc);
       setIsCameraModalVisible(false);
-      setCapturedImageIcon(imageSrc)
+      setCapturedImageIcon(imageSrc);
     }
   }, []);
 
@@ -407,10 +318,13 @@ const OperatorTable: React.FC = () => {
           }}
         >
           <Title level={2}>
-            {t("ESD_OPERATOR.FACIAL_RECOGNITION", { appName: "App for Translations" })}
+            {t("ESD_OPERATOR.FACIAL_RECOGNITION", {
+              appName: "App for Translations",
+            })}
           </Title>
           <Space>
             <Button
+              style={{ backgroundColor: "#389e0d" }}
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => {
@@ -424,11 +338,11 @@ const OperatorTable: React.FC = () => {
                 appName: "App for Translations",
               })}
             </Button>
-            <Button icon={<CameraOutlined />} onClick={handleFacialRecognition}>
+            {/* <Button icon={<CameraOutlined />} onClick={handleFacialRecognition}>
               {t("ESD_OPERATOR.FACIAL_RECOGNITION", {
                 appName: "App for Translations",
               })}
-            </Button>
+            </Button> */}
           </Space>
         </div>
         <Space style={{ marginBottom: 16 }}>
@@ -475,6 +389,7 @@ const OperatorTable: React.FC = () => {
           setCapturedImage(null);
         }}
         footer={null}
+        style={{ maxHeight: "100px", maxWidth: "300px" }}
       >
         <Form
           form={form}
@@ -501,7 +416,7 @@ const OperatorTable: React.FC = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item label={t("ESD_OPERATOR.PHOTO")}>
+          <Form.Item>
             {capturedImage ? (
               <div>
                 <img
@@ -509,13 +424,15 @@ const OperatorTable: React.FC = () => {
                   alt="Captured"
                   style={{ width: "100%", maxWidth: "300px" }}
                 />
-                <Button
-                  onClick={() => setIsCameraModalVisible(true)}
-                  icon={<CameraOutlined />}
-                  style={{ marginTop: "8px" }}
-                >
-                  {t("ESD_OPERATOR.RETAKE_PHOTO")}
-                </Button>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Button
+                    onClick={() => setIsCameraModalVisible(true)}
+                    icon={<CameraOutlined />}
+                    style={{ marginTop: "8px" }}
+                  >
+                    {t("ESD_OPERATOR.RETAKE_PHOTO")}
+                  </Button>
+                </div>
               </div>
             ) : (
               <Button
@@ -527,11 +444,17 @@ const OperatorTable: React.FC = () => {
             )}
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              {editingOperator
-                ? t("ESD_OPERATOR.UPDATE")
-                : t("ESD_OPERATOR.CREATE")}
-            </Button>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                style={{ backgroundColor: "#389e0d" }}
+                type="primary"
+                htmlType="submit"
+              >
+                {editingOperator
+                  ? t("ESD_OPERATOR.UPDATE")
+                  : t("ESD_OPERATOR.CREATE")}
+              </Button>
+            </div>
           </Form.Item>
         </Form>
       </Modal>

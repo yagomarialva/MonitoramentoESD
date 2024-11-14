@@ -43,6 +43,7 @@
       "INFO_OPERATOR": "Informações do Operador",
       "DELETE_OPERATOR": "Deletar Operador",
       "TAKE_PHOTO":"Adicionar foto",
+      "RETAKE_PHOTO":"Tirar outra foto",
       "CREATE": "Adicionar",
       "PHOTO": "Foto do operador",
       "UPDATE":"Atualizar Operador",

@@ -39,7 +39,9 @@
 }
 
 /* OperatorTable.css */
-
+.add-operator-button{
+  color: #389e0d !important;
+}
 .site-layout {
   margin: 24px 16px;
   padding: 24px;
