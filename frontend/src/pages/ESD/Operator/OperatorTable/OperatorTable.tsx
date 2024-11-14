@@ -407,7 +407,7 @@ const OperatorTable: React.FC = () => {
           }}
         >
           <Title level={2}>
-            {t("ESD_OPERATOR.TITLE", { appName: "App for Translations" })}
+            {t("ESD_OPERATOR.FACIAL_RECOGNITION", { appName: "App for Translations" })}
           </Title>
           <Space>
             <Button

@@ -42,6 +42,10 @@
       "EDIT_OPERATOR": "Editar Operador",
       "INFO_OPERATOR": "Informações do Operador",
       "DELETE_OPERATOR": "Deletar Operador",
+      "TAKE_PHOTO":"Adicionar foto",
+      "CREATE": "Adicionar",
+      "PHOTO": "Foto do operador",
+      "UPDATE":"Atualizar Operador",
       "TABLE": {
         "USER_ID": "Matrícula",
         "NAME": "Operador(a)",
