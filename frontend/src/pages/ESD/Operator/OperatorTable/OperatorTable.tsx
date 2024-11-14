@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { Image } from "antd";
 import { useTranslation } from "react-i18next";
 import {
   getAllOperators,
@@ -39,10 +40,9 @@ interface Operator {
   id: number;
   name: string;
   badge: string;
-  photo?: string;
-  stream?: string | Blob | null;
+  photo?: any;
+  stream?: string | Blob | null | any;
 }
-
 
 const OperatorTable: React.FC = () => {
   const navigate = useNavigate();
@@ -61,6 +61,8 @@ const OperatorTable: React.FC = () => {
   const webcamRef = useRef<Webcam>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [operatorToDelete, setOperatorToDelete] = useState<number | null>(null);
+  const [capturedImageIcon, setCapturedImageIcon] = useState<string | null>(null);
+  const [imageData,setImageData] = useState(null);
 
   const videoConstraints = {
     width: 480,
@@ -82,6 +84,8 @@ const OperatorTable: React.FC = () => {
     try {
       const result = await getAllOperators();
       console.log("API response:", result);
+      // const blob = await result.users.blob();
+      // const url = URL.createObjectURL(blob)
       if (Array.isArray(result)) {
         setOperators(result);
       } else if (
@@ -157,7 +161,7 @@ const OperatorTable: React.FC = () => {
         const blob = await base64Response.blob();
         values.stream = blob;
       }
-
+      values.photo = capturedImage; // Armazena a imagem base64 diretamente
       await createOperators(values);
       await fetchOperators();
       showSnackbar(
@@ -230,12 +234,49 @@ const OperatorTable: React.FC = () => {
     setIsDeleteModalVisible(true);
   };
 
+  // capturedImage
+
   const columns: ColumnsType<Operator> = [
     {
       title: t("ESD_OPERATOR.TABLE.PHOTO"),
       dataIndex: "photo",
       key: "photo",
-      render: (photo: string) => <Avatar src={photo} icon={<UserOutlined />} />,
+      render: (text, record) => {
+        let imageSrc = record.stream;
+      
+        // Verifica se o stream é uma string, e tenta convertê-la para base64
+        if (typeof imageSrc === "string") {
+          try {
+            // Decodifica a string base64 para verificar se é válida
+            atob(imageSrc);
+            // Se for base64, aplica o prefixo para data URL
+            imageSrc = `data:image/png;base64,${imageSrc}`;
+          } catch (error) {
+            console.error("Erro ao converter stream para base64:", error);
+          }
+        } else if (record.stream instanceof Blob) {
+          // Caso o stream seja um Blob, converte para URL temporária
+          imageSrc = URL.createObjectURL(record.stream);
+        }
+      
+        // Condição para mostrar a imagem ou um avatar de ícone padrão
+        return imageSrc ? (
+          <Image
+            src={imageSrc}
+            width={35}
+            height={35}
+            style={{ borderRadius: "50%" }} // Adiciona arredondamento
+            onLoad={() => {
+              // Revoga o URL temporário após o carregamento da imagem
+              if (record.stream instanceof Blob) {
+                URL.revokeObjectURL(imageSrc);
+              }
+            }}
+          />
+        ) : (
+          <Avatar icon={<UserOutlined />} />
+        );
+      },
     },
     {
       title: t("ESD_OPERATOR.TABLE.NAME", { appName: "App for Translations" }),
@@ -278,6 +319,62 @@ const OperatorTable: React.FC = () => {
     },
   ];
 
+  // const columns: ColumnsType<Operator> = [
+  //   {
+  //     title: t("ESD_OPERATOR.TABLE.PHOTO"),
+  //     dataIndex: "stream",
+  //     key: "stream",
+  //     render: (text, record) => {
+  //       // Check if the operator has a photo or a captured stream
+  //       const photo = record.photo || record.stream; // Use the photo if available, fallback to stream
+  //       return photo ? (
+  //         <Avatar src={photo} />
+  //       ) : (
+  //         <Avatar icon={<UserOutlined />} />
+  //       );
+  //     },
+  //   },
+  //   {
+  //     title: t("ESD_OPERATOR.TABLE.NAME", { appName: "App for Translations" }),
+  //     dataIndex: "name",
+  //     key: "name",
+  //     filteredValue: [searchName],
+  //     onFilter: (value, record) =>
+  //       record.name.toLowerCase().includes(String(value).toLowerCase()),
+  //   },
+  //   {
+  //     title: t("ESD_OPERATOR.TABLE.USER_ID", {
+  //       appName: "App for Translations",
+  //     }),
+  //     dataIndex: "badge",
+  //     key: "badge",
+  //     filteredValue: [searchBadge],
+  //     onFilter: (value, record) =>
+  //       record.badge.toLowerCase().includes(String(value).toLowerCase()),
+  //   },
+  //   {
+  //     title: t("ESD_OPERATOR.TABLE.ACTIONS"),
+  //     key: "actions",
+  //     render: (_, record) => (
+  //       <Space size="middle">
+  //         <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
+  //           <Button
+  //             icon={<EditOutlined />}
+  //             onClick={() => handleEdit(record)}
+  //           />
+  //         </Tooltip>
+  //         <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
+  //           <Button
+  //             icon={<DeleteOutlined />}
+  //             danger
+  //             onClick={() => showDeleteConfirmation(record.id)}
+  //           />
+  //         </Tooltip>
+  //       </Space>
+  //     ),
+  //   },
+  // ];
+
   const handleEdit = (operator: Operator) => {
     setEditingOperator(operator);
     form.setFieldsValue(operator);
@@ -290,6 +387,7 @@ const OperatorTable: React.FC = () => {
     if (imageSrc) {
       setCapturedImage(imageSrc);
       setIsCameraModalVisible(false);
+      setCapturedImageIcon(imageSrc)
     }
   }, []);
 

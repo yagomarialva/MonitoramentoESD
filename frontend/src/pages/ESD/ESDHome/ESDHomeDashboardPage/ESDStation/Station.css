@@ -16,6 +16,18 @@
   margin-bottom: -12px;
 }
 
+.icon-container-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FF4848;
+  padding: 10px;
+  border-radius: 5px;
+  height: 100px; /* Defina uma altura fixa para as células */
+  width: 100px;  /* Defina uma largura fixa para as células */
+  margin-bottom: -12px;
+}
+
 .dut-icon-success{
   margin-top: 10px;
   margin-left: 13px;
@@ -25,13 +37,13 @@
 .dut-icon-error{
   margin-top: 10px;
   margin-left: 13px;
-  color: red;
+  color: #FF4848;
 }
 
 .dut-icon-default{
   margin-top: 10px;
   margin-left: 13px;
-  color: #BFBFBF;
+  color: #e2e1e1;
 }
 
 .computer-icon,

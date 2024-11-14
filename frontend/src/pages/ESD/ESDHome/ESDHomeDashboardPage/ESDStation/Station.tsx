@@ -22,6 +22,7 @@ import MonitorForm from "../../MonitorForm/MonitorForm";
 import { deleteStation } from "../../../../../api/stationApi";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Description } from "@mui/icons-material";
+import PointOfSaleOutlinedIcon from '@mui/icons-material/PointOfSaleOutlined';
 import signalRService from "../../../../../api/signalRService";
 
 interface Station {
@@ -278,7 +279,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
             {cell ? (
               <Tooltip title={cell.monitorsEsd.serialNumber}>
                 <div className="computer-icon">
-                  <ComputerIcon
+                  <PointOfSaleOutlinedIcon
                     className={
                       monitorStatuses[cell.monitorsEsd.serialNumber] === 1
                         ? "dut-icon-success"
