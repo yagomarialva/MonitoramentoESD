@@ -26,29 +26,30 @@ export const getOperators = async (id) => {
 };
 
 export const createOperators = async (operator) => {
+  console.log('operator', operator)
   const form = new FormData();
-  form.append("ID", operator.id || 0);  // ID padrão 0 se não for especificado
+  form.append("ID", operator.id || 0); // ID padrão 0 se não for especificado
   form.append("Name", operator.name);
   form.append("Badge", operator.badge);
 
   // Checa se o operador tem um arquivo de imagem válido antes de adicioná-lo
   if (operator.stream && operator.stream instanceof Blob) {
-      form.append("Image", operator.stream, "image.png");  // Adiciona com o nome de arquivo desejado
+    form.append("Image", operator.stream, "image.png"); // Adiciona com o nome de arquivo desejado
   }
 
   try {
-      const response = await TokenApi.post(`${url}/adicionar`, form, {
-          headers: {
-              "Content-Type": "multipart/form-data"
-          }
-      });
-      return response.data;
+    const response = await TokenApi.post(`${url}/adicionar`, form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log('response', response.data)
+    return response.data;
   } catch (error) {
-      console.error("Failed to create operator", error);
-      throw error;
+    console.error("Failed to create operator", error);
+    throw error;
   }
 };
-
 
 // Update an existing operator
 export const updateOperators = async (operator) => {

@@ -40,26 +40,9 @@ interface Operator {
   name: string;
   badge: string;
   photo?: string;
-  stream?: Blob | null; // Atualizado para aceitar Blob ou null
+  stream?: string | Blob | null;
 }
 
-// Função para converter base64 para Blob
-function base64ToBlob(base64Data: string, contentType = 'image/png'): Blob {
-  const byteCharacters = atob(base64Data);
-  const byteArrays = [];
-  
-  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-    const slice = byteCharacters.slice(offset, offset + 512);
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
-  }
-  
-  return new Blob(byteArrays, { type: contentType });
-}
 
 const OperatorTable: React.FC = () => {
   const navigate = useNavigate();
@@ -70,12 +53,14 @@ const OperatorTable: React.FC = () => {
   const [searchBadge, setSearchBadge] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isCameraModalVisible, setIsCameraModalVisible] = useState(false);
-  const [isFacialRecognitionModalVisible, setIsFacialRecognitionModalVisible] = useState(false);
+  const [isFacialRecognitionModalVisible, setIsFacialRecognitionModalVisible] =
+    useState(false);
   const [editingOperator, setEditingOperator] = useState<Operator | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
-  const [capturedImageBlob, setCapturedImageBlob] = useState<Blob | null>(null); // Estado para armazenar o Blob
   const [form] = Form.useForm();
   const webcamRef = useRef<Webcam>(null);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [operatorToDelete, setOperatorToDelete] = useState<number | null>(null);
 
   const videoConstraints = {
     width: 480,
@@ -83,9 +68,15 @@ const OperatorTable: React.FC = () => {
     facingMode: "user",
   };
 
-  const showSnackbar = useCallback((content: string, type: "success" | "error" | "info" | "warning" = "success") => {
-    message[type](content);
-  }, []);
+  const showSnackbar = useCallback(
+    (
+      content: string,
+      type: "success" | "error" | "info" | "warning" = "success"
+    ) => {
+      message[type](content);
+    },
+    []
+  );
 
   const fetchOperators = async () => {
     try {
@@ -93,7 +84,11 @@ const OperatorTable: React.FC = () => {
       console.log("API response:", result);
       if (Array.isArray(result)) {
         setOperators(result);
-      } else if (result && typeof result === 'object' && Array.isArray(result.users)) {
+      } else if (
+        result &&
+        typeof result === "object" &&
+        Array.isArray(result.users)
+      ) {
         setOperators(result.users);
       } else {
         console.error("Unexpected API response format:", result);
@@ -115,8 +110,39 @@ const OperatorTable: React.FC = () => {
     fetchOperators();
   }, [navigate, showSnackbar, t]);
 
+  // const handleCreateOperator = async (values: Operator) => {
+  //   try {
+  //     const alreadyExists = operators.some((op) => op.badge === values.badge);
+
+  //     if (alreadyExists) {
+  //       showSnackbar("Operador já existe no sistema.", "error");
+  //       return;
+  //     }
+
+  //     if (capturedImage) {
+  //       values.stream = capturedImage;
+  //     }
+  //     await createOperators(values);
+  //     await fetchOperators();
+  //     showSnackbar(
+  //       t("ESD_OPERATOR.TOAST.CREATE_SUCCESS", {
+  //         appName: "App for Translations",
+  //       })
+  //     );
+  //     setIsModalVisible(false);
+  //     form.resetFields();
+  //     setCapturedImage(null);
+  //   } catch (error: any) {
+  //     showSnackbar(
+  //       t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
+  //         appName: "App for Translations",
+  //       }),
+  //       "error"
+  //     );
+  //   }
+  // };
+
   const handleCreateOperator = async (values: Operator) => {
-    console.log('capturedImageBlob', capturedImageBlob); // Log para verificar o Blob
     try {
       const alreadyExists = operators.some((op) => op.badge === values.badge);
 
@@ -125,8 +151,11 @@ const OperatorTable: React.FC = () => {
         return;
       }
 
-      if (capturedImageBlob) {
-        values.stream = capturedImageBlob; // Definir o Blob no stream
+      if (capturedImage) {
+        // Convert the base64 image to a Blob
+        const base64Response = await fetch(capturedImage);
+        const blob = await base64Response.blob();
+        values.stream = blob;
       }
 
       await createOperators(values);
@@ -139,8 +168,8 @@ const OperatorTable: React.FC = () => {
       setIsModalVisible(false);
       form.resetFields();
       setCapturedImage(null);
-      setCapturedImageBlob(null); // Resetar o Blob após a criação
     } catch (error: any) {
+      console.error("Error creating operator:", error);
       showSnackbar(
         t("ESD_OPERATOR.TOAST.TOAST_ERROR", {
           appName: "App for Translations",
@@ -152,8 +181,8 @@ const OperatorTable: React.FC = () => {
 
   const handleUpdateOperator = async (values: Operator) => {
     try {
-      if (capturedImageBlob) {
-        values.stream = capturedImageBlob; // Definir o Blob no stream
+      if (capturedImage) {
+        values.stream = capturedImage;
       }
 
       await updateOperators(values);
@@ -166,64 +195,83 @@ const OperatorTable: React.FC = () => {
       setIsModalVisible(false);
       setEditingOperator(null);
       setCapturedImage(null);
-      setCapturedImageBlob(null); // Resetar o Blob após a atualização
     } catch (error: any) {
       showSnackbar(error.response.data.errors.Name, "error");
     }
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      const result = await deleteOperators(id);
-      console.log("Delete operator result:", result);
-      setOperators(operators.filter((operator) => operator.id !== id));
-      showSnackbar(t("ESD_OPERATOR.TOAST.DELETE_SUCCESS", { appName: "App for Translations" }));
-    } catch (error: any) {
-      console.error("Error deleting operator:", error);
-      showSnackbar(error.response?.data || "Error deleting operator", "error");
+  const handleDelete = async () => {
+    if (operatorToDelete) {
+      try {
+        const result = await deleteOperators(operatorToDelete);
+        console.log("Delete operator result:", result);
+        setOperators(
+          operators.filter((operator) => operator.id !== operatorToDelete)
+        );
+        showSnackbar(
+          t("ESD_OPERATOR.TOAST.DELETE_SUCCESS", {
+            appName: "App for Translations",
+          })
+        );
+      } catch (error: any) {
+        console.error("Error deleting operator:", error);
+        showSnackbar(
+          error.response?.data || "Error deleting operator",
+          "error"
+        );
+      }
+      setIsDeleteModalVisible(false);
+      setOperatorToDelete(null);
     }
+  };
+
+  const showDeleteConfirmation = (id: number) => {
+    setOperatorToDelete(id);
+    setIsDeleteModalVisible(true);
   };
 
   const columns: ColumnsType<Operator> = [
     {
       title: t("ESD_OPERATOR.TABLE.PHOTO"),
-      dataIndex: 'photo',
-      key: 'photo',
-      render: (photo: string) => (
-        <Avatar src={photo} icon={<UserOutlined />} />
-      ),
+      dataIndex: "photo",
+      key: "photo",
+      render: (photo: string) => <Avatar src={photo} icon={<UserOutlined />} />,
     },
     {
       title: t("ESD_OPERATOR.TABLE.NAME", { appName: "App for Translations" }),
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: "name",
+      key: "name",
       filteredValue: [searchName],
-      onFilter: (value, record) => record.name.toLowerCase().includes(String(value).toLowerCase()),
+      onFilter: (value, record) =>
+        record.name.toLowerCase().includes(String(value).toLowerCase()),
     },
     {
-      title: t("ESD_OPERATOR.TABLE.USER_ID", { appName: "App for Translations" }),
-      dataIndex: 'badge',
-      key: 'badge',
+      title: t("ESD_OPERATOR.TABLE.USER_ID", {
+        appName: "App for Translations",
+      }),
+      dataIndex: "badge",
+      key: "badge",
       filteredValue: [searchBadge],
-      onFilter: (value, record) => record.badge.toLowerCase().includes(String(value).toLowerCase()),
+      onFilter: (value, record) =>
+        record.badge.toLowerCase().includes(String(value).toLowerCase()),
     },
     {
       title: t("ESD_OPERATOR.TABLE.ACTIONS"),
-      key: 'actions',
+      key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Tooltip title={t("ESD_OPERATOR.TABLE.EDIT")}>
-            <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+          <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => handleEdit(record)}
+            />
           </Tooltip>
-          <Tooltip title={t("ESD_OPERATOR.TABLE.DELETE")}>
-            <Popconfirm
-              title={t("ESD_OPERATOR.CONFIRM_DELETE")}
-              onConfirm={() => handleDelete(record.id)}
-              okText={t("ESD_OPERATOR.YES")}
-              cancelText={t("ESD_OPERATOR.NO")}
-            >
-              <Button icon={<DeleteOutlined />} danger />
-            </Popconfirm>
+          <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
+            <Button
+              icon={<DeleteOutlined />}
+              danger
+              onClick={() => showDeleteConfirmation(record.id)}
+            />
           </Tooltip>
         </Space>
       ),
@@ -240,25 +288,8 @@ const OperatorTable: React.FC = () => {
   const captureImage = useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) {
-      console.log("Captured image source:", imageSrc); // Log para verificar se a imagem foi capturada
-
-      // Extrair a parte base64 da imagem
-      const base64Data = imageSrc.split(",")[1];
-      
-      if (base64Data) {
-        // Converter base64 para Blob
-        const blob = base64ToBlob(base64Data, 'image/png'); // Garantir o tipo correto
-        console.log("Blob criado a partir da imagem capturada:", blob); // Log para verificar o Blob
-        
-        // Atualizar o estado com o Blob da imagem
-        setCapturedImageBlob(blob);
-        setCapturedImage(imageSrc); // Opcional: para exibir a imagem capturada
-      } else {
-        console.error("Erro ao extrair dados base64 da imagem capturada.");
-      }
+      setCapturedImage(imageSrc);
       setIsCameraModalVisible(false);
-    } else {
-      console.error("Erro ao capturar a imagem. Certifique-se de que o Webcam está funcionando.");
     }
   }, []);
 
@@ -268,13 +299,22 @@ const OperatorTable: React.FC = () => {
 
   return (
     <Layout className="site-layout">
-      <Content style={{ margin: '24px 16px', padding: 24, minHeight: 280 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <Title level={2}>{t("ESD_OPERATOR.TITLE", { appName: "App for Translations" })}</Title>
+      <Content style={{ margin: "24px 16px", padding: 24, minHeight: 280 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 16,
+          }}
+        >
+          <Title level={2}>
+            {t("ESD_OPERATOR.TITLE", { appName: "App for Translations" })}
+          </Title>
           <Space>
-            <Button 
-              type="primary" 
-              icon={<PlusOutlined />} 
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
               onClick={() => {
                 setEditingOperator(null);
                 form.resetFields();
@@ -282,89 +322,117 @@ const OperatorTable: React.FC = () => {
                 setIsModalVisible(true);
               }}
             >
-              {t("ESD_OPERATOR.ADD_OPERATOR", { appName: "App for Translations" })}
+              {t("ESD_OPERATOR.ADD_OPERATOR", {
+                appName: "App for Translations",
+              })}
             </Button>
-            <Button
-              icon={<CameraOutlined />}
-              onClick={handleFacialRecognition}
-            >
-              {t("ESD_OPERATOR.FACIAL_RECOGNITION", { appName: "App for Translations" })}
+            <Button icon={<CameraOutlined />} onClick={handleFacialRecognition}>
+              {t("ESD_OPERATOR.FACIAL_RECOGNITION", {
+                appName: "App for Translations",
+              })}
             </Button>
           </Space>
         </div>
         <Space style={{ marginBottom: 16 }}>
           <Input
-            placeholder={t("ESD_OPERATOR.TABLE.NAME", { appName: "App for Translations" })}
+            placeholder={t("ESD_OPERATOR.TABLE.NAME", {
+              appName: "App for Translations",
+            })}
             value={searchName}
             onChange={(e) => setSearchName(e.target.value)}
             prefix={<SearchOutlined />}
           />
           <Input
-            placeholder={t("ESD_OPERATOR.TABLE.USER_ID", { appName: "App for Translations" })}
+            placeholder={t("ESD_OPERATOR.TABLE.USER_ID", {
+              appName: "App for Translations",
+            })}
             value={searchBadge}
             onChange={(e) => setSearchBadge(e.target.value)}
             prefix={<SearchOutlined />}
           />
         </Space>
         <Spin spinning={loading}>
-          <Table 
-            dataSource={operators} 
-            columns={columns} 
+          <Table
+            dataSource={operators}
+            columns={columns}
             rowKey="id"
-            pagination={{ 
-              showSizeChanger: true, 
+            pagination={{
+              showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
             }}
           />
         </Spin>
       </Content>
       <Modal
-        title={editingOperator ? t("ESD_OPERATOR.EDIT_OPERATOR") : t("ESD_OPERATOR.ADD_OPERATOR")}
+        title={
+          editingOperator
+            ? t("ESD_OPERATOR.EDIT_OPERATOR")
+            : t("ESD_OPERATOR.ADD_OPERATOR")
+        }
         visible={isModalVisible}
         onCancel={() => {
           setIsModalVisible(false);
           setCapturedImage(null);
-          setCapturedImageBlob(null); // Resetar o Blob ao fechar o modal
         }}
         footer={null}
       >
         <Form
           form={form}
-          onFinish={editingOperator ? handleUpdateOperator : handleCreateOperator}
+          onFinish={
+            editingOperator ? handleUpdateOperator : handleCreateOperator
+          }
           layout="vertical"
         >
           <Form.Item
             name="name"
             label={t("ESD_OPERATOR.TABLE.NAME")}
-            rules={[{ required: true, message: t("ESD_OPERATOR.NAME_REQUIRED") }]}
+            rules={[
+              { required: true, message: t("ESD_OPERATOR.NAME_REQUIRED") },
+            ]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="badge"
             label={t("ESD_OPERATOR.TABLE.USER_ID")}
-            rules={[{ required: true, message: t("ESD_OPERATOR.BADGE_REQUIRED") }]}
+            rules={[
+              { required: true, message: t("ESD_OPERATOR.BADGE_REQUIRED") },
+            ]}
           >
             <Input />
           </Form.Item>
           <Form.Item label={t("ESD_OPERATOR.PHOTO")}>
             {capturedImage ? (
               <div>
-                <img src={capturedImage} alt="Captured" style={{ width: '100%', maxWidth: '300px' }} />
-                <Button onClick={() => setIsCameraModalVisible(true)} icon={<CameraOutlined />} style={{ marginTop: '8px' }}>
+                <img
+                  src={capturedImage}
+                  alt="Captured"
+                  style={{ width: "100%", maxWidth: "300px" }}
+                />
+                <Button
+                  onClick={() => setIsCameraModalVisible(true)}
+                  icon={<CameraOutlined />}
+                  style={{ marginTop: "8px" }}
+                >
                   {t("ESD_OPERATOR.RETAKE_PHOTO")}
                 </Button>
               </div>
             ) : (
-              <Button onClick={() => setIsCameraModalVisible(true)} icon={<CameraOutlined />}>
+              <Button
+                onClick={() => setIsCameraModalVisible(true)}
+                icon={<CameraOutlined />}
+              >
                 {t("ESD_OPERATOR.TAKE_PHOTO")}
               </Button>
             )}
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              {editingOperator ? t("ESD_OPERATOR.UPDATE") : t("ESD_OPERATOR.CREATE")}
+              {editingOperator
+                ? t("ESD_OPERATOR.UPDATE")
+                : t("ESD_OPERATOR.CREATE")}
             </Button>
           </Form.Item>
         </Form>
@@ -375,13 +443,19 @@ const OperatorTable: React.FC = () => {
         onCancel={() => setIsCameraModalVisible(false)}
         footer={null}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <Webcam
             audio={false}
             ref={webcamRef}
-            screenshotFormat="image/png"
+            screenshotFormat="image/jpeg"
             videoConstraints={videoConstraints}
-            style={{ marginBottom: '16px' }}
+            style={{ marginBottom: "16px" }}
           />
           <Space>
             <Button onClick={() => setIsCameraModalVisible(false)}>
@@ -399,13 +473,19 @@ const OperatorTable: React.FC = () => {
         onCancel={() => setIsFacialRecognitionModalVisible(false)}
         footer={null}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <Webcam
             audio={false}
             ref={webcamRef}
-            screenshotFormat="image/png"
+            screenshotFormat="image/jpeg"
             videoConstraints={videoConstraints}
-            style={{ marginBottom: '16px' }}
+            style={{ marginBottom: "16px" }}
           />
           <Space>
             <Button onClick={() => setIsFacialRecognitionModalVisible(false)}>
@@ -416,6 +496,43 @@ const OperatorTable: React.FC = () => {
             </Button>
           </Space>
         </div>
+      </Modal>
+      <Modal
+        title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_OPERATOR")}
+        visible={isDeleteModalVisible}
+        onOk={handleDelete}
+        onCancel={() => {
+          setIsDeleteModalVisible(false);
+          setOperatorToDelete(null);
+        }}
+        okText={t("ESD_OPERATOR.CONFIRM_DIALOG.YES")}
+        cancelText={t("ESD_OPERATOR.CONFIRM_DIALOG.NO")}
+        footer={[
+          <div
+            key="footer"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <Button
+              key="cancel"
+              onClick={() => {
+                setIsDeleteModalVisible(false);
+                setOperatorToDelete(null);
+              }}
+            >
+              {t("ESD_OPERATOR.CONFIRM_DIALOG.CLOSE")}
+            </Button>
+            <Button
+              style={{ marginLeft: "15px" }}
+              key="submit"
+              type="primary"
+              onClick={handleDelete}
+            >
+              {t("ESD_OPERATOR.CONFIRM_DIALOG.SAVE")}
+            </Button>
+          </div>,
+        ]}
+      >
+        <p>{t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM_TEXT")}</p>
       </Modal>
     </Layout>
   );

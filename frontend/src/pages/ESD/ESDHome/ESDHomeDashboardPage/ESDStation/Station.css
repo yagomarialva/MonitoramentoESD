@@ -25,13 +25,13 @@
 .dut-icon-error{
   margin-top: 10px;
   margin-left: 13px;
-  color: purple;
+  color: red;
 }
 
 .dut-icon-default{
   margin-top: 10px;
   margin-left: 13px;
-  color: grey;
+  color: #BFBFBF;
 }
 
 .computer-icon,

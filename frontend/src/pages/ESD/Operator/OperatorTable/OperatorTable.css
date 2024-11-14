@@ -33,3 +33,44 @@
 .ant-modal-content {
   padding: 20px 15px !important;
 }
+
+.confirm-delete-operator-button{
+  margin-left: 10px !important;
+}
+
+/* OperatorTable.css */
+
+.site-layout {
+  margin: 24px 16px;
+  padding: 24px;
+  min-height: 280px;
+}
+
+.operator-table-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 16px !important;
+}
+
+
+
+.operator-table-photo {
+  width: 100%;
+  max-width: 300px;
+  margin-top: 8px;
+}
+
+.camera-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.webcam {
+  margin-bottom: 16px;
+}
+
+.input-space {
+  margin-bottom: 16px;
+}

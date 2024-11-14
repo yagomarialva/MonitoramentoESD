@@ -3,7 +3,7 @@ import { Tooltip, message } from "antd";
 import ComputerIcon from "@mui/icons-material/Computer";
 import { Alert, Snackbar } from "@mui/material";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
-import "./Station.css"; // Importando o CSS
+import "./Station.css";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -23,7 +23,6 @@ import { deleteStation } from "../../../../../api/stationApi";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Description } from "@mui/icons-material";
 import signalRService from "../../../../../api/signalRService";
-// import MonitorEditForm from "../../MonitorEditForm/MonitorEditForm";
 
 interface Station {
   id?: number;
@@ -64,7 +63,7 @@ interface StationEntry {
 
 interface StationProps {
   stationEntry: StationEntry;
-  onUpdate: () => void; // Prop para disparar a atualização
+  onUpdate: () => void;
 }
 
 type SnackbarSeverity = "success" | "error";
@@ -88,8 +87,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
   const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState<LogData[]>([]);
-  const [cellStatus, setCellStatus] = useState<any | null>();
-  const [cellSerialNumber, setCellSerialNumber] = useState<any | null>();
+  const [monitorStatuses, setMonitorStatuses] = useState<{[key: string]: number}>({});
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const handleModalClose = () => {
@@ -97,9 +95,9 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   };
 
   const [state, setState] = useState({
-    snackbarMessage: "", // Mensagem do Snackbar
+    snackbarMessage: "",
     snackbarOpen: false,
-    snackbarSeverity: "success" as SnackbarSeverity, // Severidade do Snackbar
+    snackbarSeverity: "success" as SnackbarSeverity,
   });
 
   const showSnackbar = (
@@ -109,11 +107,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     handleStateChange({
       snackbarMessage: message,
       snackbarSeverity: severity,
-      snackbarOpen: true, // Abrir o Snackbar
+      snackbarOpen: true,
     });
   };
 
-  // Atualiza o estado com os tipos corretos
   const handleStateChange = (changes: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...changes }));
   };
@@ -129,9 +126,8 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 
       await createStationMapper(selectedCell);
 
-      onUpdate(); // Dispara a atualização
-      setOpenModal(false); // Fecha o modal após a criação
-      // Mostra o Snackbar de sucesso
+      onUpdate();
+      setOpenModal(false);
       showSnackbar(
         `Monitor ${result.serialNumber} adicionado com sucesso!`,
         "success"
@@ -147,7 +143,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   };
 
   const showMessage = (content: string, type: "success" | "error") => {
-    message[type](content); // Exibe uma mensagem de sucesso ou erro
+    message[type](content);
   };
 
   useEffect(() => {
@@ -165,8 +161,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     connectToSignalR();
 
     signalRService.onReceiveAlert((log: LogData) => {
-      setCellStatus(log.status);
-      setCellSerialNumber(log.serialNumber);
+      setMonitorStatuses(prevStatuses => ({
+        ...prevStatuses,
+        [log.serialNumber]: log.status
+      }));
       if (![0, 1].includes(log.status)) {
         const updatedLog = {
           ...log,
@@ -178,7 +176,6 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       } else {
         setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100));
       }
-      // Mostra o Snackbar caso o status seja 0 (indicando erro)
       if (log.status === 0) {
         showSnackbar(
           `Erro no monitor ${log.serialNumber}: ${log.description}`,
@@ -212,8 +209,8 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           appName: "App for Translations",
         })
       );
-      onUpdate(); // Chama a função onUpdate para atualizar a visualização
-      return result; // Retorna os resultados atualizados
+      onUpdate();
+      return result;
     } catch (error: any) {
       showSnackbar(
         t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
@@ -261,11 +258,11 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const getStatusColor = (status: number) => {
     switch (status) {
       case 1:
-        return "green"; // Ativo (exemplo)
+        return "green";
       case 0:
-        return "red"; // Erro (exemplo)
+        return "red";
       default:
-        return "black"; // Cor padrão
+        return "grey";
     }
   };
 
@@ -283,17 +280,14 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
                 <div className="computer-icon">
                   <ComputerIcon
                     className={
-                      cell.monitorsEsd.serialNumber === cellSerialNumber
-                        ? cellStatus === 1
-                          ? "dut-icon-success"
-                          : "dut-icon-error"
-                        : "dut-icon-default" // Classe vazia se serialNumber não corresponder
+                      monitorStatuses[cell.monitorsEsd.serialNumber] === 1
+                        ? "dut-icon-success"
+                        : monitorStatuses[cell.monitorsEsd.serialNumber] === 0
+                        ? "dut-icon-error"
+                        : "dut-icon-default"
                     }
                     style={{
-                      color:
-                        cell.monitorsEsd.serialNumber === cellSerialNumber
-                          ? getStatusColor(cellStatus)
-                          : "inherit", // Cor padrão se serialNumber não corresponder
+                      color: getStatusColor(monitorStatuses[cell.monitorsEsd.serialNumber] ?? -1)
                     }}
                     onClick={() => setModalVisible(true)}
                   />

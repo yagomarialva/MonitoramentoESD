@@ -52,10 +52,11 @@
         "ROLE": "Cargo",
         "COMPACT": "Compacto",
         "STANDARD": "Padrão",
-        "CONFORTABLE": "Confortável"
+        "CONFORTABLE": "Confortável",
+        "PHOTO": "Foto"
       },
       "CONFIRM_DIALOG": {
-        "CONFIRM_TEXT": "Deseja excluir o Operador(a) ",
+        "CONFIRM_TEXT": "Deseja excluir o Operador(a)? ",
         "CLOSE": "Não",
         "SAVE": "Sim",
         "DELETE_OPERATOR": "Excluir Operador(a)"
