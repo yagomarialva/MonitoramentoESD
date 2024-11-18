@@ -270,12 +270,14 @@ const OperatorTable: React.FC = () => {
         <Space size="middle">
           <Tooltip title={t("ESD_OPERATOR.EDIT_OPERATOR")}>
             <Button
+              className="no-border-button-informations"
               icon={<EditOutlined />}
               onClick={() => handleEdit(record)}
             />
           </Tooltip>
           <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
             <Button
+              className="no-border-button-informations"            
               icon={<DeleteOutlined />}
               danger
               onClick={() => showDeleteConfirmation(record.id)}
@@ -324,7 +326,7 @@ const OperatorTable: React.FC = () => {
           </Title>
           <Space>
             <Button
-              style={{ backgroundColor: "#389e0d" }}
+              style={{ backgroundColor: "#389e0d", borderRadius: "0" }}
               type="primary"
               icon={<PlusOutlined />}
               onClick={() => {
@@ -338,11 +340,6 @@ const OperatorTable: React.FC = () => {
                 appName: "App for Translations",
               })}
             </Button>
-            {/* <Button icon={<CameraOutlined />} onClick={handleFacialRecognition}>
-              {t("ESD_OPERATOR.FACIAL_RECOGNITION", {
-                appName: "App for Translations",
-              })}
-            </Button> */}
           </Space>
         </div>
         <Space style={{ marginBottom: 16 }}>
@@ -436,6 +433,7 @@ const OperatorTable: React.FC = () => {
               </div>
             ) : (
               <Button
+                style={{ borderRadius: "0" }}
                 onClick={() => setIsCameraModalVisible(true)}
                 icon={<CameraOutlined />}
               >
@@ -446,7 +444,7 @@ const OperatorTable: React.FC = () => {
           <Form.Item>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Button
-                style={{ backgroundColor: "#389e0d" }}
+                style={{ backgroundColor: "#389e0d", borderRadius: "0" }}
                 type="primary"
                 htmlType="submit"
               >
@@ -479,10 +477,17 @@ const OperatorTable: React.FC = () => {
             style={{ marginBottom: "16px" }}
           />
           <Space>
-            <Button onClick={() => setIsCameraModalVisible(false)}>
+            <Button
+              style={{ borderRadius: "0" }}
+              onClick={() => setIsCameraModalVisible(false)}
+            >
               {t("ESD_OPERATOR.CANCEL")}
             </Button>
-            <Button type="primary" onClick={captureImage}>
+            <Button
+              style={{ backgroundColor: "#389e0d", borderRadius: "0" }}
+              type="primary"
+              onClick={captureImage}
+            >
               {t("ESD_OPERATOR.CAPTURE")}
             </Button>
           </Space>

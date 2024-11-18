@@ -38,9 +38,16 @@
   margin-left: 10px !important;
 }
 
+.no-border-button-informations {
+  border: none; /* Remove a borda */
+  box-shadow: none; /* Remove qualquer sombra de borda */
+  background: transparent; /* Define o fundo transparente */
+  color: #BFBFBF;
+}
+
 /* OperatorTable.css */
 .add-operator-button{
-  color: #389e0d !important;
+  background-color: #389e0d !important;
 }
 .site-layout {
   margin: 24px 16px;
