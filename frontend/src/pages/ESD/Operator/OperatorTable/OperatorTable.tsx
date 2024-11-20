@@ -23,6 +23,7 @@ import {
 } from "antd";
 import {
   CameraOutlined,
+  DeleteFilled,
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
@@ -277,7 +278,7 @@ const OperatorTable: React.FC = () => {
           </Tooltip>
           <Tooltip title={t("ESD_OPERATOR.DELETE_OPERATOR")}>
             <Button
-              className="no-border-button-informations"            
+              className="no-border-button-informations"
               icon={<DeleteOutlined />}
               danger
               onClick={() => showDeleteConfirmation(record.id)}
@@ -524,19 +525,34 @@ const OperatorTable: React.FC = () => {
         </div>
       </Modal>
       <Modal
-        title={t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_OPERATOR")}
+        title={
+          <span>
+            <DeleteFilled style={{ color: "#f5a623", marginRight: "8px" }} />
+            {t("ESD_OPERATOR.CONFIRM_DIALOG.DELETE_OPERATOR")}
+          </span>
+        }
         visible={isDeleteModalVisible}
-        onOk={handleDelete}
         onCancel={() => {
           setIsDeleteModalVisible(false);
           setOperatorToDelete(null);
         }}
-        okText={t("ESD_OPERATOR.CONFIRM_DIALOG.YES")}
-        cancelText={t("ESD_OPERATOR.CONFIRM_DIALOG.NO")}
-        footer={[
+        footer={null}
+        width={330}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <p>{t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM_TEXT")}</p>
           <div
-            key="footer"
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
           >
             <Button
               key="cancel"
@@ -544,21 +560,20 @@ const OperatorTable: React.FC = () => {
                 setIsDeleteModalVisible(false);
                 setOperatorToDelete(null);
               }}
+              style={{ marginRight: "8px", borderRadius: "0" }}
             >
               {t("ESD_OPERATOR.CONFIRM_DIALOG.CLOSE")}
             </Button>
             <Button
-              style={{ marginLeft: "15px" }}
               key="submit"
               type="primary"
+              style={{ backgroundColor: "#389e0d", borderRadius: "0" }}
               onClick={handleDelete}
             >
               {t("ESD_OPERATOR.CONFIRM_DIALOG.SAVE")}
             </Button>
-          </div>,
-        ]}
-      >
-        <p>{t("ESD_OPERATOR.CONFIRM_DIALOG.CONFIRM_TEXT")}</p>
+          </div>
+        </div>
       </Modal>
     </Layout>
   );
