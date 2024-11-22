@@ -221,9 +221,9 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const getStatusColor = (status: number) => {
     switch (status) {
       case 1:
-        return "green";
+        return "#4caf50 ";
       case 0:
-        return "red";
+        return "#f44336";
       default:
         return '#d9d9d9';
     }
