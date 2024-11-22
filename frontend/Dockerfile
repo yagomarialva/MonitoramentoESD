@@ -1,5 +1,5 @@
 # Etapa de build
-FROM node:18 AS build
+FROM node:16.15.0 AS build
 
 # Define o diretório de trabalho dentro do contêiner
 WORKDIR /app

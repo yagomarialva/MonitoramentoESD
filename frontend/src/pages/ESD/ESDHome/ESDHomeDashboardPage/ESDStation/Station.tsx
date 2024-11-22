@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Tooltip, message } from "antd";
-import ComputerIcon from "@mui/icons-material/Computer";
-import { Alert, Snackbar } from "@mui/material";
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import React, { useEffect, useState } from "react";
+import { Tooltip, message, Modal, Card, Button, Row, Col, Typography, Alert } from 'antd';
+import { PlusCircleOutlined, LaptopOutlined } from '@ant-design/icons';
 import "./Station.css";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -13,16 +11,9 @@ import {
 } from "../../../../../api/monitorApi";
 import {
   createStationMapper,
-  getAllStationMapper,
-  getAllStationView,
 } from "../../../../../api/mapingAPI";
-import Monitor from "../ESDMonitor/Monitor";
 import ReusableModal from "../../ReausableModal/ReusableModal";
 import MonitorForm from "../../MonitorForm/MonitorForm";
-import { deleteStation } from "../../../../../api/stationApi";
-import useWebSocket, { ReadyState } from "react-use-websocket";
-import { Description } from "@mui/icons-material";
-import PointOfSaleOutlinedIcon from '@mui/icons-material/PointOfSaleOutlined';
 import signalRService from "../../../../../api/signalRService";
 
 interface Station {
@@ -67,54 +58,46 @@ interface StationProps {
   onUpdate: () => void;
 }
 
-type SnackbarSeverity = "success" | "error";
+type AlertType = "success" | "info" | "warning" | "error";
 
 const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   const { station, monitorsEsd } = stationEntry;
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [modalText, setModalText] = useState<any | null>("-");
-  const [modalTitleText, setModalTitleText] = useState<any | null>("-");
-  const [modalIndexText, setModalIndexTitleText] = useState<any | null>("-");
+  const [modalText, setModalText] = useState<string>("-");
+  const [modalTitleText, setModalTitleText] = useState<string>("-");
+  const [modalIndexText, setModalIndexTitleText] = useState<number | null>(null);
 
   const [modalVisible, setModalVisible] = useState(false);
-
   const [openModal, setOpenModal] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<any | null>(null);
 
-  const [socketUrl, setSocketUrl] = useState("wss://echo.websocket.org");
   const [error, setError] = useState<string | null>(null);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
   const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState<LogData[]>([]);
   const [monitorStatuses, setMonitorStatuses] = useState<{[key: string]: number}>({});
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
-  const handleModalClose = () => {
-    setModalVisible(false);
-  };
 
-  const [state, setState] = useState({
-    snackbarMessage: "",
-    snackbarOpen: false,
-    snackbarSeverity: "success" as SnackbarSeverity,
+  const [alertState, setAlertState] = useState({
+    message: "",
+    type: "success" as AlertType,
+    show: false,
   });
 
-  const showSnackbar = (
-    message: string,
-    severity: SnackbarSeverity = "success"
-  ) => {
-    handleStateChange({
-      snackbarMessage: message,
-      snackbarSeverity: severity,
-      snackbarOpen: true,
+  const showAlert = (message: string, type: AlertType = "success") => {
+    setAlertState({
+      message,
+      type,
+      show: true,
     });
+    setTimeout(() => {
+      setAlertState(prev => ({ ...prev, show: false }));
+    }, 6000);
   };
 
-  const handleStateChange = (changes: Partial<typeof state>) => {
-    setState((prevState) => ({ ...prevState, ...changes }));
-  };
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const handleModalClose = () => setModalVisible(false);
 
   const handleCreateMonitor = async (monitor: any) => {
     try {
@@ -129,22 +112,15 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 
       onUpdate();
       setOpenModal(false);
-      showSnackbar(
-        `Monitor ${result.serialNumber} adicionado com sucesso!`,
-        "success"
-      );
+      showAlert(`Monitor ${result.serialNumber} adicionado com sucesso!`, "success");
     } catch (error: any) {
       console.error("Erro ao criar monitor:", error);
-      showSnackbar(`Monitor não foi adicionado!`, "error");
+      showAlert(`Monitor não foi adicionado!`, "error");
       if (error.message === "Request failed with status code 401") {
         localStorage.removeItem("token");
         navigate("/");
       }
     }
-  };
-
-  const showMessage = (content: string, type: "success" | "error") => {
-    message[type](content);
   };
 
   useEffect(() => {
@@ -178,10 +154,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100));
       }
       if (log.status === 0) {
-        showSnackbar(
-          `Erro no monitor ${log.serialNumber}: ${log.description}`,
-          "error"
-        );
+        showAlert(`Erro no monitor ${log.serialNumber}: ${log.description}`, "error");
       }
     });
 
@@ -205,20 +178,13 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         description: params.description,
       };
       const result = await updateMonitor(updatedResult);
-      showSnackbar(
-        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
-          appName: "App for Translations",
-        })
-      );
+      showAlert(t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" }), "success");
       onUpdate();
       return result;
     } catch (error: any) {
-      showSnackbar(
-        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
-        "error"
-      );
+      showAlert(t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }), "error");
       if (error.message === "Request failed with status code 401") {
-        showMessage("Sessão Expirada.", "error");
+        message.error("Sessão Expirada.");
         localStorage.removeItem("token");
         navigate("/");
       }
@@ -226,7 +192,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   };
 
   const handleCellClick = (
-    cell: any | "null",
+    cell: any | null,
     index: number,
     stationInfo: any
   ) => {
@@ -249,11 +215,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 
   const handleDelete = () => {
     console.log("Monitor deletado com sucesso!");
-    showSnackbar(
-      t("ESD_MONITOR.TOAST.DELETE_SUCCESS", {
-        appName: "App for Translations",
-      })
-    );
+    showAlert(t("ESD_MONITOR.TOAST.DELETE_SUCCESS", { appName: "App for Translations" }), "success");
   };
 
   const getStatusColor = (status: number) => {
@@ -263,7 +225,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       case 0:
         return "red";
       default:
-        return "grey";
+        return '#d9d9d9';
     }
   };
 
@@ -279,7 +241,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
             {cell ? (
               <Tooltip title={cell.monitorsEsd.serialNumber}>
                 <div className="computer-icon">
-                  <PointOfSaleOutlinedIcon
+                  <LaptopOutlined
                     className={
                       monitorStatuses[cell.monitorsEsd.serialNumber] === 1
                         ? "dut-icon-success"
@@ -296,27 +258,29 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
               </Tooltip>
             ) : (
               <div className="add-icon" onClick={handleOpenModal}>
-                <AddCircleOutlineRoundedIcon className="cell-icon" />
+                <PlusCircleOutlined className="cell-icon" />
               </div>
             )}
           </div>
         ))}
-        <Snackbar
-          open={state.snackbarOpen}
-          autoHideDuration={6000}
-          onClose={() => handleStateChange({ snackbarOpen: false })}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          className={`ant-snackbar ant-snackbar-${state.snackbarSeverity}`}
-        >
-          <Alert
-            onClose={() => handleStateChange({ snackbarOpen: false })}
-            severity={state.snackbarSeverity}
-            className="ant-alert"
-          >
-            {state.snackbarMessage}
-          </Alert>
-        </Snackbar>
       </div>
+
+      {alertState.show && (
+        <Alert
+          message={alertState.message}
+          type={alertState.type}
+          showIcon
+          closable
+          onClose={() => setAlertState(prev => ({ ...prev, show: false }))}
+          style={{
+            backgroundColor:'white',
+            position: 'fixed',
+            top: 16,
+            right: 16,
+            zIndex: 1000,
+          }}
+        />
+      )}
 
       <ReusableModal
         visible={modalVisible}
@@ -347,3 +311,4 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 };
 
 export default Station;
+
