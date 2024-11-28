@@ -306,7 +306,6 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     },
   ];
 
-
   const monitorData: DataType[] = [
     {
       key: monitor.monitorsESD?.id?.toString() || "N/A",
@@ -324,19 +323,17 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     if (key !== "2") return; // Caso o key não seja "2", retorna imediatamente
 
     try {
-      // Configura o SignalR
-      const monitorToDelete = await getMonitor(
-        monitor.monitorsESD.serialNumber
-      );
+      getMonitorLogs(monitor.monitorsESD.serialNumber);
       const allLogs = await getMonitorLogs(monitor.monitorsESD.serialNumber);
       // Filtrando logs em categorias de "Operador" e "Jig"
       const filteredOperatorLogs = allLogs.filter(
-        (log: { messageType: string }) => log.messageType === "operador"
+        (log: { messageType: string }) => log.messageType === "operator"
       );
       const filteredJigLogs = allLogs.filter(
         (log: { messageType: string }) => log.messageType === "jig"
       );
 
+      console.log('filteredJigLogs',filteredJigLogs)
       // Atualizando os estados
       setOperatorLogData(filteredOperatorLogs);
       setJigLogData(filteredJigLogs);
@@ -361,9 +358,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         title={
           <div className="modal-title-container">
             <div className="title-content">
-              <LaptopOutlined
-              className="dut-reausable-modal"
-              />
+              <LaptopOutlined className="dut-reausable-modal" />
               <Tooltip title={title}>
                 <span className="ellipsis-text">
                   {title.length > 5 ? `${title.slice(0, 20)}` : title}
@@ -415,9 +410,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         <div>
           <Tabs activeKey={activeKey} onChange={handleTabChange}>
             <TabPane tab="Monitor" key="1">
-              <div
-               className="monitor-table-container"
-              >
+              <div className="monitor-table-container">
                 <Table
                   columns={monitorColumns}
                   dataSource={monitorData}
@@ -427,16 +420,8 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
             </TabPane>
             <TabPane tab="Log" key="2">
               <div className="modal-table-container flex-gap">
-                <RealTimeLogTable
-                  serialNumberFilter={title}
-                  // statusFilter={1}
-                  tipo="operador"
-                />
-                <RealTimeLogTable
-                  serialNumberFilter={title}
-                  // statusFilter={1}
-                  tipo="jig"
-                />
+                <RealTimeLogTable serialNumberFilter={title} tipo="operador" />
+                <RealTimeLogTable serialNumberFilter={title} tipo="jig" />
               </div>
             </TabPane>
           </Tabs>

@@ -20,12 +20,12 @@ class SignalRService {
   }
 
   // Inicia a conexão com o SignalR
-  async startConnection(): Promise<void> {
+  public async startConnection(): Promise<void> {
     try {
       await this.connection.start();
       console.log("Conectado ao SignalR no factoryMap");
     } catch (error) {
-      console.error("Erro ao conectar ao SignalR:", error);
+      // console.error("Erro ao conectar ao SignalR:", error);
       // Tenta reconectar após 5 segundos
       setTimeout(() => this.startConnection(), 5000);
     }
@@ -53,11 +53,15 @@ class SignalRService {
   async stopConnection(): Promise<void> {
     try {
       await this.connection.stop();
-      console.log("Conexão com o SignalR parada");
     } catch (error) {
-      console.error("Erro ao parar a conexão:", error);
+      // console.error("Erro ao parar a conexão:", error);
     }
   }
+  public getConnectionState(): string {
+    return this.connection.state;
+  }
 }
+
+
 
 export default new SignalRService();

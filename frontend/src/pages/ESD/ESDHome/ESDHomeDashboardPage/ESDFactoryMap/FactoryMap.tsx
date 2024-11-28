@@ -259,7 +259,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
                 <div className="card-header"></div>
                 <div className="card-body">
                   <div className="no-lines-message">
-                    <h2>Não há linhas cadastradas</h2>
+                    <h2>Não há linhas para serem exibidas</h2>
                   </div>
                 </div>
               </div>

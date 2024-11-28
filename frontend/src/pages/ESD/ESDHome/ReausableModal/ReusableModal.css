@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   max-width: 600px;
-  position: relative; 
+  position: relative;
 }
 
 .title-content {
@@ -18,6 +18,9 @@
 }
 
 .modal-table-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Espaço entre as tabelas */
   max-height: calc(190vh - 100px);
   max-width: calc(300vh - 200px);
   overflow-y: auto;
@@ -208,6 +211,7 @@
   color: #009B2D !important;
   margin-right: 5px;
 }
+
 :where(.css-dev-only-do-not-override-qnu6hi).ant-modal-confirm .ant-modal-confirm-btns .ant-btn+.ant-btn {
   background-color: #389e0d !important;
 }
@@ -263,9 +267,10 @@
   margin-left: 33px !important;
 }
 
+/* Alterações para garantir que as tabelas fiquem alinhadas */
 .modal-table-container {
   max-height: calc(190vh - 100px); /* Ajuste conforme necessário */
-  max-width: calc(300vh - 200px); /* Ajuste conforme necessário */
+  max-width: 100%; /* Garantir que o conteúdo ocupe todo o espaço disponível */
   overflow-y: auto; /* Habilita rolagem vertical */
   overflow-x: auto;
 }
@@ -273,10 +278,12 @@
 .flex-gap {
   display: flex;
   gap: 12px;
-  min-width: 1000px;
+  width: 100%; /* Ajuste para ocupar todo o espaço disponível */
 }
 
 .monitor-table-container {
-  max-width: 400px;
-  max-height: 400px;
+  flex: 1; /* As duas tabelas devem ocupar o mesmo espaço */
+  max-width: 50%; /* Limita o tamanho máximo da tabela */
+  max-height: 400px; /* Limita a altura da tabela */
+  overflow: auto; /* Permite rolagem se necessário */
 }

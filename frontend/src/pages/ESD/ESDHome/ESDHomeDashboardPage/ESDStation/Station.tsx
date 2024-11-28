@@ -1,6 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { Tooltip, message, Modal, Card, Button, Row, Col, Typography, Alert } from 'antd';
-import { PlusCircleOutlined, LaptopOutlined } from '@ant-design/icons';
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  Tooltip,
+  message,
+  Modal,
+  Card,
+  Button,
+  Row,
+  Col,
+  Typography,
+  Alert,
+} from "antd";
+import {
+  PlusCircleOutlined,
+  LaptopOutlined,
+  UserOutlined,
+  ToolOutlined,
+  ExclamationCircleOutlined 
+} from "@ant-design/icons";
 import "./Station.css";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -9,9 +25,7 @@ import {
   getMonitor,
   updateMonitor,
 } from "../../../../../api/monitorApi";
-import {
-  createStationMapper,
-} from "../../../../../api/mapingAPI";
+import { createStationMapper } from "../../../../../api/mapingAPI";
 import ReusableModal from "../../ReausableModal/ReusableModal";
 import MonitorForm from "../../MonitorForm/MonitorForm";
 import signalRService from "../../../../../api/signalRService";
@@ -67,16 +81,34 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 
   const [modalText, setModalText] = useState<string>("-");
   const [modalTitleText, setModalTitleText] = useState<string>("-");
-  const [modalIndexText, setModalIndexTitleText] = useState<number | null>(null);
+  const [modalIndexText, setModalIndexTitleText] = useState<number | null>(
+    null
+  );
 
+  const [operatorStatuses, setOperatorStatuses] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [jigStatuses, setJigStatuses] = useState<{ [key: string]: boolean }>(
+    {}
+  );
   const [modalVisible, setModalVisible] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState<any | null>(null);
 
   const [error, setError] = useState<string | null>(null);
+  const [iconToUse, seticonToUse] = useState<any | null>(null);
+  const [iconTypeToUse, seticonTypeToUse] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState<LogData[]>([]);
-  const [monitorStatuses, setMonitorStatuses] = useState<{[key: string]: number}>({});
+  const [globalColorOperador, setglobalColorOperador] = useState<any | null>(
+    null
+  );
+  const [globalColorJig, setglobalColorJig] = useState<any | null>(null);
+  const [monitorStatuses, setMonitorStatuses] = useState<{
+    [key: string]: number;
+  }>({});
+
+  const [connectionStatus, setConnectionStatus] = useState<boolean>(true);
 
   const [alertState, setAlertState] = useState({
     message: "",
@@ -91,7 +123,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       show: true,
     });
     setTimeout(() => {
-      setAlertState(prev => ({ ...prev, show: false }));
+      setAlertState((prev) => ({ ...prev, show: false }));
     }, 6000);
   };
 
@@ -112,7 +144,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 
       onUpdate();
       setOpenModal(false);
-      showAlert(`Monitor ${result.serialNumber} adicionado com sucesso!`, "success");
+      showAlert(
+        `Monitor ${result.serialNumber} adicionado com sucesso!`,
+        "success"
+      );
     } catch (error: any) {
       console.error("Erro ao criar monitor:", error);
       showAlert(`Monitor não foi adicionado!`, "error");
@@ -128,20 +163,66 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       try {
         await signalRService.startConnection();
         setError(null);
+        setConnectionStatus(true);
+        showAlert("Conexão com SignalR restabelecida!", "success");
       } catch (err) {
+        console.error("Erro ao conectar ao SignalR", err);
         setError("Falha ao conectar ao SignalR");
+        setConnectionStatus(false);
+        showAlert(
+          "Conexão com SignalR perdida. Tentando reconectar...",
+          "error"
+        );
       } finally {
         setLoading(false);
       }
     };
 
-    connectToSignalR();
+    if (connectionStatus) {
+      setTimeout(() => {
+        connectToSignalR();
+      }, 1000);
+    }
+
+    const checkConnection = setInterval(() => {
+      const currentState = signalRService.getConnectionState();
+      if (currentState !== "Connected" && connectionStatus) {
+        setConnectionStatus(false);
+        showAlert(
+          "Conexão com SignalR perdida. Tentando reconectar...",
+          "error"
+        );
+      } else if (currentState === "Connected" && !connectionStatus) {
+        setConnectionStatus(true);
+        showAlert("Conexão com SignalR restabelecida!", "success");
+      }
+    }, 5000);
 
     signalRService.onReceiveAlert((log: LogData) => {
-      setMonitorStatuses(prevStatuses => ({
+      const isConnected = log.status === 1;
+      const iconColor = getStatusIcon(log.description, isConnected);
+      const iconType = getIconType(log.messageType, isConnected);
+
+      seticonToUse(iconColor);
+      seticonTypeToUse(iconType);
+
+      setMonitorStatuses((prevStatuses) => ({
         ...prevStatuses,
-        [log.serialNumber]: log.status
+        [log.serialNumber]: log.status,
       }));
+
+      if (log.messageType === "operador") {
+        setOperatorStatuses((prevStatuses) => ({
+          ...prevStatuses,
+          [log.serialNumber]: isConnected,
+        }));
+      } else if (log.messageType === "jig") {
+        setJigStatuses((prevStatuses) => ({
+          ...prevStatuses,
+          [log.serialNumber]: isConnected,
+        }));
+      }
+
       if (![0, 1].includes(log.status)) {
         const updatedLog = {
           ...log,
@@ -153,15 +234,20 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       } else {
         setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100));
       }
+
       if (log.status === 0) {
-        showAlert(`Erro no monitor ${log.serialNumber}: ${log.description}`, "error");
+        showAlert(
+          `Erro no monitor ${log.serialNumber}: ${log.messageType}`,
+          "error"
+        );
       }
     });
 
     return () => {
+      clearInterval(checkConnection);
       signalRService.stopConnection();
     };
-  }, []);
+  }, [connectionStatus]);
 
   const cells = new Array(12).fill(null);
 
@@ -178,11 +264,19 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         description: params.description,
       };
       const result = await updateMonitor(updatedResult);
-      showAlert(t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", { appName: "App for Translations" }), "success");
+      showAlert(
+        t("ESD_MONITOR.TOAST.UPDATE_SUCCESS", {
+          appName: "App for Translations",
+        }),
+        "success"
+      );
       onUpdate();
       return result;
     } catch (error: any) {
-      showAlert(t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }), "error");
+      showAlert(
+        t("ESD_MONITOR.TOAST.TOAST_ERROR", { appName: "App for Translations" }),
+        "error"
+      );
       if (error.message === "Request failed with status code 401") {
         message.error("Sessão Expirada.");
         localStorage.removeItem("token");
@@ -214,56 +308,92 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   };
 
   const handleDelete = () => {
-    console.log("Monitor deletado com sucesso!");
-    showAlert(t("ESD_MONITOR.TOAST.DELETE_SUCCESS", { appName: "App for Translations" }), "success");
+    showAlert(
+      t("ESD_MONITOR.TOAST.DELETE_SUCCESS", {
+        appName: "App for Translations",
+      }),
+      "success"
+    );
   };
 
-  const getStatusColor = (status: number) => {
-    switch (status) {
-      case 1:
-        return "#4caf50 ";
-      case 0:
-        return "#f44336";
-      default:
-        return '#d9d9d9';
+  const getStatusIcon = (status: string, isConnected: boolean) => {
+    if (!connectionStatus) return "#d9d9d9";
+    return isConnected ? "#4caf50" : "#f44336";
+  };
+
+  const getIconType = (status: string, isConnected: boolean) => {
+    const color = !connectionStatus
+      ? "#d9d9d9"
+      : isConnected
+      ? "#4caf50"
+      : "#f44336";
+    if (status === "jig") {
+      return <LaptopOutlined style={{ color }} />;
+    } else if (status === "operador") {
+      return <UserOutlined style={{ color }} />;
     }
+    return <LaptopOutlined style={{ color }} />;
   };
 
   return (
     <>
-      <div className="card-grid">
-        {cells.map((cell, index) => (
-          <div
-            key={index}
-            className="icon-container"
-            onClick={() => handleCellClick(cell, index, stationEntry)}
-          >
-            {cell ? (
-              <Tooltip title={cell.monitorsEsd.serialNumber}>
-                <div className="computer-icon">
-                  <LaptopOutlined
-                    className={
-                      monitorStatuses[cell.monitorsEsd.serialNumber] === 1
-                        ? "dut-icon-success"
-                        : monitorStatuses[cell.monitorsEsd.serialNumber] === 0
-                        ? "dut-icon-error"
-                        : "dut-icon-default"
-                    }
-                    style={{
-                      color: getStatusColor(monitorStatuses[cell.monitorsEsd.serialNumber] ?? -1)
-                    }}
+      {!connectionStatus ? (
+        <div
+          className="no-connection-message"
+          style={{ textAlign: "center", padding: "20px" }}
+        >
+          <Alert
+            message="Sem Conexão"
+            description="Aparentemente, você está desconectado. Verifique sua conexão de internet e tente novamente."
+            type="error"
+            showIcon
+            icon={
+              <ExclamationCircleOutlined
+                style={{ fontSize: "24px", color: "#ffcc00" }}
+              />
+            }
+            style={{ maxWidth: "600px", margin: "0 auto" }}
+          />
+        </div>
+      ) : (
+        // </div>
+        <div className="card-grid">
+          {cells.map((cell, index) => (
+            <div
+              key={index}
+              className="icon-container"
+              onClick={() => handleCellClick(cell, index, stationEntry)}
+            >
+              {cell ? (
+                <Tooltip title={cell.monitorsEsd.serialNumber}>
+                  <div
+                    className="cell-content computer-icon"
                     onClick={() => setModalVisible(true)}
+                  >
+                    <div className="status-indicators">
+                      {getIconType(
+                        "operador",
+                        operatorStatuses[cell.monitorsEsd.serialNumber] ?? false
+                      )}
+                      {getIconType(
+                        "jig",
+                        jigStatuses[cell.monitorsEsd.serialNumber] ?? false
+                      )}
+                    </div>
+                  </div>
+                </Tooltip>
+              ) : (
+                <div className="add-icon" onClick={handleOpenModal}>
+                  <PlusCircleOutlined
+                    className="cell-icon"
+                    style={{ color: connectionStatus ? undefined : "#d9d9d9" }}
                   />
                 </div>
-              </Tooltip>
-            ) : (
-              <div className="add-icon" onClick={handleOpenModal}>
-                <PlusCircleOutlined className="cell-icon" />
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
       {alertState.show && (
         <Alert
@@ -271,10 +401,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           type={alertState.type}
           showIcon
           closable
-          onClose={() => setAlertState(prev => ({ ...prev, show: false }))}
+          onClose={() => setAlertState((prev) => ({ ...prev, show: false }))}
           style={{
-            backgroundColor:'white',
-            position: 'fixed',
+            backgroundColor: "white",
+            position: "fixed",
             top: 16,
             right: 16,
             zIndex: 1000,
@@ -311,4 +441,3 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 };
 
 export default Station;
-

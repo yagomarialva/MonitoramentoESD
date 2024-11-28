@@ -1,8 +1,3 @@
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 6 colunas */
-  grid-gap: 10px; /* Espaçamento entre as células */
-}
 
 .icon-container {
   display: flex;
@@ -15,6 +10,20 @@
   width: 100px;  /* Defina uma largura fixa para as células */
   margin-bottom: -12px;
 }
+
+.status-indicators {
+  display: flex;
+  gap: 4px; /* Espaçamento entre os pontos */
+  margin: auto; /* Distância entre os pontos e o ícone */
+  justify-content: center;
+}
+
+.status-point {
+  width: 10px; /* Largura do ponto */
+  height: 10px; /* Altura do ponto */
+  border-radius: 50%; /* Torna o ponto circular */
+}
+
 
 .icon-container-error {
   display: flex;
@@ -58,11 +67,15 @@
 }
 
 .computer-icon,
-.add-icon :hover {
-  font-size: 24px !important;
+.add-icon :hover { 
   cursor: pointer;
 }
 
+.computer-icon{
+  font-size: 20px !important;
+  display: flex;
+  align-items: center;
+}
 .icon-container:nth-child(6) {
   margin-right: 40px;
 }
