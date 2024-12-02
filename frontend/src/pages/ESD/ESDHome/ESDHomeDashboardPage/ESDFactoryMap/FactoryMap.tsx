@@ -15,10 +15,13 @@ import {
 import { useTranslation } from "react-i18next";
 import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
-import { Button, Modal, message, Radio, Checkbox } from "antd";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button, Modal, message, Radio, Checkbox,  Alert } from "antd";
+import { PlusOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import signalRService from "../../../../../api/signalRService";
-import { getAllStationMapper, getStationMapper } from "../../../../../api/mapingAPI";
+import {
+  getAllStationMapper,
+  getStationMapper,
+} from "../../../../../api/mapingAPI";
 
 interface Station {
   id: number;
@@ -85,6 +88,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(false); // Estado para controlar o reload
+  const [connectionStatus, setConnectionStatus] = useState<boolean>(true);
 
   const showMessage = (content: string, type: "success" | "error") => {
     message[type](content);
@@ -99,16 +103,30 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
       try {
         await signalRService.startConnection();
         setError(null);
+        setConnectionStatus(true);
       } catch (err) {
         setError("Falha ao conectar ao SignalR");
-        console.log('lines', lines)
+        setConnectionStatus(false);
+        console.log("lines");
       } finally {
-        console.log('lines', lines)
         setLoading(false);
       }
     };
 
-    connectToSignalR();
+    if (connectionStatus) {
+      setTimeout(() => {
+        connectToSignalR();
+      }, 1000);
+    }
+
+    const checkConnection = setInterval(() => {
+      const currentState = signalRService.getConnectionState();
+      if (currentState !== "Connected" && connectionStatus) {
+        setConnectionStatus(false);
+      } else if (currentState === "Connected" && !connectionStatus) {
+        setConnectionStatus(true);
+      }
+    }, 5000);
 
     signalRService.onReceiveAlert((log: LogData) => {
       if (![0, 1].includes(log.status)) {
@@ -125,9 +143,10 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
     });
 
     return () => {
+      clearInterval(checkConnection);
       signalRService.stopConnection();
     };
-  }, [reload, onUpdate]);
+  }, [reload, onUpdate, connectionStatus]);
 
   const handleError = (error: any) => {
     console.error("Erro:", error);
@@ -188,7 +207,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
           await getAllStationMapper();
           showMessage("Linha excluída com sucesso!", "success");
           onUpdate();
-        } catch (error:any) {
+        } catch (error: any) {
           if (error.message === "Request failed with status code 404") {
             window.location.reload();
             // lines = undefined;
@@ -205,7 +224,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
       },
     });
   };
-  
 
   const handleLineChange = (link: Link) => {
     setSelectedLineId(link.line.id || null);
@@ -215,46 +233,67 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
 
   return (
     <>
-      <div className="app-container">
-        <header className="container-title">
-          <h1>{t("LINE.TABLE_HEADER")}</h1>
-          <div className="header-buttons">
-            {isEditing && (
-              <>
-                <Button
-                  type="link"
-                  icon={<DeleteOutlined />}
-                  disabled={!selectedLineId}
-                  onClick={handleConfirmDelete}
-                  className="white-background-button no-border remove-button-container"
-                >
-                  {t("LINE.CONFIRM_DIALOG.DELETE_LINE", {
-                    appName: "App for Translations",
-                  })}
-                </Button>
-                <Button
-                  type="link"
-                  icon={<PlusOutlined />}
-                  onClick={handleCreateLine}
-                  className="white-background-button no-border add-button-container"
-                >
-                  {t("LINE.ADD_LINE", { appName: "App for Translations" })}
-                </Button>
-              </>
-            )}
-            <Button
-              type="primary"
-              onClick={() => setIsEditing(!isEditing)}
-              className="white-background-button no-border enable-button-container"
-            >
-              {isEditing ? "Finalizar Edição" : "Editar Linhas"}
-            </Button>
-          </div>
-        </header>
+      {!connectionStatus ? (
+        <div className="app-container">
+        <div
+          className="no-connection-message"
+          style={{ textAlign: "center", padding: "20px" }}
+        >
+          <Alert
+            message="Sem Conexão"
+            description="Aparentemente, você está desconectado. Verifique sua conexão de internet e tente novamente."
+            type="error"
+            showIcon
+            icon={
+              <ExclamationCircleOutlined
+                style={{ fontSize: "24px", color: "#ffcc00" }}
+              />
+            }
+            style={{ maxWidth: "600px", margin: "0 auto" }}
+          />
+        </div>
+        </div>
+      ) : (
+        <div className="app-container">
+          <header className="container-title">
+            <h1>{t("LINE.TABLE_HEADER")}</h1>
+            <div className="header-buttons">
+              {isEditing && (
+                <>
+                  <Button
+                    type="link"
+                    icon={<DeleteOutlined />}
+                    disabled={!selectedLineId}
+                    onClick={handleConfirmDelete}
+                    className="white-background-button no-border remove-button-container"
+                  >
+                    {t("LINE.CONFIRM_DIALOG.DELETE_LINE", {
+                      appName: "App for Translations",
+                    })}
+                  </Button>
+                  <Button
+                    type="link"
+                    icon={<PlusOutlined />}
+                    onClick={handleCreateLine}
+                    className="white-background-button no-border add-button-container"
+                  >
+                    {t("LINE.ADD_LINE", { appName: "App for Translations" })}
+                  </Button>
+                </>
+              )}
+              <Button
+                type="primary"
+                onClick={() => setIsEditing(!isEditing)}
+                className="white-background-button no-border enable-button-container"
+              >
+                {isEditing ? "Finalizar Edição" : "Editar Linhas"}
+              </Button>
+            </div>
+          </header>
 
-        <div className="body">
-          {lines.length === 0 ? (
-            // <div className="no-lines-message">
+          <div className="body">
+            {lines.length === 0 ? (
+              // <div className="no-lines-message">
               <div className="card">
                 <div className="card-header"></div>
                 <div className="card-body">
@@ -263,27 +302,28 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
                   </div>
                 </div>
               </div>
-            // </div>
-          ) : (
-            lines.map((line) => (
-              <div className="card" key={line.id}>
-                <div className="card-header">
-                  {isEditing && (
-                    <Checkbox
-                      checked={selectedLineId === line.line.id}
-                      onChange={() => handleLineChange(line)}
-                      className="green-checkbox"
-                    />
-                  )}
+            ) : (
+              // </div>
+              lines.map((line) => (
+                <div className="card" key={line.id}>
+                  <div className="card-header">
+                    {isEditing && (
+                      <Checkbox
+                        checked={selectedLineId === line.line.id}
+                        onChange={() => handleLineChange(line)}
+                        className="green-checkbox"
+                      />
+                    )}
+                  </div>
+                  <div className="card-body">
+                    <Line lineData={line} onUpdate={onUpdate} />
+                  </div>
                 </div>
-                <div className="card-body">
-                  <Line lineData={line} onUpdate={onUpdate} />
-                </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

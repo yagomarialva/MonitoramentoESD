@@ -157,7 +157,7 @@ const OperatorTable: React.FC = () => {
         values.stream = capturedImage;
       }
 
-      await updateOperators(values);
+      await createOperators(values);
       await fetchOperators();
       showSnackbar(
         t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {

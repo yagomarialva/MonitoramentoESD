@@ -51,25 +51,48 @@ export const createOperators = async (operator) => {
   }
 };
 
-// Update an existing operator
 export const updateOperators = async (operator) => {
-  console.log("operador", operator);
+  console.log('operator', operator);
   const form = new FormData();
-  form.append("id", operator.id);
-  form.append("name", operator.name);
-  form.append("badge", operator.badge);
-  // Definir um valor padrão para 'stream' caso ele esteja undefined
-  const streamValue = operator.stream || null; // Substitua "default_stream_value" pelo valor padrão desejado
-  form.append("stream", streamValue);
+  form.append("ID", operator.id || 0); // ID padrão 0 se não for especificado
+  form.append("Name", operator.name);
+  form.append("Badge", operator.badge);
+
+  // Checa se o operador tem um arquivo de imagem válido antes de adicioná-lo
+  if (operator.stream) {
+    let streamBlob;
+
+    // Verifica se o stream é uma string base64
+    if (typeof operator.stream === 'string' && operator.stream.startsWith('data:image')) {
+      // Converte base64 para Blob
+      const byteString = atob(operator.stream.split(',')[1]);
+      const mimeString = operator.stream.split(',')[0].split(':')[1].split(';')[0];
+      const byteNumbers = new Array(byteString.length).fill().map((_, i) => byteString.charCodeAt(i));
+      const byteArray = new Uint8Array(byteNumbers);
+      streamBlob = new Blob([byteArray], { type: mimeString });
+    } else if (operator.stream instanceof Blob) {
+      streamBlob = operator.stream;
+    }
+
+    if (streamBlob) {
+      form.append("Image", streamBlob, "image.png"); // Adiciona com o nome de arquivo desejado
+    }
+  }
 
   try {
-    const response = await TokenApi.post(`${url}/adicionar`, form);
+    const response = await TokenApi.post(`${url}/adicionar`, form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log('response', response.data);
     return response.data;
   } catch (error) {
-    console.error("Failed to create operator", error);
+    console.error("Failed to update operator", error);
     throw error;
   }
 };
+
 
 // Delete an operator by ID
 export const deleteOperators = async (id) => {

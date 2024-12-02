@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Menu, Typography, Button, Card, Spin, Dropdown } from "antd";
 import {
-  HomeOutlined,
   UserOutlined,
-  SettingOutlined,
-  MonitorOutlined,
-  PlusOutlined,
+  ApartmentOutlined,
   LogoutOutlined,
   DownOutlined,
 } from "@ant-design/icons";
@@ -38,40 +35,16 @@ const getMenuItems = (userRole: string): MenuItem[] => {
   const allItems: MenuItem[] = [
     {
       text: "Controle",
-      icon: <HomeOutlined />,
+      icon: <ApartmentOutlined />,
       path: "/dashboard",
       roles: ["administrator", "operator"],
       subItems: [
-        { text: "Dashboard", path: "/dashboard" },
-        { text: "Linhas", path: "/liners" },
-        { text: "Estações", path: "/stations" },
-        { text: "Ligar Estação e Linha", path: "/linkstationline" },
+        { text: "Dashboard", path: "/dashboard" }
       ],
     },
     {
       text: "Operadores",
       icon: <UserOutlined />,
-      path: "/users",
-      roles: ["administrator"],
-    },
-    {
-      text: "Jigs",
-      icon: <SettingOutlined />,
-      path: "/jigs",
-      roles: ["operator", "administrador"],
-    },
-    {
-      text: "Monitores",
-      icon: <MonitorOutlined />,
-      path: "/monitors",
-      roles: ["operator", "administrador"],
-      subItems: [
-        { text: "Monitores", path: "/monitors" },
-      ],
-    },
-    {
-      text: "Cadastrar",
-      icon: <PlusOutlined />,
       path: "/register",
       roles: ["operator","administrador"],
       subItems: [
