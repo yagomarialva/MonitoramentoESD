@@ -65,9 +65,11 @@ const OperatorTable: React.FC = () => {
   const [capturedImageIcon, setCapturedImageIcon] = useState<string | null>(
     null
   );
-  const [imageData, setImageData] = useState(null);
+  const [hasCameraAccess, setHasCameraAccess] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [videoDeviceId, setVideoDeviceId] = useState<string | undefined>(undefined);
 
-  const videoConstraints = {
+  const videoConstraints: boolean | MediaTrackConstraints = {
     width: 480,
     height: 480,
     facingMode: "user",
@@ -110,9 +112,61 @@ const OperatorTable: React.FC = () => {
     }
   };
 
+  const requestCameraAccess = useCallback(async () => {
+    try {
+      const constraints: MediaStreamConstraints = { video: true };
+
+      // Check if running in Docker
+      if (window.location.hostname === 'localhost' || window.location.hostname.startsWith('172.')) {
+        // Use a specific video device if available
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        if (videoDevices.length > 0) {
+          constraints.video = { deviceId: { exact: videoDevices[0].deviceId } };
+        }
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      setHasCameraAccess(true);
+      setCameraError(null);
+
+      // Store the deviceId
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        const settings = videoTrack.getSettings();
+        if (settings.deviceId) {
+          setVideoDeviceId(settings.deviceId);
+        }
+      }
+
+      return stream;
+    } catch (error: any) {
+      console.error("Erro ao acessar a câmera:", error);
+      setHasCameraAccess(false);
+      if (error.name === "NotReadableError") {
+        setCameraError("Não foi possível iniciar a câmera. Verifique se ela não está sendo usada por outro aplicativo.");
+      } else if (error.name === "NotAllowedError") {
+        setCameraError("Acesso à câmera negado. Por favor, permita o acesso à câmera nas configurações do seu navegador.");
+      } else {
+        setCameraError(`Erro ao acessar a câmera: ${error.message}`);
+      }
+      showSnackbar(
+        "Não foi possível acessar a câmera. Verifique as permissões e se ela não está sendo usada por outro aplicativo.",
+        "error"
+      );
+      return null;
+    }
+  }, [showSnackbar]);
+
   useEffect(() => {
     fetchOperators();
   }, [navigate, showSnackbar, t]);
+
+  useEffect(() => {
+    if (isCameraModalVisible) {
+      requestCameraAccess();
+    }
+  }, [isCameraModalVisible, requestCameraAccess]);
 
   const handleCreateOperator = async (values: Operator) => {
     try {
@@ -124,12 +178,11 @@ const OperatorTable: React.FC = () => {
       }
 
       if (capturedImage) {
-        // Convert the base64 image to a Blob
         const base64Response = await fetch(capturedImage);
         const blob = await base64Response.blob();
         values.stream = blob;
       }
-      values.photo = capturedImage; // Armazena a imagem base64 diretamente
+      values.photo = capturedImage;
       await createOperators(values);
       await fetchOperators();
       showSnackbar(
@@ -157,7 +210,7 @@ const OperatorTable: React.FC = () => {
         values.stream = capturedImage;
       }
 
-      await createOperators(values);
+      await updateOperators(values);
       await fetchOperators();
       showSnackbar(
         t("ESD_OPERATOR.TOAST.UPDATE_SUCCESS", {
@@ -202,8 +255,6 @@ const OperatorTable: React.FC = () => {
     setIsDeleteModalVisible(true);
   };
 
-  // capturedImage
-
   const columns: ColumnsType<Operator> = [
     {
       title: t("ESD_OPERATOR.TABLE.PHOTO"),
@@ -212,30 +263,24 @@ const OperatorTable: React.FC = () => {
       render: (text, record) => {
         let imageSrc = record.stream;
 
-        // Verifica se o stream é uma string, e tenta convertê-la para base64
         if (typeof imageSrc === "string") {
           try {
-            // Decodifica a string base64 para verificar se é válida
             atob(imageSrc);
-            // Se for base64, aplica o prefixo para data URL
             imageSrc = `data:image/png;base64,${imageSrc}`;
           } catch (error) {
             console.error("Erro ao converter stream para base64:", error);
           }
         } else if (record.stream instanceof Blob) {
-          // Caso o stream seja um Blob, converte para URL temporária
           imageSrc = URL.createObjectURL(record.stream);
         }
 
-        // Condição para mostrar a imagem ou um avatar de ícone padrão
         return imageSrc ? (
           <Image
             src={imageSrc}
             width={35}
             height={35}
-            style={{ borderRadius: "50%" }} // Adiciona arredondamento
+            style={{ borderRadius: "50%" }}
             onLoad={() => {
-              // Revoga o URL temporário após o carregamento da imagem
               if (record.stream instanceof Blob) {
                 URL.revokeObjectURL(imageSrc);
               }
@@ -307,6 +352,65 @@ const OperatorTable: React.FC = () => {
 
   const handleFacialRecognition = () => {
     setIsFacialRecognitionModalVisible(true);
+  };
+
+  const getBrowserName = () => {
+    const userAgent = navigator.userAgent;
+    let browserName;
+
+    if (userAgent.match(/chrome|chromium|crios/i)) {
+      browserName = "Google Chrome";
+    } else if (userAgent.match(/firefox|fxios/i)) {
+      browserName = "Mozilla Firefox";
+    } else if (userAgent.match(/safari/i)) {
+      browserName = "Apple Safari";
+    } else if (userAgent.match(/opr\//i)) {
+      browserName = "Opera";
+    } else if (userAgent.match(/edg/i)) {
+      browserName = "Microsoft Edge";
+    } else {
+      browserName = "Navegador desconhecido";
+    }
+
+    return browserName;
+  };
+
+  const isRunningInDocker = useCallback(() => {
+    return window.location.hostname === 'localhost' || window.location.hostname.startsWith('172.');
+  }, []);
+
+  const handleOpenCameraModal = async () => {
+    if (isRunningInDocker()) {
+      showSnackbar("Executando em ambiente Docker. Certifique-se de que a câmera está corretamente configurada.", "info");
+    }
+    const stream = await requestCameraAccess();
+    if (stream) {
+      setIsCameraModalVisible(true);
+    } else {
+      const browserName = getBrowserName();
+      setCameraError(`Não foi possível acessar a câmera no ${browserName}. Por favor, verifique as configurações de permissão.`);
+    }
+  };
+
+  const stopWebcam = useCallback(() => {
+    if (webcamRef.current && webcamRef.current.video) {
+      const stream = webcamRef.current.video.srcObject as MediaStream;
+      if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach((track) => track.stop());
+      }
+    }
+    setHasCameraAccess(false);
+  }, []);
+
+  const retryRequestCameraAccess = async () => {
+    const stream = await requestCameraAccess();
+    if (stream) {
+      setIsCameraModalVisible(true);
+    } else {
+      const browserName = getBrowserName();
+      setCameraError(`Não foi possível acessar a câmera no ${browserName}. Por favor, verifique as configurações de permissão.`);
+    }
   };
 
   return (
@@ -424,7 +528,7 @@ const OperatorTable: React.FC = () => {
                 />
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <Button
-                    onClick={() => setIsCameraModalVisible(true)}
+                    onClick={handleOpenCameraModal}
                     icon={<CameraOutlined />}
                     style={{ marginTop: "8px" }}
                   >
@@ -435,7 +539,7 @@ const OperatorTable: React.FC = () => {
             ) : (
               <Button
                 style={{ borderRadius: "0" }}
-                onClick={() => setIsCameraModalVisible(true)}
+                onClick={handleOpenCameraModal}
                 icon={<CameraOutlined />}
               >
                 {t("ESD_OPERATOR.TAKE_PHOTO")}
@@ -460,7 +564,10 @@ const OperatorTable: React.FC = () => {
       <Modal
         title={t("ESD_OPERATOR.TAKE_PHOTO")}
         visible={isCameraModalVisible}
-        onCancel={() => setIsCameraModalVisible(false)}
+        onCancel={() => {
+          setIsCameraModalVisible(false);
+          stopWebcam();
+        }}
         footer={null}
       >
         <div
@@ -470,13 +577,29 @@ const OperatorTable: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Webcam
-            audio={false}
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-            videoConstraints={videoConstraints}
-            style={{ marginBottom: "16px" }}
-          />
+          {hasCameraAccess ? (
+            <div>
+              <Webcam
+                audio={false}
+                ref={webcamRef}
+                screenshotFormat="image/jpeg"
+                videoConstraints={
+                  hasCameraAccess && videoDeviceId
+                    ? { ...videoConstraints, deviceId: { exact: videoDeviceId } }
+                    : videoConstraints
+                }
+                style={{ marginBottom: "16px", width: "457px" }}
+              />
+            </div>
+          ) : (
+            <div>
+              <p style={{ color: "red", marginBottom: "16px" }}>
+                {cameraError || "Solicitando acesso à câmera..."}
+              </p>
+              <Button onClick={retryRequestCameraAccess}>Tentar novamente</Button>
+            </div>
+          )}
+
           <Space>
             <Button
               style={{ borderRadius: "0" }}
@@ -488,6 +611,7 @@ const OperatorTable: React.FC = () => {
               style={{ backgroundColor: "#389e0d", borderRadius: "0" }}
               type="primary"
               onClick={captureImage}
+              disabled={!hasCameraAccess}
             >
               {t("ESD_OPERATOR.CAPTURE")}
             </Button>
@@ -580,3 +704,4 @@ const OperatorTable: React.FC = () => {
 };
 
 export default OperatorTable;
+

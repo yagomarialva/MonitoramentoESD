@@ -4,7 +4,7 @@ const url = "api/Biometric";
 export const getAllOperators = async () => {
   try {
     const response = await TokenApi.get(
-      `${url}/ListUsersPaginated?page=1&pageSize=50`
+      `${url}/ListUsersPaginated?page=1&pageSize=50000`
     );
     return response.data;
   } catch (error) {
@@ -92,6 +92,7 @@ export const updateOperators = async (operator) => {
     throw error;
   }
 };
+
 
 
 // Delete an operator by ID
