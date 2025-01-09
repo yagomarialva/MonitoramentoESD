@@ -309,7 +309,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const monitorData: DataType[] = [
     {
       key: monitor.monitorsESD?.id?.toString() || "N/A",
-      serialNumber: monitor.monitorsESD.serialNumber,
+      serialNumber: monitor.monitorsESD.serialNumber || "N/A",
       description: monitor.monitorsESD.description,
       statusJig: monitor.monitorsESD.statusJig,
       statusOperador: monitor.monitorsESD.statusOperador,

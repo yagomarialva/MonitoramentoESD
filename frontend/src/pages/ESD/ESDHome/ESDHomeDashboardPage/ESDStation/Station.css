@@ -86,3 +86,48 @@
   margin-left: 14px;
 }
 
+/* .cell-group {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 42px;
+  margin-left: 20px;
+} */
+
+.card-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.cell-group {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 42px;
+  margin-left: 20px;
+  position: relative; /* Necessário para posicionar o ícone */
+}
+
+.icon-container {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.icon-container.second-cell {
+  position: relative;
+}
+
+.user-icon {
+  position: absolute;
+  top: -42px; /* Ajuste conforme necessário */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  color: #BFBFBF;
+  font-size: 24px;
+  background-color: white;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); /* Sombra leve ao redor dos ícones */
+}
+

@@ -15,7 +15,7 @@ import {
   LaptopOutlined,
   UserOutlined,
   ToolOutlined,
-  ExclamationCircleOutlined 
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import "./Station.css";
 import { useTranslation } from "react-i18next";
@@ -356,42 +356,118 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           />
         </div>
       ) : (
+        // <div className="card-grid">
+        //   {cells.map((cell, index) => (
+        //     <>
+        //       <div
+        //         key={index}
+        //         className="icon-container"
+        //         onClick={() => handleCellClick(cell, index, stationEntry)}
+        //       >
+        //         {cell ? (
+        //           <Tooltip title={cell.monitorsEsd.serialNumber}>
+        //             <div
+        //               className="computer-icon"
+        //               onClick={() => setModalVisible(true)}
+        //             >
+        //               <div className="status-indicators">
+        //                 {getIconType(
+        //                   "operador",
+        //                   operatorStatuses[cell.monitorsEsd.serialNumber] ??
+        //                     false
+        //                 )}
+        //                 {getIconType(
+        //                   "jig",
+        //                   jigStatuses[cell.monitorsEsd.serialNumber] ?? false
+        //                 )}
+        //               </div>
+        //             </div>
+        //           </Tooltip>
+        //         ) : (
+        //           <div className="add-icon" onClick={handleOpenModal}>
+        //             <PlusCircleOutlined
+        //               className="cell-icon"
+        //               style={{
+        //                 color: connectionStatus ? undefined : "#d9d9d9",
+        //               }}
+        //             />
+        //           </div>
+        //         )}
+        //       </div>
+        //     </>
+        //   ))}
         // </div>
         <div className="card-grid">
-          {cells.map((cell, index) => (
-            <div
-              key={index}
-              className="icon-container"
-              onClick={() => handleCellClick(cell, index, stationEntry)}
-            >
-              {cell ? (
-                <Tooltip title={cell.monitorsEsd.serialNumber}>
-                  <div
-                    className="cell-content computer-icon"
-                    onClick={() => setModalVisible(true)}
-                  >
-                    <div className="status-indicators">
-                      {getIconType(
-                        "operador",
-                        operatorStatuses[cell.monitorsEsd.serialNumber] ?? false
-                      )}
-                      {getIconType(
-                        "jig",
-                        jigStatuses[cell.monitorsEsd.serialNumber] ?? false
+          {Array.from({ length: Math.ceil(cells.length / 3) }).map(
+            (_, groupIndex) => {
+              const group = cells.slice(groupIndex * 3, groupIndex * 3 + 3); // Agrupa 3 itens por vez
+
+              return (
+                <div key={groupIndex} className="cell-group">
+                  {group.map((cell, index) => (
+                    <div
+                      key={index}
+                      className="icon-container"
+                      onClick={() => handleCellClick(cell, index, stationEntry)}
+                    >
+                      {/* {index === 1 && (
+                        <div className=" user-icon">
+                          <UserOutlined />
+                        </div>
+                      //   <div className="status-indicators">
+                      //   {getIconType(
+                      //     "operador",
+                      //     operatorStatuses[
+                      //       cell.monitorsEsd.serialNumber
+                      //     ] ?? false
+                      //   )}
+                      // </div>
+                      )} */}
+
+                      {cell ? (
+                        <Tooltip title={cell.monitorsEsd.serialNumber}>
+                          {/* <div
+                            className="computer-icon"
+                            onClick={() => setModalVisible(true)}
+                          >
+                            <div className="status-indicators">
+                              {getIconType(
+                                "operador",
+                                operatorStatuses[
+                                  cell.monitorsEsd.serialNumber
+                                ] ?? false
+                              )}
+                            </div>
+                          </div> */}
+                          <div
+                            className="computer-icon"
+                            onClick={() => setModalVisible(true)}
+                          >
+                            <div className="status-indicators">
+                              {getIconType(
+                                "jig",
+                                jigStatuses[cell.monitorsEsd.serialNumber] ??
+                                  false
+                              )}
+                            </div>
+                          </div>
+                        </Tooltip>
+                      ) : (
+                        <div className="add-icon" onClick={handleOpenModal}>
+                          <PlusCircleOutlined
+                            className="cell-icon"
+                            style={{
+                              color: connectionStatus ? undefined : "#d9d9d9",
+                            }}
+                          />
+                        </div>
                       )}
                     </div>
-                  </div>
-                </Tooltip>
-              ) : (
-                <div className="add-icon" onClick={handleOpenModal}>
-                  <PlusCircleOutlined
-                    className="cell-icon"
-                    style={{ color: connectionStatus ? undefined : "#d9d9d9" }}
-                  />
+                  ))}
                 </div>
-              )}
-            </div>
-          ))}
+              );
+            }
+          )}
         </div>
       )}
 
