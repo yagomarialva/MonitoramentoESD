@@ -10,6 +10,7 @@ import signalRService from "../../../../api/signalRService"; // Ajuste o caminho
 import './RealTimeLogTable.css'; // Importando o CSS
 
 interface LogData {
+  serialNumberEsp: any;
   serialNumber: string;
   status: number;
   description: string;
@@ -158,7 +159,7 @@ export default function RealTimeLogTable({
   const filteredLogs = logs.filter(
     (log) =>
       (serialNumberFilter
-        ? log.serialNumber.includes(serialNumberFilter)
+        ? log.serialNumberEsp.includes(serialNumberFilter)
         : true) &&
       (statusFilter !== undefined ? log.status === statusFilter : true) &&
       (tipo ? log.messageType === tipo : true)

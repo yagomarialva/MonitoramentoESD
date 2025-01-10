@@ -28,7 +28,7 @@ interface Monitor {
   monitorsESD: {
     id: number;
     description: string;
-    serialNumber: string;
+    serialNumberEsp: string;
     statusOperador: string;
     statusJig: string;
   };
@@ -46,16 +46,9 @@ interface monitorsESD {
   description: string;
 }
 
-interface LogData {
-  key: string;
-  message: string;
-  date: string;
-  hour: string;
-}
-
 interface DataType {
   key: string;
-  serialNumber: string;
+  serialNumberEsp: string;
   description: string;
   statusJig: string;
   statusOperador: string;
@@ -134,7 +127,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     rowsPerPage: 10,
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [editableData, setEditableData] = useState<monitorsESD>(
+  const [editableData, setEditableData] = useState<any>(
     monitor.monitorsESD
   );
 
@@ -229,7 +222,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       onOk: async () => {
         try {
           const monitorToDelete = await getMonitor(
-            monitor.monitorsESD.serialNumber
+            monitor.monitorsESD.serialNumberEsp
           );
           await deleteMonitor(monitorToDelete.id);
           onUpdate();
@@ -309,7 +302,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const monitorData: DataType[] = [
     {
       key: monitor.monitorsESD?.id?.toString() || "N/A",
-      serialNumber: monitor.monitorsESD.serialNumber || "N/A",
+      serialNumberEsp: monitor.monitorsESD.serialNumberEsp || "N/A",
       description: monitor.monitorsESD.description,
       statusJig: monitor.monitorsESD.statusJig,
       statusOperador: monitor.monitorsESD.statusOperador,
@@ -323,8 +316,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     if (key !== "2") return; // Caso o key não seja "2", retorna imediatamente
 
     try {
-      getMonitorLogs(monitor.monitorsESD.serialNumber);
-      const allLogs = await getMonitorLogs(monitor.monitorsESD.serialNumber);
+      // getMonitorLogs(monitor.monitorsESD.serialNumberEsp);
+      console.log('allLogs', monitor )
+      const allLogs = await getMonitorLogs(monitor.monitorsESD.serialNumberEsp);
       // Filtrando logs em categorias de "Operador" e "Jig"
       const filteredOperatorLogs = allLogs.filter(
         (log: { messageType: string }) => log.messageType === "operator"

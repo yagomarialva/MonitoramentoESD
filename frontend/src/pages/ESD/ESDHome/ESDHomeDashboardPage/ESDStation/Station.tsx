@@ -49,7 +49,7 @@ interface LogData {
 
 interface MonitorDetails {
   id: number;
-  serialNumber: string;
+  serialNumberEsp: string;
   description: string;
   statusJig: string;
   statusOperador: string;
@@ -249,7 +249,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     };
   }, [connectionStatus]);
 
-  const cells = new Array(12).fill(null);
+  const cells = new Array(16).fill(null);
 
   monitorsEsd.forEach((monitor) => {
     cells[monitor.positionSequence] = monitor;
@@ -356,51 +356,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           />
         </div>
       ) : (
-        // <div className="card-grid">
-        //   {cells.map((cell, index) => (
-        //     <>
-        //       <div
-        //         key={index}
-        //         className="icon-container"
-        //         onClick={() => handleCellClick(cell, index, stationEntry)}
-        //       >
-        //         {cell ? (
-        //           <Tooltip title={cell.monitorsEsd.serialNumber}>
-        //             <div
-        //               className="computer-icon"
-        //               onClick={() => setModalVisible(true)}
-        //             >
-        //               <div className="status-indicators">
-        //                 {getIconType(
-        //                   "operador",
-        //                   operatorStatuses[cell.monitorsEsd.serialNumber] ??
-        //                     false
-        //                 )}
-        //                 {getIconType(
-        //                   "jig",
-        //                   jigStatuses[cell.monitorsEsd.serialNumber] ?? false
-        //                 )}
-        //               </div>
-        //             </div>
-        //           </Tooltip>
-        //         ) : (
-        //           <div className="add-icon" onClick={handleOpenModal}>
-        //             <PlusCircleOutlined
-        //               className="cell-icon"
-        //               style={{
-        //                 color: connectionStatus ? undefined : "#d9d9d9",
-        //               }}
-        //             />
-        //           </div>
-        //         )}
-        //       </div>
-        //     </>
-        //   ))}
-        // </div>
         <div className="card-grid">
-          {Array.from({ length: Math.ceil(cells.length / 3) }).map(
+          {Array.from({ length: Math.ceil(cells.length / 4) }).map(
             (_, groupIndex) => {
-              const group = cells.slice(groupIndex * 3, groupIndex * 3 + 3); // Agrupa 3 itens por vez
+              const group = cells.slice(groupIndex * 4, groupIndex * 4 + 4); // Agrupa 3 itens por vez
 
               return (
                 <div key={groupIndex} className="cell-group">
@@ -410,35 +369,8 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
                       className="icon-container"
                       onClick={() => handleCellClick(cell, index, stationEntry)}
                     >
-                      {/* {index === 1 && (
-                        <div className=" user-icon">
-                          <UserOutlined />
-                        </div>
-                      //   <div className="status-indicators">
-                      //   {getIconType(
-                      //     "operador",
-                      //     operatorStatuses[
-                      //       cell.monitorsEsd.serialNumber
-                      //     ] ?? false
-                      //   )}
-                      // </div>
-                      )} */}
-
                       {cell ? (
                         <Tooltip title={cell.monitorsEsd.serialNumber}>
-                          {/* <div
-                            className="computer-icon"
-                            onClick={() => setModalVisible(true)}
-                          >
-                            <div className="status-indicators">
-                              {getIconType(
-                                "operador",
-                                operatorStatuses[
-                                  cell.monitorsEsd.serialNumber
-                                ] ?? false
-                              )}
-                            </div>
-                          </div> */}
                           <div
                             className="computer-icon"
                             onClick={() => setModalVisible(true)}
@@ -499,7 +431,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           positionSequence: selectedMonitor?.index,
           monitorsESD: {
             id: selectedMonitor?.index,
-            serialNumber: modalTitleText,
+            serialNumberEsp:modalTitleText,
             description: selectedMonitor?.cell.description,
             statusJig: "TRUE",
             statusOperador: "FALSE",

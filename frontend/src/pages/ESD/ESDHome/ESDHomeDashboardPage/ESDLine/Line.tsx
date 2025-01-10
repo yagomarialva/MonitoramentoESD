@@ -24,7 +24,7 @@ interface StationLine {
 
 interface MonitorDetails {
   id: number;
-  serialNumber: string;
+  serialNumberEsp: string;
   description: string;
   statusJig: string;
   statusOperador: string;
