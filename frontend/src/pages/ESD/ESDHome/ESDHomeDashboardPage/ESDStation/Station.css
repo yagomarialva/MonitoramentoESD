@@ -57,7 +57,7 @@
 
 .computer-icon,
 .add-icon {
-  font-size: 5px !important;
+  font-size: 7px !important;
   color: #BFBFBF;
   margin-top: 13px;
   width: 50px !important;
@@ -93,7 +93,7 @@
   margin-left: 20px;
 } */
 
-.card-grid {
+/* .card-grid {
   display: flex;
   flex-direction: column;
 }
@@ -103,7 +103,39 @@
   justify-content: space-around;
   margin-bottom: 42px;
   margin-left: 20px;
-  position: relative; /* Necessário para posicionar o ícone */
+  position: relative; 
+} */
+
+.card-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.triangle-layout {
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  align-items: center;
+  width: 200px; /* Ajuste conforme necessário */
+}
+
+.triangle-layout .top-cell {
+  grid-column: 2; /* Alinha ao centro */
+}
+
+.triangle-layout .base-cell:nth-child(2) {
+  grid-column: 1;
+}
+
+.triangle-layout .base-cell:nth-child(3) {
+  grid-column: 2;
+}
+
+.triangle-layout .base-cell:nth-child(4) {
+  grid-column: 3;
 }
 
 .icon-container {

@@ -48,18 +48,19 @@ export default function RealTimeLogTable({
 
     connectToSignalR();
 
+
     signalRService.onReceiveAlert((log: LogData) => {
-      if (![0, 1].includes(log.status)) {
-        const updatedLog = {
-          ...log,
-          status: -1,
-          description: "Monitor desconectado",
-          lastUpdated: new Date().toISOString(),
-        };
-        setLogs((prevLogs) => [updatedLog, ...prevLogs].slice(0, 100));
-      } else {
-        setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100));
-      }
+      const updatedLog =
+        ![0, 1].includes(log.status)
+          ? {
+              ...log,
+              status: -1,
+              description: "Monitor desconectado",
+              lastUpdated: new Date().toISOString(),
+            }
+          : log;
+
+      setLogs((prevLogs) => [updatedLog, ...prevLogs].slice(0, 100));
     });
 
     return () => {
@@ -148,7 +149,7 @@ export default function RealTimeLogTable({
       key: "status",
       width: 5,
       render: (status: number) => (
-        <Tooltip title={status === 1 ? "Sucesso" : "Falha"}>
+        <Tooltip title={status === 1 ? "Conectado" : "Desconectado"}>
           <span>{getStatusBadge(status)}</span>
         </Tooltip>
       ),
@@ -161,12 +162,11 @@ export default function RealTimeLogTable({
       (serialNumberFilter
         ? log.serialNumberEsp.includes(serialNumberFilter)
         : true) &&
-      (statusFilter !== undefined ? log.status === statusFilter : true) &&
-      (tipo ? log.messageType === tipo : true)
+      (statusFilter !== undefined ? log.status === statusFilter : true) 
   );
 
   const getLastLogStatus = () => {
-    const filteredLogsByType = logs.filter((log) => log.messageType === tipo); 
+    const filteredLogsByType = logs.filter((log) => log.messageType === 'jig' || 'operador'); 
     const lastLog = filteredLogsByType[0];
     if (lastLog) {
       return getStatusHeaderBadge(lastLog.status);
@@ -186,7 +186,7 @@ export default function RealTimeLogTable({
     <Card
       title={
         <div className="card-title-container">
-          <span>{tipo === "operador" ? "Operador" : "Jig"}</span>
+          {/* <span>{tipo === "operador" ? "Operador" : "Jig"}</span> */}
           {getLastLogStatus()}
         </div>
       }

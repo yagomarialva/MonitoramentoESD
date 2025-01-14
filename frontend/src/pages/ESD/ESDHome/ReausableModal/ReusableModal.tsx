@@ -415,7 +415,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
             <TabPane tab="Log" key="2">
               <div className="modal-table-container flex-gap">
                 <RealTimeLogTable serialNumberFilter={title} tipo="operador" />
-                <RealTimeLogTable serialNumberFilter={title} tipo="jig" />
+                {/* <RealTimeLogTable serialNumberFilter={title} tipo="jig" /> */}
               </div>
             </TabPane>
           </Tabs>

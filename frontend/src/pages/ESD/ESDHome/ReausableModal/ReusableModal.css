@@ -32,6 +32,10 @@
   overflow-x: hidden;
 }
 
+.ant-modal-content {
+  width: 80% !important;
+}
+
 .modal-footer {
   display: flex !important;
   justify-content: center !important;

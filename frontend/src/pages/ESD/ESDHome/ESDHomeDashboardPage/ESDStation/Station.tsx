@@ -39,6 +39,7 @@ interface Station {
 }
 
 interface LogData {
+  serialNumberEsp: any;
   serialNumber: string;
   status: number;
   description: string;
@@ -108,7 +109,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     [key: string]: number;
   }>({});
 
-  const [connectionStatus, setConnectionStatus] = useState<boolean>(true);
+  const [connectionStatus, setConnectionStatus] = useState(true);
 
   const [alertState, setAlertState] = useState({
     message: "",
@@ -199,10 +200,10 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     }, 5000);
 
     signalRService.onReceiveAlert((log: LogData) => {
-      const isConnected = log.status === 1;
+      const isConnected = log.status === 0;
       const iconColor = getStatusIcon(log.description, isConnected);
       const iconType = getIconType(log.messageType, isConnected);
-
+      
       seticonToUse(iconColor);
       seticonTypeToUse(iconType);
 
@@ -211,23 +212,28 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         [log.serialNumber]: log.status,
       }));
 
-      if (log.messageType === "operador") {
-        setOperatorStatuses((prevStatuses) => ({
-          ...prevStatuses,
-          [log.serialNumber]: isConnected,
-        }));
-      } else if (log.messageType === "jig") {
-        setJigStatuses((prevStatuses) => ({
-          ...prevStatuses,
-          [log.serialNumber]: isConnected,
-        }));
-      }
+      setOperatorStatuses((prevStatuses) => ({
+        ...prevStatuses,
+        [log.serialNumber]: isConnected,
+      }));
+      
+      // if (log.messageType === "operador") {
+      //   setOperatorStatuses((prevStatuses) => ({
+      //     ...prevStatuses,
+      //     [log.serialNumber]: isConnected,
+      //   }));
+      // } else if (log.messageType === "jig") {
+      //   setJigStatuses((prevStatuses) => ({
+      //     ...prevStatuses,
+      //     [log.serialNumber]: isConnected,
+      //   }));
+      // }
 
       if (![0, 1].includes(log.status)) {
         const updatedLog = {
           ...log,
           status: -1,
-          description: "Monitor desconectado",
+          description: "Desconectado",
           lastUpdated: new Date().toISOString(),
         };
         setLogs((prevLogs) => [updatedLog, ...prevLogs].slice(0, 100));
@@ -237,7 +243,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 
       if (log.status === 0) {
         showAlert(
-          `Erro no monitor ${log.serialNumber}: ${log.messageType}`,
+          `Erro no monitor ${log.serialNumberEsp}: ${log.messageType}`,
           "error"
         );
       }
@@ -249,7 +255,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     };
   }, [connectionStatus]);
 
-  const cells = new Array(16).fill(null);
+  const cells = new Array(4).fill(null);
 
   monitorsEsd.forEach((monitor) => {
     cells[monitor.positionSequence] = monitor;
@@ -323,17 +329,21 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 
   const getIconType = (status: string, isConnected: boolean) => {
     const color = !connectionStatus
-      ? "#d9d9d9"
+      ? "#d9d9d9" // Cor para quando não há conexão
       : isConnected
-      ? "#4caf50"
-      : "#f44336";
-    if (status === "jig") {
-      return <LaptopOutlined style={{ color }} />;
-    } else if (status === "operador") {
-      return <UserOutlined style={{ color }} />;
+      ? "#4caf50" // Cor para quando está conectado
+      : "#f44336"; // Cor para quando não está conectado
+  
+    switch (status) {
+      case "jig":
+        return <LaptopOutlined style={{ color:color }} />;
+      case "operador":
+        return <UserOutlined style={{ color:color }} />;
+      default:
+        return <LaptopOutlined style={{ color:color }} />;
     }
-    return <LaptopOutlined style={{ color }} />;
   };
+  
 
   return (
     <>
@@ -359,14 +369,23 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         <div className="card-grid">
           {Array.from({ length: Math.ceil(cells.length / 4) }).map(
             (_, groupIndex) => {
-              const group = cells.slice(groupIndex * 4, groupIndex * 4 + 4); // Agrupa 3 itens por vez
+              const group = cells.slice(groupIndex * 4, groupIndex * 4 + 4); // Agrupa 4 itens por vez
 
               return (
-                <div key={groupIndex} className="cell-group">
+                <div
+                  key={groupIndex}
+                  className={`cell-group ${
+                    groupIndex === 0 ? "triangle-layout" : "base-layout"
+                  }`}
+                >
                   {group.map((cell, index) => (
                     <div
                       key={index}
-                      className="icon-container"
+                      className={`icon-container ${
+                        groupIndex === 0 && index === 0
+                          ? "top-cell"
+                          : "base-cell"
+                      }`}
                       onClick={() => handleCellClick(cell, index, stationEntry)}
                     >
                       {cell ? (
@@ -377,7 +396,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
                           >
                             <div className="status-indicators">
                               {getIconType(
-                                "jig",
+                                index === 0 ? "operador" : "jig",
                                 jigStatuses[cell.monitorsEsd.serialNumber] ??
                                   false
                               )}
@@ -431,7 +450,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
           positionSequence: selectedMonitor?.index,
           monitorsESD: {
             id: selectedMonitor?.index,
-            serialNumberEsp:modalTitleText,
+            serialNumberEsp: modalTitleText,
             description: selectedMonitor?.cell.description,
             statusJig: "TRUE",
             statusOperador: "FALSE",
@@ -439,6 +458,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         }}
         onSubmit={handleEditCellChange}
       />
+
       <MonitorForm
         open={openModal}
         handleClose={handleCloseModal}
