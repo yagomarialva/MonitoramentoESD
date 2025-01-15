@@ -287,7 +287,6 @@
 
 .monitor-table-container {
   flex: 1; /* As duas tabelas devem ocupar o mesmo espaço */
-  max-width: 50%; /* Limita o tamanho máximo da tabela */
   max-height: 400px; /* Limita a altura da tabela */
   overflow: auto; /* Permite rolagem se necessário */
 }

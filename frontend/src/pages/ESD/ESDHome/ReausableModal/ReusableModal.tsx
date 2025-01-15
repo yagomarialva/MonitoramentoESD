@@ -35,14 +35,14 @@ interface Monitor {
 }
 
 interface LogData {
-  serialNumber: string;
+  serialNumberEsp: string;
   status: number;
   description: string;
   // Adicione outros campos conforme necessário
 }
 interface monitorsESD {
   id: number;
-  serialNumber: string;
+  serialNumberEsp: string;
   description: string;
 }
 
@@ -146,7 +146,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       setIsEditing(false); // Reseta o estado de edição
       setEditableData({
         id: 0, // Valores iniciais para limpar o formulário
-        serialNumber: "",
+        serialNumberEsp: "",
         description: "",
       });
     }
@@ -192,7 +192,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     setIsEditing(false); // Resetando o estado de edição ao fechar o modal
     setEditableData({
       id: 0,
-      serialNumber: "",
+      serialNumberEsp: "",
       description: "",
     });
   };
@@ -202,7 +202,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     if (!visible) return;
     const updatedMonitorESD = {
       id: editableData.id,
-      serialNumber: editableData.serialNumber,
+      serialNumberEsp: editableData.serialNumberEsp,
       description: editableData.description,
     };
 
@@ -251,17 +251,17 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   const monitorColumns: ColumnsType<DataType> = [
     {
       title: "Serial Number",
-      dataIndex: "serialNumber",
-      key: "serialNumber",
+      dataIndex: "serialNumberEsp",
+      key: "serialNumberEsp",
       render: (text: string) => (
         <Tooltip title={text || "N/A"}>
           {isEditing ? (
             <Input
-              value={editableData.serialNumber || ""}
+              value={editableData.serialNumberEsp || ""}
               onChange={(e) =>
                 setEditableData({
                   ...editableData,
-                  serialNumber: e.target.value,
+                  serialNumberEsp: e.target.value,
                 })
               }
             />

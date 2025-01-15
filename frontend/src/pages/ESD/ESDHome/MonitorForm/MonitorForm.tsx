@@ -6,7 +6,7 @@ import { LaptopOutlined } from "@mui/icons-material";
 import "./MonitorForm.css"; // CSS customizado
 
 interface Monitor {
-  serialNumber: string;
+  serialNumberEsp: string;
   description: string;
   statusOperador: string;
   statusJig: string;
@@ -27,7 +27,7 @@ const MonitorForm: React.FC<MonitorFormProps> = ({
 
   // Estado do monitor
   const [monitor, setMonitor] = useState<Monitor>({
-    serialNumber: "",
+    serialNumberEsp: "",
     description: "",
     statusOperador: "",
     statusJig: "",
@@ -58,7 +58,7 @@ const MonitorForm: React.FC<MonitorFormProps> = ({
     setErrorName("");
     // Reseta os valores do monitor quando o modal é fechado
     setMonitor({
-      serialNumber: "",
+      serialNumberEsp: "",
       description: "",
       statusOperador: "",
       statusJig: "",
@@ -69,13 +69,13 @@ const MonitorForm: React.FC<MonitorFormProps> = ({
   const monitorColumns: ColumnsType<Monitor> = [
     {
       title: t("Número de Série"),
-      dataIndex: "serialNumber",
-      key: "serialNumber",
+      dataIndex: "serialNumberEsp",
+      key: "serialNumberEsp",
       render: () => (
-        <Tooltip title={monitor.serialNumber}>
+        <Tooltip title={monitor.serialNumberEsp}>
           <Input
-            name="serialNumber"
-            value={monitor.serialNumber}
+            name="serialNumberEsp"
+            value={monitor.serialNumberEsp}
             onChange={handleChange}
             required
           />

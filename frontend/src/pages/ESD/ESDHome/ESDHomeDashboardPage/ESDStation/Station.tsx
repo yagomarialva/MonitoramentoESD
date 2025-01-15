@@ -146,7 +146,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       onUpdate();
       setOpenModal(false);
       showAlert(
-        `Monitor ${result.serialNumber} adicionado com sucesso!`,
+        `Monitor ${result.serialNumberEsp} adicionado com sucesso!`,
         "success"
       );
     } catch (error: any) {
@@ -179,81 +179,23 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       }
     };
 
-    if (connectionStatus) {
-      setTimeout(() => {
-        connectToSignalR();
-      }, 1000);
-    }
-
-    const checkConnection = setInterval(() => {
-      const currentState = signalRService.getConnectionState();
-      if (currentState !== "Connected" && connectionStatus) {
-        setConnectionStatus(false);
-        showAlert(
-          "Conexão com SignalR perdida. Tentando reconectar...",
-          "error"
-        );
-      } else if (currentState === "Connected" && !connectionStatus) {
-        setConnectionStatus(true);
-        showAlert("Conexão com SignalR restabelecida!", "success");
-      }
-    }, 5000);
+    connectToSignalR();
 
     signalRService.onReceiveAlert((log: LogData) => {
-      const isConnected = log.status === 0;
-      const iconColor = getStatusIcon(log.description, isConnected);
-      const iconType = getIconType(log.messageType, isConnected);
-      
-      seticonToUse(iconColor);
-      seticonTypeToUse(iconType);
+      const isConnected = log.status === 1;
 
       setMonitorStatuses((prevStatuses) => ({
         ...prevStatuses,
-        [log.serialNumber]: log.status,
+        [log.serialNumberEsp]: isConnected,
       }));
 
-      setOperatorStatuses((prevStatuses) => ({
-        ...prevStatuses,
-        [log.serialNumber]: isConnected,
-      }));
-      
-      // if (log.messageType === "operador") {
-      //   setOperatorStatuses((prevStatuses) => ({
-      //     ...prevStatuses,
-      //     [log.serialNumber]: isConnected,
-      //   }));
-      // } else if (log.messageType === "jig") {
-      //   setJigStatuses((prevStatuses) => ({
-      //     ...prevStatuses,
-      //     [log.serialNumber]: isConnected,
-      //   }));
-      // }
-
-      if (![0, 1].includes(log.status)) {
-        const updatedLog = {
-          ...log,
-          status: -1,
-          description: "Desconectado",
-          lastUpdated: new Date().toISOString(),
-        };
-        setLogs((prevLogs) => [updatedLog, ...prevLogs].slice(0, 100));
-      } else {
-        setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100));
-      }
-
-      if (log.status === 0) {
-        showAlert(
-          `Erro no monitor ${log.serialNumberEsp}: ${log.messageType}`,
-          "error"
-        );
-      }
+      setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100));
     });
 
     return () => {
-      clearInterval(checkConnection);
       signalRService.stopConnection();
     };
-  }, [connectionStatus]);
+  }, []);
 
   const cells = new Array(4).fill(null);
 
@@ -263,10 +205,12 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
 
   const handleEditCellChange = async (params: any) => {
     try {
-      const monitorView = await getMonitor(selectedMonitor.cell.serialNumber);
+      const monitorView = await getMonitor(
+        selectedMonitor.cell.serialNumberEsp
+      );
       const updatedResult = {
         id: monitorView.id,
-        serialNumber: params.serialNumber,
+        serialNumberEsp: params.serialNumberEsp,
         description: params.description,
       };
       const result = await updateMonitor(updatedResult);
@@ -300,7 +244,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       cell: cell
         ? cell.monitorsEsd
         : {
-            serialNumber: "N/A",
+            serialNumberEsp: "N/A",
             description: "Célula vazia",
             stationInfo,
           },
@@ -309,8 +253,9 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     };
     setSelectedMonitor(selectedCell);
     setModalText(selectedCell.cell.description);
-    setModalTitleText(selectedCell.cell.serialNumber);
+    setModalTitleText(selectedCell.cell.serialNumberEsp);
     setModalIndexTitleText(index);
+    console.log("cell", cell);
   };
 
   const handleDelete = () => {
@@ -327,23 +272,18 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     return isConnected ? "#4caf50" : "#f44336";
   };
 
-  const getIconType = (status: string, isConnected: boolean) => {
-    const color = !connectionStatus
-      ? "#d9d9d9" // Cor para quando não há conexão
-      : isConnected
-      ? "#4caf50" // Cor para quando está conectado
-      : "#f44336"; // Cor para quando não está conectado
-  
+  const getIconType = (status: string, isConnected: any) => {
+    const color = isConnected ? "#4caf50" : "#f44336";
+
     switch (status) {
       case "jig":
-        return <LaptopOutlined style={{ color:color }} />;
+        return <LaptopOutlined style={{ color }} />;
       case "operador":
-        return <UserOutlined style={{ color:color }} />;
+        return <UserOutlined style={{ color }} />;
       default:
-        return <LaptopOutlined style={{ color:color }} />;
+        return <LaptopOutlined style={{ color: "#d9d9d9" }} />;
     }
   };
-  
 
   return (
     <>
@@ -389,7 +329,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
                       onClick={() => handleCellClick(cell, index, stationEntry)}
                     >
                       {cell ? (
-                        <Tooltip title={cell.monitorsEsd.serialNumber}>
+                        <Tooltip title={cell.monitorsEsd.serialNumberEsp}>
                           <div
                             className="computer-icon"
                             onClick={() => setModalVisible(true)}
@@ -397,8 +337,9 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
                             <div className="status-indicators">
                               {getIconType(
                                 index === 0 ? "operador" : "jig",
-                                jigStatuses[cell.monitorsEsd.serialNumber] ??
-                                  false
+                                monitorStatuses[
+                                  cell.monitorsEsd.serialNumberEsp
+                                ] ?? false
                               )}
                             </div>
                           </div>
