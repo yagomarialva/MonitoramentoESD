@@ -7,7 +7,9 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import signalRService from "../../../../api/signalRService"; // Ajuste o caminho de importação conforme necessário
-import './RealTimeLogTable.css'; // Importando o CSS
+import "./RealTimeLogTable.css"; // Importando o CSS
+import { Button, DatePicker } from "antd"; // Para o seletor de data e botão
+import * as XLSX from "xlsx"; // Para exportar dados para Excel
 
 interface LogData {
   serialNumberEsp: any;
@@ -33,6 +35,10 @@ export default function RealTimeLogTable({
   const [logs, setLogs] = useState<LogData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dateRange, setDateRange] = useState<[string | null, string | null]>([
+    null,
+    null,
+  ]);
 
   useEffect(() => {
     const connectToSignalR = async () => {
@@ -48,17 +54,15 @@ export default function RealTimeLogTable({
 
     connectToSignalR();
 
-
     signalRService.onReceiveAlert((log: LogData) => {
-      const updatedLog =
-        ![0, 1].includes(log.status)
-          ? {
-              ...log,
-              status: -1,
-              description: "Monitor desconectado",
-              lastUpdated: new Date().toISOString(),
-            }
-          : log;
+      const updatedLog = ![0, 1].includes(log.status)
+        ? {
+            ...log,
+            status: -1,
+            description: "Monitor desconectado",
+            lastUpdated: new Date().toISOString(),
+          }
+        : log;
 
       setLogs((prevLogs) => [updatedLog, ...prevLogs].slice(0, 100));
     });
@@ -157,16 +161,26 @@ export default function RealTimeLogTable({
     },
   ];
 
-  const filteredLogs = logs.filter(
-    (log) =>
+  const filteredLogs = logs.filter((log) => {
+    const withinDateRange =
+      dateRange[0] && dateRange[1]
+        ? new Date(log.lastUpdated) >= new Date(dateRange[0]) &&
+          new Date(log.lastUpdated) <= new Date(dateRange[1])
+        : true;
+
+    return (
       (serialNumberFilter
         ? log.serialNumberEsp.includes(serialNumberFilter)
         : true) &&
-      (statusFilter !== undefined ? log.status === statusFilter : true) 
-  );
+      (statusFilter !== undefined ? log.status === statusFilter : true) &&
+      withinDateRange
+    );
+  });
 
   const getLastLogStatus = () => {
-    const filteredLogsByType = logs.filter((log) => log.messageType === 'jig' || 'operador'); 
+    const filteredLogsByType = logs.filter(
+      (log) => log.messageType === "jig" || "operador"
+    );
     const lastLog = filteredLogsByType[0];
     if (lastLog) {
       return getStatusHeaderBadge(lastLog.status);
@@ -182,16 +196,75 @@ export default function RealTimeLogTable({
     );
   }
 
+  const exportToExcel = () => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(filteredLogs);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Logs");
+    XLSX.writeFile(workbook, "logs.xlsx");
+  };
+
+  const handleDateFilter = (dates: any) => {
+    if (dates) {
+      const [start, end] = dates;
+      setDateRange([
+        start ? start.startOf("day").toISOString() : null,
+        end ? end.endOf("day").toISOString() : null,
+      ]);
+    } else {
+      setDateRange([null, null]);
+    }
+  };
+
   return (
+    // <Card
+    //   title={
+    //     <div className="card-title-container">
+    //       {/* <span>{tipo === "operador" ? "Operador" : "Jig"}</span> */}
+    //       {getLastLogStatus()}
+    //     </div>
+    //   }
+    //   className="card-container"
+    // >
+    //   {error && (
+    //     <Alert
+    //       message="Error"
+    //       description={error}
+    //       type="error"
+    //       showIcon
+    //       className="error-alert"
+    //     />
+    //   )}
+    //   <Table
+    //     columns={columns}
+    //     dataSource={filteredLogs}
+    //     rowKey={(record, index) => index!.toString()}
+    //     pagination={{
+    //       pageSize: 5,
+    //       showSizeChanger: false,
+    //       pageSizeOptions: [],
+    //     }}
+    //     scroll={{ y: 600 }}
+    //   />
+    // </Card>
     <Card
       title={
         <div className="card-title-container">
-          {/* <span>{tipo === "operador" ? "Operador" : "Jig"}</span> */}
+          <span>Logs</span>
           {getLastLogStatus()}
         </div>
       }
       className="card-container"
     >
+      <div className="table-controls">
+        <DatePicker.RangePicker
+          onChange={handleDateFilter}
+          format="DD/MM/YYYY"
+          style={{ marginRight: "10px" }}
+        />
+        <Button onClick={exportToExcel}  style={{ backgroundColor: "#009B2D" }} type="primary">
+          Exportar para Excel
+        </Button>
+      </div>
       {error && (
         <Alert
           message="Error"
