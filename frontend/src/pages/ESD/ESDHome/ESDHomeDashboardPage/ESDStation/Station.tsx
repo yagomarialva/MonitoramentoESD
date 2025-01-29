@@ -396,7 +396,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         open={openModal}
         handleClose={handleCloseModal}
         onSubmit={handleCreateMonitor}
-        type={selectedMonitor?.index === 0 ? "operador" : "jig"}
+        type={[0, 4, 8, 12].includes(selectedMonitor?.index) ? "operador" : "jig"}
       />
     </>
   );
