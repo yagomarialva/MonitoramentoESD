@@ -13,7 +13,7 @@ class SignalRService {
 
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(`http://${API_URL}:5051/loghub`) // Substitua pela URL do seu hub
+      .withUrl(`http://${API_URL}:7080/loghub`) // Substitua pela URL do seu hub
       .withAutomaticReconnect() // Reconexão automática
       .configureLogging(signalR.LogLevel.Information) // Nível de log configurado para Information
       .build();

@@ -28,29 +28,25 @@ namespace BiometricFaceApi.Repositories
 
         public async Task<List<StationViewModel>> GetAllStationViewsAsync()
         {
-            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetAllStationView, new { });
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.StationViewQueries.GetAllStationView, new { });
             return result;
         }
-
         public async Task<StationViewModel?> GetStationViewByIdAsync(int id)
         {
             
-            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetStationViewById, new { id });
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.StationViewQueries.GetStationViewById, new { id });
             return result.FirstOrDefault();
         }
-
         public async Task<StationViewModel?> GetByPositionSequenceIdAsync(int positionId)
         {
-            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetStationViewPositionById, new { positionId });
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.StationViewQueries.GetStationViewPositionById, new { positionId });
             return result.FirstOrDefault();
         }
-
         public async Task<StationViewModel?> GetStationViewByLinkStAndLineByIdAsync(int linkStationAndLineId, int seguenceNumber)
         {
-            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetStationViewPositionByLinkId, new { linkStationAndLineId, seguenceNumber });
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.StationViewQueries.GetStationViewPositionByLinkId, new { linkStationAndLineId, seguenceNumber });
             return result.FirstOrDefault();
         }
-
         public async Task<StationViewModel?> AddOrUpdateAsync(StationViewModel stationView)
         {
             StationViewModel? existingStationView = await GetStationViewByIdAsync(stationView.ID);
@@ -58,7 +54,6 @@ namespace BiometricFaceApi.Repositories
                 ? await InsertStationViewAsync(stationView)
                 : await UpdateStationViewAsync(existingStationView, stationView);
         }
-
         private async Task<StationViewModel?> InsertStationViewAsync(StationViewModel stationView)
         {
             // Verifique se o LinkStationAndLineId é válido
@@ -98,7 +93,7 @@ namespace BiometricFaceApi.Repositories
             stationView.Created = DateTimeHelperService.GetManausCurrentDateTime();
             stationView.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
             //stationView.PositionSequence = counterLinks;
-            await _oraConnector.SaveData(SQLScripts.InsertStationView, stationView);
+            await _oraConnector.SaveData(SQLScripts.StationViewQueries.InsertStationView, stationView);
             CheckForError();
             return stationView;
         }
@@ -149,11 +144,10 @@ namespace BiometricFaceApi.Repositories
 
             updatedStationView.LastUpdated = lastUpdated;
             await HandleMonitorEsdUpdate(existingStationView, updatedStationView, newMonitorEsd, newLinkStationAndLine);
-            await _oraConnector.SaveData(SQLScripts.UpdateStationView, existingStationView);
+            await _oraConnector.SaveData(SQLScripts.StationViewQueries.UpdateStationView, existingStationView);
             CheckForError();
             return existingStationView;
         }
-
         private void ValidateUpdateParameters(MonitorEsdModel? newMonitorEsd, LinkStationAndLineModel? newLinkStationAndLine)
         {
             if (newMonitorEsd == null)
@@ -161,7 +155,6 @@ namespace BiometricFaceApi.Repositories
             if (newLinkStationAndLine == null)
                 throw new Exception($"Id {newLinkStationAndLine.ID} de sessão de linha é inválido");
         }
-
         private async Task HandleMonitorEsdUpdate(StationViewModel existingStationView, StationViewModel updatedStationView, MonitorEsdModel newMonitorEsd, LinkStationAndLineModel newLinkStationAndLine)
         {
             var allStationViews = await GetAllStationViewsAsync();
@@ -182,32 +175,30 @@ namespace BiometricFaceApi.Repositories
                     $"está sendo relacionado com a Estação de id {existingStationView.LinkStationAndLineId} e Monitor ESD de id {existingStationView.MonitorEsdId}");
             }
         }
-
         public async Task<StationViewModel> DeleteAsync(int id)
         {
             StationViewModel? stationViewDel = await GetStationViewByIdAsync(id);
             if (stationViewDel == null)
                 throw new Exception($"StationView com ID:{id} não foi encontrado no banco de dados.");
         
-            await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteStationView, new { id });
+            await _oraConnector.SaveData<dynamic>(SQLScripts.StationViewQueries.DeleteStationView, new { id });
             return stationViewDel;
         }
         public async Task <StationViewModel?>DeleteMonitorEsdByStationView(int id)
         {
             StationViewModel? stwMonitor = await GetStationViewByMonitorIdAsync(id);
-            await _oraConnector.SaveData<dynamic>(SQLScripts.Delele_MonitorByStationView, new { id });
+            await _oraConnector.SaveData<dynamic>(SQLScripts.StationViewQueries.Delete_MonitorByStationView, new { id });
             return stwMonitor;
+        }
+        public async Task<StationViewModel?> GetStationViewByMonitorIdAsync(int id)
+        {
+            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.StationViewQueries.GetMonitorByIdInST, new { id });
+            return result.FirstOrDefault();
         }
         private void CheckForError()
         {
             if (_oraConnector.Error != null)
                 throw new Exception($"Error : {_oraConnector.Error}");
-        }
-
-        public async Task<StationViewModel?> GetStationViewByMonitorIdAsync(int id)
-        {
-            var result = await _oraConnector.LoadData<StationViewModel, dynamic>(SQLScripts.GetMonitorByIdInST, new { id });
-            return result.FirstOrDefault();
         }
     }
 }

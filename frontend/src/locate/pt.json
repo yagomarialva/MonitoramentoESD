@@ -39,6 +39,8 @@
       "FACIAL_RECOGNITION":"Reconhecimento Facial",
       "TABLE_HEADER": "Operadores ESD",
       "ADD_OPERATOR": "Adicionar Operador",
+      "NAME_REQUIRED":"Insira um nome válido",
+      "BADGE_REQUIRED":"Insira um número de matrícula válido",
       "EDIT_OPERATOR": "Editar Operador",
       "INFO_OPERATOR": "Informações do Operador",
       "DELETE_OPERATOR": "Deletar Operador",

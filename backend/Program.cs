@@ -33,36 +33,32 @@ namespace BiometricFaceApi
             var dotenv = Path.Combine(root, ".env");
             DotEnv.Load(dotenv);
 
-            // Carrega o valor de DB_HOST
-            var oracleHost = Environment.GetEnvironmentVariable("DB_HOST");
+            var oracleHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
+
+            // Obter a string de conexão do arquivo de configuração e substituir ${DB_HOST} pelo valor da variável de ambiente
+            var connectionString = builder.Configuration.GetConnectionString("ora");
+            if (connectionString is not null)
+            {
+                connectionString = connectionString.Replace("${DB_HOST}", oracleHost); // Substituir o placeholder pela variável de ambiente
+            }
 
             var config =
             new ConfigurationBuilder()
             .AddEnvironmentVariables()
             .Build();
 
-            // Carrega as vari�veis de ambiente do arquivo .env
-            DotEnv.Load(dotenv);  // Certifique-se de que este m�todo est� dispon�vel
-
-            // Pega o valor das vari�veis de ambiente e exibe no console
-            // var oraclePort = Environment.GetEnvironmentVariable("ORACLE_PORT");
-            // var oracleService = Environment.GetEnvironmentVariable("ORACLE_SERVICE");
-
+            DotEnv.Load(dotenv);
             Console.WriteLine($"ORACLE_HOST: {oracleHost}");
-            // Console.WriteLine($"ORACLE_PORT: {oraclePort}");
-            // Console.WriteLine($"ORACLE_SERVICE: {oracleService}");
-            // Configura??o do AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
 
-            // Add services to the container.
             builder.Services.AddControllers();
 
-            // Adicionar e configurar CORS
+           
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigins", policy =>
                      policy
-                         .WithOrigins("http://localhost:3000", "http://${oracleHost}:3000", "http://*:3000") // adicione quantas origens precisar
+                         .WithOrigins("http://localhost:3000", "http://192.168.0.101:3000", $"http://{oracleHost}:3000", "http://*:3000") 
                          .AllowAnyHeader()
                          .AllowAnyMethod()
                          .AllowCredentials());
@@ -95,16 +91,16 @@ namespace BiometricFaceApi
                         Version = "v1"
                     });
 
-                //remove virtual properties
+              
                 c.SchemaFilter<SwaggerSchemaFilter>();
 
-                // Jwt Authorization settings
+               
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description =
-                      @"JWT Authorization header using the Bearer scheme. \r\n\r\n  Enter 'Bearer'
+                      @"JWT Authorization header using the Bearer scheme. \r  \r    Enter 'Bearer'
                         [space] and then your token in the text input below.
-                        \r\n\r\nExample : 'Bearer 12345abcdef'",
+                        \r  \r  Example : 'Bearer 12345abcdef'",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
@@ -129,20 +125,20 @@ namespace BiometricFaceApi
                     }
                 });
 
-                // Documentation variable
+              
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
                 c.EnableAnnotations();
             });
 
-            // Connection String
-            var connectionString = builder.Configuration.GetConnectionString("ora");
+           
+           // var connectionString = builder.Configuration.GetConnectionString("ora");
             var securityKeyA = builder.Configuration["security:key"];
             var securityKeyB = builder.Configuration["security:iv"];
             if (connectionString is not null)
             {
-                // Repositores
+              
                 builder.Services.AddDbContext<BiometricFaceDBContex>(opt => opt.UseOracle(connectionString, oraOptions => oraOptions.UseOracleSQLCompatibility("11")).
                 AddInterceptors(new QueryCommandInterceptor()));
                 builder.Services.AddSingleton<IOracleDataAccessRepository, OracleDataAccessRepository>(ora => new OracleDataAccessRepository(connectionString));
@@ -159,16 +155,25 @@ namespace BiometricFaceApi
                 builder.Services.AddScoped<ILinkStationAndLineRepository, LinkStationAndLineRepository>();
                 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
                 builder.Services.AddScoped<ILogMonitorEsdRepository, LogMonitorEsdRepository>();
-                builder.Services.AddSingleton<JwtAuthentication>();
+                builder.Services.AddScoped<ILastLogMonitorEsdRepository, LastLogMonitorEsdRepository>();
+                builder.Services.AddScoped<IFcEmbeddingRepository, FcEmbeddingRepository>();
+                builder.Services.AddScoped<IFcAreaRepository, FcAreaRepository>();
+                builder.Services.AddScoped<IFcEyeRepository, FcEyeRepository>();
+                builder.Services.AddScoped<IStatusJigAndUserRepository, StatusJigAndUserRepository>();
+                builder.Services.AddScoped<StatusJigAndUserService>();
                 builder.Services.AddScoped<UserService>();
                 builder.Services.AddScoped<ImageService>();
                 builder.Services.AddScoped<BiometricService>();
+                builder.Services.AddScoped<MonitorEsdService>();
                 builder.Services.AddScoped<RecordStatusService>();
                 builder.Services.AddScoped<AuthenticationService>();
                 builder.Services.AddScoped<JigService>();
                 builder.Services.AddScoped<LineService>();
                 builder.Services.AddScoped<LinkStationAndLineService>();
                 builder.Services.AddScoped<StationService>();
+                builder.Services.AddScoped<LogMonitorEsdService>();
+                builder.Services.AddSingleton<JwtAuthentication>();
+
                 builder.Services.AddScoped<IDbInitializerRepository>(provider =>
                 {
                     var oracleRepo = provider.GetRequiredService<IOracleDataAccessRepository>();
@@ -184,7 +189,7 @@ namespace BiometricFaceApi
             builder.Services.AddScoped<SecurityService>(ss => new SecurityService(securityKeyA, securityKeyB));
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+          
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -202,11 +207,10 @@ namespace BiometricFaceApi
             app.UseAuthorization();
             app.MapControllers();
 
-            // Mapeie o hub
+          
             app.MapHub<CommunicationHub>("/loghub");
 
-            // Cria??o do usu?rio administrador padr?o
-            using (var scope = app.Services.CreateScope()) // Cria um escopo
+            using (var scope = app.Services.CreateScope()) 
             {
                 var scopedServices = scope.ServiceProvider;
                 var dbInitializer = scopedServices.GetRequiredService<IDbInitializerRepository>();

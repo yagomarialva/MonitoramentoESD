@@ -312,7 +312,7 @@
             <summary>
             Cadastra ou atualiza dados de um log.
             </summary>
-            <param name="model">Dados de um log a serem cadastrados ou atualizados.</param>
+            <param name="models">Dados de um log a serem cadastrados ou atualizados.</param>
             <returns>Retorna o resultado da operação.</returns>
             <response code="200">Dados atualizados com sucesso.</response>
             <response code="201">Dados cadastrados com sucesso.</response>
@@ -588,67 +588,96 @@
             Comando SQL USERS
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllUsers">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.FcEmbeddingQueries">
             <summary>
-            Comando SQL USERS
+            Comando SQL FCEMBEDDING
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllImage">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.FcAreaQueries">
+            <summary>
+            Comando SQL FCAREA
+            </summary>
+        </member>
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.FcEyeQueries">
+            <summary>
+            Comando SQL FCEYE
+            </summary>
+        </member>
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.UserQueries">
+            <summary>
+            Comando SQL USERS
+            </summary> 
+        </member>
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.ImageQueries">
             <summary>
             COMANDOS SQL IMAGES
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllLine">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.LineQueries">
             <summary>
-            COMANDO SQL LINE
+            Comandos SQL para a tabela Line
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllLStation">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.StationQueries">
             <summary>
-            COMANDO SQL STATION
+            Comandos SQL para a tabela Station
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllJig">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.JigQueries">
             <summary>
-            COMANDO SQL JIG
+            Comandos SQL para a tabela Jig
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllMonitor">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.MonitoresdQueries">
             <summary>
-            COMANDO SQL MONITORESD
+            Comandos SQL para a tabela MonitoresEsd
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllLinks">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.LinkStationAndLineQueries">
             <summary>
-            COMANDO SQL LINKSTATIONANDLINE
+            Comandos SQL para a tabela linkStationAndLine
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllProcuceAct">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.ProduceActivityQueries">
             <summary>
-            COMANDO SQL PRODUCEACTIVITY
+            Comandos SQL para a tabela produceactivity
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllRecordStatus">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.RecordStatusProduceQueries">
             <summary>
-            COMANDO SQL RECORDSTATUSPRODUCE
+            Comandos SQL para a tabela recordStatusProduce
             </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllRoles">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.RolesQueries">
             <summary>
-            COMANDO SQL ROLES
-            </summary>  
+            Comandos SQL para a tabela roles
+            </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.AuthenticateUser">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.AuthenticationQueries">
             <summary>
-            COMANDO SQL AUTHENTICATION
-            </summary>      
+            Comandos SQL para a tabela authentication
+            </summary>
         </member>
-        <member name="F:BiometricFaceApi.OraScripts.SQLScripts.GetAllStationView">
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.StationViewQueries">
             <summary>
-            COMANDO SQL STATIONVIEW
+            Comandos SQL para a tabela stationview
             </summary>   
         </member>
-        <!-- Badly formed XML comment ignored for member "F:BiometricFaceApi.OraScripts.SQLScripts.GetAllLogMonitor" -->
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.LogMonitorEsdQueries">
+            <summary>
+            Comandos SQL para a tabela logmonitorEsd
+            </summary>
+        </member>
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.LastLogMonitorEsdQueries">
+            <summary>
+            Comandos SQL para a tabela lastlogmonitorEsd
+            </summary>
+        </member>
+        <member name="T:BiometricFaceApi.OraScripts.SQLScripts.StatusJigAndUserQueries">
+            <summary>
+            Comandos SQL para a tabela statusjigandusers
+            </summary>
+        </member>
         <member name="M:BiometricFaceApi.Repositories.Interfaces.IAuthenticationRepository.AuthenticateUserAsync(System.String,System.String)">
             <summary>
             Authenticates a user by login and password.

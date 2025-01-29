@@ -17,7 +17,6 @@ namespace BiometricFaceApi.Middleware
             _logger = logger;
             _env = env; // Injeção do ambiente
         }
-
         public async Task InvokeAsync(HttpContext context)
         {
             try
@@ -56,7 +55,6 @@ namespace BiometricFaceApi.Middleware
                 await HandleExceptionAsync(context, exception);
             }
         }
-
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             HttpStatusCode status;

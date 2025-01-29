@@ -105,10 +105,11 @@ const OperatorTable: React.FC = () => {
       console.error("Error fetching operators:", error);
       if (error.message === "Request failed with status code 401") {
         localStorage.removeItem("token");
+        showSnackbar(t('Sessão expirada'), "error");
         navigate("/");
       }
-      showSnackbar(t(error.message), "error");
-      setLoading(false);
+        showSnackbar(t('Logue novamente'), "error");
+        setLoading(false);
     }
   };
 

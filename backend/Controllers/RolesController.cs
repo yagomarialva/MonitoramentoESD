@@ -24,7 +24,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Nenhuma função encontrada.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro interno do servidor!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("all")]
         public async Task<IActionResult> GetAllRoles()
         {
@@ -40,7 +40,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="404">Função não encontrada.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro interno do servidor!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetRoleById(int id)
         {
@@ -57,7 +57,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados inválidos fornecidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro interno do servidor!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpPost]
         public async Task<IActionResult> UpsertRole([FromBody] RolesModel model)
         {
@@ -73,7 +73,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="404">Função não encontrada.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro interno do servidor!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteRole(int id)
         {

@@ -5,8 +5,6 @@ using BiometricFaceApi.Security;
 using BiometricFaceApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace BiometricFaceApi.Controllers
 {
@@ -69,7 +67,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="201">Dados cadastrados com sucesso.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("criacao")]
         public async Task<IActionResult> InsertAuths([FromBody] AuthenticationModel authModel)
         {
@@ -84,7 +82,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna dados do usuário.</response>
         /// <response code="404">Usuário não encontrado.</response>
         /// <response code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAuthsById(int id)
         {
@@ -103,7 +101,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Usuário removido com sucesso.</response>
         /// <response code="404">Usuário não encontrado.</response>
         /// <response code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAtuhs(int id)
         {

@@ -1,16 +1,20 @@
-﻿namespace BiometricFaceApi.Models
+﻿using System.Text.Json.Serialization;
+
+namespace BiometricFaceApi.Models
 {
     public class MonitorEsdView
     {
+        
         public MonitorEsdModel MonitorsEsd { get; set; }
         public int PositionSequence { get; set; }
-        public LogMonitorEsdModel LogOperator { get; set; }
-        public LogMonitorEsdModel LogJig { get; set; }
-       
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public LastLogMonitorEsdModel LogOperator { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public LastLogMonitorEsdModel LogJig { get; set; }
         public MonitorEsdView()
         {
-            LogOperator = new LogMonitorEsdModel();
-            LogJig = new LogMonitorEsdModel();
+            LogOperator = new LastLogMonitorEsdModel();
+            LogJig = new LastLogMonitorEsdModel();
 
         }
     }

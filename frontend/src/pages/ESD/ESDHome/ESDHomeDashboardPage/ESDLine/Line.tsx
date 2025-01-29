@@ -12,7 +12,7 @@ import { createLink, deleteLink } from "../../../../../api/linkStationLine";
 import { useNavigate } from "react-router-dom";
 import RemoveCircleOutlineOutlinedIcon from "@mui/icons-material/RemoveCircleOutlineOutlined";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
-import { Button } from "antd"; // Importa o botão do Ant Design
+import { Button, Tooltip } from "antd"; // Importa o botão do Ant Design
 
 interface StationLine {
   id: number;
@@ -113,6 +113,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   }, []); // Agora ele será chamado quando `stations` mudar
 
   const handleStationSelect = (stationEntry: StationEntry) => {
+    console.log("station", stationEntry);
     setSelectedStationId(stationEntry.station.id);
     const selectedInfo = {
       line: lineData.line,
@@ -123,7 +124,9 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
   };
 
   const handleCreateStation = async () => {
-    const randomStationName = `Estação ${Math.floor(Math.random() * 100000000000)}`;
+    const randomStationName = `Estação ${Math.floor(
+      Math.random() * 100000000000
+    )}`;
     const linkId = lineData.id;
     const station = {
       name: randomStationName,
@@ -200,18 +203,31 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
       return;
     }
 
+    // Verificação para garantir que a estação não seja a única da linha
+    if (lineData.stations.length <= 1) {
+      showSnackbar("Não é possível excluir a única estação da linha.", "error");
+      return;
+    }
+
     try {
       const selectedInfo = handleStationSelect(selectedStation);
-
+      console.log('selectedStation', selectedStation.monitorsEsd)
       await deleteLink(selectedInfo.linkId);
-  
+
       await deleteStation(selectedInfo.station.id);
 
       // Chama a função onUpdate após a exclusão da estação
       onUpdate();
 
+      if (selectedStation.monitorsEsd.length > 0) {
+        showSnackbar("Não é possível excluir estação", "error");
+      }
+
+      if (selectedStation.monitorsEsd.length == 0) {
+        showSnackbar("Estação excluída com sucesso!", "success");
+      }
       // Mostra o Snackbar de sucesso
-      showSnackbar("Estação excluída com sucesso!", "success");
+      
     } catch (error: any) {
       console.error("Erro ao excluir a estação:", error);
 
@@ -269,18 +285,27 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
                 <div key={stationEntry.station.id}>
                   {isEditing && ( // Renderiza os botões de rádio apenas no modo de edição
                     <div className="radio-button">
-                      <input
-                        type="radio"
-                        name="selectedStation"
-                        id={`station-${stationEntry.station.id}`} // ID único para cada estação
-                        value={stationEntry.station.id}
-                        onChange={() => handleStationSelect(stationEntry)}
-                        checked={selectedStationId === stationEntry.station.id}
-                      />
+                      <Tooltip
+                        title={
+                          stationEntry.monitorsEsd.length > 0
+                            ? "Não é possível excluir uma estação com monitores inseridos a ela."
+                            : ""
+                          }
+                      >
+                          <input
+                            type="radio"
+                            name="selectedStation"
+                            id={`station-${stationEntry.station.id}`} // ID único para cada estação
+                            value={stationEntry.station.id}
+                            onChange={() => handleStationSelect(stationEntry)}
+                            checked={ selectedStationId === stationEntry.station.id}
+                            title={`Select station ${stationEntry.station.name}`}
+                            disabled={stationEntry.monitorsEsd.length > 0}
+                          />
+                      </Tooltip>
                     </div>
                   )}
                   <Station stationEntry={stationEntry} onUpdate={onUpdate} />
-                  
                 </div>
               ))}
             </div>

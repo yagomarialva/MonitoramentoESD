@@ -15,30 +15,35 @@ namespace BiometricFaceApi.Repositories
         }
         public async Task<List<ImageModel?>> GetAllImagesAsync()
         {
-            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetAllImage, new { });
+            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.ImageQueries.GetAllImage, new { });
             return result;
         }
         public async Task<List<ImageModel?>> GetListImagesAsync(int page, int pageSize)
         {
-            var result = await _oraConnector.LoadData<ImageModel?, dynamic>(SQLScripts.GetListImage,
+            var result = await _oraConnector.LoadData<ImageModel?, dynamic>(SQLScripts.ImageQueries.GetListImage,
                 new { Offset = (page - 1) * pageSize, Limit = pageSize });
             return result.ToList() ?? throw new KeyNotFoundException($"Nenhuma image cadastrado.");
         }
         public async Task<ImageModel?> GetImageByIdAsync(int id)
         {
-            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetImageById, new { id });
+            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.ImageQueries.GetImageById, new { id });
             return result.FirstOrDefault();
 
 
         }
         public async Task<ImageModel?> GetImageByUserIdAsync(int userId)
         {
-            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetUserId, new { userId });
+            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.ImageQueries.GetUserId, new { userId });
             return result.FirstOrDefault();
         }
         public async Task<ImageModel?> GetByImageAsync(string img)
         {
-            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.GetImageByString, new {img});
+            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.ImageQueries.GetImageByString, new {img});
+            return result.FirstOrDefault();
+        }
+        public async Task<ImageModel?> GetByEmbeddingAsync(string embedding)
+        {
+            var result = await _oraConnector.LoadData<ImageModel, dynamic>(SQLScripts.ImageQueries.GetEmbeddingByString, new { embedding });
             return result.FirstOrDefault();
         }
         public async Task<ImageModel?> AddImageAsync(ImageModel image)
@@ -47,7 +52,7 @@ namespace BiometricFaceApi.Repositories
             {
                 image.Created = DateTimeHelperService.GetManausCurrentDateTime();
                 image.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
-                await _oraConnector.SaveData<ImageModel>(SQLScripts.InsertImage, image);
+                await _oraConnector.SaveData<ImageModel>(SQLScripts.ImageQueries.InsertImage, image);
                 if (_oraConnector.Error != null)
                 {
                     throw new Exception($"Erro de banco de dados: {_oraConnector.Error}");
@@ -68,8 +73,9 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception($"O imagem do usuário para o ID {imageEntity.UserId} não foi encontrado no banco de dados.");
             }
             nextEntityImage.PictureStream = imageEntity.PictureStream;
+            nextEntityImage.Embedding = imageEntity.Embedding;
             nextEntityImage.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
-            await _oraConnector.SaveData<ImageModel>(SQLScripts.UpdateImage, nextEntityImage);
+            await _oraConnector.SaveData<ImageModel>(SQLScripts.ImageQueries.UpdateImage, nextEntityImage);
             if (_oraConnector.Error != null)
                 throw new Exception($"Error:{_oraConnector.Error}");
            
@@ -84,7 +90,7 @@ namespace BiometricFaceApi.Repositories
                 throw new KeyNotFoundException($"Nenhuma imagem encontrada para ID {imageId}");
             }
 
-            await _oraConnector.SaveData<ImageModel>(SQLScripts.DeleteImage, existingImage);
+            await _oraConnector.SaveData<ImageModel>(SQLScripts.ImageQueries.DeleteImage, existingImage);
             if (_oraConnector.Error != null)
             {
                 throw new Exception($"Erro de banco de dados: {_oraConnector.Error}");
@@ -92,25 +98,6 @@ namespace BiometricFaceApi.Repositories
 
             return true;
         }
-
-        
-
-        public class OperationResult
-        {
-            public bool IsSuccess { get; }
-            public string Message { get; }
-
-            private OperationResult(bool isSuccess, string message)
-            {
-                IsSuccess = isSuccess;
-                Message = message;
-            }
-
-            public static OperationResult Success() => new OperationResult(true, string.Empty);
-
-            public static OperationResult Failure(string message) => new OperationResult(false, message);
-        }
-
 
     }
 }

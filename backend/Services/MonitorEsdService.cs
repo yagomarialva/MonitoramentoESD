@@ -65,23 +65,6 @@ namespace BiometricFaceApi.Services
                 return (exception.Message, StatusCodes.Status400BadRequest);
             }
         }
-        //public async Task<(object?, int)> GetMonitorByIp(string ip)
-        //{
-        //    try
-        //    {
-        //        var monitor = await _repository.GetMonitorByIPAsync(ip);
-        //        if (monitor == null)
-        //        {
-        //            return ($"Monitor com IP: {ip} não encontrado.", StatusCodes.Status404NotFound);
-        //        }
-
-        //        return (monitor, StatusCodes.Status200OK);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        return (exception.Message, StatusCodes.Status400BadRequest);
-        //    }
-        //}
         public async Task<(object?, int)> GetLogs(string logs)
         {
             try
@@ -191,7 +174,7 @@ namespace BiometricFaceApi.Services
                 var content = new
                 {
                     id = monitor.ID,
-                    serialNumber = monitor.SerialNumber,
+                    serialNumberEsp = monitor.SerialNumberEsp,
                     description = monitor.Description
                 };
 
@@ -202,5 +185,29 @@ namespace BiometricFaceApi.Services
                 return ($"{id} não encontrado.", StatusCodes.Status400BadRequest);
             }
         }
+
+
+
+
+
+
+
+        //public async Task<(object?, int)> GetMonitorByIp(string ip)
+        //{
+        //    try
+        //    {
+        //        var monitor = await _repository.GetMonitorByIPAsync(ip);
+        //        if (monitor == null)
+        //        {
+        //            return ($"Monitor com IP: {ip} não encontrado.", StatusCodes.Status404NotFound);
+        //        }
+
+        //        return (monitor, StatusCodes.Status200OK);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        return (exception.Message, StatusCodes.Status400BadRequest);
+        //    }
+        //}
     }
 }

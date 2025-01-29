@@ -20,6 +20,7 @@ namespace BiometricFaceApi.Repositories.Interfaces
         /// <returns>A task representing the asynchronous operation, with the image model.</returns>
         Task<ImageModel?> GetImageByIdAsync(int imageId);
         Task<ImageModel?> GetByImageAsync(string img);
+        Task<ImageModel?> GetByEmbeddingAsync(string embedding);
 
         /// <summary>
         /// Retrieves an image by the associated user's unique identifier asynchronously.

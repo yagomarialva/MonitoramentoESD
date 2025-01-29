@@ -111,8 +111,23 @@
   padding: 10px 0;
 }
 
+:where(.css-dev-only-do-not-override-nqoqt9).ant-layout-sider .ant-layout-sider-trigger {
+  display: none;
+}
+
 @media (min-width: 1400px) {
   .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
       max-width: 100% !important;
   }
+}
+.ant-layout-sider-children{
+  margin-top: 48.9px !important;
+}
+
+.ant-layout-sider-trigger{
+  display: none !important;
+}
+
+.main-card {
+  min-height: 800px !important;
 }

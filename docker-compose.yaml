@@ -32,11 +32,12 @@ services:
       ORACLE_PWD: oracle
       TZ: America/Manaus  # Define o fuso horário para o contêiner Oracle
     ports:
-      - "49161:1521"  # Porta do Oracle Listener
+      - "49000:1521"  # Porta do Oracle Listener
     networks:
       - your-network
     volumes:
       - oracle-data:/u01/app/oracle  # Persistir os dados do Oracle
+      - ./init-scripts:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "netstat", "-an", "|", "grep", "1521"]
       interval: 30s

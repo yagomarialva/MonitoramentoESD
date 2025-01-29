@@ -16,12 +16,14 @@ interface MonitorFormProps {
   open: boolean;
   handleClose: () => void;
   onSubmit: (monitor: Monitor) => Promise<void>;
+  type: "operador" | "jig"; // Nova prop adicionada
 }
 
 const MonitorForm: React.FC<MonitorFormProps> = ({
   open,
   handleClose,
   onSubmit,
+  type 
 }) => {
   const { t } = useTranslation();
 
@@ -107,7 +109,7 @@ const MonitorForm: React.FC<MonitorFormProps> = ({
       title={
         <div className="modal-title-container-add">
           <LaptopOutlined className="icon-add-monitor" />
-          <span className="ellipsis-text">Adicionar Monitor</span>
+          <span className="ellipsis-text">{type === "operador" ? "Adicionar Operador" : "Adicionar Jig"}</span>
         </div>
       }
       className="modal-container"

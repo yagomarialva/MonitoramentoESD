@@ -22,7 +22,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna todos os status.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("todosStatus")]
         public async Task<IActionResult> GetAllStatus()
         {
@@ -38,7 +38,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">ID incorreto ou inválido.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("buscaStatus/{id}")]
         public async Task<IActionResult> GetStatusById(int id)
         {
@@ -54,7 +54,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="201">Status cadastrado com sucesso.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("adicionarStatus")]
         public async Task<IActionResult> AddOrUpdateStatus([FromBody] RecordStatusProduceModel model)
         {
@@ -69,7 +69,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Status removido com sucesso.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("deleteStatus/{id}")]
         public async Task<IActionResult> DeleteStatus(int id)
         {

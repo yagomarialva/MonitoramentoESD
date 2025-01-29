@@ -15,19 +15,5 @@ namespace BiometricFaceApi.Data
             _securityService = securityService;
             _appSettings = appSettings;
         }
-
-        public DbSet<UserModel> Users { get; set; }
-        public DbSet<ImageModel> Images { get; set; }
-        public DbSet<AuthenticationModel> Authentications { get; set; }
-        public DbSet<MonitorEsdModel> MonitorEsds { get; set; }
-        public DbSet<LogMonitorEsdModel> LogMonitorEsd { get; set; }
-        public DbSet<ProduceActivityModel> ProduceActivity { get; set; }
-        public DbSet<JigModel> Jigs { get; set; }
-        public DbSet<RecordStatusProduceModel> RecordStatusProduce { get; set; }
-        public DbSet<RolesModel> Roles { get; set; }
-        public DbSet<StationModel> Station { get; set; }
-        public DbSet<StationViewModel> StationViews { get; set; }
-        public DbSet<LineModel> lineModels { get; set; }
-        public DbSet<LinkStationAndLineModel> LinkStationAndLines { get; set; }
     }
 }

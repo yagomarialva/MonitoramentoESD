@@ -21,7 +21,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna dados de linha.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("TodasLinhas")]
         public async Task<ActionResult> BuscarTodaLinha()
         {
@@ -35,7 +35,7 @@ namespace BiometricFaceApi.Controllers
         /// <param name="id">ID da linha</param>
         /// <response code="200">Retorna dados de linha.</response>
         /// <response code="400">Dados incorretos ou inválidos.
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("BuscarLinha/{id}")]
         public async Task<ActionResult> BuscarLinha(int id)
         {
@@ -51,7 +51,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("BuscarNome/{name}")]
         public async Task<ActionResult> BuscarNome(string name)
         {
@@ -68,7 +68,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("adicionarLinha")]
         public async Task<ActionResult> Include([FromBody] LineModel model)
         {
@@ -84,7 +84,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("DeleteLinha/{id}")]
         public async Task<ActionResult> Delete(int id)
         {

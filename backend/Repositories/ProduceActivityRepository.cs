@@ -13,39 +13,33 @@ namespace BiometricFaceApi.Repositories
         {
             _oraConnector = oraConnector;
         }
-
         public async Task<List<ProduceActivityModel>> GetAllAsync()
         {
-            return await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetAllProcuceAct, new { });
+            return await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.ProduceActivityQueries.GetAllProcuceAct, new { });
         }
-
         public async Task<ProduceActivityModel?> GetByIdAsync(int id)
         {
-            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetProduceActById, new { id });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.ProduceActivityQueries.GetProduceActById, new { id });
             return result.FirstOrDefault();
         }
-
-        public async Task<ProduceActivityModel?> GetByMonitorIdAsync(int monitorProduce)
+        public async Task<ProduceActivityModel?> GetByMonitorIdAsync(int monitorEsdId)
         {
-            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetMonitorActById, new { monitorProduce });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.ProduceActivityQueries.GetMonitorActById, new { monitorEsdId });
             return result.FirstOrDefault();
         }
-
-        public async Task<ProduceActivityModel?> GetByJigIdAsync(int jigProduce)
+        public async Task<ProduceActivityModel?> GetByJigIdAsync(int jigId)
         {
-            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetJigActById, new { jigProduce });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.ProduceActivityQueries.GetJigActById, new { jigId });
             return result.FirstOrDefault();
         }
-
         public async Task<ProduceActivityModel?> GetByUserIdAsync(int userId)
         {
-            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetUserActById, new { userId });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.ProduceActivityQueries.GetUserActById, new { userId });
             return result.FirstOrDefault();
         }
-
         public async Task<ProduceActivityModel?> GetByLinkStationAndLineIdAsync(int linkStationAndLineId)
         {
-            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.GetLinkStationAndLineById, new { linkStationAndLineId });
+            var result = await _oraConnector.LoadData<ProduceActivityModel, dynamic>(SQLScripts.ProduceActivityQueries.GetLinkStationAndLineById, new { linkStationAndLineId });
             return result.FirstOrDefault();
         }
         public async Task<ProduceActivityModel?> IsLockedAsync(int id, int locked)
@@ -60,24 +54,21 @@ namespace BiometricFaceApi.Repositories
                 result.IsLocked = lockdValue; // Atualiza o status de IsLocked (booleano)
                 result.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
 
-                await _oraConnector.SaveData<ProduceActivityModel>(SQLScripts.UpdateProduceAct, result);
+                await _oraConnector.SaveData<ProduceActivityModel>(SQLScripts.ProduceActivityQueries.UpdateProduceAct, result);
                 
             }
             else
                 throw new Exception($"Erro ao atualizar atividade de produção: {_oraConnector.Error}");
             return result;
         }
-
-        // Task realiza o include e update
-        // include de novos dados
-        // update e feito atraves do ProduceActivityID, senso assim possibilitando a alteração de dados.
+       
         public async Task<ProduceActivityModel?> AddOrUpdateAsync(ProduceActivityModel produceActivity)
         {
             if (produceActivity.ID > 0)
             {
                 // Atualização
                 produceActivity.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
-                await _oraConnector.SaveData<ProduceActivityModel>(SQLScripts.UpdateProduceAct, produceActivity);
+                await _oraConnector.SaveData<ProduceActivityModel>(SQLScripts.ProduceActivityQueries.UpdateProduceAct, produceActivity);
 
                 if (_oraConnector.Error != null)
                 {
@@ -89,7 +80,7 @@ namespace BiometricFaceApi.Repositories
                 // Inclusão
                 produceActivity.Created = DateTimeHelperService.GetManausCurrentDateTime();
                 produceActivity.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
-                await _oraConnector.SaveData<ProduceActivityModel>(SQLScripts.InsertProduceAct, produceActivity);
+                await _oraConnector.SaveData<ProduceActivityModel>(SQLScripts.ProduceActivityQueries.InsertProduceAct, produceActivity);
 
                 if (_oraConnector.Error != null)
                 {
@@ -99,7 +90,6 @@ namespace BiometricFaceApi.Repositories
 
             return produceActivity;
         }
-
         public async Task<ProduceActivityModel?> DeleteAsync(int id)
         {
             var produceActivity = await GetByIdAsync(id);
@@ -109,7 +99,7 @@ namespace BiometricFaceApi.Repositories
                 throw new ArgumentException("ID de atividade de produção inválido.");
             }
 
-            await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteProduceAct, new { id });
+            await _oraConnector.SaveData<dynamic>(SQLScripts.ProduceActivityQueries.DeleteProduceAct, new { id });
 
             if (_oraConnector.Error != null)
             {

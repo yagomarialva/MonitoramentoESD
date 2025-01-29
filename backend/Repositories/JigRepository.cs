@@ -8,55 +8,45 @@ namespace BiometricFaceApi.Repositories
     public class JigRepository : IJigRepository
     {
         private readonly IOracleDataAccessRepository _oraConnector;
-       
-
-
         public JigRepository(IOracleDataAccessRepository oraConnector)
         {
             _oraConnector = oraConnector;
            
         }
-
         public async Task<List<JigModel>> GetAllAsync()
         {
 
-            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.GetAllJig, new { });
+            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.JigQueries.GetAllJig, new { });
             return result;
         }
-
         public async Task<JigModel?> GetByIdAsync(int id)
         {
-            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.GetJigId, new { id });
+            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.JigQueries.GetJigId, new { id });
             return result.FirstOrDefault();
         }
-
         public async Task<JigModel?> GetJigBySnAsync(string serialNumber)
         {
-            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.GetjigBySerialNumber, new { serialNumber });
+            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.JigQueries.GetjigBySerialNumber, new { serialNumber });
             return result.FirstOrDefault();
         }
-
         public async Task<JigModel?> GetByNameAsync(string name)
         {
             //Tranforma name para letras minusculas, verifica se existe caracters especiais e tira os espçao no final da palavra.
             var nameLower = name.Normalize().ToLower().TrimEnd();
 
-            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.GetJigName, new { nameLower });
+            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.JigQueries.GetJigName, new { nameLower });
             return result.FirstOrDefault();
         }
-
-        // Método que inclui ou atualiza o Jig dependendo do ID.
+        
         public async Task<JigModel?> AddOrUpdateAsync(JigModel jigModel)
         {
             try
             {
-                //Formata o Name para letras minúsculas
+              
                 jigModel.Name = jigModel.Name.ToLowerInvariant();
 
-                //Usa a hora de Manaus.
                 var formattedDateTime = DateTimeHelperService.GetManausCurrentDateTime();
 
-                //armazena a data atual
                 var lastUpdated = jigModel.LastUpdated = formattedDateTime; 
                 var created = jigModel.Created = formattedDateTime;
 
@@ -65,8 +55,8 @@ namespace BiometricFaceApi.Repositories
                 {
                     jigModel.LastUpdated = lastUpdated;
 
-                    // Atualiza se já existir
-                    await _oraConnector.SaveData(SQLScripts.UpdateJig, jigModel);
+                   
+                    await _oraConnector.SaveData(SQLScripts.JigQueries.UpdateJig, jigModel);
                     if (_oraConnector.Error != null)
                         throw new Exception($"Erro durante o update: {_oraConnector.Error}");
 
@@ -77,8 +67,8 @@ namespace BiometricFaceApi.Repositories
                     jigModel.Created = created;
                     jigModel.LastUpdated = lastUpdated;
 
-                    // Insere se não existir
-                    await _oraConnector.SaveData<JigModel>(SQLScripts.InsertJig, jigModel);
+                    
+                    await _oraConnector.SaveData<JigModel>(SQLScripts.JigQueries.InsertJig, jigModel);
                     if (_oraConnector.Error != null)
                         throw new Exception($"Erro durante o insert: {_oraConnector.Error}");
 
@@ -93,7 +83,6 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception($"Erro durante o AddOrUpdate: {ex.Message}", ex);
             }
         }
-
         public async Task<bool> DeleteAsync(int id)
         {
             try
@@ -102,7 +91,7 @@ namespace BiometricFaceApi.Repositories
                 if (jigDel == null)
                     return false; // Já deletado ou não encontrado
 
-                await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteJig, new { id });
+                await _oraConnector.SaveData<dynamic>(SQLScripts.JigQueries.DeleteJig, new { id });
                 if (_oraConnector.Error != null)
                     throw new Exception($"Erro durante o delete: {_oraConnector.Error}");
 
@@ -114,10 +103,9 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception($"Erro no Delete: {ex.Message}", ex);
             }
         }
-
-        public async Task<JigModel?> GetJigSerialNumberAsync(string serialNumber)
+        public async Task<JigModel?> GetJigSerialNumberAsync(string serialNumberJig)
         {
-            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.GetjigBySerialNumber, new { serialNumber });
+            var result = await _oraConnector.LoadData<JigModel, dynamic>(SQLScripts.JigQueries.GetjigBySerialNumber, new { serialNumberJig });
             return result.FirstOrDefault();
         }
     }

@@ -86,6 +86,12 @@
   margin-left: 14px;
 }
 
+:where(.css-nqoqt9).ant-btn.ant-btn-round.ant-btn-sm {
+  border-radius: 0px;
+  padding-inline-start: 0px;
+  padding-inline-end: 10px;
+}
+
 /* .cell-group {
   display: flex;
   justify-content: space-around;
@@ -120,6 +126,8 @@
   justify-items: center;
   align-items: center;
   width: 200px; /* Ajuste conforme necessário */
+  margin-right: 150px;
+  margin-bottom: 70px;
 }
 
 .triangle-layout .top-cell {

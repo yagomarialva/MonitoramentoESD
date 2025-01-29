@@ -12,7 +12,7 @@ namespace BiometricFaceApi.SqlInterceptor
             CancellationToken cancellationToken = default)
         {
             command.CommandText = command.CommandText.Replace('"'.ToString(), string.Empty);
-            command.CommandText = command.CommandText.Replace("\n", " ");
+            command.CommandText = command.CommandText.Replace("  ", " ");
 
             foreach (var param in command.Parameters)
             {

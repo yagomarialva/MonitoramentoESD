@@ -40,7 +40,7 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Retorna todos os registros de produção.
         /// </summary>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("TodaProducao")]
         public async Task<IActionResult> GetAllProduction()
         {
@@ -51,7 +51,7 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Busca dados de produção pelo ID.
         /// </summary>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("BuscarProducao/{id}")]
         public async Task<IActionResult> GetProductionById(int id)
         {
@@ -62,7 +62,7 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Cadastra ou atualiza dados de produção.
         /// </summary>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("AdicionarProducao")]
         public async Task<IActionResult> AddOrUpdateProduction([FromBody] ProduceActivityModel model)
         {
@@ -73,7 +73,7 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Altera o status de produção.
         /// </summary>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("ChangeStatus")]
         public async Task<IActionResult> ChangeProductionStatus(int id, bool status, string? description)
         {
@@ -85,7 +85,7 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Deleta um registro de produção pelo ID.
         /// </summary>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("DeleteProducao/{id}")]
         public async Task<IActionResult> DeleteProduction(int id)
         {

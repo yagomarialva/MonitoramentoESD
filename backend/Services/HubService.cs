@@ -79,7 +79,6 @@ namespace BiometricFaceApi.Services
                 await _hubConnection.StopAsync();
             }
         }
-
         public async void Dispose()
         {
             await StopListeningAsync();

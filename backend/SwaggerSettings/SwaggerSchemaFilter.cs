@@ -14,9 +14,13 @@ namespace BiometricFaceApi.SwaggerSettings
             {
                 return;
             }
-            var ignoreDataMemberProperties = context.Type.GetProperties()
-                .Where(t => t.GetCustomAttribute<IgnoreDataMemberAttribute>() != null || t.GetCustomAttribute<SwaggerIgnoreAttribute>() != null);
 
+            // Procura por propriedades com IgnoreDataMember ou SwaggerIgnore
+            var ignoreDataMemberProperties = context.Type.GetProperties()
+                .Where(t => t.GetCustomAttribute<IgnoreDataMemberAttribute>() != null ||
+                            t.GetCustomAttribute<SwaggerIgnoreAttribute>() != null);
+
+            // Remove propriedades que devem ser ocultadas
             foreach (var ignoreDataMemberProperty in ignoreDataMemberProperties)
             {
                 var propertyToHide = schema.Properties.Keys

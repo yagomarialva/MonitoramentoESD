@@ -57,7 +57,7 @@ namespace BiometricFaceApi.Repositories
                 error = null;
                 using (IDbConnection connection = new OracleConnection(this.ConnectionString))
                 {
-                    connection.Open(); //sincrono
+                    connection.Open();
                     await connection.ExecuteAsync(insertAdminUserQuery, value);
                 }
             }

@@ -37,6 +37,12 @@ namespace BiometricFaceApi.Services
             return result;
         }
 
+        public async Task<ImageModel?> GetEmbeddingAsync(string emebedding)
+        {
+            var result = await _imageRepository.GetByEmbeddingAsync(emebedding);
+            return result;
+        }
+
         // Retorna a imagem pelo ID do usuário
         public async Task<ImageModel?> GetImageByUserIdAsync(int userId)
         {
@@ -67,5 +73,5 @@ namespace BiometricFaceApi.Services
         }
     }
 
-   
+
 }

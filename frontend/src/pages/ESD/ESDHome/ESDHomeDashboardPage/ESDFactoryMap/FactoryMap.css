@@ -384,3 +384,13 @@ input[type=radio]#Red {
 .css-cij06z-MuiTypography-root {
   margin-left: 33px !important;
 }
+
+.view-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.data-view {
+  margin-top: 16px;
+}

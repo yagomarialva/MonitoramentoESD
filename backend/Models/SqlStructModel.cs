@@ -7,5 +7,6 @@
         public string? CommandToSequence { get; set; }
         public string? CommandToTrigger { get; set; }
         public string? CommandToPopulete { get; set; }
+        public string? CommandToTrigger1 { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using BiometricFaceApi.Models;
 using BiometricFaceApi.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BiometricFaceApi.Services
 {
@@ -13,13 +12,15 @@ namespace BiometricFaceApi.Services
         private readonly IStationRepository _stationRepository;
         private readonly LinkStationAndLineService _linkStationAndLineService;
         private readonly ILogMonitorEsdRepository _logMonitorEsdRepository;
+        private readonly ILastLogMonitorEsdRepository _lastLogMonitorRepository;
 
         public StationViewService(IStationViewRepository stationViewRepository,
                                   IMonitorEsdRepository monitorEsdRepository,
                                   ILinkStationAndLineRepository linkStationAndLineRepository,
                                   ILineRepository lineRepository,
                                   IStationRepository stationRepository,
-                                  ILogMonitorEsdRepository logMonitorEsdRepository)
+                                  ILogMonitorEsdRepository logMonitorEsdRepository,
+                                  ILastLogMonitorEsdRepository lastLogMonitorRepository)
         {
             _stationViewRepository = stationViewRepository;
             _monitorEsdRepository = monitorEsdRepository;
@@ -28,6 +29,7 @@ namespace BiometricFaceApi.Services
             _stationRepository = stationRepository;
             _linkStationAndLineService = new LinkStationAndLineService(linkStationAndLineRepository, stationRepository, lineRepository);
             _logMonitorEsdRepository = logMonitorEsdRepository;
+            _lastLogMonitorRepository = lastLogMonitorRepository;
         }
 
         public async Task<(object? Result, int StatusCode)> GetAllStationView()
@@ -44,7 +46,6 @@ namespace BiometricFaceApi.Services
                 return HandleException(ex);
             }
         }
-
         public async Task<(object? Result, int StatusCode)> GetStationViewById(int id)
         {
             try
@@ -59,7 +60,6 @@ namespace BiometricFaceApi.Services
                 return HandleException(ex);
             }
         }
-
         public async Task<(object? Result, int StatusCode)> Include(StationViewModel stationViewModel)
         {
             var allStation = await LoadAllStationViewsAsync();
@@ -88,7 +88,6 @@ namespace BiometricFaceApi.Services
                 return HandleIncludeException(ex);
             }
         }
-
         public async Task<(object? Content, int StatusCode)> Delete(int id)
         {
             try
@@ -114,7 +113,6 @@ namespace BiometricFaceApi.Services
                 return HandleException(ex);
             }
         }
-
         public async Task<(object? Content, int StatusCode)> FactoryView()
         {
             try
@@ -131,7 +129,6 @@ namespace BiometricFaceApi.Services
                 return HandleException(ex);
             }
         }
-
         private async Task<List<StationViewModel>> LoadAllStationViewsAsync()
         {
             var monitorEds = await _monitorEsdRepository.GetAllMonitorsAsync();
@@ -147,7 +144,6 @@ namespace BiometricFaceApi.Services
 
             return stationView;
         }
-
         private async Task<List<LineView>> LoadFactoryViewDataAsync()
         {
             // Carregar todos os dados de uma vez
@@ -156,7 +152,8 @@ namespace BiometricFaceApi.Services
             var linesAll = await _lineRepository.GetAllAsync();
             var stationsAll = await _stationRepository.GetAllAsync();
             var monitorsAll = await _monitorEsdRepository.GetAllMonitorsAsync();
-            var logMonitorAll = await _logMonitorEsdRepository.GetAllAsync();
+            var logMonitorAll = await _logMonitorEsdRepository.GetLogIncreasingForStationviewAsync();
+            var lastLogsMonitorAll = await _lastLogMonitorRepository.GetAllLastLogsAsync();
 
             // Converter listas para dicionários
             var linesById = linesAll.ToDictionary(line => line.ID);
@@ -164,7 +161,7 @@ namespace BiometricFaceApi.Services
             var monitorsById = monitorsAll.ToDictionary(monitor => monitor.ID);
 
             // Agrupar logs por tipo de mensagem para otimizar filtragem
-            var latestLogsByMonitor = logMonitorAll
+            var latestLogsByMonitor = lastLogsMonitorAll
                 .Where(log => log.MessageType.Contains("operador") || log.MessageType.Contains("jig"))
                 .GroupBy(log => new { log.MonitorEsdId, log.MessageType })
                 .Select(group => group.OrderByDescending(log => log.Created).FirstOrDefault())

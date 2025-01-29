@@ -22,7 +22,7 @@ namespace BiometricFaceApi.Controllers
         /// <returns>Uma lista de Jigs.</returns>
         /// <response code="200">Retorna a lista de Jigs.</response>
         /// <response code="500">Se ocorrer um erro interno do servidor.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("todosJigs")]
         public async Task<ActionResult> GetAllJigs()
         {
@@ -38,7 +38,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna o Jig.</response>
         /// <response code="404">Se o Jig não for encontrado.</response>
         /// <response code="500">Se ocorrer um erro interno do servidor.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("buscarJig/{id}")]
         public async Task<ActionResult> GetJigById(int id)
         {
@@ -54,7 +54,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna o Jig.</response>
         /// <response code="404">Se o Jig não for encontrado.</response>
         /// <response code="500">Se ocorrer um erro interno do servidor.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("buscarJigBySn/{serialNumber}")]
         public async Task<ActionResult> GetJigBySn(string serialNumber)
         {
@@ -70,7 +70,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="201">Retorna o Jig criado.</response>
         /// <response code="400">Se o modelo fornecido for nulo.</response>
         /// <response code="500">Se ocorrer um erro interno do servidor.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("gerenciarJigs")]
         public async Task<ActionResult> Include([FromBody] JigModel model)
         {
@@ -87,7 +87,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="404">Se o Jig não for encontrado.</response>
         /// 
         /// <response code="500">Se ocorrer um erro interno do servidor.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("deleteJigs/{id}")]
         public async Task<ActionResult> Delete(int id)
         {

@@ -28,7 +28,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna todos os links.</response>
         /// <response code="404">Nenhum link encontrado.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("todosLinks")]
         public async Task<ActionResult> BuscarTodos()
         {
@@ -42,7 +42,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna o link buscado.</response>
         /// <response code="404">Link não encontrado.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("{id}")]
         public async Task<ActionResult> BuscarPorId(int id)
         {
@@ -56,7 +56,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna os links da linha.</response>
         /// <response code="404">Linha não encontrada.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("linksPorLinha/{id}")]
         public async Task<ActionResult> LinksPorLinha(int id)
         {
@@ -70,7 +70,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna os links da estação.</response>
         /// <response code="404">Estação não encontrada.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("linksPorEstacao/{id}")]
         public async Task<ActionResult> LinksPorEstacao(int id)
         {
@@ -83,7 +83,7 @@ namespace BiometricFaceApi.Controllers
         /// </summary>
         /// <response code="201">Link criado com sucesso.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("incluir")]
         public async Task<ActionResult> Incluir([FromBody] LinkStationAndLineModel model)
         {
@@ -96,7 +96,7 @@ namespace BiometricFaceApi.Controllers
         /// </summary>
         /// <response code="200">Link deletado com sucesso.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Deletar(int id)
         {

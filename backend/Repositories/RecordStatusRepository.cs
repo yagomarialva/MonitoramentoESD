@@ -18,7 +18,7 @@ namespace BiometricFaceApi.Repositories
         {
             try
             {
-                return await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetAllRecordStatus, new { });
+                return await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.RecordStatusProduceQueries.GetAllRecordStatus, new { });
             }
             catch (Exception ex)
             {
@@ -26,12 +26,11 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception("\"Erro ao buscar todos os status registro.", ex);
             }
         }
-
         public async Task<RecordStatusProduceModel?> GetByIdAsync(int id)
         {
             try
             {
-                var result = await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetRecordStatusById, new { id });
+                var result = await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.RecordStatusProduceQueries.GetRecordStatusById, new { id });
                 return result.FirstOrDefault();
             }
             catch (Exception ex)
@@ -39,12 +38,11 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception($"Erro ao buscar status registro com ID {id}.", ex);
             }
         }
-
         public async Task<RecordStatusProduceModel?> GetByProduceActivityIdAsync(int produceActivityId)
         {
             try
             {
-                var result = await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetRecordProduceActId, new { produceActivityId });
+                var result = await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.RecordStatusProduceQueries.GetRecordProduceActId, new { produceActivityId });
                 return result.FirstOrDefault();
             }
             catch (Exception ex)
@@ -52,12 +50,11 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception($"Erro ao  buscar status de registro para  atividade de produção com o ID {produceActivityId}.", ex);
             }
         }
-
         public async Task<RecordStatusProduceModel?> GetByUserIdAsync(int userId)
         {
             try
             {
-                var result = await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.GetRecordProduceUserId, new { userId });
+                var result = await _oraConnector.LoadData<RecordStatusProduceModel, dynamic>(SQLScripts.RecordStatusProduceQueries.GetRecordProduceUserId, new { userId });
                 return result.FirstOrDefault();
             }
             catch (Exception ex)
@@ -65,8 +62,6 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception($"Erro ao buscar status do resgistro para o ID de usuário {userId}.", ex);
             }
         }
-
-
         public async Task<RecordStatusProduceModel?> AddOrUpdateAsync(RecordStatusProduceModel recordModel)
         {
             if (recordModel == null) throw new ArgumentNullException(nameof(recordModel));
@@ -77,15 +72,15 @@ namespace BiometricFaceApi.Repositories
             {
                 if (recordModel.ID > 0)
                 {
-                    // Update record
+                   
                     recordModel.DateEvent = DateTimeHelperService.GetManausCurrentDateTime();
-                    await _oraConnector.SaveData<RecordStatusProduceModel>(SQLScripts.UpdateRecordStatusProduce, recordModel);
+                    await _oraConnector.SaveData<RecordStatusProduceModel>(SQLScripts.RecordStatusProduceQueries.UpdateRecordStatusProduce, recordModel);
                 }
                 else
                 {
-                    // Insert new record
+                    
                     recordModel.DateEvent = DateTimeHelperService.GetManausCurrentDateTime();
-                    await _oraConnector.SaveData<RecordStatusProduceModel>(SQLScripts.InsereRecordStatusProduce, recordModel);
+                    await _oraConnector.SaveData<RecordStatusProduceModel>(SQLScripts.RecordStatusProduceQueries.InsertRecordStatusProduce, recordModel);
                 }
 
                 if (_oraConnector.Error != null)
@@ -100,8 +95,6 @@ namespace BiometricFaceApi.Repositories
                 throw new Exception($"Erro ao salvar o status do registro com ID: {recordModel.ID}", ex);
             }
         }
-
-
         public async Task<RecordStatusProduceModel> DeleteAsync(int id)
         {
             try
@@ -112,7 +105,7 @@ namespace BiometricFaceApi.Repositories
                     throw new KeyNotFoundException($"Registro com ID {id} não encontrado.");
                 }
 
-                await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteRecordStatusProduce, new { id });
+                await _oraConnector.SaveData<dynamic>(SQLScripts.RecordStatusProduceQueries.DeleteRecordStatusProduce, new { id });
 
                 return recordToDelete;
             }

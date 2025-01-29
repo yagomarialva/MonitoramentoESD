@@ -11,10 +11,13 @@ namespace BiometricFaceApi.Models
 
         [Column("USERID")]
         public int UserId { get; set; }
-        public virtual UserModel? User { get; set; }
+       
 
         [Column("PICTURESTREAM")]
         public byte[]? PictureStream { get; set; }
+
+        [Column ("EMBEDDING")]
+        public string? Embedding {  get; set; }
 
         [Column("CREATED")]
         public DateTime Created { get; set; }
@@ -55,6 +58,9 @@ namespace BiometricFaceApi.Models
                 return string.Empty;
             }
         }
+
+        //Propriedades de navegação
+        public virtual UserModel? User { get; set; }
     }
 }
 

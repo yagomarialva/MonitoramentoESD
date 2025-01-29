@@ -216,36 +216,6 @@ export default function RealTimeLogTable({
   };
 
   return (
-    // <Card
-    //   title={
-    //     <div className="card-title-container">
-    //       {/* <span>{tipo === "operador" ? "Operador" : "Jig"}</span> */}
-    //       {getLastLogStatus()}
-    //     </div>
-    //   }
-    //   className="card-container"
-    // >
-    //   {error && (
-    //     <Alert
-    //       message="Error"
-    //       description={error}
-    //       type="error"
-    //       showIcon
-    //       className="error-alert"
-    //     />
-    //   )}
-    //   <Table
-    //     columns={columns}
-    //     dataSource={filteredLogs}
-    //     rowKey={(record, index) => index!.toString()}
-    //     pagination={{
-    //       pageSize: 5,
-    //       showSizeChanger: false,
-    //       pageSizeOptions: [],
-    //     }}
-    //     scroll={{ y: 600 }}
-    //   />
-    // </Card>
     <Card
       title={
         <div className="card-title-container">
@@ -283,7 +253,6 @@ export default function RealTimeLogTable({
           showSizeChanger: false,
           pageSizeOptions: [],
         }}
-        scroll={{ y: 600 }}
       />
     </Card>
   );

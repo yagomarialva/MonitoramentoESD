@@ -1,7 +1,8 @@
 ﻿using BiometricFaceApi.Models;
+using BiometricFaceApi.Repositories.Interfaces;
 using Newtonsoft.Json.Linq;
-using System.Net.Http.Headers;
 using System.Text.Json;
+using JsonException = Newtonsoft.Json.JsonException;
 
 namespace BiometricFaceApi.Services
 {
@@ -10,11 +11,15 @@ namespace BiometricFaceApi.Services
         private readonly UserService _userService;
         private readonly ImageService _imageService;
         private readonly JigService _jigService;
-        public BiometricService(UserService userService, ImageService imageService, JigService jigService)
+        private readonly StatusJigAndUserService _statusJigAndUserService;
+        private readonly ILastLogMonitorEsdRepository _lastLogMonitorEsdRepository;
+        public BiometricService(UserService userService, ImageService imageService, JigService jigService, StatusJigAndUserService statusJigAndUserService, ILastLogMonitorEsdRepository lastLogMonitorEsdRepository)
         {
             _userService = userService;
             _imageService = imageService;
             _jigService = jigService;
+            _statusJigAndUserService = statusJigAndUserService;
+            _lastLogMonitorEsdRepository = lastLogMonitorEsdRepository;
         }
         // Gerenciar operadores (atualizar ou inserir)
         public async Task<(object?, int)> ManageOperatorAsync(BiometricModel biometric)
@@ -43,6 +48,21 @@ namespace BiometricFaceApi.Services
         }
         private async Task<(object?, int)> UpdateExistingOperatorAsync(UserModel existingUser, UserModel user, ImageModel image, BiometricModel biometric)
         {
+            // Verifica se a imagem e seu stream estão preenchidos corretamente
+            if (image == null || image.PictureStream == null)
+            {
+                return ("Imagem inválida ou não carregada", StatusCodes.Status400BadRequest);
+            }
+
+            var url = "http://10.58.72.188:5000/embedding/";
+
+            image.Embedding = (await GetApiResponseAsync(url, image))?.Replace("  ", "").Replace(" ", "");
+
+            if (string.IsNullOrEmpty(image.Embedding))
+            {
+                return ("Falha ao obter embedding da imagem", StatusCodes.Status400BadRequest);
+            }
+
             image.UserId = existingUser.ID;
 
             var existingImage = await _imageService.GetImageByUserIdAsync(existingUser.ID);
@@ -63,14 +83,29 @@ namespace BiometricFaceApi.Services
                 ID = existingUser.ID,
                 Badge = biometric.Badge,
                 Name = biometric.Name,
-                Stream = image.PictureStream
+                Stream = image.PictureStream,
+                Embedding = image.Embedding
             };
 
             return (updatedBiometric, StatusCodes.Status200OK);
         }
         private async Task<(object?, int)> InsertNewOperatorAsync(UserModel user, ImageModel image, BiometricModel biometric)
         {
+            var url = "http://10.58.72.188:5000/embedding/";
+
+            if (image != null && image.PictureStream != null)
+            {
+                // Obtém o embedding da imagem
+                image.Embedding = (await GetApiResponseAsync(url, image))?.Replace("  ", "").Replace(" ", "");
+
+                // Verifica se o embedding foi gerado corretamente
+                if (string.IsNullOrEmpty(image.Embedding))
+                {
+                    return ("Falha ao obter embedding da imagem", StatusCodes.Status400BadRequest);
+                }
+            }
             var newUser = await _userService.AddUserAsync(user);
+
             if (newUser != null)
             {
                 image.UserId = newUser.ID;
@@ -81,7 +116,8 @@ namespace BiometricFaceApi.Services
                     ID = newUser.ID,
                     Badge = biometric.Badge,
                     Name = biometric.Name,
-                    Stream = image.PictureStream
+                    Stream = image.PictureStream,
+                    Embedding = image.Embedding
                 };
 
                 return (newBiometric, StatusCodes.Status201Created);
@@ -107,6 +143,24 @@ namespace BiometricFaceApi.Services
                 Stream = image?.PictureStream
             };
         }
+        //Pesquisa por Caracteristica
+        //public async Task<BiometricModel> GetEmbedding(string embedding)
+        //{
+        //    if (string.IsNullOrEmpty(embedding))
+        //    {
+        //        throw new ArgumentNullException(nameof(embedding), "O parâmetro 'embedding' não pode ser nulo ou vazio.");
+        //    }
+        //    var image = await _imageService.GetEmbeddingAsync(embedding);
+        //    if (image == null)
+        //        throw new KeyNotFoundException("Imagem não encontrado");
+
+        //    return new BiometricModel
+        //    {
+
+        //        Stream = image?.PictureStream,
+        //        Embedding = image?.Embedding
+        //    };
+        //}
         public async Task<(object?, int)> GetUsersPaginatedAsync(int page, int pageSize)
         {
             var users = await _userService.GetListUsersAsync(page, pageSize); // Obtenha os usuários paginados
@@ -247,106 +301,188 @@ namespace BiometricFaceApi.Services
                 return ($"Erro ao excluir o usuário: {ex.Message}", StatusCodes.Status400BadRequest);
             }
         }
-
-        public async Task<(object? photo, int personId, JigModel? jig)> Verify(IFormFile imageFile, string serial)
+        private async Task<string?> GetApiResponseAsync(string url, ImageModel image)
         {
-            // Verifica se o Jig existe no banco de dados
-            var jig = await _jigService.GetSerialNumberAsync(serial);
-
-            if (jig == null)
+            try
             {
-                return (null, 0, null); // Se não encontrar o jig, retorna nulo e 0
+                using (HttpClient client = new HttpClient())
+                {
+                    using (var content = new MultipartFormDataContent())
+                    {
+                        var imageContent = new ByteArrayContent(image.PictureStream);
+                        imageContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+                        content.Add(imageContent, "file", "imag.jpeg");
+                        var response = await client.PostAsync(url, content);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var contentResponse = await response.Content.ReadAsStringAsync();
+                            var jobject = JObject.Parse(contentResponse);
+                            var data = jobject["data"]?.ToString();
+
+
+                            // Retornar o conteúdo da resposta como string
+                            return data;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao chamar a API: {ex.Message}");
+                return null;
+            }
+        }
+        private async Task<string?> GetApiResponseFaceRecognitionAsync(string url, ImageModel image)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    using (var content = new MultipartFormDataContent())
+                    {
+                        var imageContent = new ByteArrayContent(image.PictureStream);
+                        imageContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+                        content.Add(imageContent, "file", "imag.jpeg");
+                        var response = await client.PostAsync(url, content);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var contentResponse = await response.Content.ReadAsStringAsync();
+                            return contentResponse;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao chamar a API: {ex.Message}");
+                return null;
+            }
+        }
+        public async Task<(int personId, JigModel? jig, UserModel? user, int? statusJig, int? statusUser)> Verify(IFormFile imageFile, string serial)
+        {
+            // Valida se o número de série é válido
+            var jig = await _jigService.GetSerialNumberAsync(serial);
+            if (jig == null || string.IsNullOrEmpty(jig.SerialNumberJig))
+            {
+                return (0, null, null, 0, 0);
             }
 
-            // Converte o arquivo da imagem para stream
-            byte[] imageData;
+            var lasLogMonitor = await _lastLogMonitorEsdRepository.GetJigByIdLastLogsAsync(jig.ID);
+            if (lasLogMonitor == null)
+            {
+                return (0, null, null, 0, 0);
+            }
+
+            // Converte a imagem para byte array
+            byte[] imageBytes;
             using (var memoryStream = new MemoryStream())
             {
                 await imageFile.CopyToAsync(memoryStream);
-                imageData = memoryStream.ToArray();
+                imageBytes = memoryStream.ToArray();
             }
 
-            HttpClient client = new HttpClient();
-            var url = "http://example.com/ffdfffd/fdf"; // Altere para a URL correta
+            var image = new ImageModel { PictureStream = imageBytes };
 
-            using (var content = new MultipartFormDataContent())
+            // URL da API de reconhecimento facial
+            var url = "http://10.58.72.188:5000/verify/";
+
+            // Chama a API de reconhecimento facial
+            var responseData = await GetApiResponseFaceRecognitionAsync(url, image);
+
+            if (string.IsNullOrEmpty(responseData))
             {
-                // Cria o ByteArrayContent a partir da imagem
-                var fotoContent = new ByteArrayContent(imageData);
-                fotoContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg"); // Altere o tipo de mídia conforme necessário
-
-                // Adiciona o conteúdo da foto ao formulário
-                content.Add(fotoContent, "foto", imageFile.FileName); // O terceiro parâmetro é o nome do arquivo
-                content.Add(new StringContent(serial), "serial");
-
-                // Envia a requisição POST
-                var response = await client.PostAsync(url, content);
-
-                // Verifica a resposta
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseData = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("Resposta: " + responseData);
-
-                    // Aqui você pode fazer o processamento da resposta da API de reconhecimento facial
-                    // Exemplo (ajuste conforme a estrutura da resposta):
-                    var personId = ExtractPersonId(responseData); // Método fictício para extrair ID da pessoa da resposta
-                    var photo = ExtractPhoto(responseData);       // Método fictício para extrair a foto processada
-
-                    // Retorna a foto e o ID da pessoa reconhecida
-                    return (photo, personId, jig);
-                }
-                else
-                {
-                    Console.WriteLine($"Erro ao enviar a foto: {response.StatusCode}");
-                }
+                Console.WriteLine("Erro ao obter resposta da API.");
+                return (0, null, null, 0, 0);
             }
 
-            return (null, 0, jig); // Retorne nulo e 0 se não houver foto ou se não encontrar a pessoa
-        }
+            // Processa a resposta da API para extrair o ID da pessoa e a foto
+            var personId = ExtractPersonId(responseData); // Obtém o personId da resposta da API
+            if (personId == 0)
+            {
+                return (0, null, null, 0, 0); // Retorna null se o reconhecimento falhou
+            }
 
-        // Método fictício para extrair o ID da pessoa da resposta da API
+            // Busca o usuário pelo personId
+            var user = await _userService.GetUserByIdAsync(personId);
+            if (user == null)
+            {
+                return (0, null, null, 0, 0);
+            }
+            var monitor = 0;
+            var status = await _statusJigAndUserService.GetCurrentStatusAsync(monitor, personId, jig.ID);
+            var statusJig = status?.MessageType == "jig" ? status.Status : 0;
+            var statusUser = status?.MessageType == "operador" ? status.Status : 0;
+
+            // Retorna o resultado com o personId, foto, jig e o usuário
+            return (personId, jig, user, statusJig, statusUser);
+        }
         private int ExtractPersonId(string responseData)
         {
             try
             {
-                // Converte a string JSON para um objeto JsonDocument
-                using (JsonDocument doc = JsonDocument.Parse(responseData))
+                using (JsonDocument jsonDocument = JsonDocument.Parse(responseData))
                 {
-                    // Navega até o valor de "personId"
-                    var root = doc.RootElement;
-                    var personId = root.GetProperty("data").GetProperty("personId").GetInt32();
-                    return personId;
+                    var root = jsonDocument.RootElement;
+
+                    // Verifica se a propriedade "userId" existe
+                    if (root.TryGetProperty("userId", out JsonElement userIdElement))
+                    {
+                        // Se o "userId" for numérico, retorna seu valor
+                        if (userIdElement.ValueKind == JsonValueKind.Number)
+                        {
+                            return userIdElement.GetInt32();
+                        }
+                        // Caso o "userId" seja uma string, tenta convertê-la para int
+                        else if (userIdElement.ValueKind == JsonValueKind.String &&
+                                 int.TryParse(userIdElement.GetString(), out int personId))
+                        {
+                            return personId;
+                        }
+                    }
+
+                    Console.WriteLine("Propriedade 'userId' ausente ou inválida.");
+                    return 0; // Retorna 0 se não encontrar o userId ou se for inválido
                 }
             }
             catch (JsonException ex)
             {
                 Console.WriteLine($"Erro ao processar JSON: {ex.Message}");
-                return 0; // Retorna 0 caso não consiga extrair o personId
+                return 0;
             }
         }
-
-        // Método fictício para extrair a foto da resposta da API
         private object ExtractPhoto(string responseData)
         {
             try
             {
-                // Converte a string JSON para um objeto JObject
-                JObject jsonResponse = JObject.Parse(responseData);
 
-                // Acessa o valor da propriedade "photo" dentro de "data"
-                string photoBase64 = (string)jsonResponse["data"]["photo"];
+                JObject converteStringParaObjtJson = JObject.Parse(responseData);
 
-                // Decodifica a string base64 em um array de bytes
-                byte[] photoBytes = Convert.FromBase64String(photoBase64);
+                string acessaValorDaPropriedadePhotoDentroDeData = (string)converteStringParaObjtJson["data"]["photo"];
 
-                // Retorna os bytes da foto
-                return photoBytes; // Retorna os bytes da foto
+                byte[] bytesDaFotoBase64 = Convert.FromBase64String(acessaValorDaPropriedadePhotoDentroDeData);
+
+                return bytesDaFotoBase64;
             }
             catch (JsonException ex)
             {
                 Console.WriteLine($"Erro ao processar JSON: {ex.Message}");
-                return null; // Retorna null caso não consiga extrair a foto
+                return null;
             }
         }
     }

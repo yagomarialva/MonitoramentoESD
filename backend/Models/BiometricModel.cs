@@ -1,6 +1,8 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 
@@ -18,6 +20,11 @@ namespace BiometricFaceApi.Models
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [RegularExpression("^[a-zA-Z0-9]{1,255}$", ErrorMessage = "O Badge deve conter apenas letras e números.")]
         public string? Badge { get; set; }
+
+       
+        [SwaggerIgnore]
+        public string? Embedding { get; set; }
+
 
         [NotMapped,JsonIgnore]
         public IFormFile? Image { get; set; }

@@ -28,11 +28,10 @@ namespace BiometricFaceApi.Repositories
             password = password.Trim();
 
             var result = await _oraConnector.LoadData<AuthenticationModel, dynamic>(
-                SQLScripts.AuthenticateUser, new { username, password });
+                SQLScripts.AuthenticationQueries.AuthenticateUser, new { username, password });
 
             return result.FirstOrDefault();
         }
-
         public async Task<AuthenticationModel?> GetByIdAsync(int id)
         {
             if (id <= 0)
@@ -41,11 +40,10 @@ namespace BiometricFaceApi.Repositories
             }
 
             var result = await _oraConnector.LoadData<AuthenticationModel, dynamic>(
-                SQLScripts.GetAuthenticationById, new { id });
+                SQLScripts.AuthenticationQueries.GetAuthenticationById, new { id });
 
             return result.FirstOrDefault();
         }
-
         public async Task<AuthenticationModel?> GetByUsernameAsync(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
@@ -54,19 +52,17 @@ namespace BiometricFaceApi.Repositories
             }
 
             var result = await _oraConnector.LoadData<AuthenticationModel, dynamic>(
-                SQLScripts.GetAuthenticationByUserName, new { username });
+                SQLScripts.AuthenticationQueries.GetAuthenticationByUserName, new { username });
 
             return result.FirstOrDefault();
         }
-
         public async Task<AuthenticationModel?> GetByBadgeAsync(string? badge)
         {
             var result = await _oraConnector.LoadData<AuthenticationModel, dynamic>(
-                SQLScripts.GetAuthenticationByBadge, new { badge });
+                SQLScripts.AuthenticationQueries.GetAuthenticationByBadge, new { badge });
 
             return result.FirstOrDefault();
         }
-
         public async Task<AuthenticationModel?> AddAsync(AuthenticationModel userAuth)
         {
             if (userAuth == null)
@@ -75,12 +71,11 @@ namespace BiometricFaceApi.Repositories
             }
             userAuth.Created = DateTimeHelperService.GetManausCurrentDateTime();
             userAuth.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
-            await _oraConnector.SaveData<AuthenticationModel>(SQLScripts.InsertAuthentication, userAuth);
+            await _oraConnector.SaveData<AuthenticationModel>(SQLScripts.AuthenticationQueries.InsertAuthentication, userAuth);
             CheckForErrors();
 
             return await GetByUsernameAsync(userAuth.Username);
         }
-
         public async Task<AuthenticationModel?> UpdateAsync(AuthenticationModel userAuth, int id)
         {
             if (userAuth == null)
@@ -95,13 +90,12 @@ namespace BiometricFaceApi.Repositories
             }
             userAuth.ID = existingAuth.ID;
             userAuth.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
-            await _oraConnector.SaveData<AuthenticationModel>(SQLScripts.UpdateAuthentication, userAuth);
+            await _oraConnector.SaveData<AuthenticationModel>(SQLScripts.AuthenticationQueries.UpdateAuthentication, userAuth);
             CheckForErrors();
 
              // Guarda o ID original
             return userAuth;
         }
-
         public async Task<AuthenticationModel?> DeleteAsync(int id)
         {
             var authToDelete = await GetByIdAsync(id);
@@ -110,12 +104,11 @@ namespace BiometricFaceApi.Repositories
                 throw new KeyNotFoundException($"Usuário com ID: {id} não foi encontrado no banco de dados.");
             }
 
-            await _oraConnector.SaveData<dynamic>(SQLScripts.DeleteAuthentication, new { id });
+            await _oraConnector.SaveData<dynamic>(SQLScripts.AuthenticationQueries.DeleteAuthentication, new { id });
             CheckForErrors();
 
             return authToDelete;
         }
-
         private void CheckForErrors()
         {
             if (_oraConnector.Error != null)

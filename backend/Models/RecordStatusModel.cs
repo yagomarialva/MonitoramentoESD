@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace BiometricFaceApi.Models
 {
@@ -15,15 +16,10 @@ namespace BiometricFaceApi.Models
         [Column("PRODUCEACTIVITYID")]
         public int ProduceActivityId { get; set; }
         
-        [IgnoreDataMember]
-        public virtual ProduceActivityModel? ProduceActivity { get; set; }
-
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [RegularExpression("^(?!\\s*$)[a-zA-Z0-9]+$", ErrorMessage = "O UserId deve conter apenas letras e números e não pode ser vazio ou conter apenas espaços em branco")]
         [Column("USERID")]
         public int UserId { get; set; }
-        [IgnoreDataMember]
-        public virtual UserModel? User { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(250, ErrorMessage = "O Description deve ter no máximo 250 caracteres")]
@@ -36,5 +32,13 @@ namespace BiometricFaceApi.Models
         [Column("DATEEVENT")]
         public DateTime? DateEvent { get; set; }
 
+        //Propriedades de navegação
+
+        [IgnoreDataMember]
+        public virtual ProduceActivityModel? ProduceActivity { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [IgnoreDataMember]
+        public virtual UserModel? User { get; set; }
     }
 }

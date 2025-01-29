@@ -18,7 +18,8 @@ namespace BiometricFaceApi.Controllers
             ILinkStationAndLineRepository linkStationAndLineRepository,
             IStationRepository stationRepository,
             ILineRepository lineRepository,
-            ILogMonitorEsdRepository logMonitorEsdRepository)
+            ILogMonitorEsdRepository logMonitorEsdRepository,
+            ILastLogMonitorEsdRepository lastLogMonitorEsdRepository)
         {
             _stationViewService = new StationViewService(
                 stationViewRepository,
@@ -26,7 +27,8 @@ namespace BiometricFaceApi.Controllers
                 linkStationAndLineRepository,
                 lineRepository,
                 stationRepository,
-                logMonitorEsdRepository);
+                logMonitorEsdRepository,
+                lastLogMonitorEsdRepository);
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna todos.</response>
         /// <response code="404">Nenhuma estação encontrada.</response>
         /// <response code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("todasEstacaoView")]
         public async Task<ActionResult> BuscarTodos()
         {
@@ -50,7 +52,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Retorna Estação View por Id.</response>
         /// <response code="404">Estação View não encontrada.</response>
         /// <response code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("BuscarEstacaoView/{id}")]
         public async Task<ActionResult> BuscarIdEstacaoView(int id)
         {
@@ -66,7 +68,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="201">Dados cadastrados com sucesso.</response>
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("adicionarEstacaoView")]
         public async Task<ActionResult> Include(StationViewModel model)
         {
@@ -93,7 +95,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Dados removidos do banco de dados.</response>
         /// <response code="404">Estação View não encontrada.</response>
         /// <response code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("deleteStationView/{id}")]
         public async Task<ActionResult> Delete(int id)
         {

@@ -59,6 +59,7 @@ namespace BiometricFaceApi.Repositories
                 await ExecuteCommandAsync(command, table.CommandToCreateTable);
                 await ExecuteCommandAsync(command, table.CommandToSequence);
                 await ExecuteCommandAsync(command, table.CommandToTrigger);
+                await ExecuteCommandAsync(command, table.CommandToTrigger1);
                 await ExecuteCommandAsync(command, table.CommandToPopulete);
             }
 

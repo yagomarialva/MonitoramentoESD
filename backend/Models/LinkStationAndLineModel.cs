@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace BiometricFaceApi.Models
 {
@@ -13,15 +14,23 @@ namespace BiometricFaceApi.Models
         public int OrdersList { get; set; }
         [Column("LINEID")]
         public int LineID { get; set; }
-        [IgnoreDataMember]
-        public virtual LineModel? Line { get; set; }
+
         [Column("STATIONID")]
         public int StationID { get; set; }
-        [IgnoreDataMember]
-        public virtual StationModel? Station { get; set; }
+
         [Column("CREATED")]
         public DateTime? Created { get; set; }
         [Column("LASTUPDATED")]
         public DateTime? LastUpdated { get; set; }
+
+        //Propriedades de navegação
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [IgnoreDataMember]
+        public virtual StationModel? Station { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [IgnoreDataMember]
+        public virtual LineModel? Line { get; set; }
     }
 }

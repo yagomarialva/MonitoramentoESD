@@ -190,6 +190,12 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       }));
 
       setLogs((prevLogs) => [log, ...prevLogs].slice(0, 100));
+      if (log.status === 0) {
+        showAlert(
+          `Erro no monitor ${log.serialNumberEsp}: ${log.messageType}`,
+          "error"
+        );
+      }
     });
 
     return () => {
@@ -197,7 +203,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     };
   }, []);
 
-  const cells = new Array(4).fill(null);
+  const cells = new Array(16).fill(null);
 
   monitorsEsd.forEach((monitor) => {
     cells[monitor.positionSequence] = monitor;
@@ -267,8 +273,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     );
   };
 
-  const getStatusIcon = (status: string, isConnected: boolean) => {
-    if (!connectionStatus) return "#d9d9d9";
+  const getStatusIcon = (isConnected: boolean) => {
     return isConnected ? "#4caf50" : "#f44336";
   };
 
@@ -312,34 +317,20 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
               const group = cells.slice(groupIndex * 4, groupIndex * 4 + 4); // Agrupa 4 itens por vez
 
               return (
-                <div
-                  key={groupIndex}
-                  className={`cell-group ${
-                    groupIndex === 0 ? "triangle-layout" : "base-layout"
-                  }`}
-                >
+                <div key={groupIndex} className={`cell-group triangle-layout`}>
                   {group.map((cell, index) => (
                     <div
                       key={index}
-                      className={`icon-container ${
-                        groupIndex === 0 && index === 0
-                          ? "top-cell"
-                          : "base-cell"
-                      }`}
-                      onClick={() => handleCellClick(cell, index, stationEntry)}
+                      className={`icon-container ${index === 0 ? "top-cell" : "base-cell"}`}
+                      onClick={() => handleCellClick(cell, groupIndex * 4 + index, stationEntry)}
                     >
                       {cell ? (
                         <Tooltip title={cell.monitorsEsd.serialNumberEsp}>
-                          <div
-                            className="computer-icon"
-                            onClick={() => setModalVisible(true)}
-                          >
+                          <div className="computer-icon" onClick={() => setModalVisible(true)}>
                             <div className="status-indicators">
                               {getIconType(
                                 index === 0 ? "operador" : "jig",
-                                monitorStatuses[
-                                  cell.monitorsEsd.serialNumberEsp
-                                ] ?? false
+                                monitorStatuses[cell.monitorsEsd.serialNumberEsp] ?? false,
                               )}
                             </div>
                           </div>
@@ -357,7 +348,8 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
                     </div>
                   ))}
                 </div>
-              );
+              )
+    
             }
           )}
         </div>
@@ -404,6 +396,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
         open={openModal}
         handleClose={handleCloseModal}
         onSubmit={handleCreateMonitor}
+        type={selectedMonitor?.index === 0 ? "operador" : "jig"}
       />
     </>
   );

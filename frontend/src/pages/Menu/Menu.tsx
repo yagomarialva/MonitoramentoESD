@@ -186,7 +186,7 @@ const MenuComponent: React.FC<MenuProps> = ({ componentToShow }) => {
           </div>
         </Header>
         <Content style={{ margin: "20px" }}>
-          <Card style={{ overflow: "auto", minHeight: "500px" }}>
+          <Card className="main-card" style={{ overflow: "auto", minHeight: "500px" }}>
             {isLoading ? (
               <div className="loading-spinner">
                 <Spin size="large" />

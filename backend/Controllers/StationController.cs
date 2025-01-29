@@ -25,7 +25,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("todosEstacoes")]
         public async Task<IActionResult> GetAllStations()
@@ -42,7 +42,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("BuscarEstacao/{id}")]
         public async Task<IActionResult> GetStationById(int id)
@@ -59,7 +59,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("BuscarNomeEstacao/{name}")]
         public async Task<IActionResult> GetStationByName(string name)
@@ -77,7 +77,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpPost]
         [Route("adicionarEstacao")]
         public async Task<IActionResult> AddOrUpdateStation([FromBody] StationModel model)
@@ -94,7 +94,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="200">Remove dados do banco de dados.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas</response>
         /// <response  code="500">Erro do servidor interno!</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete]
         [Route("deleteEstação")]
         public async Task<IActionResult> DeleteStation(int id)

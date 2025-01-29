@@ -4,6 +4,7 @@ const url = '/api/StationView'
 export const getAllStationMapper = async () => {
   try {
     const { data } = await TokenApi.get(`${url}/factoryMap`);
+    console.log('data', data)
     return data;
   } catch (error) {
     console.error("Error fetching mapper:", error);

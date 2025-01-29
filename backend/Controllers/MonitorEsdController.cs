@@ -26,7 +26,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="404">Nenhum monitor encontrado.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("todosmonitores")]
         public async Task<ActionResult> BuscarTodos()
@@ -44,7 +44,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="404">Monitor não encontrado.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult> BuscarIdMonitor(int id)
@@ -52,24 +52,6 @@ namespace BiometricFaceApi.Controllers
             var (result, statusCode) = await _service.GetMonitorId(id);
             return StatusCode(statusCode, result);
         }
-
-        ///// <summary>
-        ///// Busca um monitor ESD por IP.
-        ///// </summary>
-        ///// <param name="ip">IP do monitor a ser buscado.</param>
-        ///// <returns>Retorna o monitor solicitado.</returns>
-        ///// <response code="200">Retorna o monitor encontrado.</response>
-        ///// <response code="404">Monitor não encontrado.</response>
-        ///// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        ///// <response code="500">Erro do servidor interno.</response>
-        //[Authorize(Roles = "administrador,desenvolvedor,tecnico")]
-        //[HttpGet]
-        //[Route("Pesquisa{ip}")]
-        //public async Task<ActionResult> BuscarIpMonitor(string ip)
-        //{
-        //    var (result, statusCode) = await _service.GetMonitorByIp(ip);
-        //    return StatusCode(statusCode, result);
-        //}
 
         /// <summary>
         /// Busca um monitor ESD por Serial Number.
@@ -80,7 +62,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="404">Monitor não encontrado.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("Pesquisa{serialNumber}")]
         public async Task<ActionResult> BuscarMonitorBySerialNumber(string serialNumber)
@@ -99,7 +81,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="400">Dados incorretos ou inválidos.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpPost]
         [Route("monitores")]
         public async Task<ActionResult> ManagerMonitor([FromBody] MonitorEsdModel model)
@@ -117,7 +99,7 @@ namespace BiometricFaceApi.Controllers
         /// <response code="404">Monitor não encontrado.</response>
         /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
         /// <response code="500">Erro do servidor interno.</response>
-        [Authorize(Roles = "administrador,desenvolvedor,tecnico")]
+       [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult> Delete(int id)
