@@ -1,12 +1,12 @@
 .list-items-buttons.selected {
-  background-color: #aec0af; /* Cor de fundo para o item selecionado */
-  color: #333; /* Cor do texto para o item selecionado */
+  background-color: #aec0af;
+  color: #333;
 }
 
-/* Opcional: cor para o subitem selecionado */
+
 .drawer-sublist .selected {
-  background-color: #aec0af; /* Cor de fundo para o subitem selecionado */
-  color: #333; /* Cor do texto para o subitem selecionado */
+  background-color: #aec0af;
+  color: #333;
 }
 
 .css-cveggr-MuiListItemIcon-root {
@@ -21,7 +21,7 @@
   margin-top: 13px;
   margin-left: -15px;
 }
-/* marginRight: 25, color: "#FFFFFF" */
+
 .itens-header {
   margin-right: -10px;
   color: '#FFFFFF';

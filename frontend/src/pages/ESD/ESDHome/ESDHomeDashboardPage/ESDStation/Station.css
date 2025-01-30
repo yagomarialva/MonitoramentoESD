@@ -6,8 +6,8 @@
   background-color: #f0f0f0;
   padding: 10px;
   border-radius: 5px;
-  height: 100px; /* Defina uma altura fixa para as células */
-  width: 100px;  /* Defina uma largura fixa para as células */
+  height: 100px;
+  width: 100px;
   margin-bottom: -12px;
 }
 
@@ -19,9 +19,9 @@
 }
 
 .status-point {
-  width: 10px; /* Largura do ponto */
-  height: 10px; /* Altura do ponto */
-  border-radius: 50%; /* Torna o ponto circular */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 
 
@@ -32,8 +32,8 @@
   background-color: #FF4848;
   padding: 10px;
   border-radius: 5px;
-  height: 100px; /* Defina uma altura fixa para as células */
-  width: 100px;  /* Defina uma largura fixa para as células */
+  height: 100px;
+  width: 100px;
   margin-bottom: -12px;
 }
 
@@ -59,8 +59,8 @@
 .add-icon {
   font-size: 24px;
   color: #bfbfbf;
-  width: 50px;
-  height: 50px;
+  width: 39px;
+  height: 38px;
   background-color: white;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
   display: flex;
@@ -109,7 +109,6 @@
   margin-bottom: 20px;
 }
 
-/* Posicionamento dos itens dentro do container amarelo */
 .triangle-layout .top-cell {
   grid-column: 2;
   grid-row: 1;
@@ -137,9 +136,8 @@
   background-color: #f0f0f0;
   padding: 10px;
   border-radius: 5px;
-  height: 100px;
-  width: 100px;
-  margin: 5px;
+  height: 76px;
+  width: 70px;
 }
 
 .icon-container.second-cell {
@@ -148,13 +146,13 @@
 
 .user-icon {
   position: absolute;
-  top: -42px; /* Ajuste conforme necessário */
+  top: -42px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
   color: #BFBFBF;
   font-size: 24px;
   background-color: white;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15); /* Sombra leve ao redor dos ícones */
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
 }
 

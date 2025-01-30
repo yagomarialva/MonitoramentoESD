@@ -1,14 +1,12 @@
 .container {
-  /* padding: 10px; */
   background-color: #f0f2f5;
-  position: relative; /* Para que o botão possa ser posicionado dentro desse container */
+  position: relative;
 }
 
 h1 {
   margin-top: 14px !important;
-  font-size: 24px !important; /* Define o tamanho da fonte para 24 pixels */
+  font-size: 24px !important;
 }
-
 
 .container-title {
   display: flex;
@@ -16,14 +14,14 @@ h1 {
   padding: 10px;
   background-color: #f0f2f5;
   font-family: "Roboto", sans-serif;
-  position: relative; /* Para que o botão possa ser posicionado dentro desse container */
+  position: relative;
 }
 
 .line-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* Espaço entre as linhas */
-  justify-content: center; /* Centraliza as linhas na tela */
+  gap: 10px;
+  justify-content: center;
   padding: 10px;
 }
 
@@ -39,15 +37,14 @@ h1 {
   align-items: center;
 }
 
-
 .add-button-container {
   display: flex;
   margin-top: 10px;
   margin-right: 4px;
   height: 32px;
   border-radius: 0;
-  border: 2px solid #389e0d !important; /* Define uma borda azul */
-  color: #389e0d !important; /* Define a cor do texto como azul */
+  border: 2px solid #389e0d !important;
+  color: #389e0d !important;
   transition: background-color 0.3s ease; /* Adiciona transição suave */
   width: 129px;
 }
@@ -58,9 +55,9 @@ h1 {
   margin-right: 4px;
   height: 32px;
   border-radius: 0;
-  border: 2px solid red !important; /* Define uma borda azul */
-  color: red !important; /* Define a cor do texto como azul */
-  transition: background-color 0.3s ease; /* Adiciona transição suave */
+  border: 2px solid red !important;
+  color: red !important;
+  transition: background-color 0.3s ease;
   width: 129px;
 }
 
@@ -70,9 +67,9 @@ h1 {
   margin-right: 4px;
   height: 32px;
   border-radius: 0;
-  border: 2px solid red !important; /* Define uma borda azul */
-  color: #389e0d !important; /* Define a cor do texto como azul */
-  transition: background-color 0.3s ease; /* Adiciona transição suave */
+  border: 2px solid red !important;
+  color: #389e0d !important;
+  transition: background-color 0.3s ease;
   width: 129px;
 }
 .notification-icon-fixed {
@@ -83,54 +80,48 @@ h1 {
   transition: background-color 0.3s ease;
 }
 
-/* Estilo básico para o Snackbar semelhante ao Ant Design */
 .ant-snackbar {
   font-family: "Roboto", sans-serif;
   color: #595959;
   border-radius: 4px;
   box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.12);
-  padding: 0; /* Remover padding extra */
-  margin: 0; /* Remover margens */
-  max-width: 400px; /* Largura máxima */
+  padding: 0;
+  margin: 0;
+  max-width: 400px;
 }
 
-/* Estilos para severidade 'success' */
 .ant-snackbar-success {
   background-color: #f6ffed;
-  border: 1px solid #b7eb8f; /* Borda geral */
-  position: relative; /* Necessário para a borda esquerda */
+  border: 1px solid #b7eb8f;
+  position: relative;
 }
 
-/* Adiciona borda esquerda */
 .ant-snackbar-success::before {
   content: "";
   position: absolute;
-  left: 0; /* Alinhado à esquerda */
+  left: 0;
   top: 0;
   bottom: 0;
-  width: 4px; /* Largura da borda */
-  background-color: #4caf50; /* Verde escuro */
-  border-radius: 4px 0 0 4px; /* Bordas arredondadas apenas do lado esquerdo */
+  width: 4px;
+  background-color: #4caf50;
+  border-radius: 4px 0 0 4px;
 }
 
-/* Estilos para severidade 'error' */
 .ant-snackbar-error {
   background-color: #fff2f0;
   border: 1px solid #ffccc7;
 }
 
-/* Estilos para o Alert dentro do Snackbar */
 .ant-alert {
   background-color: inherit;
   color: inherit;
   font-weight: 500;
   display: flex;
   align-items: center;
-  padding: 8px 16px; /* Ajuste fino de padding */
+  padding: 8px 16px;
   border-radius: 4px;
 }
 
-/* Posicionamento fixo no topo à direita */
 .snackbar-position {
   position: fixed;
   top: 24px;
@@ -138,20 +129,18 @@ h1 {
   z-index: 1000;
 }
 
-
-
 .white-background-button {
-  background-color: white !important; /* Fundo branco */
-  border: none !important; /* Remove as bordas */
-  color: #bfbfbf; /* Cor do ícone ou texto */
+  background-color: white !important;
+  border: none !important;
+  color: #bfbfbf;
 }
 
 .white-background-button:hover {
-  background-color: #f0f0f0 !important; /* Cor de fundo no hover */
+  background-color: #f0f0f0 !important;
 }
 
 .no-border {
-  box-shadow: none !important; /* Remove a sombra (caso tenha) */
+  box-shadow: none !important;
 }
 :where(.css-dev-only-do-not-override-qnu6hi).ant-btn.ant-btn-round.ant-btn-sm {
   border-radius: 24px;
@@ -159,7 +148,6 @@ h1 {
   padding-inline-end: 15px;
   width: 15px;
 }
-
 
 * {
   margin: 0;
@@ -189,12 +177,11 @@ body {
   justify-content: space-between;
 }
 
-
 .body .card, 
 .body .card-header, 
 .body .card-body {
-  border: none; /* Remove as bordas */
-  box-shadow: none; /* Remove sombras (se aplicável) */
+  border: none;
+  box-shadow: none;
   background-color: white;
   margin-bottom: 25px;
 }
@@ -242,10 +229,6 @@ input[type=radio]#Red {
   background-color: #389e0d !important
 } 
 
-
-
-/* modal */
-/* Estilos gerais do modal */
 .custom-modal .ant-modal-content {
   width: 299px !important;
   height: 161px !important;
@@ -256,7 +239,6 @@ input[type=radio]#Red {
   opacity: 1;
 }
 
-/* Container dos botões */
 .button-container {
   margin-top: 24px;
   display: flex;
@@ -264,7 +246,6 @@ input[type=radio]#Red {
   gap: 18px;
 }
 
-/* Estilos dos botões personalizados */
 .custom-button {
   text-transform: none !important;
   height: 25px;
@@ -272,23 +253,18 @@ input[type=radio]#Red {
   border-radius: 0 !important;
 }
 
-/* Container do ícone do usuário */
 .user-icon-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Estilos para o ícone de exclusão */
 .user-icon-delete {
   margin-right: 108px !important;
   padding-bottom: 13px;
-  /* width: 35.5px !important;
-  height: 24px !important;  */
   color: #F59E0B;
 }
 
-/* Estilos para o cabeçalho do modal */
 .modal-header {
   display: flex;
   justify-content: center;
@@ -296,7 +272,6 @@ input[type=radio]#Red {
   margin-bottom: 16px;
 }
 
-/* Fonte personalizada para o texto de exclusão */
 .custom-font-delete {
   font-family: 'Selawik', sans-serif !important;
   font-size: 13px !important;
@@ -304,56 +279,33 @@ input[type=radio]#Red {
   color: white !important;
 }
 
-/* Fonte personalizada para o texto de edição */
 .custom-font-edit {
-  /* font-family: 'Selawik', sans-serif !important;
-  font-size: 13px !important;
-  font-weight: 600 !important; */
-  /* border: 2px solid green !important;
-  color: green !important;
-  background-color: transparent !important;
-  font-weight: 600 !important;
-  font-family: 'Selawik', sans-serif !important;
-  font-size: 13px !important; */
   height: 26px;
-  /* border: none; */
   border-radius: 0;
   background-color: #389e0d !important;
   width: 100px;
 }
 
-/* Botão de cancelamento personalizado */
 .custom-cancel-button {
-  /* border: 2px solid green !important;
-  color: green !important;
-  background-color: transparent !important;
-  font-weight: 600 !important;
-  font-family: 'Selawik', sans-serif !important;
-  font-size: 13px !important; */
   height: 26px;
-  /* border: none; */
   border-radius: 0;
   width: 100px;
 }
 
-/* Formulário do modal */
 .modal-form {
   margin-bottom: 16px;
 }
 
-/* Estilo do ícone de input (exemplo de cadeado) */
 .modal-form .ant-input-suffix {
   color: rgba(0, 0, 0, 0.45);
 }
 
-/* Container para os botões dentro do modal */
 .modal-buttons {
   display: flex;
   justify-content: center;
   gap: 24px;
 }
 
-/* Botões de edição e fechamento do modal */
 .modal-edit-button,
 .modal-close-button {
   width: 105px;
@@ -361,7 +313,6 @@ input[type=radio]#Red {
   margin-right: 20px;
 }
 
-/* Estilo para inputs como labels */
 .textfield-as-label {
   border: none;
   background: transparent;
@@ -373,8 +324,7 @@ input[type=radio]#Red {
   display: flex;
   align-items: center;
 }
-
-/* Remoção de bordas e sombra do input */
+ 
 .textfield-as-label .MuiInputBase-input {
   border: none;
   background: transparent;
@@ -383,7 +333,6 @@ input[type=radio]#Red {
   margin: 0;
 }
 
-/* Margem ajustada para tipografia */
 .css-cij06z-MuiTypography-root {
   margin-left: 33px !important;
 }

@@ -1,40 +1,38 @@
-/* Ajuste no container principal para permitir que tudo fique alinhado corretamente */
 .line-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1200px; /* Define um limite para evitar que as estações fiquem muito espaçadas */
+  max-width: 1200px;
   margin: 0 auto;
 }
-/* Remove a borda do card */
 .line-container .esd-line-container .card {
-  border: none !important; /* Remove a borda */
-  box-shadow: none !important; /* Remove qualquer sombra padrão */
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .line-content {
   display: flex;
-  align-items: flex-start; /* Alinha os itens no início do eixo vertical */
+  align-items: flex-start;
 }
 
 .add-button-container-stations {
-  margin-right: auto; /* Espaço entre os botões e as estações */
+  margin-right: auto;
 }
 
 .esd-line-container {
   display: flex;
-  flex-wrap: wrap; /* Permite que as estações quebrem para a próxima linha se necessário */
-  justify-content: flex-start; /* Alinha as estações horizontalmente */
+  flex-wrap: wrap; 
+  justify-content: flex-start;
   align-items: flex-start;
-  gap: 20px; /* Espaçamento entre as estações */
+  gap: 20px; 
   width: 100%;
 }
 
 
 .station-card {
   display: flex !important;
-  flex-direction: column; /* Mantenha a direção da coluna para o contêiner principal */
+  flex-direction: column; 
   align-items: center;
 }
 
@@ -42,7 +40,7 @@
   padding: 10px;
   min-width: 120px;
   height: fit-content;
-  margin-right: 10px; /* Adicionado margem à direita para aproximar dos containers amarelos */
+  margin-right: 10px; 
 }
 
 .stations-wrapper {
@@ -50,24 +48,21 @@
   flex: 1;
   flex-wrap: wrap;
   gap: 20px;
-  flex-direction: row !important; /* Força o alinhamento horizontal */
+  flex-direction: row !important;
 }
 
 
 .esd-line-container .station {
-  position: relative; /* Para posicionar o radio button em relação ao elemento station */
+  position: relative;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 150px; /* Ajuste o tamanho conforme necessário */
-  height: 150px; /* Ajuste o tamanho conforme necessário */
+  width: 150px; 
+  height: 150px; 
 }
 
 .radio-button {
-  /* position: absolute;
-  top: 13px !important;
-  margin-left: -27px; */
   margin-left: -15px;
   
 }
@@ -75,7 +70,6 @@
 .add-button-container-stations {
   display: flex; 
   align-items: center;
-  /* border: solid blue 2px !important;  */
 }
 
 .no-border {
@@ -83,63 +77,63 @@
 }
 
 .add-button-container button {
-  margin-left: 10px; /* Espaçamento entre o ícone e o botão */
+  margin-left: 10px;
 }
 
 .button-container {
-  display: flex; /* Para alinhar os botões em linha */
-  align-items: center; /* Centraliza verticalmente */
-  margin-top: 20px; /* Espaçamento superior opcional */
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .button-container button {
-  margin-left: 10px; /* Espaçamento entre o ícone e o botão */
+  margin-left: 10px;
 }
 
 button {
-  padding: 10px 20px; /* Estilo do botão */
-  font-size: 16px; /* Tamanho da fonte do botão */
-  background-color: #007bff; /* Cor de fundo do botão */
-  color: white; /* Cor do texto do botão */
-  border: none; /* Remove bordas do botão */
-  border-radius: 4px; /* Arredonda os cantos do botão */
-  cursor: pointer; /* Muda o cursor ao passar o mouse sobre o botão */
-  transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button:disabled {
-  background-color: #ccc; /* Cor de fundo para o botão desativado */
-  cursor: not-allowed; /* Cursor de não permitido */
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 button:hover:not(:disabled) {
-  background-color: #4caf50;; /* Cor de fundo ao passar o mouse */
+  background-color: #4caf50;
 }
 
 input[type="radio"] {
-  margin-left: 10px; /* Margem para o botão de seleção */
+  margin-left: 10px;
 }
 
 .delete-button {
-  position: absolute; /* Permite que o botão fique no canto superior direito */
-  top: 20px; /* Distância do topo */
-  right: 20px; /* Distância da direita */
-  background-color: #ff4d4f; /* Cor de fundo para o botão de excluir */
-  color: white; /* Cor do texto */
-  border: none; /* Remove bordas */
-  border-radius: 4px; /* Arredonda os cantos */
-  padding: 8px 12px; /* Estilo do botão */
-  cursor: pointer; /* Muda o cursor ao passar o mouse sobre o botão */
-  transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
-  display: none; /* Inicialmente oculta */
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: none;
 }
 
 .delete-button.show {
-  display: block; /* Mostra o botão quando a classe 'show' é adicionada */
+  display: block;
 }
 
 .delete-button:hover {
-  background-color: #d93600; /* Cor ao passar o mouse */
+  background-color: #d93600;
 }
 
 input[type=radio]#Red {
@@ -148,7 +142,6 @@ input[type=radio]#Red {
 
 .container {
   background-color: white !important;
-  /* border: solid blue 2px !important; */
 
   right: 17px;
 }
@@ -162,15 +155,14 @@ input[type=radio]#Red {
 .stations-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* Centraliza horizontalmente */
+  justify-content: center;
 }
 
-/* Ajuste para garantir que cada estação ocupe um espaço adequado */
 .station-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 180px; /* Defina um tamanho fixo para cada estação */
+  width: 180px;
   height: auto;
   background-color: white;
   border-radius: 8px;

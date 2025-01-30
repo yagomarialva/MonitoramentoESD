@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getAllStationMapper } from "../../../../api/mapingAPI";
-import "./ESDTable.css";
 import FactoryMap from "./ESDFactoryMap/FactoryMap";
 
 interface Station {

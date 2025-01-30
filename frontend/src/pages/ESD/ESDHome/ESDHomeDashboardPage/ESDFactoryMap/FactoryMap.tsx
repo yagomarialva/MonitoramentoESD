@@ -238,7 +238,6 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
         } catch (error: any) {
           if (error.message === "Request failed with status code 404") {
             window.location.reload();
-            // lines = undefined;
           }
           console.error("Erro ao excluir a linha:", error);
           showMessage("Erro ao excluir a linha.", "error");
