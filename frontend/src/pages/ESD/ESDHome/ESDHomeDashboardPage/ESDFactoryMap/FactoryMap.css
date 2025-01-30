@@ -2,7 +2,6 @@
   /* padding: 10px; */
   background-color: #f0f2f5;
   position: relative; /* Para que o botão possa ser posicionado dentro desse container */
-  margin-top: -43px !important;
 }
 
 h1 {
@@ -14,7 +13,7 @@ h1 {
 .container-title {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
+  padding: 10px;
   background-color: #f0f2f5;
   font-family: "Roboto", sans-serif;
   position: relative; /* Para que o botão possa ser posicionado dentro desse container */
@@ -22,9 +21,10 @@ h1 {
 
 .line-container {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 10px; /* Espaço entre as linhas */
+  justify-content: center; /* Centraliza as linhas na tela */
+  padding: 10px;
 }
 
 .card-grid {
@@ -200,9 +200,12 @@ body {
 }
 
 .card-body {
-  border-bottom: #f0f0f0  15px solid !important;
-  margin-bottom: 25px;
-  /* height: 650px; */
+  border: 2px solid red;
+  display: flex;
+  width: 100%;
+  min-height: 400px;
+  padding: 20px;
+  gap: 10px;
 }
 
 .no-lines-message{

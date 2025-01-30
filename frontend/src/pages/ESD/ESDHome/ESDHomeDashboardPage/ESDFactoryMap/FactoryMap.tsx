@@ -426,7 +426,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
                   </div>
                 ) : (
                   lines.map((line) => (
-                    <div className="card" key={line.id}>
+                    <div className="card" key={line.id} >
                     <div className="card-header">
                       {isEditing && (
                         <Tooltip
@@ -444,7 +444,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
                         </Tooltip>
                       )}
                     </div>
-                    <div className="card-body">
+                    <div className="card-body" >
                       <Line lineData={line} onUpdate={onUpdate} />
                     </div>
                   </div>

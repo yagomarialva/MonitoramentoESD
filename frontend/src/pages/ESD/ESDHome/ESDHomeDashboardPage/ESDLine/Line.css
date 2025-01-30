@@ -1,21 +1,16 @@
+/* Ajuste no container principal para permitir que tudo fique alinhado corretamente */
 .line-container {
   display: flex;
-  flex-direction: column; /* Mantenha a direção da coluna para o contêiner principal */
-  align-items: center; /* Centraliza os itens dentro do contêiner */
-  margin: 20px;
-  padding: 10px;
-  border: none !important;
-  border-radius: 8px;
-  position: relative;
-  box-shadow: none !important;
-  /* border: solid red 2px !important;  */
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; /* Define um limite para evitar que as estações fiquem muito espaçadas */
+  margin: 0 auto;
 }
-
 /* Remove a borda do card */
 .line-container .esd-line-container .card {
   border: none !important; /* Remove a borda */
   box-shadow: none !important; /* Remove qualquer sombra padrão */
-  /* border: solid blue 2px !important;  */
 }
 
 .line-content {
@@ -25,25 +20,17 @@
 
 .add-button-container-stations {
   margin-right: auto; /* Espaço entre os botões e as estações */
-  /* margin-left: 18px;
-  margin-top: -52%; */
-  /* Você pode adicionar mais estilos, se necessário */
 }
 
 .esd-line-container {
-  flex: 1; /* Permite que o contêiner de estações ocupe o restante do espaço */
-  /* Outros estilos conforme necessário */
-}
-
-
-.esd-line-container {
-  /* border: solid green 2px !important;  */
   display: flex;
-  flex-wrap: wrap; /* Permite que as estações se reorganizem em várias linhas */
-  justify-content: center; /* Centraliza as estações */
+  flex-wrap: wrap; /* Permite que as estações quebrem para a próxima linha se necessário */
+  justify-content: flex-start; /* Alinha as estações horizontalmente */
+  align-items: flex-start;
   gap: 20px; /* Espaçamento entre as estações */
-  margin-bottom: 20px; /* Margem inferior para espaçamento */
+  width: 100%;
 }
+
 
 .station-card {
   display: flex !important;
@@ -52,9 +39,20 @@
 }
 
 .button-for-edit {
-  margin-right: -29px;
-  margin-top: 225px;
+  padding: 10px;
+  min-width: 120px;
+  height: fit-content;
+  margin-right: 10px; /* Adicionado margem à direita para aproximar dos containers amarelos */
 }
+
+.stations-wrapper {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 20px;
+  flex-direction: row !important; /* Força o alinhamento horizontal */
+}
+
 
 .esd-line-container .station {
   position: relative; /* Para posicionar o radio button em relação ao elemento station */
@@ -158,4 +156,24 @@ input[type=radio]#Red {
 
 .color-button{
   color: #389e0d !important;
+}
+
+
+.stations-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centraliza horizontalmente */
+}
+
+/* Ajuste para garantir que cada estação ocupe um espaço adequado */
+.station-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 180px; /* Defina um tamanho fixo para cada estação */
+  height: auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px;
 }

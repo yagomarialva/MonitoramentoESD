@@ -281,6 +281,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
         <div className="line-container">
           <div className="line-content">
             <div className="esd-line-container">
+            <div className="stations-container">
               {lineData.stations.map((stationEntry) => (
                 <div key={stationEntry.station.id}>
                   {isEditing && ( // Renderiza os botões de rádio apenas no modo de edição
@@ -305,9 +306,12 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
                       </Tooltip>
                     </div>
                   )}
+                  <div className="stations-wrapper">
                   <Station stationEntry={stationEntry} onUpdate={onUpdate} />
+                  </div>
                 </div>
               ))}
+            </div>
             </div>
           </div>
 
