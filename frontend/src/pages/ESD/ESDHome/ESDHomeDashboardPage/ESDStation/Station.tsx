@@ -321,7 +321,14 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
                   {group.map((cell, index) => (
                     <div
                       key={index}
-                      className={`icon-container ${index === 0 ? "top-cell" : "base-cell"}`}
+                      // className={`icon-container ${index === 0 ? "top-cell" : "base-cell"}`}
+                      className={`icon-container ${
+                        [0, 4].includes(groupIndex * 4 + index)
+                          ? "top-cell-odd"
+                          : [8, 12].includes(groupIndex * 4 + index)
+                            ? "top-cell"
+                            : "base-cell"
+                      }`}
                       onClick={() => handleCellClick(cell, groupIndex * 4 + index, stationEntry)}
                     >
                       {cell ? (

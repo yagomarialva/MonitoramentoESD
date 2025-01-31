@@ -57,10 +57,10 @@
 
 .computer-icon,
 .add-icon {
-  font-size: 24px;
+  font-size: 13px;
   color: #bfbfbf;
-  width: 39px;
-  height: 38px;
+  width: 29px;
+  height: 31px;
   background-color: white;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
   display: flex;
@@ -75,7 +75,7 @@
 }
 
 .computer-icon{
-  font-size: 20px !important;
+  font-size: 15px !important;
   display: flex;
   align-items: center;
 }
@@ -84,7 +84,7 @@
 }
 
 .cell-icon {
-  font-size: 24px;
+  font-size: 15px;
 
 }
 
@@ -105,13 +105,21 @@
   display: grid;
   grid-template-rows: auto auto;
   grid-template-columns: repeat(3, 1fr);
-  padding: 10px;
-  margin-bottom: 20px;
+  padding: 5px;
+  margin-bottom: 1px;
+  margin-right: 10px;
 }
 
 .triangle-layout .top-cell {
   grid-column: 2;
   grid-row: 1;
+  margin-bottom: 1px;
+}
+
+.triangle-layout .top-cell-odd {
+  grid-column: 2;
+  grid-row: 3;
+  margin-bottom: 1px;
 }
 
 .triangle-layout .base-cell:nth-child(2) {
@@ -136,8 +144,8 @@
   background-color: #f0f0f0;
   padding: 10px;
   border-radius: 5px;
-  height: 76px;
-  width: 70px;
+  height: 50px;
+  width: 50px;
 }
 
 .icon-container.second-cell {
