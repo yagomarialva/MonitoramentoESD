@@ -261,7 +261,6 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     setModalText(selectedCell.cell.description);
     setModalTitleText(selectedCell.cell.serialNumberEsp);
     setModalIndexTitleText(index);
-    console.log("cell", cell);
   };
 
   const handleDelete = () => {
@@ -321,7 +320,6 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
                   {group.map((cell, index) => (
                     <div
                       key={index}
-                      // className={`icon-container ${index === 0 ? "top-cell" : "base-cell"}`}
                       className={`icon-container ${
                         [0, 4].includes(groupIndex * 4 + index)
                           ? "top-cell-odd"
