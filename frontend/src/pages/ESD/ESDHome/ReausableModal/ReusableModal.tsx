@@ -348,7 +348,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   return (
     <>
       <Modal
-        className="ellipsis-modal"
+        className={`ellipsis-modal ${activeKey === "2" ? "custom-log-modal" : ""}`}
         title={
           <div className="modal-title-container">
             <div className="title-content">
