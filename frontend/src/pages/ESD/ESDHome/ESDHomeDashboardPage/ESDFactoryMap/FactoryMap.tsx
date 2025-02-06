@@ -209,6 +209,7 @@ const FactoryMap: React.FC<FactoryMapProps> = ({ lines, onUpdate }) => {
         ordersList: createdLine.id,
         lineID: createdLine.id,
         stationID: stationName.id,
+        // lastUpdated: new Date().toISOString()
       };
       await createLink(link);
       onUpdate();

@@ -19,7 +19,7 @@ services:
       - your-network
     depends_on:
       - oracle-db
-    entrypoint: ["/bin/sh", "-c", "sleep 7 && dotnet BiometricFaceApi.dll"] # Adiciona um atraso de 7 segundos antes de iniciar a API
+    entrypoint: ["/bin/sh", "-c", "sleep 30 && dotnet BiometricFaceApi.dll"] # Adiciona um atraso de 7 segundos antes de iniciar a API
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]  # Verifica o endpoint de saúde da API
       interval: 30s  # Verifica a cada 30 segundos

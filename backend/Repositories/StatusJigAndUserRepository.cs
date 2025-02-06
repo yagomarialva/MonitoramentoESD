@@ -29,7 +29,7 @@ namespace BiometricFaceApi.Repositories
                 }
                 else
                 {
-                    status.Created = DateTimeHelperService.GetManausCurrentDateTime();
+                    //status.Created = DateTimeHelperService.GetManausCurrentDateTime();
                     status.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
                     await _oraConnector.SaveData<StatusJigAndUserModel>(SQLScripts.StatusJigAndUserQueries.InsertStatusJigAndUser, status);
 

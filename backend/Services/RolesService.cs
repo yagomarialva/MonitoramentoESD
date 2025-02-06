@@ -73,7 +73,7 @@ namespace BiometricFaceApi.Services
             }
             catch
             {
-                return ("Verifique se os dados estão corretos.", StatusCodes.Status400BadRequest);
+                return ("Dados já cadastrados ou incorretos.", StatusCodes.Status400BadRequest);
             }
         }
 

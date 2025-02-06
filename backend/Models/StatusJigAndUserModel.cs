@@ -32,9 +32,9 @@ namespace BiometricFaceApi.Models
         [ForeignKey("LogMonitorEsd")]
         public int LastLogId { get; set; }
 
-        [Required]
-        [Column("Created")]
-        public DateTime Created { get; set; }
+        //[Required]
+        //[Column("Created")]
+        //public DateTime Created { get; set; }
 
         [Required]
         [Column("LastUpdated")]

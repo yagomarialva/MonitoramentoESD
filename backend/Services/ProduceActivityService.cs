@@ -116,7 +116,7 @@ namespace BiometricFaceApi.Services
                 await _recordStatusRepository.AddOrUpdateAsync(recordStatus);
                 var updatedProduceActivity = await _produceActivityRepository.IsLockedAsync(id, isLocked ? 1 : 0);
 
-                return (updatedProduceActivity, StatusCodes.Status200OK);
+                return (recordStatus, StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {

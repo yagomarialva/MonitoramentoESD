@@ -47,13 +47,13 @@ namespace BiometricFaceApi.Repositories.Interfaces
         /// </summary>
         /// <param name="model">O modelo do link a ser incluído.</param>
         /// <returns>O modelo do link incluído.</returns>
-        Task<LinkStationAndLineModel> IncludeAsync(LinkStationAndLineModel model);
+        Task<LinkStationAndLineModel?> IncludeAsync(LinkStationAndLineModel model);
 
         /// <summary>
         /// Deleta um link específico pelo ID.
         /// </summary>
         /// <param name="id">O ID do link a ser deletado.</param>
         /// <returns>O modelo do link deletado.</returns>
-        Task<LinkStationAndLineModel> DeleteAsync(int id);
+        Task<LinkStationAndLineModel?> DeleteAsync(int id);
     }
 }

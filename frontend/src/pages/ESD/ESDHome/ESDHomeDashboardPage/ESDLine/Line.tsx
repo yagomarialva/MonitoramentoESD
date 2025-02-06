@@ -145,6 +145,7 @@ const Line: React.FC<ESDStationProps> = ({ lineData, onUpdate }) => {
         ordersList: stationName.id,
         lineID: lineData.line.id,
         stationID: stationName.id,
+        // lastUpdated: new Date().toISOString()
       };
 
       await createLink(link);

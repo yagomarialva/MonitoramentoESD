@@ -73,14 +73,19 @@ namespace BiometricFaceApi.Repositories
                 return false;
             }
 
-            command.CommandText = $@"SELECT COUNT(1) FROM all_tables WHERE table_name = '{tableName.ToUpper()}'";
+            // Ajuste para verificar o schema correto
+            command.CommandText = $@"SELECT COUNT(1) FROM all_tables WHERE owner = 'FCT_AUTO_TEST' AND table_name = '{tableName.ToUpper()}'";
             command.CommandType = CommandType.Text;
+
+            //command.CommandText = $@"SELECT COUNT(1) FROM all_tables WHERE table_name = '{tableName.ToUpper()}'";
+            //command.CommandType = CommandType.Text;
 
             // Mantendo a implementação original
             var result = command.ExecuteScalar();
             return result?.ToString().Trim() != "0";
         }
 
+       
         private async Task ExecuteCommandAsync(OracleCommand command, string? sqlCommand)
         {
             if (!string.IsNullOrEmpty(sqlCommand))

@@ -7237,24 +7237,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\BC4G9992\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\bc4g9991\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\BC4G9992\\Desktop\\Nova pasta (3)\\fct_auto_test\\backend\\BiometricFaceApi.csproj",
+      "projectUniqueName": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\BiometricFaceApi.csproj",
       "projectName": "BiometricFaceApi",
-      "projectPath": "C:\\Users\\BC4G9992\\Desktop\\Nova pasta (3)\\fct_auto_test\\backend\\BiometricFaceApi.csproj",
-      "packagesPath": "C:\\Users\\BC4G9992\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\BC4G9992\\Desktop\\Nova pasta (3)\\fct_auto_test\\backend\\obj\\",
+      "projectPath": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\BiometricFaceApi.csproj",
+      "packagesPath": "C:\\Users\\bc4g9991\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\BC4G9992\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\bc4g9991\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -7382,7 +7377,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
@@ -7391,7 +7386,7 @@
       "code": "NU1608",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: Oracle.EntityFrameworkCore 6.21.4 requires Oracle.ManagedDataAccess.Core (>= 3.21.41 && < 3.22.0) but version Oracle.ManagedDataAccess.Core 23.5.1 was resolved.",
+      "message": "Versão detectada do pacote fora da restrição de dependência: Oracle.EntityFrameworkCore 6.21.4 requer Oracle.ManagedDataAccess.Core (>= 3.21.41 && < 3.22.0), mas a versão Oracle.ManagedDataAccess.Core 23.5.1 foi resolvida.",
       "libraryId": "Oracle.ManagedDataAccess.Core",
       "targetGraphs": [
         "net8.0"
@@ -7401,7 +7396,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'EntityFramework 6.1.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
+      "message": "O pacote 'EntityFramework 6.1.0' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' em vez da estrutura de destino do projeto 'net8.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
       "libraryId": "EntityFramework",
       "targetGraphs": [
         "net8.0"

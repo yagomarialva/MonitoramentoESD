@@ -3,20 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\controllers\\stationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\stationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\repositories\\stationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\stationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\controllers\\linkstationandlinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:controllers\\linkstationandlinecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\repositories\\jigrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:repositories\\jigrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|c:\\users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\services\\linkstationandlineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DE83A8C4-A618-4070-AD0E-7EA87743E3B6}|BiometricFaceApi.csproj|solutionrelative:services\\linkstationandlineservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,75 +22,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "LinkStationAndLineController.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Controllers\\LinkStationAndLineController.cs",
-              "RelativeDocumentMoniker": "Controllers\\LinkStationAndLineController.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Controllers\\LinkStationAndLineController.cs",
-              "RelativeToolTip": "Controllers\\LinkStationAndLineController.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAAAFgAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-20T18:20:10.944Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "StationController.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Controllers\\StationController.cs",
-              "RelativeDocumentMoniker": "Controllers\\StationController.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Controllers\\StationController.cs",
-              "RelativeToolTip": "Controllers\\StationController.cs",
-              "ViewState": "AQIAABIAAAAAAAAAAAAkwFQAAAAMAAAA",
+              "Title": "LinkStationAndLineService.cs",
+              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Services\\LinkStationAndLineService.cs",
+              "RelativeDocumentMoniker": "Services\\LinkStationAndLineService.cs",
+              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Services\\LinkStationAndLineService.cs",
+              "RelativeToolTip": "Services\\LinkStationAndLineService.cs",
+              "ViewState": "AQIAAHMAAAAAAAAAAAAwwHoAAAAjAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-20T18:20:10.965Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "StationRepository.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Repositories\\StationRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\StationRepository.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Repositories\\StationRepository.cs",
-              "RelativeToolTip": "Repositories\\StationRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEAAAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-20T18:18:29.353Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Orientation": 0,
-      "VerticalTabListWidth": 256,
-      "FloatingWindowState": {
-        "Id": "9220ff7a-a90a-4996-82ae-6c5c4c4476d9",
-        "Display": 0,
-        "X": -5,
-        "Y": 378,
-        "Width": 1449,
-        "Height": 659,
-        "WindowState": 2
-      },
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "JigRepository.cs",
-              "DocumentMoniker": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Repositories\\JigRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\JigRepository.cs",
-              "ToolTip": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\Repositories\\JigRepository.cs",
-              "RelativeToolTip": "Repositories\\JigRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-20T18:18:58.747Z",
+              "WhenOpened": "2025-02-06T13:01:20.265Z",
               "EditorCaption": ""
             }
           ]

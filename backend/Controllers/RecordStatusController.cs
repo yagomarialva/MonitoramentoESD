@@ -19,9 +19,6 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Busca todos os status.
         /// </summary>
-        /// <response code="200">Retorna todos os status.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("todosStatus")]
         public async Task<IActionResult> GetAllStatus()
@@ -33,11 +30,6 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Buscar status de produção por ID.
         /// </summary>
-        /// <param name="id">ID do status.</param>
-        /// <response code="200">Retorna o status de produção correspondente.</response>
-        /// <response code="400">ID incorreto ou inválido.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("buscaStatus/{id}")]
         public async Task<IActionResult> GetStatusById(int id)
@@ -47,14 +39,9 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Cadastra ou atualiza status de produção.
+        /// Criar ou atualizar status de produção.
         /// </summary>
-        /// <param name="model">Dados de status a serem cadastrados ou atualizados.</param>
-        /// <response code="200">Status atualizado com sucesso.</response>
-        /// <response code="201">Status cadastrado com sucesso.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
-       [Authorize(Roles = "administrador,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("adicionarStatus")]
         public async Task<IActionResult> AddOrUpdateStatus([FromBody] RecordStatusProduceModel model)
         {
@@ -63,12 +50,8 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Deleta um status de produção.
+        /// Deleta status de produção.
         /// </summary>
-        /// <param name="id">ID do status a ser deletado.</param>
-        /// <response code="200">Status removido com sucesso.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("deleteStatus/{id}")]
         public async Task<IActionResult> DeleteStatus(int id)

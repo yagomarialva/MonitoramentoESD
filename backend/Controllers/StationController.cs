@@ -20,11 +20,6 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Buscar todos
         /// </summary>
-        /// <param > Buscar todas Estações</param>
-        /// <response code="200">Retorna todos.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("todosEstacoes")]
@@ -37,11 +32,6 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Buscar id 
         /// </summary>
-        /// <param name="id"> Buscar Estação por Id</param>
-        /// <response code="200">Retorna  Estação </response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("BuscarEstacao/{id}")]
@@ -52,13 +42,8 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Buscar id 
+        /// Buscar nome 
         /// </summary>
-        /// <param name="name"> Buscar Estação por name</param>
-        /// <response code="200">Retorna  Estação </response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("BuscarNomeEstacao/{name}")]
@@ -68,16 +53,9 @@ namespace BiometricFaceApi.Controllers
             return StatusCode(statusCode, result);
         }
         /// <summary>
-        /// Cadastra e Atualiza de dados da Estação.
+        /// Criar ou atualizar Estação.
         /// </summary>
-        /// <remarks>Cadastra estação na base de dados; Para atualizar dados basta usar Id da estação.</remarks>
-        /// <param name="model">Dados de cadastro da estação</param>
-        /// <response code="200">Dados atualizado com sucesso.</response>
-        /// <response code="201">Dados cadastrados com sucesso.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
-       [Authorize(Roles = "administrador,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpPost]
         [Route("adicionarEstacao")]
         public async Task<IActionResult> AddOrUpdateStation([FromBody] StationModel model)
@@ -89,11 +67,6 @@ namespace BiometricFaceApi.Controllers
         /// <summary>
         /// Deletar Estação
         /// </summary>
-        /// <param name="id"> Deleta  Estação</param>
-        /// <returns></returns>
-        /// <response code="200">Remove dados do banco de dados.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas</response>
-        /// <response  code="500">Erro do servidor interno!</response>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete]
         [Route("deleteEstação")]

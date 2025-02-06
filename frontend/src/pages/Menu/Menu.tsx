@@ -41,16 +41,7 @@ const getMenuItems = (userRole: string): MenuItem[] => {
       subItems: [
         { text: "Dashboard", path: "/dashboard" }
       ],
-    },
-    {
-      text: "Operadores",
-      icon: <UserOutlined />,
-      path: "/register",
-      roles: ["operator","administrador"],
-      subItems: [
-        { text: "Cadastrar", path: "/register" },
-      ],
-    },
+    }
   ];
 
   return allItems.filter((item) => item.roles.includes(userRole));

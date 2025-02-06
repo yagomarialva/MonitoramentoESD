@@ -210,14 +210,20 @@ namespace BiometricFaceApi
           
             app.MapHub<CommunicationHub>("/loghub");
 
-            using (var scope = app.Services.CreateScope()) 
+            var runDbInitializer = builder.Configuration.GetValue<bool>("RunDbInitializer");
+
+            if (runDbInitializer)
             {
-                var scopedServices = scope.ServiceProvider;
-                var dbInitializer = scopedServices.GetRequiredService<IDbInitializerRepository>();
-                await dbInitializer.InitializeAsync();
+                using (var scope = app.Services.CreateScope())
+                {
+                    var scopedServices = scope.ServiceProvider;
+                    var dbInitializer = scopedServices.GetRequiredService<IDbInitializerRepository>();
+                    await dbInitializer.InitializeAsync();
 
 
+                }
             }
+           
 
             await app.RunAsync();
         }

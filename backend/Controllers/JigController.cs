@@ -17,11 +17,9 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Recupera todos os Jigs.
+        /// Buscar todos.
         /// </summary>
-        /// <returns>Uma lista de Jigs.</returns>
-        /// <response code="200">Retorna a lista de Jigs.</response>
-        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
+        /// <returns>Uma Lista de Jigs.</returns>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("todosJigs")]
         public async Task<ActionResult> GetAllJigs()
@@ -31,13 +29,9 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Recupera um Jig pelo seu ID.
+        /// Buscar por Jig por ID.
         /// </summary>
-        /// <param name="id">O ID do Jig.</param>
-        /// <returns>O Jig solicitado.</returns>
-        /// <response code="200">Retorna o Jig.</response>
-        /// <response code="404">Se o Jig não for encontrado.</response>
-        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
+        /// <param name="id">ID Jig.</param>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpGet("buscarJig/{id}")]
         public async Task<ActionResult> GetJigById(int id)
@@ -47,30 +41,22 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Recupera um Jig pelo seu Serial Number.
+        /// Buscar Jig por SN.
         /// </summary>
-        /// <param name="serialNumber">O Serial Number do Jig.</param>
-        /// <returns>O Jig solicitado.</returns>
-        /// <response code="200">Retorna o Jig.</response>
-        /// <response code="404">Se o Jig não for encontrado.</response>
-        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
-       [Authorize(Roles = "administrador,tecnico")]
-        [HttpGet("buscarJigBySn/{serialNumber}")]
-        public async Task<ActionResult> GetJigBySn(string serialNumber)
+        /// <param name="sn">SN do Jig.</param>
+        [Authorize(Roles = "administrador,tecnico")]
+        [HttpGet("jig-bysn/{sn}")]
+        public async Task<ActionResult> GetJigBySn(string sn)
         {
-            var (result, statusCode) = await _service.GetJigBySnAsync(serialNumber);
+            var (result, statusCode) = await _service.GetJigBySnAsync(sn);
             return StatusCode(statusCode, result);
         }
 
         /// <summary>
-        /// Adiciona ou atualiza um Jig.
+        ///Criar ou atualizar operador Jig.
         /// </summary>
         /// <param name="model">O modelo Jig a ser adicionado ou atualizado.</param>
-        /// <returns>O Jig criado ou atualizado.</returns>
-        /// <response code="201">Retorna o Jig criado.</response>
-        /// <response code="400">Se o modelo fornecido for nulo.</response>
-        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
-       [Authorize(Roles = "administrador,tecnico")]
+        [Authorize(Roles = "administrador,tecnico")]
         [HttpPost("gerenciarJigs")]
         public async Task<ActionResult> Include([FromBody] JigModel model)
         {
@@ -79,14 +65,9 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Exclui um Jig pelo seu ID.
+        /// Excluir Jig por ID.
         /// </summary>
-        /// <param name="id">O ID do Jig a ser excluído.</param>
-        /// <returns>Uma confirmação de exclusão.</returns>
-        /// <response code="200">Se o Jig foi excluído com sucesso.</response>
-        /// <response code="404">Se o Jig não for encontrado.</response>
-        /// 
-        /// <response code="500">Se ocorrer um erro interno do servidor.</response>
+        /// <param name="id">ID do Jig a ser excluído.</param>
        [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete("deleteJigs/{id}")]
         public async Task<ActionResult> Delete(int id)

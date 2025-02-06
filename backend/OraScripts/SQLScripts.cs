@@ -8,7 +8,7 @@ namespace BiometricFaceApi.OraScripts
         /// Comando SQL USERS
         /// </summary>
         public const string VerifyTables = @"SELECT COUNT(1)
-                                                FROM all_tables
+                                                FROM INTO FCT_AUTO_TEST.all_tables
                                                 WHERE table_name = '{0}'";
         /// <summary>
         /// Comando SQL FCEMBEDDING
@@ -17,21 +17,21 @@ namespace BiometricFaceApi.OraScripts
         {
             // Pesquisa usuário por ID usando o índice no USERID
             public const string GetEmbeddingByUserId = @"SELECT ID, USERID, EMBEDDING_VALUE 
-                                                 FROM fc_embedding 
+                                                 FROM FCT_AUTO_TEST.fc_embedding 
                                                  WHERE USERID = :userId";
 
             // Insere dados na tabela Fc_Embedding
-            public const string InsertEmbedding = @"INSERT INTO fc_embedding (ID, USERID, EMBEDDING_VALUE) 
+            public const string InsertEmbedding = @"INSERT INTO FCT_AUTO_TEST.fc_embedding (ID, USERID, EMBEDDING_VALUE) 
                                             VALUES (:Id, :UserId, :EmbeddingValue)";
 
             // Atualiza dados na tabela Fc_Embedding
-            public const string UpdateEmbedding = @"UPDATE fc_embedding
+            public const string UpdateEmbedding = @"UPDATE FCT_AUTO_TEST.fc_embedding
                                             SET USERID = :UserId,
                                                 EMBEDDING_VALUE = :EmbeddingValue
                                             WHERE ID = :id";
 
             // Deleta dados na tabela Fc_Embedding
-            public const string DeleteEmbedding = @"DELETE FROM fc_embedding 
+            public const string DeleteEmbedding = @"DELETE FROM FCT_AUTO_TEST.fc_embedding 
                                             WHERE USERID = :userId";
         }
         /// <summary>
@@ -41,16 +41,16 @@ namespace BiometricFaceApi.OraScripts
         {
             // Pesquisa usuário por ID usando o índice no USERID
             public const string GetAreaByUserId = @"SELECT ID, USERID, FACE_CONFIDENCE, H, W, X, Y 
-                                            FROM fc_area 
+                                            FROM FCT_AUTO_TEST.fc_area 
                                             WHERE USERID = :userId";
 
             // Insere dados na tabela Fc_Area
-            public const string InsertArea = @"INSERT INTO fc_area (ID, USERID, FACE_CONFIDENCE, H, W, X, Y)
+            public const string InsertArea = @"INSERT INTO FCT_AUTO_TEST.fc_area (ID, USERID, FACE_CONFIDENCE, H, W, X, Y)
                                        VALUES (:Id, :UserId, :FaceConfidence, :H, :W, :X, :Y)";
 
             // Atualiza dados na tabela Fc_Area
             public const string UpdateArea = @"UPDATE fc_area
-                                       SET FACE_CONFIDENCE = :FaceConfidence,
+                                       SET FCT_AUTO_TEST.FACE_CONFIDENCE = :FaceConfidence,
                                            H = :H, 
                                            W = :W, 
                                            X = :X, 
@@ -58,7 +58,7 @@ namespace BiometricFaceApi.OraScripts
                                        WHERE USERID = :UserId AND ID = :id";
 
             // Deleta dados na tabela Fc_Area
-            public const string DeleteArea = @"DELETE FROM fc_area 
+            public const string DeleteArea = @"DELETE FROM FCT_AUTO_TEST.fc_area 
                                        WHERE USERID = :userId";
         }
         /// <summary>
@@ -68,21 +68,21 @@ namespace BiometricFaceApi.OraScripts
         {
             // Pesquisa usuário por ID usando o índice no USERID
             public const string GetEyeUserId = @"SELECT ID, USERID, LEFT_EYE, LEFT_RIGHT
-                                         FROM fc_eye 
+                                         FROM FCT_AUTO_TEST.fc_eye 
                                          WHERE USERID = :userId";
 
             // Insere dados na tabela Fc_Eye
-            public static string InsertEye = @"INSERT INTO fc_eye (ID, USERID, LEFT_EYE, LEFT_RIGHT)
+            public static string InsertEye = @"INSERT INTO FCT_AUTO_TEST.fc_eye (ID, USERID, LEFT_EYE, LEFT_RIGHT)
                                        VALUES (:Id, :UserId, :LeftEye, :LeftRight)";
 
             // Atualiza dados na tabela Fc_Eye
-            public static string UpdateEye = @"UPDATE fc_eye
+            public static string UpdateEye = @"UPDATE FCT_AUTO_TEST.fc_eye
                                        SET LEFT_EYE = :LeftEye,
                                            LEFT_RIGHT = :LeftRight
                                        WHERE USERID = :UserId AND ID = :id";
 
             // Deleta dados na tabela Fc_Eye
-            public static string DeleteEye = @"DELETE FROM fc_eye 
+            public static string DeleteEye = @"DELETE FROM FCT_AUTO_TEST.fc_eye 
                                        WHERE USERID = :userId";
         }
         /// <summary>
@@ -91,15 +91,15 @@ namespace BiometricFaceApi.OraScripts
         public static class UserQueries 
         {
             //pesquisa e retornar todos os users
-            public const string GetAllUsers = @"SELECT ID, NAME, BADGE, CREATED, LASTUPDATED FROM users";
+            public const string GetAllUsers = @"SELECT ID, NAME, BADGE, CREATED, LASTUPDATED FROM FCT_AUTO_TEST.users";
             //Restorna todos o total de usuários cadastrados.
-            public const string GetCountUsers = "SELECT COUNT(*) FROM Users";
+            public const string GetCountUsers = "SELECT COUNT(*) FROM FCT_AUTO_TEST.Users";
             // Lista de usuários com paginação
             public const string GetPaginatedUsers = @"SELECT * 
                                                     FROM (
                                                     SELECT a.*, ROWNUM rnum 
                                                     FROM (
-                                                        SELECT * FROM users 
+                                                        SELECT * FROM FCT_AUTO_TEST.users 
                                                         ORDER BY LASTUPDATED DESC
                                                     ) a 
                                                     WHERE ROWNUM <= :Offset + :Limit
@@ -107,15 +107,15 @@ namespace BiometricFaceApi.OraScripts
                                                     WHERE rnum > :Offset";
 
             // Pesquisa usuário por ID
-            public const string GetUserById = @"SELECT * FROM users WHERE ID = :id";
+            public const string GetUserById = @"SELECT * FROM FCT_AUTO_TEST.users WHERE ID = :id";
             // Pesquisa usuário por matrícula (badge)
-            public const string GetUserByBadge = @"SELECT * FROM users WHERE BADGE = :badgeLower";
+            public const string GetUserByBadge = @"SELECT * FROM FCT_AUTO_TEST.users WHERE BADGE = :badgeLower";
             // Pesquisa usuário por nome
-            public const string GetUserByName = @"SELECT * FROM users WHERE NAME = :nameLower";
+            public const string GetUserByName = @"SELECT * FROM FCT_AUTO_TEST.users WHERE NAME = :nameLower";
             // Retorna a contagem de usuários
-            public const string GetUsersCount = @"SELECT COUNT(*) FROM Users";
+            public const string GetUsersCount = @"SELECT COUNT(*) FROM FCT_AUTO_TEST.users";
             // Insere um novo usuário
-            public const string InsertUser = @"INSERT INTO users (
+            public const string InsertUser = @"INSERT INTO FCT_AUTO_TEST.users (
                                                                  NAME,
                                                                  BADGE,
                                                                  CREATED,
@@ -127,14 +127,14 @@ namespace BiometricFaceApi.OraScripts
                                                                  :lastUpdated
                                                              )";
             // Atualiza um usuário existente
-            public const string UpdateUser = @"UPDATE users 
+            public const string UpdateUser = @"UPDATE FCT_AUTO_TEST.users 
                                                         SET 
                                                             NAME = :name, 
                                                             BADGE = :badge,
                                                             LASTUPDATED = :lastUpdated 
                                                         WHERE ID = :id";
             // Deleta um usuário
-            public const string DeleteUser = @"DELETE FROM users WHERE ID = :id";
+            public const string DeleteUser = @"DELETE FROM FCT_AUTO_TEST.users WHERE ID = :id";
         }
         /// <summary>
         /// COMANDOS SQL IMAGES
@@ -142,30 +142,30 @@ namespace BiometricFaceApi.OraScripts
         public static class ImageQueries 
         {
             // Retorna todas as imagens
-            public const string GetAllImage = @"SELECT * FROM images";
+            public const string GetAllImage = @"SELECT * FROM FCT_AUTO_TEST.images";
             // Lista de imagens com paginação
             public const string GetListImage = @"SELECT * 
                                                     FROM (
                                                     SELECT a.*, ROWNUM rnum 
                                                     FROM (
-                                                        SELECT * FROM images 
+                                                        SELECT * FROM FCT_AUTO_TEST.images 
                                                         ORDER BY LASTUPDATED DESC
                                                     ) a 
                                                     WHERE ROWNUM <= :Offset + :Limit
                                                     ) 
                                                     WHERE rnum > :Offset";
             // Pesquisa imagem por ID
-            public const string GetImageById = @"SELECT * FROM images WHERE ID = :id";
+            public const string GetImageById = @"SELECT * FROM FCT_AUTO_TEST.images WHERE ID = :id";
             // Pesquisa imagem por UserID
-            public const string GetUserId = @"SELECT * FROM images WHERE USERID = :userId";
+            public const string GetUserId = @"SELECT * FROM FCT_AUTO_TEST.images WHERE USERID = :userId";
             // Pesquisa imagem por conteúdo (PictureStream)
-            public const string GetImageByString = @"SELECT * FROM images WHERE PICTURESTREAM = :img";
+            public const string GetImageByString = @"SELECT * FROM FCT_AUTO_TEST.images WHERE PICTURESTREAM = :img";
             //Pesquisa imagem por embedding(Caracteristica)
             public const string GetEmbeddingByString = @"SELECT *
-                                                                   FROM images
+                                                                   FROM FCT_AUTO_TEST.images
                                                                    WHERE CONTAINS(EMBEDDING, :embedding, 1) > 0";
             // Insere uma nova imagem
-            public const string InsertImage = @"INSERT INTO images (
+            public const string InsertImage = @"INSERT INTO FCT_AUTO_TEST.images (
                                                                   USERID,
                                                                   PICTURESTREAM,
                                                                   EMBEDDING,
@@ -179,14 +179,14 @@ namespace BiometricFaceApi.OraScripts
                                                                   :lastUpdated
                                                                )";
             // Atualiza uma imagem existente
-            public const string UpdateImage = @"UPDATE images SET
+            public const string UpdateImage = @"UPDATE FCT_AUTO_TEST.images SET
                                                                 USERID = :userId, 
                                                                 PICTURESTREAM = :pictureStream,
                                                                 EMBEDDING = :embedding,
                                                                 LASTUPDATED = :lastUpdated
                                                           WHERE ID = :ID";
             // Deleta uma imagem
-            public const string DeleteImage = @"DELETE FROM images WHERE ID = :id";
+            public const string DeleteImage = @"DELETE FROM FCT_AUTO_TEST.images WHERE ID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela Line
@@ -194,17 +194,17 @@ namespace BiometricFaceApi.OraScripts
         public static class LineQueries 
         {
             // Pesquisa e lista todas as linhas (somente as colunas necessárias)
-            public const string GetAllLine = @"SELECT ID, NAME, CREATED, LASTUPDATED FROM line";
+            public const string GetAllLine = @"SELECT ID, NAME, CREATED, LASTUPDATED FROM FCT_AUTO_TEST.line";
             // Pesquisa linha por ID
             public const string GetLineById = @"SELECT ID, NAME, CREATED, LASTUPDATED 
-                                        FROM line 
+                                        FROM FCT_AUTO_TEST.line 
                                         WHERE ID = :id";
             // Pesquisa linha por nome (caso-insensível)
             public const string GetLineByName = @"SELECT ID, NAME, CREATED, LASTUPDATED 
-                                          FROM line 
+                                          FROM FCT_AUTO_TEST.line 
                                           WHERE LOWER(NAME) = :nameLower";
             // Insere uma nova linha
-            public const string InsertLine = @"INSERT INTO line (
+            public const string InsertLine = @"INSERT INTO FCT_AUTO_TEST.line (
                                           NAME,
                                           CREATED, 
                                           LASTUPDATED
@@ -214,12 +214,12 @@ namespace BiometricFaceApi.OraScripts
                                           :lastUpdated
                                       )";
             // Atualiza uma linha existente
-            public const string UpdateLine = @"UPDATE line 
+            public const string UpdateLine = @"UPDATE FCT_AUTO_TEST.line 
                                        SET NAME = :name,
                                            LASTUPDATED = :lastUpdated
                                        WHERE ID = :id";
             // Deleta uma linha por ID
-            public const string DeleteLine = @"DELETE FROM line WHERE ID = :id";
+            public const string DeleteLine = @"DELETE FROM FCT_AUTO_TEST.line WHERE ID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela Station
@@ -228,15 +228,15 @@ namespace BiometricFaceApi.OraScripts
         {
             // Pesquisa e lista todas as estações (somente colunas necessárias)
             public const string GetAllLStation = @"SELECT ID, NAME, SIZEX, SIZEY, CREATED, LASTUPDATED 
-                                           FROM station";
+                                           FROM FCT_AUTO_TEST.station";
             // Pesquisa estação por ID
-            public const string GetStationId = @"SELECT * FROM station WHERE ID = :id";
+            public const string GetStationId = @"SELECT * FROM FCT_AUTO_TEST.station WHERE ID = :id";
             // Pesquisa estação por nome (caso-insensível)
             public const string GetStationName = @"SELECT ID, NAME, SIZEX, SIZEY, CREATED, LASTUPDATED 
-                                             FROM station 
+                                             FROM FCT_AUTO_TEST.station 
                                              WHERE LOWER(NAME) = :nameLower";
             // Insere uma nova estação
-            public const string InsertStation = @"INSERT INTO station (
+            public const string InsertStation = @"INSERT INTO FCT_AUTO_TEST.station (
                                               NAME, 
                                               SIZEX,
                                               SIZEY,
@@ -250,14 +250,14 @@ namespace BiometricFaceApi.OraScripts
                                               :lastUpdated
                                           )";
             // Atualiza uma estação existente
-            public const string UpdateStation = @"UPDATE station 
+            public const string UpdateStation = @"UPDATE FCT_AUTO_TEST.station 
                                           SET NAME = :name, 
                                               SIZEX = :sizex, 
                                               SIZEY = :sizey, 
                                               LASTUPDATED = :lastUpdated 
                                           WHERE ID = :id";
             // Deleta uma estação por ID
-            public const string DeleteStation = @"DELETE FROM station WHERE ID = :id";
+            public const string DeleteStation = @"DELETE FROM FCT_AUTO_TEST.station WHERE ID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela Jig
@@ -266,19 +266,19 @@ namespace BiometricFaceApi.OraScripts
         {
             // Pesquisa e lista todos os jigs (somente colunas necessárias)
             public const string GetAllJig = @"SELECT ID, NAME, SERIALNUMBERJIG, DESCRIPTION, CREATED, LASTUPDATED 
-                                       FROM jig";
+                                       FROM FCT_AUTO_TEST.jig";
             // Pesquisa jig por ID
-            public const string GetJigId = @"SELECT * FROM jig WHERE ID = :id";
+            public const string GetJigId = @"SELECT * FROM FCT_AUTO_TEST.jig WHERE ID = :id";
             // Pesquisa jig por Serial Number (retorna as colunas necessárias)
             public const string GetjigBySerialNumber = @"SELECT ID, NAME, SERIALNUMBERJIG, DESCRIPTION, CREATED, LASTUPDATED 
-                                                 FROM jig 
+                                                 FROM FCT_AUTO_TEST.jig 
                                                  WHERE SERIALNUMBERJIG = :serialNumberJig";
             // Pesquisa jig por nome (caso-insensível)
             public const string GetJigName = @"SELECT ID, NAME, SERIALNUMBERJIG, DESCRIPTION, CREATED, LASTUPDATED 
-                                         FROM jig 
+                                         FROM FCT_AUTO_TEST.jig 
                                          WHERE LOWER(NAME) = :nameLower";
             // Insere um novo jig
-            public const string InsertJig = @"INSERT INTO jig (
+            public const string InsertJig = @"INSERT INTO FCT_AUTO_TEST.jig (
                                           NAME, 
                                           SERIALNUMBERJIG,
                                           DESCRIPTION,
@@ -292,14 +292,14 @@ namespace BiometricFaceApi.OraScripts
                                           :lastUpdated
                                       )";
             // Atualiza um jig existente
-            public const string UpdateJig = @"UPDATE jig    
+            public const string UpdateJig = @"UPDATE FCT_AUTO_TEST.jig    
                                       SET NAME = :name,
                                           SERIALNUMBERJIG = :serialNumberJig,
                                           DESCRIPTION = :description,
                                           LASTUPDATED = :lastUpdated 
                                       WHERE ID = :id";
             // Deleta um jig por ID
-            public const string DeleteJig = @"DELETE FROM jig WHERE ID = :id";
+            public const string DeleteJig = @"DELETE FROM FCT_AUTO_TEST.jig WHERE ID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela MonitoresEsd
@@ -308,38 +308,38 @@ namespace BiometricFaceApi.OraScripts
         {
             // Pesquisa e lista todos os monitoresEsd (somente colunas necessárias)
             public const string GetAllMonitor = @"SELECT ID, SERIALNUMBERESP, DESCRIPTION,CREATED, LASTUPDATED 
-                                           FROM monitoresd";
+                                           FROM FCT_AUTO_TEST.monitoresd";
             // Pesquisa monitorEsd por ID
             public const string GetMonitorId = @"SELECT ID, SERIALNUMBERESP, DESCRIPTION, CREATED, LASTUPDATED
-                                                                                FROM monitoresd
+                                                                                FROM FCT_AUTO_TEST.monitoresd
                                                                                 WHERE ID = :id";
             // Pesquisa monitorEsd por Serial Number
             public const string GetSerialNumber = @"SELECT ID, SERIALNUMBERESP, DESCRIPTION, CREATED, LASTUPDATED 
-                                                     FROM monitoresd 
+                                                     FROM FCT_AUTO_TEST.monitoresd 
                                                      WHERE SERIALNUMBERESP = :serial";
             // Pesquisa monitorEsd por IP Number
             public const string GetByIP = @"SELECT ID, SERIALNUMBERESP, DESCRIPTION,  CREATED, LASTUPDATED 
-                                           FROM monitoresd 
+                                           FROM FCT_AUTO_TEST.monitoresd 
                                            WHERE IP = :ip";
 
             // Pesquisa por logs do monitorEsd
             public const string GetByLogs = @"SELECT ID, SERIALNUMBERESP, DESCRIPTION, CREATED, LASTUPDATED 
-                                             FROM monitoresd 
+                                             FROM FCT_AUTO_TEST.monitoresd 
                                              WHERE LOGS = :logs";
             // Pesquisa monitorEsd por Status
             public const string GetStatus = @"SELECT ID, SERIALNUMBERESP, DESCRIPTION, CREATED, LASTUPDATED 
-                                               FROM monitoresd 
+                                               FROM FCT_AUTO_TEST.monitoresd 
                                                WHERE LOWER(STATUS) = :statusLower";
             // Pesquisa monitorEsd por Status do Operador
             public const string GetStatusOP = @"SELECT ID, SERIALNUMBERESP, DESCRIPTION, CREATED, LASTUPDATED 
-                                                       FROM monitoresd 
+                                                       FROM FCT_AUTO_TEST.monitoresd 
                                                        WHERE LOWER(STATUSOPERADOR) = :statusOperadorLower";
             // Pesquisa monitorEsd por Status do Jig
             public const string GetStatusJig = @"SELECT ID, SERIALNUMBERESP, DESCRIPTION, CREATED, LASTUPDATED 
-                                                  FROM monitoresd 
+                                                  FROM FCT_AUTO_TEST.monitoresd 
                                                   WHERE LOWER(STATUSJIG) = :statusJigLower";
             // Insere um novo monitorEsd
-            public const string InsertMonitorEsd = @"INSERT INTO monitoresd (
+            public const string InsertMonitorEsd = @"INSERT INTO FCT_AUTO_TEST.monitoresd (
                                                SERIALNUMBERESP,
                                                DESCRIPTION, 
                                                CREATED, 
@@ -351,14 +351,14 @@ namespace BiometricFaceApi.OraScripts
                                                :lastUpdated
                                             )";
             // Atualiza um monitorEsd existente
-            public const string UpdateMonitorEsd = @"UPDATE monitoresd 
+            public const string UpdateMonitorEsd = @"UPDATE FCT_AUTO_TEST.monitoresd 
                                              SET 
                                                  SERIALNUMBERESP = :serialNumberEsp,
                                                  DESCRIPTION = :description, 
                                                  LASTUPDATED = :lastUpdated
                                              WHERE ID = :id";
             // Deleta um monitorEsd por ID
-            public const string DeleteMonitor = @"DELETE FROM monitoresd WHERE ID = :id";
+            public const string DeleteMonitor = @"DELETE FROM FCT_AUTO_TEST.monitoresd WHERE ID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela linkStationAndLine
@@ -367,23 +367,23 @@ namespace BiometricFaceApi.OraScripts
         {
             // Pesquisa e lista todos os links entre estações e linhas
             public const string GetAllLinks = @"SELECT ID, ORDERSLIST, LINEID, STATIONID, CREATED, LASTUPDATED 
-                                        FROM linkStationAndLine";
+                                        FROM FCT_AUTO_TEST.linkStationAndLine";
             // Pesquisa link por ID de linha
-            public const string GetByLineId = @"SELECT * FROM linkStationAndLine WHERE LINEID = :lineId";
+            public const string GetByLineId = @"SELECT * FROM FCT_AUTO_TEST.linkStationAndLine WHERE LINEID = :lineId";
             // Pesquisa link por ID do link
-            public const string GetByLinkId = @"SELECT * FROM linkStationAndLine WHERE ID = :id";
+            public const string GetByLinkId = @"SELECT * FROM FCT_AUTO_TEST.linkStationAndLine WHERE ID = :id";
             // Pesquisa link por ID da estação
-            public const string GetByLinkStationId = @"SELECT * FROM linkStationAndLine WHERE STATIONID = :stationId ";
+            public const string GetByLinkStationId = @"SELECT * FROM FCT_AUTO_TEST.linkStationAndLine WHERE STATIONID = :stationId ";
             // Pesquisa link de linha e estação por IDs de linha e estação
             public const string GetByLinkLineAndStationById = @"SELECT ID, ORDERSLIST, LINEID, STATIONID, CREATED, LASTUPDATED 
-                                                        FROM linkStationAndLine 
+                                                        FROM FCT_AUTO_TEST.linkStationAndLine 
                                                         WHERE LINEID = :lineId AND STATIONID = :stationId";
             // Pesquisa por ID de linha e estação e retorna campos selecionados
             public const string GetLineAndStationbyId = @"SELECT ID, ORDERSLIST, LINEID, STATIONID, CREATED, LASTUPDATED 
-                                                  FROM linkStationAndLine 
+                                                  FROM FCT_AUTO_TEST.linkStationAndLine 
                                                   WHERE LINEID = :lineId AND STATIONID = :stationId";
             // Insere um novo link entre estação e linha
-            public const string InsertLinkAndStation = @"INSERT INTO linkStationAndLine (
+            public const string InsertLinkAndStation = @"INSERT INTO FCT_AUTO_TEST.linkStationAndLine (
                                                    ORDERSLIST, 
                                                    LINEID, 
                                                    STATIONID, 
@@ -397,7 +397,7 @@ namespace BiometricFaceApi.OraScripts
                                                    :lastUpdated
                                                 )";
             // Atualiza um link existente entre estação e linha
-            public const string UpdateLinkAndStation = @"UPDATE linkStationAndLine 
+            public const string UpdateLinkAndStation = @"UPDATE FCT_AUTO_TEST.linkStationAndLine 
                                                  SET 
                                                      ORDERSLIST = :ordersList, 
                                                      LINEID = :lineId, 
@@ -405,7 +405,7 @@ namespace BiometricFaceApi.OraScripts
                                                      LASTUPDATED = :lastUpdated 
                                                  WHERE ID = :id";
             // Deleta um link entre estação e linha por ID
-            public const string DeleteLinkAndStation = @"DELETE FROM linkStationAndLine WHERE ID = :id";
+            public const string DeleteLinkAndStation = @"DELETE FROM FCT_AUTO_TEST.linkStationAndLine WHERE ID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela produceactivity
@@ -413,21 +413,21 @@ namespace BiometricFaceApi.OraScripts
         public static class ProduceActivityQueries 
         {
             // Pesquisa e lista todos os registros de produceActivity
-            public const string GetAllProcuceAct = @"SELECT * FROM produceactivity";
+            public const string GetAllProcuceAct = @"SELECT * FROM FCT_AUTO_TEST.produce_activity";
             // Pesquisa produceActivity por ID
-            public const string GetProduceActById = @"SELECT * FROM produceactivity WHERE ID = :id";
+            public const string GetProduceActById = @"SELECT * FROM FCT_AUTO_TEST.produce_activity WHERE ID = :id";
             // Pesquisa produceActivity por ID de monitor
-            public const string GetMonitorActById = @"SELECT * FROM produceactivity WHERE MONITORPRODUCE = :monitorEsdId";
+            public const string GetMonitorActById = @"SELECT * FROM FCT_AUTO_TEST.produce_activity WHERE MONITORPRODUCE = :monitorEsdId";
             // Pesquisa produceActivity por ID de jig
-            public const string GetJigActById = @"SELECT * FROM produceactivity WHERE JIGPRODUCE = :jigId";
+            public const string GetJigActById = @"SELECT * FROM FCT_AUTO_TEST.produce_activity WHERE JIGPRODUCE = :jigId";
             // Pesquisa produceActivity por ID de usuário
-            public const string GetUserActById = @"SELECT * FROM produceactivity WHERE USERPRODUCE = :userId";
+            public const string GetUserActById = @"SELECT * FROM FCT_AUTO_TEST.produce_activity WHERE USERPRODUCE = :userId";
             // Pesquisa produceActivity por ID de linkStationAndLine
-            public const string GetLinkStationAndLineById = @"SELECT * FROM produceactivity WHERE LINKSTATIONANDLINEID = :linkStationAndLineId";
+            public const string GetLinkStationAndLineById = @"SELECT * FROM FCT_AUTO_TEST.produce_activity WHERE LINKSTATIONANDLINEID = :linkStationAndLineId";
             // Pesquisa produceActivity por valor de isLocked
-            public const string GetIsLockedId = @"SELECT * FROM produceactivity WHERE ISLOCKED = :id";
+            public const string GetIsLockedId = @"SELECT * FROM FCT_AUTO_TEST.produce_activity WHERE ISLOCKED = :id";
             // Insere um novo registro em produceActivity
-            public const string InsertProduceAct = @"INSERT INTO produceactivity (
+            public const string InsertProduceAct = @"INSERT INTO FCT_AUTO_TEST.produce_activity (
                                                 USERID, 
                                                 JIGID, 
                                                 MONITORESDID, 
@@ -447,7 +447,7 @@ namespace BiometricFaceApi.OraScripts
                                                 :lastUpdated
                                             )";
             // Atualiza um registro existente em produceActivity
-            public const string UpdateProduceAct = @"UPDATE produceactivity 
+            public const string UpdateProduceAct = @"UPDATE FCT_AUTO_TEST.produce_activity 
                                              SET 
                                                  USERID = :userId, 
                                                  JIGID = :jigId, 
@@ -458,7 +458,7 @@ namespace BiometricFaceApi.OraScripts
                                                  LASTUPDATED = :lastUpdated 
                                              WHERE ID = :id";
             // Deleta um registro de produceActivity por ID
-            public const string DeleteProduceAct = @"DELETE FROM produceactivity WHERE ID = :id";
+            public const string DeleteProduceAct = @"DELETE FROM FCT_AUTO_TEST.produce_activity WHERE ID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela recordStatusProduce
@@ -466,19 +466,19 @@ namespace BiometricFaceApi.OraScripts
         public static class RecordStatusProduceQueries 
         {
             // Pesquisa e lista todos os registros de recordStatusProduce
-            public const string GetAllRecordStatus = @"SELECT * FROM recordstatusproduce";
+            public const string GetAllRecordStatus = @"SELECT * FROM FCT_AUTO_TEST.record_status_produce";
 
             // Pesquisa recordStatusProduce por ID
-            public const string GetRecordStatusById = @"SELECT * FROM recordstatusproduce WHERE ID = :id";
+            public const string GetRecordStatusById = @"SELECT * FROM FCT_AUTO_TEST.record_status_produce WHERE ID = :id";
 
             // Pesquisa recordStatusProduce por produceActivityId
-            public const string GetRecordProduceActId = @"SELECT * FROM recordstatusproduce WHERE PRODUCEACTIVITYID = :produceActivityId";
+            public const string GetRecordProduceActId = @"SELECT * FROM FCT_AUTO_TEST.record_status_produce WHERE PRODUCEACTIVITYID = :produceActivityId";
 
             // Pesquisa recordStatusProduce por userId
-            public const string GetRecordProduceUserId = @"SELECT * FROM recordstatusproduce WHERE USERID = :userId";
+            public const string GetRecordProduceUserId = @"SELECT * FROM FCT_AUTO_TEST.record_status_produce WHERE USERID = :userId";
 
             // Insere um novo registro em recordStatusProduce
-            public const string InsertRecordStatusProduce = @"INSERT INTO recordstatusproduce (
+            public const string InsertRecordStatusProduce = @"INSERT INTO FCT_AUTO_TEST.record_status_produce (
                                                         PRODUCEACTIVITYID,
                                                         USERID,
                                                         DESCRIPTION,
@@ -493,7 +493,7 @@ namespace BiometricFaceApi.OraScripts
                                                     )";
 
             // Atualiza um registro existente em recordStatusProduce
-            public const string UpdateRecordStatusProduce = @"UPDATE recordstatusproduce 
+            public const string UpdateRecordStatusProduce = @"UPDATE FCT_AUTO_TEST.record_status_produce 
                                                       SET 
                                                           PRODUCEACTIVITYID = :produceActivityId, 
                                                           USERID = :userId, 
@@ -503,7 +503,7 @@ namespace BiometricFaceApi.OraScripts
                                                       WHERE ID = :id";
 
             // Deleta um registro de recordStatusProduce por ID
-            public const string DeleteRecordStatusProduce = @"DELETE FROM recordstatusproduce WHERE ID = :id";
+            public const string DeleteRecordStatusProduce = @"DELETE FROM FCT_AUTO_TEST.record_status_produce WHERE ID = :id";
 
         }
         /// <summary>
@@ -512,16 +512,16 @@ namespace BiometricFaceApi.OraScripts
         public static class RolesQueries
         {
             // Pesquisa e lista todos os registros de roles
-            public const string GetAllRoles = @"SELECT * FROM roles";
+            public const string GetAllRoles = @"SELECT * FROM FCT_AUTO_TEST.roles";
 
             // Pesquisa roles por ID
-            public const string GetRolesById = @"SELECT * FROM roles WHERE ID = :id";
+            public const string GetRolesById = @"SELECT * FROM FCT_AUTO_TEST.roles WHERE ID = :id";
 
             // Pesquisa roles por nome
-            public const string GetRolesByRolesName = @"SELECT * FROM roles WHERE ROLESNAME = :rolesNameLower";
+            public const string GetRolesByRolesName = @"SELECT * FROM FCT_AUTO_TEST.roles WHERE ROLESNAME = :rolesNameLower";
 
             // Insere um novo registro em roles
-            public const string InsertRoles = @"INSERT INTO roles (
+            public const string InsertRoles = @"INSERT INTO FCT_AUTO_TEST.roles (
                                                 ROLESNAME,
                                                 CREATED,
                                                 LASTUPDATED
@@ -532,7 +532,7 @@ namespace BiometricFaceApi.OraScripts
                                             )";
 
             // Atualiza um registro existente em roles
-            public const string UpdateRoles = @"UPDATE roles
+            public const string UpdateRoles = @"UPDATE FCT_AUTO_TEST.roles
                                         SET 
                                             ROLESNAME = :rolesName,
                                             LASTUPDATED = :lastUpdated
@@ -540,7 +540,7 @@ namespace BiometricFaceApi.OraScripts
                                             ID = :id";
 
             // Deleta um registro de roles por ID
-            public const string DeleteRoles = @"DELETE FROM roles WHERE ID = :id";
+            public const string DeleteRoles = @"DELETE FROM FCT_AUTO_TEST.roles WHERE ID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela authentication
@@ -555,22 +555,22 @@ namespace BiometricFaceApi.OraScripts
                                                  BADGE, 
                                                  PASSWORD 
                                              FROM 
-                                                 Authentication 
+                                                 FCT_AUTO_TEST.authentication  
                                              WHERE 
                                                  USERNAME = :username 
                                              AND PASSWORD = :password";
 
             // Pesquisa authentication por ID
-            public const string GetAuthenticationById = @"SELECT * FROM authentication WHERE ID = :id";
+            public const string GetAuthenticationById = @"SELECT * FROM FCT_AUTO_TEST.authentication WHERE ID = :id";
 
             // Pesquisa authentication por username
-            public const string GetAuthenticationByUserName = @"SELECT * FROM authentication WHERE USERNAME = :username";
+            public const string GetAuthenticationByUserName = @"SELECT * FROM FCT_AUTO_TEST.authentication WHERE USERNAME = :username";
 
             // Pesquisa authentication por badge
-            public const string GetAuthenticationByBadge = @"SELECT * FROM authentication WHERE BADGE = :badge";
+            public const string GetAuthenticationByBadge = @"SELECT * FROM FCT_AUTO_TEST.authentication WHERE BADGE = :badge";
 
             // Insere authentication
-            public const string InsertAuthentication = @"INSERT INTO Authentication ( 
+            public const string InsertAuthentication = @"INSERT INTO FCT_AUTO_TEST.authentication ( 
                                                          USERNAME, 
                                                          ROLESNAME, 
                                                          BADGE, 
@@ -587,7 +587,7 @@ namespace BiometricFaceApi.OraScripts
                                                      )";
 
             // Atualiza authentication
-            public const string UpdateAuthentication = @"UPDATE Authentication
+            public const string UpdateAuthentication = @"UPDATE FCT_AUTO_TEST.authentication
                                                  SET 
                                                      USERNAME = :username,
                                                      ROLESNAME = :rolesname,
@@ -598,7 +598,7 @@ namespace BiometricFaceApi.OraScripts
                                                      ID = :id";
 
             // Deleta authentication
-            public const string DeleteAuthentication = @"DELETE FROM Authentication WHERE ID = :id";
+            public const string DeleteAuthentication = @"DELETE FROM FCT_AUTO_TEST.authentication WHERE ID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela stationview
@@ -606,25 +606,25 @@ namespace BiometricFaceApi.OraScripts
         public static class StationViewQueries
         {
             // Pesquisa e lista todos os stationview
-            public const string GetAllStationView = @"SELECT * FROM stationview";
+            public const string GetAllStationView = @"SELECT * FROM FCT_AUTO_TEST.stationview";
 
             // Pesquisa stationview por ID
-            public const string GetStationViewById = @"SELECT * FROM stationview WHERE ID = :id";
+            public const string GetStationViewById = @"SELECT * FROM FCT_AUTO_TEST.stationview WHERE ID = :id";
 
             // Procura o ID de monitor na tabela stationview
-            public const string GetMonitorByIdInST = @"SELECT * FROM stationview WHERE MONITORESDID = :id";
+            public const string GetMonitorByIdInST = @"SELECT * FROM FCT_AUTO_TEST.stationview WHERE MONITORESDID = :id";
 
             // Pesquisa positionsequence por ID
-            public const string GetStationViewPositionById = @"SELECT * FROM stationview WHERE POSITIONSEQUENCE = :positionId";
+            public const string GetStationViewPositionById = @"SELECT * FROM FCT_AUTO_TEST.stationview WHERE POSITIONSEQUENCE = :positionId";
 
             // Pesquisa positionsequence por link station and line ID
-            public const string GetStationViewPositionByLinkId = @"SELECT POSITIONSEQUENCE FROM stationview WHERE LINKSTATIONANDLINEID = :linkStationAndLineId AND POSITIONSEQUENCE = :sequanceNumber";
+            public const string GetStationViewPositionByLinkId = @"SELECT POSITIONSEQUENCE FROM FCT_AUTO_TEST.stationview WHERE LINKSTATIONANDLINEID = :linkStationAndLineId AND POSITIONSEQUENCE = :sequanceNumber";
 
             // Deleta stationview
-            public const string DeleteStationView = @"DELETE FROM StationView WHERE ID = :id";
+            public const string DeleteStationView = @"DELETE FROM FCT_AUTO_TEST.StationView WHERE ID = :id";
 
             // Insere stationview
-            public const string InsertStationView = @"INSERT INTO StationView ( 
+            public const string InsertStationView = @"INSERT INTO FCT_AUTO_TEST.StationView ( 
                                                  MONITORESDID, 
                                                  LINKSTATIONANDLINEID, 
                                                  POSITIONSEQUENCE, 
@@ -639,7 +639,7 @@ namespace BiometricFaceApi.OraScripts
                                               )";
 
             // Atualiza stationview
-            public const string UpdateStationView = @"UPDATE StationView
+            public const string UpdateStationView = @"UPDATE FCT_AUTO_TEST.StationView
                                               SET 
                                                   MONITORESDID = :monitoresdId, 
                                                   LINKSTATIONANDLINEID = :linkStationAndLineId, 
@@ -649,7 +649,7 @@ namespace BiometricFaceApi.OraScripts
                                                   ID = :id";
 
             // Deleta monitor da tabela stationview
-            public const string Delete_MonitorByStationView = @"DELETE FROM stationview WHERE MONITORESDID = :id";
+            public const string Delete_MonitorByStationView = @"DELETE FROM FCT_AUTO_TEST.stationview WHERE MONITORESDID = :id";
         }
         /// <summary>
         /// Comandos SQL para a tabela logmonitorEsd
@@ -657,19 +657,19 @@ namespace BiometricFaceApi.OraScripts
         public static class LogMonitorEsdQueries
         {
             // Retorna uma lista de logs cadastrados
-            public const string GetAllLogMonitor = @"SELECT * FROM logmonitorEsd";
+            public const string GetAllLogMonitor = @"SELECT * FROM FCT_AUTO_TEST.logmonitoresd";
 
             // Pesquisa logMonitor por ID
-            public const string GetLogMonitorById = @"SELECT * FROM logmonitorEsd WHERE ID = :id";
+            public const string GetLogMonitorById = @"SELECT * FROM FCT_AUTO_TEST.logmonitoresd WHERE ID = :id";
 
             // Pesquisa monitorEsd na tabela logMonitor por ID
-            public const string GetMonitorEsdInLogById = @"SELECT * FROM logmonitorEsd WHERE MONITORESDID = :monitorId";
+            public const string GetMonitorEsdInLogById = @"SELECT * FROM FCT_AUTO_TEST.logmonitoresd WHERE MONITORESDID = :monitorId";
 
             // Pesquisa monitorEsd na tabela logMonitor por IP
-            public const string GetMonitorEsdInLogByIP = @"SELECT * FROM logmonitorEsd WHERE IP = :ip";
+            public const string GetMonitorEsdInLogByIP = @"SELECT * FROM FCT_AUTO_TEST.logmonitoresd WHERE IP = :ip";
 
             // Pesquisa SERIALNUMBER de monitorEsd na tabela logMonitor
-            public const string GetMonitorEsdInLogBySerialNumber = @"SELECT * FROM logmonitorEsd WHERE SERIALNUMBERESP = :serialNumberEsp";
+            public const string GetMonitorEsdInLogBySerialNumber = @"SELECT * FROM FCT_AUTO_TEST.logmonitoresd WHERE SERIALNUMBERESP = :serialNumberEsp";
 
             // Retorna uma lista paginada de logs do monitor esd
             public const string GetListMonitorByIdWithPagination = @"SELECT *
@@ -677,7 +677,7 @@ namespace BiometricFaceApi.OraScripts
                                                      SELECT t.*, ROWNUM rnum
                                                      FROM (
                                                          SELECT * 
-                                                         FROM LogMonitorEsd
+                                                         FROM FCT_AUTO_TEST.logmonitoresd
                                                          WHERE MONITORESDID = :monitorId
                                                          ORDER BY CREATED DESC
                                                      ) t
@@ -701,7 +701,7 @@ namespace BiometricFaceApi.OraScripts
                                                                 SELECT t.*, ROWNUM rnum
                                                                 FROM (
                                                                     SELECT * 
-                                                                    FROM LogMonitorEsd
+                                                                    FROM FCT_AUTO_TEST.logmonitoresd
                                                                     WHERE SerialNumberEsp = :serialNumberEsp
                                                                     ORDER BY Created ASC
                                                                 ) t
@@ -736,7 +736,7 @@ namespace BiometricFaceApi.OraScripts
                                                                     Description, 
                                                                     Created, 
                                                                     LastUpdated
-                                                             FROM LogMonitorEsd
+                                                             FROM FCT_AUTO_TEST.logmonitoresd
                                                              ORDER BY Created ASC
                                                          ) t
                                                          WHERE ROWNUM <= 250
@@ -760,7 +760,7 @@ namespace BiometricFaceApi.OraScripts
                                                                 SELECT t.*, ROWNUM rnum
                                                                 FROM (
                                                                     SELECT * 
-                                                                    FROM LogMonitorEsd
+                                                                    FROM FCT_AUTO_TEST.logmonitoresd
                                                                     WHERE SerialNumberEsp = :serialNumberEsp
                                                                     ORDER BY Created DESC
                                                                 ) t
@@ -770,22 +770,22 @@ namespace BiometricFaceApi.OraScripts
                                                             ORDER BY Created DESC";
 
             // Retorna logs baseados no conteúdo da mensagem
-            public const string GetMessageContent = @"SELECT * FROM logmonitorEsd WHERE MESSAGECONTENT = :messageContentLower";
+            public const string GetMessageContent = @"SELECT * FROM FCT_AUTO_TEST.logmonitoresd WHERE MESSAGECONTENT = :messageContentLower";
 
             // Retorna logs baseados no tipo de mensagem
-            public const string GetMessageType = @"SELECT * FROM logmonitorEsd WHERE MESSAGETYPE = :messageTypeLower";
+            public const string GetMessageType = @"SELECT * FROM FCT_AUTO_TEST.logmonitoresd WHERE MESSAGETYPE = :messageTypeLower";
 
             // Pesquisa logs baseados no tipo de mensagem
-            public const string SelectLogMonitor = @"SELECT * FROM logmonitorEsd WHERE ID = :id AND MESSAGETYPE = :messageType";
+            public const string SelectLogMonitor = @"SELECT * FROM FCT_AUTO_TEST.logmonitoresd WHERE ID = :id AND MESSAGETYPE = :messageType";
 
             // Deleta log de um monitorEsd específico
-            public const string DeleteLogMonitorEsd = @"DELETE FROM logmonitorEsd WHERE ID = :id";
+            public const string DeleteLogMonitorEsd = @"DELETE FROM FCT_AUTO_TEST.logmonitoresd WHERE ID = :id";
 
             // Deleta monitorEsd da tabela Log
-            public const string Delete_MonitorEsd = @"DELETE FROM logmonitorEsd WHERE MONITORESDID = :id";
+            public const string Delete_MonitorEsd = @"DELETE FROM FCT_AUTO_TEST.logmonitoresd WHERE MONITORESDID = :id";
 
             // Insere logMonitorEsd
-            public const string InsertLogMonitorEsd = @"INSERT INTO logmonitorEsd (
+            public const string InsertLogMonitorEsd = @"INSERT INTO FCT_AUTO_TEST.logmonitoresd (
                                                      SerialNumberEsp,
                                                      MessageType, 
                                                      MonitorEsdID,
@@ -810,7 +810,7 @@ namespace BiometricFaceApi.OraScripts
                                                  )";
 
             // Atualiza logMonitorEsd
-            public const string UpdateLogMonitorEsd = @"UPDATE LogMonitorEsd
+            public const string UpdateLogMonitorEsd = @"UPDATE FCT_AUTO_TEST.logmonitoresd
                                          SET 
                                              SerialNumberEsp = :serialNumberEsp,
                                              MessageType = :messageType,
@@ -824,7 +824,7 @@ namespace BiometricFaceApi.OraScripts
                                          WHERE ID = :id";
 
             // Atualiza o status de um logMonitorEsd
-            public const string UpdateLogMonitorStatus = @"UPDATE LogMonitorEsd
+            public const string UpdateLogMonitorStatus = @"UPDATE FCT_AUTO_TEST.logmonitoresd
                                              SET 
                                                  STATUS = :status,
                                                  Description = :description,
@@ -840,39 +840,39 @@ namespace BiometricFaceApi.OraScripts
         public static class LastLogMonitorEsdQueries
         {
             // Retorna uma lista de logs cadastrados
-            public const string GetAllLastLogMonitor = @"SELECT * FROM lastlogmonitorEsd";
+            public const string GetAllLastLogMonitor = @"SELECT * FROM  FCT_AUTO_TEST.lastlogmonitorEsd";
 
             // Pesquisa logMonitor por ID
-            public const string GetLastLogMonitorById = @"SELECT * FROM lastlogmonitorEsd WHERE ID = :id";
+            public const string GetLastLogMonitorById = @"SELECT * FROM  FCT_AUTO_TEST.lastlogmonitorEsd WHERE ID = :id";
 
             // Pesquisa monitorEsd na tabela logMonitor por ID
             public const string GetMonitorEsdInLastLogById = @"SELECT *
-                                                                     FROM lastlogmonitorEsd
+                                                                     FROM  FCT_AUTO_TEST.lastlogmonitorEsd
                                                                      WHERE MONITORESDID = :monitorEsd
                                                                        AND JIGID = :jigId";
 
             //Pesquisa jig na tabela lastlogs por id 
             public const string GetJigIdInLastLogById = @"SELECT * 
-                                                               FROM lastlogmonitorEsd 
+                                                               FROM  FCT_AUTO_TEST.lastlogmonitorEsd 
                                                                WHERE JIGID = :jigId";
 
             // Pesquisa SERIALNUMBERESP de monitorEsd na tabela logMonitor
-            public const string GetMonitorEsdInLastLogBySerialNumber = @"SELECT * FROM lastlogmonitorEsd WHERE SERIALNUMBERESP = :serialNumberEsp";
+            public const string GetMonitorEsdInLastLogBySerialNumber = @"SELECT * FROM  FCT_AUTO_TEST.lastlogmonitorEsd WHERE SERIALNUMBERESP = :serialNumberEsp";
 
             //Pesquisa o ultimo log atraves do campo created
             public const string GetLastLogForCreated = @"SELECT *
-                                                                FROM lastLogmonitoresd
+                                                                FROM  FCT_AUTO_TEST.lastLogmonitoresd
                                                                 WHERE ROWNUM = 1
                                                                 ORDER BY Created DESC";
 
 
             public const string GetMessageType = @"SELECT *
-                                                             FROM lastlogmonitorEsd
+                                                             FROM  FCT_AUTO_TEST.lastlogmonitorEsd
                                                              WHERE SERIALNUMBERESP = :serialNumberEsp
                                                              AND MESSAGETYPE = :messageType";
 
             // Insere logMonitorEsd
-            public const string InsertLastLogs = @"INSERT INTO lastlogmonitorEsd (
+            public const string InsertLastLogs = @"INSERT INTO  FCT_AUTO_TEST.lastlogmonitorEsd (
                                              SerialNumberEsp,
                                              MessageType, 
                                              MonitorEsdID,
@@ -897,7 +897,7 @@ namespace BiometricFaceApi.OraScripts
                                          )";
 
             // Atualiza logMonitorEsd
-            public const string UpdateLastLogs = @"UPDATE LastLogMonitorEsd
+            public const string UpdateLastLogs = @"UPDATE  FCT_AUTO_TEST.LastLogMonitorEsd
                                  SET 
                                      MessageType = :messageType,
                                      MonitorEsdID = :monitorEsdId,
@@ -915,7 +915,7 @@ namespace BiometricFaceApi.OraScripts
         public static class StatusJigAndUserQueries
         {
             // Insere um novo StatusJigAndUser
-            public const string InsertStatusJigAndUser = @"INSERT INTO StatusJigAndUser (
+            public const string InsertStatusJigAndUser = @"INSERT INTO FCT_AUTO_TEST.StatusJigAndUser (
                                                      MONITORESDID, 
                                                      JIGID, 
                                                      USERID, 
@@ -930,7 +930,7 @@ namespace BiometricFaceApi.OraScripts
                                                  )";
 
             // Atualiza um StatusJigAndUser
-            public const string UpdateStatusJigAndUser = @"UPDATE StatusJigAndUser
+            public const string UpdateStatusJigAndUser = @"UPDATE FCT_AUTO_TEST.StatusJigAndUser
                                                    SET 
                                                        MONITORESDID = :monitoresdid,
                                                        JIGID = :jigid,
@@ -943,7 +943,7 @@ namespace BiometricFaceApi.OraScripts
             public const string GetLastSatusJigAndUser = @"SELECT *
                                                     FROM (
                                                         SELECT *
-                                                        FROM StatusJigAndUser
+                                                        FROM FCT_AUTO_TEST.StatusJigAndUser
                                                         WHERE MonitorEsdId = :monitorEsdId
                                                           AND UserId = :userId
                                                           AND JigId = :jigId
@@ -952,19 +952,19 @@ namespace BiometricFaceApi.OraScripts
                                                     WHERE ROWNUM = 1";
 
             // Deleta um StatusJigAndUser
-            public const string DeleteStatusJigAndUser = @"DELETE FROM StatusJigAndUser WHERE ID = :id";
+            public const string DeleteStatusJigAndUser = @"DELETE FROM FCT_AUTO_TEST.StatusJigAndUser WHERE ID = :id";
 
             // Pesquisa StatusJigAndUser por ID
-            public const string GetStatusJigAndUserById = @"SELECT * FROM StatusJigAndUser WHERE ID = :id";
+            public const string GetStatusJigAndUserById = @"SELECT * FROM FCT_AUTO_TEST.StatusJigAndUser WHERE ID = :id";
 
             // Pesquisa StatusJigAndUser por MONITORESDID
-            public const string GetStatusJigAndUserByMonitorEsdId = @"SELECT * FROM StatusJigAndUser WHERE MONITORESDID = :monitoresdid";
+            public const string GetStatusJigAndUserByMonitorEsdId = @"SELECT * FROM FCT_AUTO_TEST.StatusJigAndUser WHERE MONITORESDID = :monitoresdid";
 
             // Pesquisa StatusJigAndUser por USERID
-            public const string GetStatusJigAndUserByUserId = @"SELECT * FROM StatusJigAndUser WHERE USERID = :userid";
+            public const string GetStatusJigAndUserByUserId = @"SELECT * FROM FCT_AUTO_TEST.StatusJigAndUser WHERE USERID = :userid";
 
             // Pesquisa StatusJigAndUser por JIGID
-            public const string GetStatusJigAndUserByJigId = @"SELECT * FROM StatusJigAndUser WHERE JIGID = :jigid";
+            public const string GetStatusJigAndUserByJigId = @"SELECT * FROM FCT_AUTO_TEST.StatusJigAndUser WHERE JIGID = :jigid";
         }
     }
 }

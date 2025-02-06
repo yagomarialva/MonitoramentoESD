@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\BC4G9992\\Desktop\\Nova pasta (3)\\fct_auto_test\\backend\\BiometricFaceApi.csproj": {}
+    "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\BiometricFaceApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\BC4G9992\\Desktop\\Nova pasta (3)\\fct_auto_test\\backend\\BiometricFaceApi.csproj": {
+    "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\BiometricFaceApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\BC4G9992\\Desktop\\Nova pasta (3)\\fct_auto_test\\backend\\BiometricFaceApi.csproj",
+        "projectUniqueName": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\BiometricFaceApi.csproj",
         "projectName": "BiometricFaceApi",
-        "projectPath": "C:\\Users\\BC4G9992\\Desktop\\Nova pasta (3)\\fct_auto_test\\backend\\BiometricFaceApi.csproj",
-        "packagesPath": "C:\\Users\\BC4G9992\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\BC4G9992\\Desktop\\Nova pasta (3)\\fct_auto_test\\backend\\obj\\",
+        "projectPath": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\BiometricFaceApi.csproj",
+        "packagesPath": "C:\\Users\\bc4g9991\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\bc4g9991\\source\\repos\\fct_auto_oracle\\backend\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\BC4G9992\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\bc4g9991\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -146,7 +142,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

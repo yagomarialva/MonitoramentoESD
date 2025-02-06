@@ -23,14 +23,8 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Busca um monitor ESD por ID.
+        /// Busca monitor ESD por ID.
         /// </summary>
-        /// <param name="id">ID monitor ESD a ser buscado.</param>
-        /// <returns>Retorna uma lista de informações solicitado.</returns>
-        /// <response code="200">Retorna o ID encontrado com uma lista de informações.</response>
-        /// <response code="404">Id não encontrado.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("ListMonitorEsd")]
@@ -40,6 +34,9 @@ namespace BiometricFaceApi.Controllers
             return StatusCode(statusCode, result);
         }
 
+        /// <summary>
+        /// Listar em ordem crescente.
+        /// </summary>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("ListLogsOrdemCrescente")]
@@ -49,6 +46,9 @@ namespace BiometricFaceApi.Controllers
             return StatusCode(statusCode, result);
         }
 
+        /// <summary>
+        /// Listar em ordem descresente.
+        /// </summary>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("ListLogsOrdemDecrescente")]
@@ -59,14 +59,8 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Busca um log monitor ESD por ID.
+        /// Busca log monitor ESD por ID.
         /// </summary>
-        /// <param name="id">ID do log monitor ESD a ser buscado.</param>
-        /// <returns>Retorna o log solicitado.</returns>
-        /// <response code="200">Retorna o log encontrado.</response>
-        /// <response code="404">log não encontrado.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("LOGBYID/{id}")]
@@ -77,15 +71,8 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Busca tipo de log de um monitor ESD.
+        /// Busca tipo de log de monitor ESD.
         /// </summary>
-        /// <param name="type">Identificação dos tipo de log a serem buscados.</param>
-        /// <returns>Retorna os logs solicitados.</returns>
-        /// <response code="200">Retorna o tipo de log encontrados.</response>
-        /// <response code="404">Nenhum monitor encontrado com o tipo de log fornecido.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("TYPE/{type}")]
@@ -96,15 +83,8 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Busca tipo de conteudo log de um monitor ESD.
+        /// Busca tipo de conteudo log de monitor ESD.
         /// </summary>
-        /// <param name="content">Identificação dos tipo de conteudo de log a serem buscados.</param>
-        /// <returns>Retorna os logs solicitados.</returns>
-        /// <response code="200">Retorna o tipo de conteudo de log encontrados.</response>
-        /// <response code="404">Nenhum monitor encontrado com o tipo de conteudo de log fornecido.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("CONTENT/{content}")]
@@ -115,14 +95,8 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Busca um monitor ESD por ID.
+        /// Busca monitor ESD por ID.
         /// </summary>
-        /// <param name="id">ID monitor ESD a ser buscado.</param>
-        /// <returns>Retorna o log solicitado.</returns>
-        /// <response code="200">Retorna o ID encontrado.</response>
-        /// <response code="404">Id não encontrado.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("ID/{id}")]
@@ -131,15 +105,10 @@ namespace BiometricFaceApi.Controllers
             var (result, statusCode) = await _logMonitorEsdService.GetMonitorEsdByIdAsync(id);
             return StatusCode(statusCode, result);
         }
+        
         /// <summary>
-        /// Busca um monitor ESD por IP.
+        /// Busca monitor ESD por IP.
         /// </summary>
-        /// <param name="ip">IP monitor ESD a ser buscado.</param>
-        /// <returns>Retorna o log solicitado.</returns>
-        /// <response code="200">Retorna o IP encontrado.</response>
-        /// <response code="404">IP não encontrado.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
         [Route("IP/{ip}")]
@@ -150,34 +119,20 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Busca um monitor ESD por Serial Number.
+        /// Busca monitor ESD por SN.
         /// </summary>
-        /// <param name="serialNumber"> monitor ESD a ser buscado.</param>
-        /// <returns>Retorna o log solicitado.</returns>
-        /// <response code="200">Retorna o Serial Number encontrado.</response>
-        /// <response code="404">Serial Number não encontrado.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpGet]
-        [Route("SN/{serialNumber}")]
-        public async Task<ActionResult> BuscarMonitorEsdBySn(string serialNumber)
+        [Route("sn/{serialNumber}")]
+        public async Task<ActionResult> BuscarMonitorEsdBySn(string sn)
         {
-            var (result, statusCode) = await _logMonitorEsdService.GetMonitorEsdBySnAsync(serialNumber);
+            var (result, statusCode) = await _logMonitorEsdService.GetMonitorEsdBySnAsync(sn);
             return StatusCode(statusCode, result);
         }
 
         /// <summary>
-        /// Cadastra ou atualiza dados de um log.
+        /// Criar ou atualizar log.
         /// </summary>
-        /// <param name="models">Dados de um log a serem cadastrados ou atualizados.</param>
-        /// <returns>Retorna o resultado da operação.</returns>
-        /// <response code="200">Dados atualizados com sucesso.</response>
-        /// <response code="201">Dados cadastrados com sucesso.</response>
-        /// <response code="400">Dados incorretos ou inválidos.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
-       // [Authorize(Roles = "administrador,tecnico")]
         [HttpPost]
         [HttpPost]
         [Route("ManagerLogs")]
@@ -187,6 +142,10 @@ namespace BiometricFaceApi.Controllers
             return StatusCode(statusCode, result);
         }
 
+
+        /// <summary>
+        /// Altera dados de log.
+        /// </summary>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpPost]
         [Route("changeLogs")]
@@ -197,14 +156,8 @@ namespace BiometricFaceApi.Controllers
         }
 
         /// <summary>
-        /// Deleta log de  monitor ESD pelo ID.
+        /// Deleta log de monitor ESD pelo ID.
         /// </summary>
-        /// <param name="id">ID do log a ser deletado.</param>
-        /// <returns>Resultado da operação.</returns>
-        /// <response code="200">log deletado com sucesso.</response>
-        /// <response code="404">log não encontrado.</response>
-        /// <response code="401">Acesso negado devido a credenciais inválidas.</response>
-        /// <response code="500">Erro do servidor interno.</response>
         [Authorize(Roles = "administrador,tecnico")]
         [HttpDelete]
         [Route("{id}")]

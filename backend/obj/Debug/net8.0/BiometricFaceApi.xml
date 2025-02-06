@@ -42,349 +42,229 @@
         </member>
         <member name="M:BiometricFaceApi.Controllers.BiometricController.GetUsersPaginated(System.Int32,System.Int32)">
             <summary>
-            Buscar todos operadores.
+            Buscar todos operadores paginados
             </summary>
-            <response code="200">Retorna dados de todos operadores com imagem.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response code="500">Erro do servidor interno!</response>
+            <param name="pagina">Número da página (padrão: 1)</param>
+            <param name="tamanhoPagina">Quantidade de itens por página (padrão: 50)</param>
         </member>
         <member name="M:BiometricFaceApi.Controllers.BiometricController.GetAllUsersImage(System.Int32,System.Int32)">
             <summary>
             Buscar todos operadores com imagem
             </summary>
-            <response code="200">Retorna dados de todos operadores com imagem.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response code="500">Erro do servidor interno!</response>
+            <param name="pagina">Número da página (padrão: 1)</param>
+            <param name="tamanhoPagina">Quantidade de itens por página (padrão: 50)</param>
         </member>
         <member name="M:BiometricFaceApi.Controllers.BiometricController.GetAllUsersNoImage(System.Int32,System.Int32)">
             <summary>
             Buscar todos operadores sem imagem
             </summary>
-            <response code="200">Retorna dados de todos operadores sem imagem.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response code="500">Erro do servidor interno!</response>
+            <param name="pagina">Número da página (padrão: 1)</param>
+            <param name="tamanhoPagina">Quantidade de itens por página (padrão: 50)</param>
         </member>
-        <member name="M:BiometricFaceApi.Controllers.BiometricController.GetByBadge(System.String)">
+        <member name="M:BiometricFaceApi.Controllers.BiometricController.VerifyJigAndFace(Microsoft.AspNetCore.Http.IFormFile,System.String)">
             <summary>
-            Buscar operadores pelo badge
+            Verificar jig e reconhecimento facial
             </summary>
-            <response code="200">Retorna dados de operadores.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response code="500">Erro do servidor interno!</response>
-        </member>
-        <member name="M:BiometricFaceApi.Controllers.BiometricController.InsertBiometric(BiometricFaceApi.Models.BiometricModel)">
-            <summary>
-            Cadastra e Atualiza dados do operador.
-            </summary>
-            <remarks>Cadastra o operador na base de dados; Para atualizar dados basta usar a matricula do operador.</remarks>
-            <param name="biometric">Dados de cadastro do operador</param>
-            <response code="200">Dados atualizados com sucesso.</response>
-            <response code="201">Dados cadastrados com sucesso.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response code="500">Erro do servidor interno!</response>
+            <param name="serialNumber">Número de serie do jig</param>
+            <param name="imageFile">Imagem do operador</param>
         </member>
         <member name="M:BiometricFaceApi.Controllers.BiometricController.GetUserById(System.Int32)">
             <summary>
-            Buscar operador pelo ID
+            Buscar operador por ID
             </summary>
-            <param name="id">ID do operador</param>
-            <response code="200">Retorna dados do operador.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response code="500">Erro do servidor interno!</response>
+            <param name="id">Id do operador no sistema.</param>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.BiometricController.GetByBadge(System.String)">
+            <summary>
+            Buscar operador por crachá
+            </summary>
+            <param name="cracha">Número do crachá</param>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.BiometricController.InsertBiometric(BiometricFaceApi.Models.BiometricModel)">
+            <summary>
+            Criar ou atualizar operador
+            </summary>
+            <param name="operador">Dados do operador</param>
         </member>
         <member name="M:BiometricFaceApi.Controllers.BiometricController.DeleteBiometric(System.Int32)">
             <summary>
-            Deleta operador pelo ID
+            Excluir operador por ID
             </summary>
             <param name="id">ID do operador</param>
-            <response code="200">Remove dados do banco de dados.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response code="500">Erro do servidor interno!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.JigController.GetAllJigs">
             <summary>
-            Recupera todos os Jigs.
+            Buscar todos.
             </summary>
-            <returns>Uma lista de Jigs.</returns>
-            <response code="200">Retorna a lista de Jigs.</response>
-            <response code="500">Se ocorrer um erro interno do servidor.</response>
+            <returns>Uma Lista de Jigs.</returns>
         </member>
         <member name="M:BiometricFaceApi.Controllers.JigController.GetJigById(System.Int32)">
             <summary>
-            Recupera um Jig pelo seu ID.
+            Buscar por Jig por ID.
             </summary>
-            <param name="id">O ID do Jig.</param>
-            <returns>O Jig solicitado.</returns>
-            <response code="200">Retorna o Jig.</response>
-            <response code="404">Se o Jig não for encontrado.</response>
-            <response code="500">Se ocorrer um erro interno do servidor.</response>
+            <param name="id">ID Jig.</param>
         </member>
         <member name="M:BiometricFaceApi.Controllers.JigController.GetJigBySn(System.String)">
             <summary>
-            Recupera um Jig pelo seu Serial Number.
+            Buscar Jig por SN.
             </summary>
-            <param name="serialNumber">O Serial Number do Jig.</param>
-            <returns>O Jig solicitado.</returns>
-            <response code="200">Retorna o Jig.</response>
-            <response code="404">Se o Jig não for encontrado.</response>
-            <response code="500">Se ocorrer um erro interno do servidor.</response>
+            <param name="sn">SN do Jig.</param>
         </member>
         <member name="M:BiometricFaceApi.Controllers.JigController.Include(BiometricFaceApi.Models.JigModel)">
-            <summary>
-            Adiciona ou atualiza um Jig.
-            </summary>
-            <param name="model">O modelo Jig a ser adicionado ou atualizado.</param>
-            <returns>O Jig criado ou atualizado.</returns>
-            <response code="201">Retorna o Jig criado.</response>
-            <response code="400">Se o modelo fornecido for nulo.</response>
-            <response code="500">Se ocorrer um erro interno do servidor.</response>
+             <summary>
+            Criar ou atualizar operador Jig.
+             </summary>
+             <param name="model">O modelo Jig a ser adicionado ou atualizado.</param>
         </member>
         <member name="M:BiometricFaceApi.Controllers.JigController.Delete(System.Int32)">
             <summary>
-            Exclui um Jig pelo seu ID.
+            Excluir Jig por ID.
             </summary>
-            <param name="id">O ID do Jig a ser excluído.</param>
-            <returns>Uma confirmação de exclusão.</returns>
-            <response code="200">Se o Jig foi excluído com sucesso.</response>
-            <response code="404">Se o Jig não for encontrado.</response>
-            
-            <response code="500">Se ocorrer um erro interno do servidor.</response>
+            <param name="id">ID do Jig a ser excluído.</param>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LineController.BuscarTodaLinha">
             <summary>
             Busca todas as linhas
             </summary>
-            <response code="200">Retorna dados de linha.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:BiometricFaceApi.Controllers.LineController.BuscarLinha(System.Int32)" -->
+        <member name="M:BiometricFaceApi.Controllers.LineController.BuscarLinha(System.Int32)">
+            <summary>
+            Buscar linha por ID
+            </summary>
+            <param name="id">ID da linha</param>
+        </member>
         <member name="M:BiometricFaceApi.Controllers.LineController.BuscarNome(System.String)">
             <summary>
             Buscar linha por nome
             </summary>
             <param name="name">Nome da linha</param>
-            <response code="200">Retorna dados de linha.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LineController.Include(BiometricFaceApi.Models.LineModel)">
             <summary>
-            Cadastrar ou atualizar uma linha
+            Criar ou atualizar uma linha
             </summary>
-            <param name="model">Modelo de dados da linha</param>
-            <response code="200">Dados atualizado com sucesso.</response>
-            <response code="201">Dados cadastrados com sucesso.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
+            <param name="linha">Informações da linha</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:BiometricFaceApi.Controllers.LineController.Delete(System.Int32)" -->
+        <member name="M:BiometricFaceApi.Controllers.LineController.Delete(System.Int32)">
+            <summary>
+            Deletar linha
+            </summary>
+            <param name="id">ID da linha a ser deletada</param>
+        </member>
         <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.BuscarTodos">
             <summary>
             Buscar todos os links
             </summary>
-            <response code="200">Retorna todos os links.</response>
-            <response code="404">Nenhum link encontrado.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.BuscarPorId(System.Int32)">
             <summary>
-            Buscar um link específico
+            Buscar link por ID
             </summary>
-            <response code="200">Retorna o link buscado.</response>
-            <response code="404">Link não encontrado.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.LinksPorLinha(System.Int32)">
             <summary>
-            Buscar links por linha
+            Buscar links por linha ID
             </summary>
-            <response code="200">Retorna os links da linha.</response>
-            <response code="404">Linha não encontrada.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.LinksPorEstacao(System.Int32)">
             <summary>
-            Buscar links por estação
+            Buscar estação
             </summary>
-            <response code="200">Retorna os links da estação.</response>
-            <response code="404">Estação não encontrada.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.Incluir(BiometricFaceApi.Models.LinkStationAndLineModel)">
             <summary>
-            Incluir um novo link
+            Criar ou atualizar link
             </summary>
-            <response code="201">Link criado com sucesso.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LinkStationAndLineController.Deletar(System.Int32)">
             <summary>
-            Deletar um link
+            Deletar link
             </summary>
-            <response code="200">Link deletado com sucesso.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.BuscarListaMonitorEsdById(System.Int32,System.Int32,System.Int32)">
             <summary>
-            Busca um monitor ESD por ID.
+            Busca monitor ESD por ID.
             </summary>
-            <param name="id">ID monitor ESD a ser buscado.</param>
-            <returns>Retorna uma lista de informações solicitado.</returns>
-            <response code="200">Retorna o ID encontrado com uma lista de informações.</response>
-            <response code="404">Id não encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.ListaLogOrdemCrescente(System.Int32,System.Int32)">
+            <summary>
+            Listar em ordem crescente.
+            </summary>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.ListaLogOrdemDecrescente(System.Int32,System.Int32)">
+            <summary>
+            Listar em ordem descresente.
+            </summary>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.BuscarLogMonitorById(System.Int32)">
             <summary>
-            Busca um log monitor ESD por ID.
+            Busca log monitor ESD por ID.
             </summary>
-            <param name="id">ID do log monitor ESD a ser buscado.</param>
-            <returns>Retorna o log solicitado.</returns>
-            <response code="200">Retorna o log encontrado.</response>
-            <response code="404">log não encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.BuscarMessageType(System.String)">
             <summary>
-            Busca tipo de log de um monitor ESD.
+            Busca tipo de log de monitor ESD.
             </summary>
-            <param name="type">Identificação dos tipo de log a serem buscados.</param>
-            <returns>Retorna os logs solicitados.</returns>
-            <response code="200">Retorna o tipo de log encontrados.</response>
-            <response code="404">Nenhum monitor encontrado com o tipo de log fornecido.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.BuscarMessageContent(System.String)">
             <summary>
-            Busca tipo de conteudo log de um monitor ESD.
+            Busca tipo de conteudo log de monitor ESD.
             </summary>
-            <param name="content">Identificação dos tipo de conteudo de log a serem buscados.</param>
-            <returns>Retorna os logs solicitados.</returns>
-            <response code="200">Retorna o tipo de conteudo de log encontrados.</response>
-            <response code="404">Nenhum monitor encontrado com o tipo de conteudo de log fornecido.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.BuscarMonitorEsdById(System.Int32)">
             <summary>
-            Busca um monitor ESD por ID.
+            Busca monitor ESD por ID.
             </summary>
-            <param name="id">ID monitor ESD a ser buscado.</param>
-            <returns>Retorna o log solicitado.</returns>
-            <response code="200">Retorna o ID encontrado.</response>
-            <response code="404">Id não encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.BuscarMonitorEsdByIP(System.String)">
             <summary>
-            Busca um monitor ESD por IP.
+            Busca monitor ESD por IP.
             </summary>
-            <param name="ip">IP monitor ESD a ser buscado.</param>
-            <returns>Retorna o log solicitado.</returns>
-            <response code="200">Retorna o IP encontrado.</response>
-            <response code="404">IP não encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.BuscarMonitorEsdBySn(System.String)">
             <summary>
-            Busca um monitor ESD por Serial Number.
+            Busca monitor ESD por SN.
             </summary>
-            <param name="serialNumber"> monitor ESD a ser buscado.</param>
-            <returns>Retorna o log solicitado.</returns>
-            <response code="200">Retorna o Serial Number encontrado.</response>
-            <response code="404">Serial Number não encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.ManagerLogsMonitorEsd(BiometricFaceApi.Models.LogMonitorEsdModel)">
             <summary>
-            Cadastra ou atualiza dados de um log.
+            Criar ou atualizar log.
             </summary>
-            <param name="models">Dados de um log a serem cadastrados ou atualizados.</param>
-            <returns>Retorna o resultado da operação.</returns>
-            <response code="200">Dados atualizados com sucesso.</response>
-            <response code="201">Dados cadastrados com sucesso.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
+        </member>
+        <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.ChangesLogsMonitorEsd(System.Int32,System.Boolean,System.String)">
+            <summary>
+            Altera dados de log.
+            </summary>
         </member>
         <member name="M:BiometricFaceApi.Controllers.LogMonitorEsdController.Delete(System.Int32)">
             <summary>
-            Deleta log de  monitor ESD pelo ID.
+            Deleta log de monitor ESD pelo ID.
             </summary>
-            <param name="id">ID do log a ser deletado.</param>
-            <returns>Resultado da operação.</returns>
-            <response code="200">log deletado com sucesso.</response>
-            <response code="404">log não encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.BuscarTodos">
             <summary>
             Busca todos os monitores ESD.
             </summary>
-            <returns>Retorna todos os monitores cadastrados.</returns>
-            <response code="200">Retorna todos os monitores.</response>
-            <response code="404">Nenhum monitor encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.BuscarIdMonitor(System.Int32)">
             <summary>
             Busca um monitor ESD por ID.
             </summary>
-            <param name="id">ID do monitor a ser buscado.</param>
-            <returns>Retorna o monitor solicitado.</returns>
-            <response code="200">Retorna o monitor encontrado.</response>
-            <response code="404">Monitor não encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.BuscarMonitorBySerialNumber(System.String)">
             <summary>
-            Busca um monitor ESD por Serial Number.
+            Busca monitor ESD por SN.
             </summary>
-            <param name="serialNumber"> Serial Number do monitor a ser buscado.</param>
-            <returns>Retorna o monitor solicitado.</returns>
-            <response code="200">Retorna o monitor encontrado.</response>
-            <response code="404">Monitor não encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.ManagerMonitor(BiometricFaceApi.Models.MonitorEsdModel)">
             <summary>
-            Cadastra ou atualiza dados de um monitor ESD.
+            Criar ou atualizar monitor ESD.
             </summary>
-            <param name="model">Dados do monitor ESD a serem cadastrados ou atualizados.</param>
-            <returns>Retorna o resultado da operação.</returns>
-            <response code="200">Dados atualizados com sucesso.</response>
-            <response code="201">Dados cadastrados com sucesso.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.MonitorEsdController.Delete(System.Int32)">
             <summary>
-            Deleta um monitor ESD pelo ID.
+            Deleta monitor ESD por ID.
             </summary>
-            <param name="id">ID do monitor a ser deletado.</param>
-            <returns>Resultado da operação.</returns>
-            <response code="200">Monitor deletado com sucesso.</response>
-            <response code="404">Monitor não encontrado.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.ProduceActivityController.GetAllProduction">
             <summary>
@@ -393,12 +273,12 @@
         </member>
         <member name="M:BiometricFaceApi.Controllers.ProduceActivityController.GetProductionById(System.Int32)">
             <summary>
-            Busca dados de produção pelo ID.
+            Busca dados de produção por ID.
             </summary>
         </member>
         <member name="M:BiometricFaceApi.Controllers.ProduceActivityController.AddOrUpdateProduction(BiometricFaceApi.Models.ProduceActivityModel)">
             <summary>
-            Cadastra ou atualiza dados de produção.
+            Criar ou atualizar dados de produção.
             </summary>
         </member>
         <member name="M:BiometricFaceApi.Controllers.ProduceActivityController.ChangeProductionStatus(System.Int32,System.Boolean,System.String)">
@@ -408,137 +288,73 @@
         </member>
         <member name="M:BiometricFaceApi.Controllers.ProduceActivityController.DeleteProduction(System.Int32)">
             <summary>
-            Deleta um registro de produção pelo ID.
+            Deleta registro de produção por ID.
             </summary>
         </member>
         <member name="M:BiometricFaceApi.Controllers.RecordStatusController.GetAllStatus">
             <summary>
             Busca todos os status.
             </summary>
-            <response code="200">Retorna todos os status.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.RecordStatusController.GetStatusById(System.Int32)">
             <summary>
             Buscar status de produção por ID.
             </summary>
-            <param name="id">ID do status.</param>
-            <response code="200">Retorna o status de produção correspondente.</response>
-            <response code="400">ID incorreto ou inválido.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.RecordStatusController.AddOrUpdateStatus(BiometricFaceApi.Models.RecordStatusProduceModel)">
             <summary>
-            Cadastra ou atualiza status de produção.
+            Criar ou atualizar status de produção.
             </summary>
-            <param name="model">Dados de status a serem cadastrados ou atualizados.</param>
-            <response code="200">Status atualizado com sucesso.</response>
-            <response code="201">Status cadastrado com sucesso.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.RecordStatusController.DeleteStatus(System.Int32)">
             <summary>
-            Deleta um status de produção.
+            Deleta status de produção.
             </summary>
-            <param name="id">ID do status a ser deletado.</param>
-            <response code="200">Status removido com sucesso.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro do servidor interno.</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.RolesController.GetAllRoles">
             <summary>
             Recupera todas as funções.
             </summary>
-            <response code="200">Retorna todas as funções.</response>
-            <response code="400">Nenhuma função encontrada.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro interno do servidor!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.RolesController.GetRoleById(System.Int32)">
             <summary>
-            Recupera uma função pelo seu ID.
+            Recupera função por ID.
             </summary>
-            <param name="id">O ID da função a ser recuperada.</param>
-            <response code="200">Retorna dados da função.</response>
-            <response code="404">Função não encontrada.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro interno do servidor!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.RolesController.UpsertRole(BiometricFaceApi.Models.RolesModel)">
             <summary>
             Adiciona ou atualiza uma função.
             </summary>
-            <param name="model">Dados da função para adição ou atualização.</param>
-            <response code="200">Função atualizada com sucesso.</response>
-            <response code="201">Função adicionada com sucesso.</response>
-            <response code="400">Dados inválidos fornecidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro interno do servidor!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.RolesController.DeleteRole(System.Int32)">
             <summary>
-            Exclui uma função pelo seu ID.
+            Exclui função por ID.
             </summary>
-            <param name="id">O ID da função a ser excluída.</param>
-            <response code="200">Função excluída com sucesso.</response>
-            <response code="404">Função não encontrada.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas.</response>
-            <response code="500">Erro interno do servidor!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.StationController.GetAllStations">
             <summary>
             Buscar todos
             </summary>
-            <param > Buscar todas Estações</param>
-            <response code="200">Retorna todos.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.StationController.GetStationById(System.Int32)">
             <summary>
             Buscar id 
             </summary>
-            <param name="id"> Buscar Estação por Id</param>
-            <response code="200">Retorna  Estação </response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.StationController.GetStationByName(System.String)">
             <summary>
-            Buscar id 
+            Buscar nome 
             </summary>
-            <param name="name"> Buscar Estação por name</param>
-            <response code="200">Retorna  Estação </response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.StationController.AddOrUpdateStation(BiometricFaceApi.Models.StationModel)">
             <summary>
-            Cadastra e Atualiza de dados da Estação.
+            Criar ou atualizar Estação.
             </summary>
-            <remarks>Cadastra estação na base de dados; Para atualizar dados basta usar Id da estação.</remarks>
-            <param name="model">Dados de cadastro da estação</param>
-            <response code="200">Dados atualizado com sucesso.</response>
-            <response code="201">Dados cadastrados com sucesso.</response>
-            <response code="400">Dados incorretos ou inválidos.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.StationController.DeleteStation(System.Int32)">
             <summary>
             Deletar Estação
             </summary>
-            <param name="id"> Deleta  Estação</param>
-            <returns></returns>
-            <response code="200">Remove dados do banco de dados.</response>
-            <response code="401">Acesso negado devido a credenciais inválidas</response>
-            <response  code="500">Erro do servidor interno!</response>
         </member>
         <member name="M:BiometricFaceApi.Controllers.StationViewController.BuscarTodos">
             <summary>

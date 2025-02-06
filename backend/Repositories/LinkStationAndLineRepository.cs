@@ -38,7 +38,7 @@ namespace BiometricFaceApi.Repositories
             var result = await _oraConnector.LoadData<LinkStationAndLineModel, dynamic>(SQLScripts.LinkStationAndLineQueries.GetByLinkLineAndStationById, new { lineId, stationId });
             return result.FirstOrDefault();
         }
-        public async Task<LinkStationAndLineModel> IncludeAsync(LinkStationAndLineModel model)
+        public async Task<LinkStationAndLineModel?> IncludeAsync(LinkStationAndLineModel model)
         {
             if (model.ID > 0)
             {
@@ -50,12 +50,13 @@ namespace BiometricFaceApi.Repositories
             else
             {
                 model.Created = DateTimeHelperService.GetManausCurrentDateTime();
+                model.LastUpdated = DateTimeHelperService.GetManausCurrentDateTime();
                 await _oraConnector.SaveData<LinkStationAndLineModel>(SQLScripts.LinkStationAndLineQueries.InsertLinkAndStation, model);
                 CheckForErrors();
                 return await GetByLineIdAndStationIdAsync(model.LineID, model.StationID);
             }
         }
-        public async Task<LinkStationAndLineModel> DeleteAsync(int id)
+        public async Task<LinkStationAndLineModel?> DeleteAsync(int id)
         {
             LinkStationAndLineModel? linkAndStationDel = await GetByLinkIdAsync(id);
             await _oraConnector.SaveData<dynamic>(SQLScripts.LinkStationAndLineQueries.DeleteLinkAndStation, new { id });
