@@ -231,9 +231,9 @@ export default function RealTimeLogTable({
           format="DD/MM/YYYY"
           style={{ marginRight: "10px" }}
         />
-        <Button onClick={exportToExcel}  style={{ backgroundColor: "#009B2D" }} type="primary">
+        {/* <Button onClick={exportToExcel}  style={{ backgroundColor: "#009B2D" }} type="primary">
           Exportar para Excel
-        </Button>
+        </Button> */}
       </div>
       {error && (
         <Alert
