@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Table, Card, Badge, Alert, Spin, Tooltip } from "antd";
+import { Table, Card, Badge, Alert, Spin, Tooltip, DatePicker } from "antd";
 import {
   CheckCircleOutlined,
   WarningOutlined,
   CloseCircleOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
-import signalRService from "../../../../api/signalRService"; // Ajuste o caminho de importação conforme necessário
-import "./RealTimeLogTable.css"; // Importando o CSS
-import { Button, DatePicker } from "antd"; // Para o seletor de data e botão
-import * as XLSX from "xlsx"; // Para exportar dados para Excel
+import signalRService from "../../../../api/signalRService";
+import * as XLSX from "xlsx"; // Para exportação para Excel
 
 interface LogData {
   serialNumberEsp: any;
@@ -40,6 +38,14 @@ export default function RealTimeLogTable({
     null,
   ]);
 
+  // Carregar logs do localStorage ao iniciar
+  useEffect(() => {
+    const savedLogs = localStorage.getItem("logs");
+    if (savedLogs) {
+      setLogs(JSON.parse(savedLogs));
+    }
+  }, []);
+
   useEffect(() => {
     const connectToSignalR = async () => {
       try {
@@ -64,7 +70,14 @@ export default function RealTimeLogTable({
           }
         : log;
 
-      setLogs((prevLogs) => [updatedLog, ...prevLogs].slice(0, 100));
+      setLogs((prevLogs) => {
+        const newLogs = [updatedLog, ...prevLogs].slice(0, 100);
+
+        // Salvar logs no localStorage para persistência
+        localStorage.setItem("logs", JSON.stringify(newLogs));
+
+        return newLogs;
+      });
     });
 
     return () => {
@@ -72,63 +85,14 @@ export default function RealTimeLogTable({
     };
   }, []);
 
-  const getStatusBadge = (status: number) => {
-    switch (status) {
-      case 0:
-        return <CloseCircleOutlined style={{ color: "red" }} />;
-      case 1:
-        return <CheckCircleOutlined style={{ color: "green" }} />;
-      case -1:
-        return <WarningOutlined style={{ color: "gray" }} />;
-      case 2:
-        return <WarningOutlined />;
-      case 3:
-        return <InfoCircleOutlined />;
-      default:
-        return <Badge status="processing" text="Unknown" />;
-    }
-  };
-
-  const getStatusHeaderBadge = (status: number) => {
-    switch (status) {
-      case 0:
-        return (
-          <Badge status="error" style={{ color: "red", marginLeft: "20px" }} />
-        );
-      case 1:
-        return (
-          <Badge
-            status="success"
-            style={{ color: "green", marginLeft: "20px" }}
-          />
-        );
-      case -1:
-        return <Badge status="warning" style={{ marginLeft: "20px" }} />;
-      default:
-        return <Badge status="processing" text="Unknown" />;
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
-  };
-
   const columns = [
     {
       title: "Data",
       dataIndex: "lastUpdated",
       key: "lastUpdated",
-      width: 5,
       render: (lastUpdated: string) => (
-        <Tooltip title={formatDate(lastUpdated)}>
-          <span>{formatDate(lastUpdated)}</span>
+        <Tooltip title={new Date(lastUpdated).toLocaleString()}>
+          <span>{new Date(lastUpdated).toLocaleString()}</span>
         </Tooltip>
       ),
       sorter: (a: LogData, b: LogData) =>
@@ -138,7 +102,6 @@ export default function RealTimeLogTable({
       title: "Descrição",
       dataIndex: "description",
       key: "description",
-      width: 5,
       render: (description: string) => (
         <Tooltip title={description}>
           <span>{description}</span>
@@ -151,10 +114,9 @@ export default function RealTimeLogTable({
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: 5,
       render: (status: number) => (
         <Tooltip title={status === 1 ? "Conectado" : "Desconectado"}>
-          <span>{getStatusBadge(status)}</span>
+          <span>{status === 1 ? <CheckCircleOutlined style={{ color: "green" }} /> : <CloseCircleOutlined style={{ color: "red" }} />}</span>
         </Tooltip>
       ),
       sorter: (a: LogData, b: LogData) => a.status - b.status,
@@ -169,39 +131,11 @@ export default function RealTimeLogTable({
         : true;
 
     return (
-      (serialNumberFilter
-        ? log.serialNumberEsp.includes(serialNumberFilter)
-        : true) &&
+      (serialNumberFilter ? log.serialNumberEsp.includes(serialNumberFilter) : true) &&
       (statusFilter !== undefined ? log.status === statusFilter : true) &&
       withinDateRange
     );
   });
-
-  const getLastLogStatus = () => {
-    const filteredLogsByType = logs.filter(
-      (log) => log.messageType === "jig" || "operador"
-    );
-    const lastLog = filteredLogsByType[0];
-    if (lastLog) {
-      return getStatusHeaderBadge(lastLog.status);
-    }
-    return <Badge status="processing" style={{ marginLeft: "20px" }} />;
-  };
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <Spin size="large" />
-      </div>
-    );
-  }
-
-  const exportToExcel = () => {
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(filteredLogs);
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Logs");
-    XLSX.writeFile(workbook, "logs.xlsx");
-  };
 
   const handleDateFilter = (dates: any) => {
     if (dates) {
@@ -215,44 +149,25 @@ export default function RealTimeLogTable({
     }
   };
 
-  return (
-    <Card
-      title={
-        <div className="card-title-container">
-          <span>Logs</span>
-          {getLastLogStatus()}
-        </div>
-      }
-      className="card-container"
-    >
-      <div className="table-controls">
-        <DatePicker.RangePicker
-          onChange={handleDateFilter}
-          format="DD/MM/YYYY"
-          style={{ marginRight: "10px" }}
-        />
-        {/* <Button onClick={exportToExcel}  style={{ backgroundColor: "#009B2D" }} type="primary">
-          Exportar para Excel
-        </Button> */}
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <Spin size="large" />
       </div>
-      {error && (
-        <Alert
-          message="Error"
-          description={error}
-          type="error"
-          showIcon
-          className="error-alert"
-        />
-      )}
+    );
+  }
+
+  return (
+    <Card title="Logs" className="card-container">
+      <div className="table-controls">
+        <DatePicker.RangePicker onChange={handleDateFilter} format="DD/MM/YYYY" style={{ marginRight: "10px" }} />
+      </div>
+      {error && <Alert message="Error" description={error} type="error" showIcon className="error-alert" />}
       <Table
         columns={columns}
         dataSource={filteredLogs}
         rowKey={(record, index) => index!.toString()}
-        pagination={{
-          pageSize: 5,
-          showSizeChanger: false,
-          pageSizeOptions: [],
-        }}
+        pagination={{ pageSize: 5, showSizeChanger: false }}
       />
     </Card>
   );
