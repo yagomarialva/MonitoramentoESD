@@ -215,6 +215,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   };
 
   const handleConfirmDelete = () => {
+    console.log('here',monitor.monitorsESD)
     confirm({
       title: "Confirmação de Exclusão",
       content: "Tem certeza de que deseja excluir este monitor?",
@@ -224,6 +225,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
           const monitorToDelete = await getMonitor(
             monitor.monitorsESD.serialNumberEsp
           );
+          console.log(' monitor.monitorsESD.serialNumberEsp',  monitorToDelete)
           await deleteMonitor(monitorToDelete.id);
           onUpdate();
           onDelete(); // Chama o callback após a exclusão
@@ -311,13 +313,10 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   const handleTabChange = async (key: React.SetStateAction<string>) => {
     setActiveKey(key);
-    console.log("key", key);
-
     if (key !== "2") return; // Caso o key não seja "2", retorna imediatamente
 
     try {
       // getMonitorLogs(monitor.monitorsESD.serialNumberEsp);
-      console.log('allLogs', monitor )
       const allLogs = await getMonitorLogs(monitor.monitorsESD.serialNumberEsp);
       // Filtrando logs em categorias de "Operador" e "Jig"
       const filteredOperatorLogs = allLogs.filter(

@@ -30,7 +30,7 @@ export const getMonitorLogs = async (id) => {
 // Obtém um monitor específico por ID
 export const getMonitor = async (serialNumber) => {
   try {
-    const { data } = await TokenApi.get(`${url}/Pesquisa${serialNumber}`);
+    const { data } = await TokenApi.get(`${url}/Pesquisa/${serialNumber}`);
     console.log('data', data)
     return data;
   } catch (error) {

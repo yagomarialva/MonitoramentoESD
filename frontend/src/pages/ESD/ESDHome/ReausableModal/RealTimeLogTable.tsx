@@ -12,7 +12,7 @@ import { Button, DatePicker } from "antd"; // Para o seletor de data e botão
 import * as XLSX from "xlsx"; // Para exportar dados para Excel
 
 interface LogData {
-  serialNumberEsp: any;
+  serialNumberEsp: string;
   serialNumber: string;
   status: number;
   description: string;
