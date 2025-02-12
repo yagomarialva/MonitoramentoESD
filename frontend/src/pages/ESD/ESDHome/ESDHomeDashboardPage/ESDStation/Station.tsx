@@ -249,8 +249,8 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     let hasChanges = false
 
     Object.entries(monitorLastUpdate).forEach(([serialNumberEsp, lastUpdate]) => {
-      if (now - lastUpdate > 3000) {
-        newMonitorStatuses[serialNumberEsp] = 0 // 0 representa o estado "sem atualização"
+      if (now - lastUpdate > 30000) {
+        newMonitorStatuses[serialNumberEsp] = 3 // 0 representa o estado "sem atualização"
         hasChanges = true
       }
     })
