@@ -220,7 +220,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
       )
 
       if (allInactive) {
-        newGroupColors[Number(groupIndex)] = "#f44336" // Cor cinza para grupos sem atualização
+        newGroupColors[Number(groupIndex)] = "#f0f2f5" // Cor cinza para grupos sem atualização
         hasChanges = true
       } else {
         newGroupColors[Number(groupIndex)] = "" // Volta para a cor normal
@@ -234,7 +234,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
   }, [groupLastUpdate, groupColors, monitorsEsd, monitorLastUpdate])
 
   useEffect(() => {
-    intervalRef.current = setInterval(checkGroupUpdates, 100)
+    intervalRef.current = setInterval(checkGroupUpdates, 5000)
 
     return () => {
       if (intervalRef.current) {
@@ -249,8 +249,8 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     let hasChanges = false
 
     Object.entries(monitorLastUpdate).forEach(([serialNumberEsp, lastUpdate]) => {
-      if (now - lastUpdate > 1000) {
-        newMonitorStatuses[serialNumberEsp] = 2 // 2 representa o estado "sem atualização"
+      if (now - lastUpdate > 3000) {
+        newMonitorStatuses[serialNumberEsp] = 0 // 0 representa o estado "sem atualização"
         hasChanges = true
       }
     })
@@ -337,7 +337,7 @@ const Station: React.FC<StationProps> = ({ stationEntry, onUpdate }) => {
     if (groupColors[groupIndex] === "#d9d9d9") {
       color = "#d9d9d9" // Cor cinza para o grupo inteiro se não houver atualização
     } else {
-      color = monitorStatus === 1 ? "#4caf50" : monitorStatus === 0 ? "#f44336" : "#f44336"
+      color = monitorStatus === 1 ? "#4caf50" : monitorStatus === 0 ? "#f44336" : "#bfbfbf"
     }
 
     switch (status) {

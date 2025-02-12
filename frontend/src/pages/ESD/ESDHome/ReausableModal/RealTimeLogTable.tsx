@@ -61,15 +61,13 @@ export default function RealTimeLogTable({
     }
 
     signalRService.onReceiveAlert((log: LogData) => {
-      const updatedLog = ![0, 1].includes(log.status)
-        ? {
-            ...log,
-            status: -1,
-            description: "Monitor desconectado",
-            lastUpdated: new Date().toISOString(),
-          }
-        : log;
-
+      const updatedLog = {
+        ...log,
+        status: log.status === 0 ? 0 : log.status === 1 ? 1 : -1,
+        description:
+          log.status === 0 ? "Desconectado" : log.status === 1 ? "Conectado" : "Status desconhecido",
+        lastUpdated: new Date().toISOString(),
+      }
       // setLogs((prevLogs) => [updatedLog, ...prevLogs].slice(0, 100));
       setLogs((prevLogs) => {
         const newLogs = [updatedLog, ...prevLogs].slice(0, 100)
@@ -86,39 +84,29 @@ export default function RealTimeLogTable({
   const getStatusBadge = (status: number) => {
     switch (status) {
       case 0:
-        return <CloseCircleOutlined style={{ color: "red" }} />;
+        return <CloseCircleOutlined style={{ color: "red" }} />
       case 1:
-        return <CheckCircleOutlined style={{ color: "green" }} />;
+        return <CheckCircleOutlined style={{ color: "green" }} />
       case -1:
-        return <WarningOutlined style={{ color: "gray" }} />;
-      case 2:
-        return <WarningOutlined />;
-      case 3:
-        return <InfoCircleOutlined />;
+        return <WarningOutlined style={{ color: "gray" }} />
       default:
-        return <Badge status="processing" text="Unknown" />;
+        return <Badge status="processing" text="Unknown" />
     }
-  };
+  }
 
   const getStatusHeaderBadge = (status: number) => {
     switch (status) {
       case 0:
-        return (
-          <Badge status="error" style={{ color: "red", marginLeft: "20px" }} />
-        );
+        return <Badge status="error" style={{ color: "red", marginLeft: "20px" }} />
       case 1:
-        return (
-          <Badge
-            status="success"
-            style={{ color: "green", marginLeft: "20px" }}
-          />
-        );
-      case -1:
-        return <Badge status="warning" style={{ marginLeft: "20px" }} />;
+        return <Badge status="success" style={{ color: "green", marginLeft: "20px" }} />
+      // case -1:
+      //   return <Badge status="warning" style={{ marginLeft: "20px" }} />
       default:
-        return <Badge status="processing" text="Unknown" />;
+        return <Badge status="processing" style={{ marginLeft: "20px" }} />
     }
-  };
+  }
+
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -168,9 +156,10 @@ export default function RealTimeLogTable({
       key: "status",
       width: 5,
       render: (status: number) => (
-        <Tooltip title={status === 1 ? "Conectado" : "Desconectado"}>
-          <span>{getStatusBadge(status)}</span>
-        </Tooltip>
+        // console.log('status', status),
+        <Tooltip title={status === 1 ? "Conectado" : status === 0 ? "Desconectado" : "Status desconhecido"}>
+        <span>{getStatusBadge(status)}</span>
+      </Tooltip>
       ),
       sorter: (a: LogData, b: LogData) => a.status - b.status,
     },

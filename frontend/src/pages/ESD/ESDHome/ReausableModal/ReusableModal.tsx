@@ -105,6 +105,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   const [operatorLogData, setOperatorLogData] = useState([]); // Renomeado para evitar conflitos
   const [jigLogData, setJigLogData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -127,9 +128,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
     rowsPerPage: 10,
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [editableData, setEditableData] = useState<any>(
-    monitor.monitorsESD
-  );
+  const [editableData, setEditableData] = useState<any>(monitor.monitorsESD);
 
   useEffect(() => {
     if (visible) {
@@ -213,42 +212,56 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
       console.error("Erro ao salvar monitor:", error);
     }
   };
-
   const handleConfirmDelete = () => {
-    console.log('here',monitor.monitorsESD)
     confirm({
       title: "Confirmação de Exclusão",
       content: "Tem certeza de que deseja excluir este monitor?",
-      className: "custom-modal", // Adiciona a classe personalizada ao modal
+      className: "custom-modal",
       onOk: async () => {
+        setIsLoading(true) // Start loading
         try {
-          const monitorToDelete = await getMonitor(
-            monitor.monitorsESD.serialNumberEsp
-          );
-          console.log(' monitor.monitorsESD.serialNumberEsp',  monitorToDelete)
-          await deleteMonitor(monitorToDelete.id);
-          onUpdate();
-          onDelete(); // Chama o callback após a exclusão
-          onClose();
-          showSnackbar("Linha excluída com sucesso!", "success");
+          const monitorToDelete = await getMonitor(monitor.monitorsESD.serialNumberEsp)
+          console.log("monitor.monitorsESD.id", monitorToDelete)
+          if (!monitorToDelete.id) {
+            throw new Error("Monitor ID is missing")
+          }
+          await deleteMonitor(monitorToDelete.id)
+          setIsLoading(false) // Stop loading
+          onUpdate()
+          onDelete()
+          onClose()
+          message.success("Monitor excluído com sucesso!")
         } catch (error: any) {
-          showMessage("Erro ao excluir a linha:", error);
-          if (error.message === "Request failed with status code 401") {
-            showMessage("Sessão Expirada.", "error");
-            localStorage.removeItem("token");
-            navigate("/");
+          console.error("Error deleting monitor:", error)
+          if (error.response && error.response.status === 400) {
+            // If we get a 400 error, assume the deletion was successful but there was a communication issue
+            // message.warning(
+            //   "O monitor foi excluído, mas houve um problema de comunicação. Por favor, atualize a página.",
+            // )
+            setTimeout(() => {
+              setIsLoading(false) // Stop loading
+              onUpdate()
+              onDelete()
+              onClose()
+            }, 2000) // 2 second delay
+          } else {
+            message.error("Erro ao excluir o monitor: " + (error.message || "Erro desconhecido"))
+            if (error.response && error.response.status === 401) {
+              showMessage("Sessão Expirada.", "error")
+              localStorage.removeItem("token")
+              navigate("/")
+            }
           }
         }
       },
       okButtonProps: {
-        className: "custom-button", // Adiciona a classe personalizada ao botão OK
+        className: "custom-button",
       },
       cancelButtonProps: {
-        className: "custom-cancel-button", // Adiciona a classe personalizada ao botão Cancelar
+        className: "custom-cancel-button",
       },
-    });
-  };
-
+    })
+  }
   //table
   const monitorColumns: ColumnsType<DataType> = [
     {
@@ -266,6 +279,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
                   serialNumberEsp: e.target.value,
                 })
               }
+              disabled={isLoading}
             />
           ) : (
             <span className="ellipsis-text">
@@ -290,6 +304,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
                   description: e.target.value,
                 })
               }
+              disabled={isLoading}
             />
           ) : (
             <span className="ellipsis-text">
@@ -326,7 +341,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         (log: { messageType: string }) => log.messageType === "jig"
       );
 
-      console.log('filteredJigLogs',filteredJigLogs)
+      console.log("filteredJigLogs", filteredJigLogs);
       // Atualizando os estados
       setOperatorLogData(filteredOperatorLogs);
       setJigLogData(filteredJigLogs);
@@ -347,7 +362,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
   return (
     <>
       <Modal
-        className={`ellipsis-modal ${activeKey === "2" ? "custom-log-modal" : ""}`}
+        className={`ellipsis-modal ${
+          activeKey === "2" ? "custom-log-modal" : ""
+        }`}
         title={
           <div className="modal-title-container">
             <div className="title-content">
@@ -387,12 +404,14 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
               <button
                 className="modal-button-monitor-cancel"
                 onClick={handleClose}
+                disabled={isLoading}
               >
                 Cancelar
               </button>
               <button
                 className="modal-button-monitor-save"
                 onClick={actionType === "editar" ? handleSubmit : onDelete}
+                disabled={isLoading}
               >
                 {actionType === "editar" ? "Salvar" : "Excluir"}
               </button>

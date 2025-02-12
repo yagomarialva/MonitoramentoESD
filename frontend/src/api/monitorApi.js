@@ -74,11 +74,11 @@ export const updateMonitor = async (monitor) => {
 };
 
 // Deleta um monitor por ID
-export const deleteMonitor = async (monitor) => {
+export const deleteMonitor = async (id) => {
   try {
-    await TokenApi.delete(`${url}/${monitor}`, monitor);
+    await TokenApi.delete(`${url}/${id}`)
   } catch (error) {
-    console.error(`Error deleting monitor with ID :`, error);
-    throw error;
+    console.error(`Error deleting monitor with ID ${id}:`, error)
+    throw error
   }
-};
+}
