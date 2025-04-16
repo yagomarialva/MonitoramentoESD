@@ -5,7 +5,7 @@
 #include <WiFi.h>
 
 // Configurações comuns
-  
+const float VRef = 1.6; // Volts
 const int resolucaoADC = 4095;
 const float limiteTensao = 0.1;
 const float faixaTensao = 0.05;
